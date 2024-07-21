@@ -1,0 +1,20 @@
+{
+  "name": "scspace",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "dotenv -- pnpm -r run dev"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@9.5.0",
+  "devDependencies": {
+    "dotenv-cli": "^7.4.2"
+  }
+}
