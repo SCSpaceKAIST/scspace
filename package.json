@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "dotenv -- pnpm -r run dev"
+    "dev": "dotenv -- pnpm -r run dev",
+    "migrate": "drizzle-kit migrate --config packages/server/src/db/drizzle.config.ts",
+    "generate": "drizzle-kit generate --config packages/server/src/db/drizzle.config.ts"
   },
   "workspaces": [
     "packages/*"
@@ -15,6 +17,12 @@
   "license": "ISC",
   "packageManager": "pnpm@9.5.0",
   "devDependencies": {
-    "dotenv-cli": "^7.4.2"
+    "dotenv-cli": "^7.4.2",
+    "drizzle-kit": "^0.24.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.33.0",
+    "mysql2": "^3.11.0"
   }
 }
