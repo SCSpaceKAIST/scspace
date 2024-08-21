@@ -11,9 +11,13 @@ export class UserService {
   ) {}
 
   async getUser(user_id: string) {
-    const user = await this.db.query.users.findFirst({
-      where: eq(schema.users.userId, user_id),
-    });
-    return user;
+    // const user = await this.db.query.users.findFirst({
+    //   where: eq(schema.users.userId, user_id),
+    // });
+    const user = await this.db
+      .select()
+      .from(schema.users)
+      .where(eq(schema.users.userId, user_id));
+    return user[0];
   }
 }
