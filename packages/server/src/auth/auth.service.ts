@@ -18,11 +18,6 @@ interface UserInfo {
   ku_kname: string;
 }
 
-interface USERINFO {
-  dataMap: {
-    USER_INFO: UserInfo;
-  };
-}
 const FRONT_BASE_URL = 'https://localhost';
 @Injectable()
 export class AuthService {
@@ -31,7 +26,7 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
-  async verificationJWT(body) {}
+
   async login(result: string, state: string, res): Promise<void> {
     const secretKey = this.configService.get<string>('SECRETKEY') + state;
     const keySpec = Buffer.from(secretKey.substring(80, 96), 'utf8');
@@ -63,8 +58,9 @@ export class AuthService {
     }
   }
 
-  verification(cookie: any, res): void {
-    if (!cookie['scspacetoken1']) {
+  verification(cookies: any, res): void {
+    const cookie = cookies.scspacetoken1;
+    if (!cookie) {
       res.send(false);
       return;
     }
@@ -72,6 +68,7 @@ export class AuthService {
     try {
       const token = Buffer.from(cookie, 'base64').toString('utf8');
       const decoded = this.jwtService.verify(token);
+      console.log(decoded);
       res.send(decoded);
     } catch (err) {
       if (err.name === 'TokenExpiredError') {
@@ -99,5 +96,12 @@ export class AuthService {
     ]).toString();
 
     return JSON.parse(decrypted).dataMap.USER_INFO;
+
+    interface USERINFO {
+      // decrypted 후의 결과
+      dataMap: {
+        USER_INFO: UserInfo;
+      };
+    }
   };
 }

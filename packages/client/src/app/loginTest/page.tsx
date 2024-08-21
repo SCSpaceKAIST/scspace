@@ -9,7 +9,8 @@ interface SsoResponse {
 }
 
 async function sendPost(): Promise<AxiosResponse<SsoResponse>> {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/login`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/verification`;
+  console.log(url);
   const config = {
     withCredentials: true,
     headers: {
@@ -52,11 +53,29 @@ const Login: React.FC = () => {
     });
   };
 
-  console.log(location);
+  const verifyBtn = async (): Promise<void> => {
+    LoginCheck().then((result) => {
+      console.log(result);
+      window.alert(result);
+    });
+  };
+
+  const logoutBtn = async (): Promise<void> => {
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`;
+    const config = {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    await axios.post<SsoResponse>(url, JSON.stringify({}), config);
+  };
 
   return (
     <div id="main">
       <button onClick={handleSubmit}>로그인</button>
+      <button onClick={verifyBtn}>로그인 확인</button>
+      <button onClick={logoutBtn}>로그아웃</button>
     </div>
   );
 };

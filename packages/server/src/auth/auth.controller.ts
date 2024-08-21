@@ -15,7 +15,7 @@ export class AuthController {
     return this.authService.login(result, state, res);
   }
 
-  @Get('verification')
+  @Post('verification')
   verification(@Req() req: Request, @Res() res: Response): void {
     const cookie = req.cookies;
     return this.authService.verification(cookie, res);

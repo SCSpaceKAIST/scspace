@@ -5,8 +5,6 @@ import * as cors from 'cors';
 import { config } from 'dotenv';
 
 async function bootstrap() {
-  config({ path: '../.env' }); // 상위 폴더에 있는 .env 파일을 참조
-
   const app = await NestFactory.create(AppModule);
 
   // CORS 설정
