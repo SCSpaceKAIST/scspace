@@ -1,13 +1,10 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginRequestDto } from './dto/login.request.dto';
-import { DBAsyncProvider } from 'src/db/db.provider';
-import { MySql2Database } from 'drizzle-orm/mysql2';
-import { schema } from 'src/db/schema';
-import { eq } from 'drizzle-orm';
 import { JwtService } from '@nestjs/jwt';
 import * as crypto from 'crypto';
 import { ConfigService } from '@nestjs/config';
-
+import { UserRepository } from 'src/user/user.repository';
+import { Logger } from '@nestjs/common';
 interface UserInfo {
   ku_std_no: string | null;
   kaist_uid: string;
@@ -18,11 +15,19 @@ interface UserInfo {
   ku_kname: string;
 }
 
+// TypeScript 타입 정의
+export interface UserTypeWithoutID {
+  user_id: string;
+  name: string;
+  email: string;
+  type: 'user' | 'manager' | 'admin' | 'chief'; // type은 지정된 문자열 중 하나
+}
+
 const FRONT_BASE_URL = 'https://localhost';
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
+    private readonly userRepository: UserRepository,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
@@ -35,23 +40,31 @@ export class AuthService {
 
     try {
       const data = userInfo;
-      console.log(data);
-      const payload = { ...data };
+
+      const payload = this.ssoToUser(data);
+      Logger.log('PAYLOAD');
+      const user = await this.userRepository.getUser(payload.user_id);
+      Logger.log(user);
+      if (user === null) {
+        Logger.log('ADD TO DB');
+        await this.userRepository.addUser(payload);
+      }
+
       const token = this.jwtService.sign(payload, {
-        expiresIn: '5d',
+        expiresIn: '7d',
         issuer: 'scspace',
         subject: 'userInfo',
       });
 
-      res.cookie('scspacetoken1', Buffer.from(token).toString('base64'), {
-        maxAge: 60 * 60 * 1000,
+      res.cookie('scspacetoken1', token, {
+        maxAge: 60 * 60 * 1000 * 24 * 7,
         secure: true,
         sameSite: 'none',
         httpOnly: true,
         path: '/',
       });
 
-      res.redirect(FRONT_BASE_URL);
+      res.redirect(FRONT_BASE_URL + '/loginTest');
     } catch (error) {
       console.error(error);
       res.status(500).send('Internal Server Error');
@@ -59,6 +72,7 @@ export class AuthService {
   }
 
   verification(cookies: any, res): void {
+    // Deprecated
     const cookie = cookies.scspacetoken1;
     if (!cookie) {
       res.send(false);
@@ -66,9 +80,10 @@ export class AuthService {
     }
 
     try {
-      const token = Buffer.from(cookie, 'base64').toString('utf8');
+      //const token = Buffer.from(cookie, 'base64').toString('utf8');
+      const token = cookie;
       const decoded = this.jwtService.verify(token);
-      console.log(decoded);
+      Logger.log(decoded);
       res.send(decoded);
     } catch (err) {
       if (err.name === 'TokenExpiredError') {
@@ -97,11 +112,24 @@ export class AuthService {
 
     return JSON.parse(decrypted).dataMap.USER_INFO;
 
-    interface USERINFO {
-      // decrypted 후의 결과
-      dataMap: {
-        USER_INFO: UserInfo;
-      };
-    }
+    // interface USERINFO {
+    //   // decrypted 후의 결과
+    //   dataMap: {
+    //     USER_INFO: UserInfo;
+    //   };
+    // }
+  };
+
+  private ssoToUser = (ssoPayload: UserInfo): UserTypeWithoutID => {
+    // 첫 가입시 DB에 넣기 좋게 변경하는 함수
+
+    return {
+      user_id: ssoPayload.ku_std_no
+        ? ssoPayload.ku_std_no
+        : ssoPayload.ku_employee_number,
+      name: ssoPayload.ku_kname ? ssoPayload.ku_kname : ssoPayload.displayname,
+      email: ssoPayload.mail,
+      type: 'user',
+    };
   };
 }

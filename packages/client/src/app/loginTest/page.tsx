@@ -70,12 +70,26 @@ const Login: React.FC = () => {
     };
     await axios.post<SsoResponse>(url, JSON.stringify({}), config);
   };
+  const guardBtn = async (): Promise<void> => {
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/user/idJwt`;
+    const config = {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const data = await axios.get(url, config);
+    console.log(data);
+    window.alert(JSON.stringify(data));
+    console.log(url);
+  };
 
   return (
     <div id="main">
       <button onClick={handleSubmit}>로그인</button>
       <button onClick={verifyBtn}>로그인 확인</button>
       <button onClick={logoutBtn}>로그아웃</button>
+      <button onClick={guardBtn}>가드버튼</button>
     </div>
   );
 };
