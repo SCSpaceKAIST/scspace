@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "description": "Shared types and API URLs for the monorepo",
+  "main": "",
+  "types": "index.ts",
+  "files": [
+    "types/",
+    "urls/"
+  ],
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {}
+}

@@ -3,31 +3,9 @@
 import axios, { AxiosResponse } from "axios";
 import React from "react";
 import { useRouter } from "next/navigation"; // next/router 대신 next/navigation 사용
+import LoginCheck from "../Components/Auth/LoginCheck";
 
-interface SsoResponse {
-  data: any;
-}
-
-async function sendPost(): Promise<AxiosResponse<SsoResponse>> {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/verification`;
-  console.log(url);
-  const config = {
-    withCredentials: true,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-
-  return await axios.post<SsoResponse>(url, JSON.stringify({}), config);
-}
-
-async function LoginCheck(): Promise<any> {
-  const res = await sendPost();
-  const body = res.data;
-  return body;
-}
-
-const Login: React.FC = () => {
+const LoginTest: React.FC = () => {
   const router = useRouter(); // next/router 대신 next/navigation 사용
   const location = process.env.NEXT_PUBLIC_SS_URL
     ? `${process.env.NEXT_PUBLIC_SS_URL}?${new Date().getTime()}&redirect_url=${encodeURI(
@@ -41,16 +19,16 @@ const Login: React.FC = () => {
     return res === false;
   };
 
-  const handleSubmit = (): void => {
-    checkSubmit().then((result) => {
-      console.log(result);
-      if (result) {
-        window.location.href = location;
-      } else {
-        alert("로그인 되었습니다.");
-        router.push("/"); // next/router 대신 next/navigation 사용
-      }
-    });
+  const handleSubmit = async (): Promise<void> => {
+    const result = await checkSubmit();
+
+    console.log(result);
+    if (result) {
+      window.location.href = location;
+    } else {
+      alert("로그인 되었습니다.");
+      router.push("/"); // next/router 대신 next/navigation 사용
+    }
   };
 
   const verifyBtn = async (): Promise<void> => {
@@ -68,7 +46,7 @@ const Login: React.FC = () => {
         "Content-Type": "application/json",
       },
     };
-    await axios.post<SsoResponse>(url, JSON.stringify({}), config);
+    await axios.post(url, JSON.stringify({}), config);
   };
   const guardBtn = async (): Promise<void> => {
     const url = `${process.env.NEXT_PUBLIC_API_URL}/user/idJwt`;
@@ -94,4 +72,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default LoginTest;

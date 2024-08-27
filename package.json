@@ -22,18 +22,26 @@
     "drizzle-kit": "^0.24.0"
   },
   "dependencies": {
+    "@chakra-ui/next-js": "^2.2.0",
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@nestjs/config": "^3.2.3",
     "@nestjs/passport": "^10.0.3",
     "axios": "^1.7.4",
     "bcrypt": "^5.1.1",
+    "bootstrap": "5.3.3",
     "class-validator": "^0.14.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.33.0",
+    "framer-motion": "^11.3.30",
     "mysql2": "^3.11.0",
     "passport-local": "^1.0.0",
+    "react-bootstrap": "^2.10.4",
+    "react-i18next": "^15.0.1",
     "react-router-dom": "^6.26.1"
   }
 }

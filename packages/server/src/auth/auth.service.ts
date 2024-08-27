@@ -5,6 +5,7 @@ import * as crypto from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { UserRepository } from 'src/user/user.repository';
 import { Logger } from '@nestjs/common';
+import { UserTypeWithoutID } from '@depot/types/user';
 interface UserInfo {
   ku_std_no: string | null;
   kaist_uid: string;
@@ -13,14 +14,6 @@ interface UserInfo {
   displayname: string;
   mobile: string;
   ku_kname: string;
-}
-
-// TypeScript 타입 정의
-export interface UserTypeWithoutID {
-  user_id: string;
-  name: string;
-  email: string;
-  type: 'user' | 'manager' | 'admin' | 'chief'; // type은 지정된 문자열 중 하나
 }
 
 const FRONT_BASE_URL = 'https://localhost';
