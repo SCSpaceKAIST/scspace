@@ -1,4 +1,3 @@
-// src/app/about/page.tsx
 export default function Hello() {
   return (
     <div>

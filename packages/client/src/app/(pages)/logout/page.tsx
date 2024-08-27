@@ -1,14 +1,11 @@
-"use client"; // 이 지시어를 추가하여 이 컴포넌트를 클라이언트 전용으로 만듭니다.
+"use client";
 
 import axios, { AxiosResponse } from "axios";
 import React from "react";
-import { useRouter } from "next/navigation"; // next/router 대신 next/navigation 사용
+import { useRouter, usePathname } from "next/navigation"; // next/router 대신 next/navigation 사용
+import { LckResType } from "@depot/types/auth";
 
-interface SsoResponse {
-  data: any;
-}
-
-async function sendPost(): Promise<AxiosResponse<SsoResponse>> {
+async function sendPost(): Promise<AxiosResponse<LckResType>> {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/verification`;
   console.log(url);
   const config = {
@@ -18,16 +15,10 @@ async function sendPost(): Promise<AxiosResponse<SsoResponse>> {
     },
   };
 
-  return await axios.post<SsoResponse>(url, JSON.stringify({}), config);
+  return await axios.post<LckResType>(url, JSON.stringify({}), config);
 }
 
-async function LoginCheck(): Promise<any> {
-  const res = await sendPost();
-  const body = res.data;
-  return body;
-}
-
-const LogOut: React.FC = () => {
+const LogOutPage: React.FC = () => {
   const router = useRouter(); // next/router 대신 next/navigation 사용
   const location = process.env.NEXT_PUBLIC_SS_URL
     ? `${process.env.NEXT_PUBLIC_SS_URL}?${new Date().getTime()}&redirect_url=${encodeURI(
@@ -44,4 +35,4 @@ const LogOut: React.FC = () => {
   return <div id="main"></div>;
 };
 
-export default LogOut;
+export default LogOutPage;

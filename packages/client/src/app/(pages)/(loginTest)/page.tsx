@@ -3,7 +3,7 @@
 import axios, { AxiosResponse } from "axios";
 import React from "react";
 import { useRouter } from "next/navigation"; // next/router 대신 next/navigation 사용
-import LoginCheck from "../Components/Auth/LoginCheck";
+import LoginCheck from "../../../Components/Auth/LoginCheck";
 
 const LoginTest: React.FC = () => {
   const router = useRouter(); // next/router 대신 next/navigation 사용
@@ -14,7 +14,6 @@ const LoginTest: React.FC = () => {
     : "";
 
   const checkSubmit = async (): Promise<boolean> => {
-    return true;
     const res = await LoginCheck();
     return res === false;
   };

@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from "react";
 //import Password from "./Password";
 //import EmergencyNotice from "./notice/EmergencyNotice";
-import Banner from "./Components/Main/Banner";
-import Faq from "./Components/FAQ/Faq";
+import Banner from "@Components/Main/Banner";
+import Faq from "@Components/FAQ/Faq";
 //import FastNotice from "./notice/FastNotice";
 //import FAQ from "./faq/FAQ";
-import LoginCheck from "./Components/Auth/LoginCheck";
+import LoginCheck from "@Components/Auth/LoginCheck";
 import { LckResType } from "@depot/types/auth";
 import axios from "axios";
 import { UserType } from "@depot/types/user";
