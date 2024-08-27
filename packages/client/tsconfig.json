@@ -19,7 +19,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@depot/*": ["../depot/*"]
+      "@depot/*": ["../depot/*"],
+      "@Components/*": ["./src/app/Components/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

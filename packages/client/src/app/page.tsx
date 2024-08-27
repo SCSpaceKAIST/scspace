@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 //import Password from "./Password";
 //import EmergencyNotice from "./notice/EmergencyNotice";
 import Banner from "./Components/Main/Banner";
+import Faq from "./Components/FAQ/Faq";
 //import FastNotice from "./notice/FastNotice";
 //import FAQ from "./faq/FAQ";
 import LoginCheck from "./Components/Auth/LoginCheck";
@@ -59,6 +60,7 @@ const Main: React.FC<MainProps> = (props) => {
     <div>
       <div className="top-margin2">{/* <EmergencyNotice/> */}</div>
       <Banner />
+      <Faq />
     </div>
   );
 };

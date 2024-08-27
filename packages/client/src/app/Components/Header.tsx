@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { LoginBtn } from "./Auth/LoginBtn";
+import Image from "next/image";
 
 interface HeaderProps {
   t: (key: string) => string;
@@ -87,8 +88,8 @@ export const Header: React.FC = () => {
           href="/"
           className="logo d-flex align-items-center scrollto me-auto me-lg-0"
         >
-          <img src="../../../public/img/logo.svg" alt="LOGO" />
-          <h1></h1>
+          <Image src="/img/logo.svg" width={40} height={40} alt="LOGO" />
+          <h1>{}</h1>
         </Link>
 
         <nav id="navbar" className="navbar">

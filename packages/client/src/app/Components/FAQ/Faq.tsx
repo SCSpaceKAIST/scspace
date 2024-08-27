@@ -1,11 +1,9 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link"; // next/link 사용
 import axios from "axios";
 import LoginCheck from "../Auth/LoginCheck";
-
-interface FAQProps {
-  main?: boolean;
-}
+import { LckResType } from "@depot/types/auth";
 
 interface FAQItem {
   id: number | null;
@@ -13,12 +11,12 @@ interface FAQItem {
   answer: string;
 }
 
-const FAQ: React.FC<FAQProps> = ({ main }) => {
+const FAQ: React.FC = () => {
   const [idList, setIdList] = useState<number[]>([]);
   const [faqList, setFaqList] = useState<FAQItem[]>([]);
   const [editIdx, setEditIdx] = useState<number | null>(null);
   const [login, setLogin] = useState<boolean>(false);
-  const [userInfo, setUserInfo] = useState<any>(null);
+  const [userInfo, setUserInfo] = useState<LckResType>(false);
 
   useEffect(() => {
     LoginCheck().then((result) => {
@@ -42,7 +40,7 @@ const FAQ: React.FC<FAQProps> = ({ main }) => {
     let body: FAQItem[] = await res.data;
 
     if (login === false) body = body.filter((d) => d.id !== 13);
-    if (login === true && userInfo.type !== "admin") {
+    if (userInfo !== false && userInfo.type !== "admin") {
       body = body.filter((d) => d.id !== 13);
     }
 
@@ -122,7 +120,7 @@ const FAQ: React.FC<FAQProps> = ({ main }) => {
   };
 
   const renderAdminButtons = (idx: number) => {
-    if (login && userInfo?.type === "admin") {
+    if (userInfo !== false && userInfo?.type === "admin") {
       if (editIdx === idx) {
         return (
           <div className="text-end">
@@ -185,37 +183,9 @@ const FAQ: React.FC<FAQProps> = ({ main }) => {
     return null;
   };
 
-  const header = !main ? (
-    <div>
-      <div className="breadcrumbs">
-        <div className="container">
-          <div className="d-flex justify-content-between align-items-center">
-            <h3>FAQ</h3>
-            <ol>
-              <li>
-                <Link href="/">Home</Link>
-              </li>
-              <li>
-                <Link href="/introduction">FAQ</Link>
-              </li>
-            </ol>
-          </div>
-        </div>
-      </div>
-      <section>
-        <div className="section-header">
-          <h2>FAQ</h2>
-          <p>FAQ</p>
-        </div>
-        <hr></hr>
-      </section>
-    </div>
-  ) : null;
-
   return (
     <section>
       <div>
-        {header}
         <section id="faq" className="faq">
           <div className="container-fluid">
             <div className="row gy-4">
@@ -226,7 +196,7 @@ const FAQ: React.FC<FAQProps> = ({ main }) => {
                   </h3>
                   <p>많이 주신 질문들에 대한 답변입니다.</p>
                 </div>
-                {login && userInfo?.type === "admin" && (
+                {userInfo !== false && userInfo?.type === "admin" && (
                   <div className="text-end">
                     <button
                       type="button"
