@@ -247,7 +247,7 @@ section {
   background: var(--color-white);
   box-shadow: 0px 2px 20px rgba(var(--color-secondary-rgb), 0.1);
 }
-.header .logo Image {
+.header .logo img {
   max-height: 40px;
   margin-right: 6px;
 }
@@ -1158,7 +1158,7 @@ section {
 .clients {
   padding: 0 0 60px 0;
 }
-.clients .swiper-slide Image {
+.clients .swiper-slide img {
   opacity: 0.5;
   transition: 0.3s;
   filter: grayscale(100);

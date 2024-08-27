@@ -5,10 +5,6 @@ import { useTranslation } from "react-i18next";
 import { LoginBtn } from "./Auth/LoginBtn";
 import Image from "next/image";
 
-interface HeaderProps {
-  t: (key: string) => string;
-}
-
 interface MenuItem {
   name: string;
   sub_menu: string[];

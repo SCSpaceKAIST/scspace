@@ -12,13 +12,13 @@ const PageHeader: React.FC<PageHeaderProps> = ({ link_to_prop, page_name }) => {
       <div className="breadcrumbs">
         <div className="container">
           <div className="d-flex justify-content-between align-items-center">
-            <h3>FAQ</h3>
+            <h3>{page_name}</h3>
             <ol>
               <li>
                 <Link href="/">Home</Link>
               </li>
               <li>
-                <Link href={link_to_prop}>FAQ</Link>
+                <Link href={link_to_prop}>{page_name}</Link>
               </li>
             </ol>
           </div>
