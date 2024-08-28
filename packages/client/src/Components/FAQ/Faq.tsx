@@ -48,6 +48,7 @@ const FAQ: React.FC = () => {
   };
 
   const callApiEdit = async (idx: number) => {
+    // not yet
     const url = "/api/faq/update";
     const config = {
       headers: {
@@ -60,12 +61,14 @@ const FAQ: React.FC = () => {
   };
 
   const callApiDelete = async (faq_id: number | null) => {
-    await axios.get("/api/faq/delete?id=" + faq_id);
+    // not yet
+    await axios.get("/api/faq" + faq_id);
     const updatedFaqs = await callApi();
     setFaqList(updatedFaqs);
   };
 
   const callApiAdd = async (idx: number) => {
+    // not yet
     const url = "/api/faq/create";
     const config = {
       headers: {

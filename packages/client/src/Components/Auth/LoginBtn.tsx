@@ -1,38 +1,15 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
-import axios, { AxiosResponse } from "axios";
+import LoginCheck from "@Components/Auth/LoginCheck";
 
 interface UserInfo {
   name: string;
   type: "user" | "manager" | "admin" | "chief";
 }
 
-interface SsoResponse {
-  data: any;
-}
-
-async function sendPost(): Promise<AxiosResponse<SsoResponse>> {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/verification`;
-  console.log(url);
-  const config = {
-    withCredentials: true,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-
-  return await axios.post<SsoResponse>(url, JSON.stringify({}), config);
-}
-
-async function LoginCheck(): Promise<any> {
-  const res = await sendPost();
-  const body = res.data;
-  return body;
-}
-
 export const LoginBtn: React.FC = () => {
-  const [login, setLogin] = useState<boolean | null>(null);
+  const [login, setLogin] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   useEffect(() => {

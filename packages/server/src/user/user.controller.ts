@@ -17,10 +17,7 @@ import { JwtAuthGuard } from 'src/auth/jwt/jwt-guard';
 
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @Get('profile/:id')
   findUserWithID(@Param('id') id: string) {

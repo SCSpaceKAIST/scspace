@@ -12,7 +12,9 @@
     "baseUrl": "./",
 
     "paths": {
-      "@depot/*": ["../depot/*"] // depot 디렉토리의 경로를 설정
+      "@depot/*": ["../depot/*"], // depot 디렉토리의 경로를 설정
+
+      "@schema": ["./src/db/schema"]
     },
 
     "incremental": true,

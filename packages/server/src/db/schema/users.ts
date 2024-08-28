@@ -1,10 +1,7 @@
 import {
   mysqlTable,
-  int,
   varchar,
   char,
-  uniqueIndex,
-  primaryKey,
   serial,
   mysqlEnum,
 } from 'drizzle-orm/mysql-core';

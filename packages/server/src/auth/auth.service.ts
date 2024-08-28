@@ -38,7 +38,7 @@ export class AuthService {
       Logger.log('PAYLOAD');
       const user = await this.userRepository.getUser(payload.user_id);
       Logger.log(user);
-      if (user === null) {
+      if (user === false) {
         Logger.log('ADD TO DB');
         await this.userRepository.addUser(payload);
       }
@@ -57,7 +57,7 @@ export class AuthService {
         path: '/',
       });
 
-      res.redirect(FRONT_BASE_URL + '/loginTest');
+      res.redirect(FRONT_BASE_URL + '/');
     } catch (error) {
       console.error(error);
       res.status(500).send('Internal Server Error');

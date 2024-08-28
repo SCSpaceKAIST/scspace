@@ -18,6 +18,7 @@
   "packageManager": "pnpm@9.5.0",
   "devDependencies": {
     "@types/passport-local": "^1.0.38",
+    "@types/react-pdf": "^7.0.0",
     "dotenv-cli": "^7.4.2",
     "drizzle-kit": "^0.24.0"
   },

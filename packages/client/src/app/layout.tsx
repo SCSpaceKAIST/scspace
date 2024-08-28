@@ -6,14 +6,18 @@ import "../../static/vendor/glightbox/css/glightbox.min.css";
 import "../../static/vendor/swiper/swiper-bundle.min.css";
 import "../../static/css/variables.css";
 import "../../static/css/main.css";
-import { Header } from "../Components/Header";
+import { Header } from "@Components/Header";
 import { ReactNode } from "react";
-import Footer from "../Components/Footer";
+import Footer from "@Components/Footer";
 
 export const metadata = {
   title: "학생문화공간위원회",
   description: "학생문화공간위원회 웹사이트",
-  viewport: "width=device-width, initial-scale=1.0, maximum-scale=1.0",
+  generateViewport: {
+    width: "device-width",
+    initialScale: 1.0,
+    maximumScale: 1.0,
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

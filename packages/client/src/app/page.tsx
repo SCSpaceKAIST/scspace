@@ -9,7 +9,7 @@ import Faq from "@Components/FAQ/Faq";
 import LoginCheck from "@Components/Auth/LoginCheck";
 import { LckResType } from "@depot/types/auth";
 import axios from "axios";
-import { UserType } from "@depot/types/user";
+import FastNotice from "@/Components/Main/FastNotice";
 
 interface MainProps {
   // Next.js에서는 history가 기본으로 제공되지 않으므로,
@@ -36,23 +36,23 @@ const Main: React.FC<MainProps> = (props) => {
 
   useEffect(() => {
     LoginCheck().then((result: LckResType) => {
-      if (result) {
-        studentID = result.user_id;
-        if (result.type === "admin") {
-          setGprValid(true);
-          setWsValid(true);
-        } else {
-          callApi_grp().then((result) => {
-            setGprValid(result);
-          });
-          callApi_ws().then((result) => {
-            setWsValid(result);
-          });
-        }
-      } else {
-        setGprValid(false);
-        setWsValid(false);
-      }
+      // if (result) {
+      //   studentID = result.user_id;
+      //   if (result.type === "admin") {
+      //     setGprValid(true);
+      //     setWsValid(true);
+      //   } else {
+      //     callApi_grp().then((result) => {
+      //       setGprValid(result);
+      //     });
+      //     callApi_ws().then((result) => {
+      //       setWsValid(result);
+      //     });
+      //   }
+      // } else {
+      //   setGprValid(false);
+      //   setWsValid(false);
+      // }
     });
   }, []);
 
@@ -60,6 +60,7 @@ const Main: React.FC<MainProps> = (props) => {
     <div>
       <div className="top-margin2">{/* <EmergencyNotice/> */}</div>
       <Banner />
+      <FastNotice />
       <Faq />
     </div>
   );

@@ -1,10 +1,11 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
-import { schema } from 'src/db/schema';
+import { schema } from '@schema';
 import { eq } from 'drizzle-orm';
 import { UserTypeWithoutID } from '@depot/types/user';
 import { UserType } from '@depot/types/user';
+import { LckResType } from '@depot/types/auth/loginCheckResponse';
 
 @Injectable()
 export class UserRepository {
@@ -12,7 +13,7 @@ export class UserRepository {
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
   ) {}
 
-  async getUser(user_id: string): Promise<UserType | false> {
+  async getUser(user_id: string): Promise<LckResType> {
     // const user = await this.db.query.users.findFirst({
     //   where: eq(schema.users.user_id, user_id),
     // });

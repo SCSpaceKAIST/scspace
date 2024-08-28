@@ -8,10 +8,7 @@ import { stringify } from 'querystring';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
-    private readonly userRepository: UserRepository,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   async getUser(user_id: string) {
     return await this.userRepository.getUser(user_id);

@@ -64,12 +64,14 @@ export const Header: React.FC = () => {
   ]);
 
   const onClickEvent = () => {
+    // 모바일 화면에서 탭 나오게 하는 부분
     document.querySelector("body")?.classList.toggle("mobile-nav-active");
     document.querySelector("#nav_menu")?.classList.toggle("bi-list");
     document.querySelector("#nav_menu")?.classList.toggle("bi-x");
   };
 
   const onClickEvent2 = (idx: number) => {
+    // 모바일 화면에서 공간 예약 등 세부 링크나오게
     document.querySelector("#button" + idx)?.classList.toggle("bi-chevron-up");
     document
       .querySelector("#button" + idx)
