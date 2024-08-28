@@ -4,16 +4,11 @@ import Link from "next/link"; // next/link 사용
 import axios from "axios";
 import LoginCheck from "../Auth/LoginCheck";
 import { LckResType } from "@depot/types/auth";
-
-interface FAQItem {
-  id: number | null;
-  question: string;
-  answer: string;
-}
+import { FaqType } from "@depot/types/faq";
 
 const FAQ: React.FC = () => {
   const [idList, setIdList] = useState<number[]>([]);
-  const [faqList, setFaqList] = useState<FAQItem[]>([]);
+  const [faqList, setFaqList] = useState<FaqType[]>([]);
   const [editIdx, setEditIdx] = useState<number | null>(null);
   const [login, setLogin] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<LckResType>(false);
@@ -35,9 +30,11 @@ const FAQ: React.FC = () => {
       .catch((err) => console.log(err));
   }, [login]);
 
-  const callApi = async (): Promise<FAQItem[]> => {
+  const callApi = async (): Promise<FaqType[]> => {
     const res = await axios.get("/api/faq/all");
-    let body: FAQItem[] = await res.data;
+    console.log("res");
+    console.log(res.data);
+    let body: FaqType[] = await res.data;
 
     if (login === false) body = body.filter((d) => d.id !== 13);
     if (userInfo !== false && userInfo.type !== "admin") {
@@ -87,7 +84,7 @@ const FAQ: React.FC = () => {
     } else {
       setFaqList([
         ...faqList,
-        { id: null, question: "Question", answer: "Answer" },
+        //{ id: null, question: "Question", answer: "Answer" }, //추가한 값으로 나중에 변경
       ]);
     }
   };
@@ -109,7 +106,7 @@ const FAQ: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     let updatedFaqList = [...faqList];
-    //updatedFaqList[idx][e.target.name as keyof FAQItem] = e.target.value;
+    //updatedFaqList[idx][e.target.name as keyof FaqType] = e.target.value;
 
     setFaqList(updatedFaqList);
   };

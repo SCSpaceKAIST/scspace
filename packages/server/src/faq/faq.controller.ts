@@ -16,13 +16,12 @@ import { FaqService } from './faq.service';
 export class FaqController {
   constructor(private readonly faqService: FaqService) {}
 
+  @Get('all')
+  findUserWithID(@Param('id') id: string) {
+    return this.faqService.getFaqAll();
+  }
   @Get(':id')
   findFaqWithID(@Param('id') id: number) {
     return this.faqService.getFaq(id);
-  }
-
-  @Get('')
-  findUserWithID(@Param('id') id: string) {
-    return this.faqService.getFaqAll();
   }
 }

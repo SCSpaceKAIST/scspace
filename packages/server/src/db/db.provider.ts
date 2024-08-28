@@ -3,6 +3,7 @@ import { drizzle } from 'drizzle-orm/mysql2';
 import * as mysql from 'mysql2/promise';
 export const DBAsyncProvider = 'dbProvider';
 import { config } from 'dotenv';
+import { Logger } from '@nestjs/common';
 
 export const DBProvider = [
   {
@@ -10,9 +11,8 @@ export const DBProvider = [
     useFactory: async () => {
       config();
       const { DB_HOST, DB_PORT, DB_USER, DB_PWD, DB_NAME } = process.env;
-      //   const DB_URL = `mysql://${DB_USER}:${DB_PWD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`;
-      //   console.log(DB_URL);
-      //   console.log(mysql);
+      // const DB_URL = `mysql://${DB_USER}:${DB_PWD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`;
+      // Logger.log(DB_URL);;
       const connection = await mysql.createConnection({
         host: DB_HOST,
         port: Number(DB_PORT), // 포트를 숫자로 변환

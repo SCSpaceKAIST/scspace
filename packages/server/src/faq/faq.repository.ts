@@ -3,6 +3,7 @@ import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema } from '@schema';
 import { eq } from 'drizzle-orm';
+import { FaqType } from '@depot/types/faq';
 
 @Injectable()
 export class FaqRepository {
@@ -10,13 +11,21 @@ export class FaqRepository {
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
   ) {}
 
-  async getFaqAll() {
-    const result = await this.db.select().from(schema.faqs);
+  async getFaqAll(): Promise<FaqType[] | false> {
+    const result = await this.db
+      .select({
+        id: schema.faqs.id,
+        question: schema.faqs.question,
+        answer: schema.faqs.answer,
+        time_post: schema.faqs.time_post,
+        time_edit: schema.faqs.time_edit,
+      })
+      .from(schema.faqs);
     Logger.log('FAQs ' + JSON.stringify(result));
-    return result.length > 0 ? result[0] : false;
+    return result.length > 0 ? result : false;
   }
 
-  async getFaqById(faq_id: number) {
+  async getFaqById(faq_id: number): Promise<FaqType | false> {
     const result = await this.db
       .select()
       .from(schema.faqs)
