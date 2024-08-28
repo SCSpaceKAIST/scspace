@@ -6,12 +6,13 @@ import axios from "axios";
 import moment from "moment";
 import LoginCheck from "@Components/Auth/LoginCheck";
 import { useTranslation } from "react-i18next";
+import { NoticeType } from "@depot/types/notice";
 
 const Notice: React.FC = () => {
   const { t } = useTranslation();
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPageNumber, setTPN] = useState(1);
-  const [list, setList] = useState<any[]>([]);
+  const [list, setList] = useState<NoticeType[]>([]);
   const [login, setLogin] = useState(false);
   const [UserInfo, setUserInfo] = useState<any | null>(null);
 
@@ -89,7 +90,7 @@ const Notice: React.FC = () => {
                           contents.time_edit ?? contents.time_post
                         ).format("YYYY-MM-DD HH:mm:ss")}
                       </td>
-                      <td>{contents.hits}</td>
+                      <td>{contents.views}</td>
                     </tr>
                   );
                 })}

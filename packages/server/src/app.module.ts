@@ -6,6 +6,7 @@ import { DBModule } from './db/db.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { FaqModule } from './faq/faq.module';
+import { NoticeModule } from './notice/notice.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { FaqModule } from './faq/faq.module';
     DBModule,
     AuthModule,
     FaqModule,
+    NoticeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

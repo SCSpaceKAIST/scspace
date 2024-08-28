@@ -3,30 +3,30 @@ import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema } from '@schema';
 import { eq } from 'drizzle-orm';
-import { FaqType } from '@depot/types/faq';
+import { NoticeType } from '@depot/types/notice';
 
 @Injectable()
-export class FaqRepository {
+export class NoticeRepository {
   constructor(
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
   ) {}
 
-  async getFaqAll(): Promise<FaqType[] | false> {
-    const result = await this.db.select().from(schema.faqs);
-    Logger.log('FAQs ' + JSON.stringify(result));
+  async getNoticeAll(): Promise<NoticeType[] | false> {
+    const result = await this.db.select().from(schema.notices);
+    Logger.log('Notices ' + JSON.stringify(result));
     return result.length > 0 ? result : false;
   }
 
-  async getFaqById(faq_id: number): Promise<FaqType | false> {
+  async getNoticeById(notice_id: number): Promise<NoticeType | false> {
     const result = await this.db
       .select()
-      .from(schema.faqs)
-      .where(eq(schema.faqs.id, faq_id));
-    Logger.log('FAQ by ID ' + JSON.stringify(result));
+      .from(schema.notices)
+      .where(eq(schema.notices.id, notice_id));
+    Logger.log('Notice by ID ' + JSON.stringify(result));
     return result.length > 0 ? result[0] : false;
   }
 
-  async addFaq() {
+  async addNotice() {
     // await this.db.insert(schema.users).values(user);
     // Logger.log('ADD USER ' + JSON.stringify(user));
     // Logger.log(user.user_id);
