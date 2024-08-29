@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "72f7d81a-df0d-411f-8d8c-1e2490692ba3",
+  "id": "2c3e83cf-1159-4c42-b93b-21329af139fd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "asks": {
@@ -273,10 +273,10 @@
       "columns": {
         "reservation_id": {
           "name": "reservation_id",
-          "type": "int",
+          "type": "serial",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": true
         },
         "user_id": {
           "name": "user_id",
@@ -320,33 +320,27 @@
           "notNull": true,
           "autoincrement": false
         },
-        "time_edit": {
-          "name": "time_edit",
-          "type": "datetime",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "content": {
           "name": "content",
           "type": "json",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "comment": {
           "name": "comment",
           "type": "varchar(300)",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "state": {
           "name": "state",
-          "type": "enum('grant','wait','rejected')",
+          "type": "enum('grant','wait','received','rejected')",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "'wait'"
         },
         "worker_need": {
           "name": "worker_need",

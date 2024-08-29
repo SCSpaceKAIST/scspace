@@ -1,4 +1,4 @@
-type ReservationStateEnum = "grant" | "wait" | "rejected";
+type ReservationStateEnum = "grant" | "wait" | "rejected" | "received";
 type WorkerNeedEnum = "unnecessary" | "required" | "completed" | "failed";
 
 // Table: reservations
@@ -10,9 +10,8 @@ export interface ReservationType {
   time_from: Date;
   time_to: Date;
   time_post: Date;
-  time_edit: Date;
-  content: any; // json
-  comment: string; // varchar(300)
+  content: Object | null; // json
+  comment: string | null; // varchar(300)
   state: ReservationStateEnum;
   worker_need: WorkerNeedEnum;
 }

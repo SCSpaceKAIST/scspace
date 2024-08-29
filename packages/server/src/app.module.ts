@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { FaqModule } from './faq/faq.module';
 import { NoticeModule } from './notice/notice.module';
+import { AskModule } from './ask/ask.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { NoticeModule } from './notice/notice.module';
     AuthModule,
     FaqModule,
     NoticeModule,
+    AskModule,
   ],
   controllers: [AppController],
   providers: [AppService],

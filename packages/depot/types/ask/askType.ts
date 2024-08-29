@@ -1,7 +1,7 @@
 export type AskStateEnum = "wait" | "receive" | "solve";
 
 // Table: asks
-export interface AsksType {
+export interface AskType {
   id: number;
   user_id: string; // char(8)
   time_post: Date;

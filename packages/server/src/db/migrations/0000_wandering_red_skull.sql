@@ -43,17 +43,16 @@ CREATE TABLE `passwords` (
 );
 --> statement-breakpoint
 CREATE TABLE `reservations` (
-	`reservation_id` int NOT NULL,
+	`reservation_id` serial AUTO_INCREMENT NOT NULL,
 	`user_id` char(8) NOT NULL,
 	`team_id` int,
 	`space_id` int NOT NULL,
 	`time_from` datetime NOT NULL,
 	`time_to` datetime NOT NULL,
 	`time_post` datetime NOT NULL,
-	`time_edit` datetime NOT NULL,
-	`content` json NOT NULL,
-	`comment` varchar(300) NOT NULL,
-	`state` enum('grant','wait','rejected') NOT NULL,
+	`content` json,
+	`comment` varchar(300),
+	`state` enum('grant','wait','received','rejected') NOT NULL DEFAULT 'wait',
 	`worker_need` enum('unnecessary','required','completed','failed') NOT NULL DEFAULT 'unnecessary',
 	CONSTRAINT `reservations_reservation_id` PRIMARY KEY(`reservation_id`)
 );
