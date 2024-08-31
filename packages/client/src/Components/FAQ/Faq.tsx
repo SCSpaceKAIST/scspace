@@ -1,28 +1,17 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Link from "next/link"; // next/link 사용
+
 import axios from "axios";
-import LoginCheck from "../Auth/LoginCheck";
-import { LckResType } from "@depot/types/auth";
+
 import { FaqType } from "@depot/types/faq";
+import { useLoginCheck } from "@/Hooks/useLoginCheck";
+import ConditionalButton from "../_commons/ConditionalButton";
 
 const FAQ: React.FC = () => {
   const [idList, setIdList] = useState<number[]>([]);
   const [faqList, setFaqList] = useState<FaqType[]>([]);
   const [editIdx, setEditIdx] = useState<number | null>(null);
-  const [login, setLogin] = useState<boolean>(false);
-  const [userInfo, setUserInfo] = useState<LckResType>(false);
-
-  useEffect(() => {
-    LoginCheck().then((result) => {
-      if (result !== false) {
-        setLogin(true);
-        setUserInfo(result);
-      } else {
-        setLogin(false);
-      }
-    });
-  }, []);
+  const { login, userInfo } = useLoginCheck();
 
   useEffect(() => {
     callApi()
@@ -37,7 +26,7 @@ const FAQ: React.FC = () => {
     let body: FaqType[] = await res.data;
 
     if (login === false) body = body.filter((d) => d.id !== 13);
-    if (userInfo !== false && userInfo.type !== "admin") {
+    if (userInfo?.type !== "admin") {
       body = body.filter((d) => d.id !== 13);
     }
 
@@ -120,7 +109,7 @@ const FAQ: React.FC = () => {
   };
 
   const renderAdminButtons = (idx: number) => {
-    if (userInfo !== false && userInfo?.type === "admin") {
+    if (userInfo?.type === "admin") {
       if (editIdx === idx) {
         return (
           <div className="text-end">
@@ -196,17 +185,14 @@ const FAQ: React.FC = () => {
                   </h3>
                   <p>많이 주신 질문들에 대한 답변입니다.</p>
                 </div>
-                {userInfo !== false && userInfo?.type === "admin" && (
-                  <div className="text-end">
-                    <button
-                      type="button"
-                      className="modalButton2"
-                      onClick={() => addFaq("add")}
-                    >
-                      추가하기
-                    </button>
-                  </div>
-                )}
+
+                <ConditionalButton
+                  condition={login === true && userInfo?.type === "admin"}
+                  className="modalButton2"
+                  onClick={() => addFaq("add")}
+                >
+                  추가하기
+                </ConditionalButton>
                 <div className="accordion accordion-flush px-xl-5">
                   {faqList.map((contents, idx) => (
                     <div className="accordion-item" key={idx}>

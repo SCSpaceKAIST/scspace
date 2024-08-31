@@ -1,5 +1,5 @@
 import Ask from "@Components/Ask/Ask";
-import PageHeader from "@Components/PageHeader";
+import PageHeader from "@/Components/_commons/PageHeader";
 
 export default function AskPage() {
   return (

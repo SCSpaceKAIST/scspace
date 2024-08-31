@@ -1,27 +1,10 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
-import LoginCheck from "@Components/Auth/LoginCheck";
-
-interface UserInfo {
-  name: string;
-  type: "user" | "manager" | "admin" | "chief";
-}
+import { useLoginCheck } from "@/Hooks/useLoginCheck";
 
 export const LoginBtn: React.FC = () => {
-  const [login, setLogin] = useState<boolean>(false);
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const { login, userInfo } = useLoginCheck();
 
-  useEffect(() => {
-    LoginCheck().then((result: any) => {
-      if (result !== false) {
-        setLogin(true);
-        setUserInfo(result);
-      } else {
-        setLogin(false);
-      }
-    });
-  }, []);
   return (
     <>
       {login ? (

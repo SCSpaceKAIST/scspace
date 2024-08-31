@@ -1,58 +1,48 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import axios from "axios";
 import moment from "moment";
-import LoginCheck from "@Components/Auth/LoginCheck";
+
 import { useTranslation } from "react-i18next";
 import { NoticeType } from "@depot/types/notice";
+import BoardPageSelector from "@Components/_commons/BoardPageSelector";
+import ConditionalButton from "@Components/_commons/ConditionalButton";
+import { useLinkPush } from "@Hooks/useLinkPush";
+import { useBoardData } from "@/Hooks/useBoardData";
 
 const Notice: React.FC = () => {
   const { t } = useTranslation();
-  const [pageNumber, setPageNumber] = useState(1);
-  const [totalPageNumber, setTPN] = useState(1);
-  const [list, setList] = useState<NoticeType[]>([]);
-  const [login, setLogin] = useState(false);
-  const [UserInfo, setUserInfo] = useState<any | null>(null);
 
-  const callApi = async () => {
-    const res = await axios.get("/api/notice/all");
-    return res.data;
-  };
+  const { linkPush } = useLinkPush();
 
-  const onClickHandler = (link: string) => {
-    window.location.href = link; // Next.js에서는 `router.push`를 사용하거나, 간단히 `window.location.href`를 이용할 수 있습니다.
-  };
-
-  useEffect(() => {
-    LoginCheck().then((result) => {
-      if (result !== false) {
-        setLogin(true);
-        setUserInfo(result);
-      }
+  const ROW_PER_PAGE = 10;
+  const { list, pageNumber, totalPageNumber, setPageNumber, login, userInfo } =
+    useBoardData<NoticeType>({
+      apiEndpoint: "/api/notice/all",
     });
 
-    callApi()
-      .then((res) => {
-        setList(res);
-        setTPN(Math.ceil(res.length / 10));
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  const callApi = async (): Promise<NoticeType[]> => {
+    const res = await axios.get("/api/notice/all");
+    //return res.data;
+
+    // res.data를 time_post 기준으로 내림차순 정렬
+    const sortedData = res.data.sort((a: NoticeType, b: NoticeType) => {
+      return new Date(b.time_post).getTime() - new Date(a.time_post).getTime();
+    });
+
+    return sortedData;
+  };
 
   return (
     <div id="main">
       <section>
-        <div className="container">
-          {login === true && UserInfo?.type === "admin" ? (
-            <div className="text-end">
-              <button type="button" className="modalButton1">
-                <Link href="/notice/create">작성하기</Link>
-              </button>
-            </div>
-          ) : null}
-        </div>
+        <ConditionalButton
+          condition={login === true && userInfo?.type === "admin"}
+          btnLink="/notice/create"
+        >
+          작성하기
+        </ConditionalButton>
         <br />
         <div className="container">
           <table className="table manage">
@@ -66,14 +56,15 @@ const Notice: React.FC = () => {
             </thead>
             <tbody>
               {list
-                .slice((pageNumber - 1) * 10, pageNumber * 10)
+                .slice(
+                  (pageNumber - 1) * ROW_PER_PAGE,
+                  pageNumber * ROW_PER_PAGE
+                )
                 .map((contents, idx) => {
                   return (
                     <tr
                       key={idx}
-                      onClick={() =>
-                        onClickHandler("/notice/view/" + contents.id)
-                      }
+                      onClick={() => linkPush("/notice/view/" + contents.id)}
                     >
                       <td>
                         {contents.important ? (
@@ -81,7 +72,7 @@ const Notice: React.FC = () => {
                             필독
                           </b>
                         ) : (
-                          (pageNumber - 1) * 10 + idx + 1
+                          (pageNumber - 1) * ROW_PER_PAGE + idx + 1
                         )}
                       </td>
                       <td>{contents.title}</td>
@@ -97,23 +88,12 @@ const Notice: React.FC = () => {
             </tbody>
           </table>
         </div>
-        <section className="blog">
-          <div className="blog-pagination">
-            <ul className="justify-content-center">
-              {[...Array(totalPageNumber)]
-                .map((_, i) => i + 1)
-                .map((pagenum) => (
-                  <li
-                    key={pagenum}
-                    className={pageNumber === pagenum ? "active" : ""}
-                    onClick={() => setPageNumber(pagenum)}
-                  >
-                    <Link href="#">{pagenum}</Link>
-                  </li>
-                ))}
-            </ul>
-          </div>
-        </section>
+
+        <BoardPageSelector
+          totalPageNumber={totalPageNumber}
+          pageNumber={pageNumber}
+          setPageNumber={setPageNumber}
+        />
       </section>
     </div>
   );

@@ -6,7 +6,7 @@ import Banner from "@Components/Main/Banner";
 import Faq from "@Components/FAQ/Faq";
 //import FastNotice from "./notice/FastNotice";
 //import FAQ from "./faq/FAQ";
-import LoginCheck from "@Components/Auth/LoginCheck";
+import LoginCheck from "@/Hooks/LoginCheck";
 import { LckResType } from "@depot/types/auth";
 import axios from "axios";
 import FastNotice from "@/Components/Main/FastNotice";

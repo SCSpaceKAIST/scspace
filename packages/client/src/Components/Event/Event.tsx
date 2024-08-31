@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useTranslation } from "react-i18next";
 //import AOS from "aos";
 //import "aos/dist/aos.css";
-import LoginCheck from "@Components/Auth/LoginCheck";
+import LoginCheck from "@/Hooks/LoginCheck";
 
 const Event: React.FC = () => {
   const { t } = useTranslation();

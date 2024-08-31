@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import { UserType } from "@depot/types/user";
 import { LckResType } from "@depot/types/auth";
 
 async function sendPost(): Promise<AxiosResponse<LckResType>> {

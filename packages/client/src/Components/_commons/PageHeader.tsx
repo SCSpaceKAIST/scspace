@@ -9,6 +9,23 @@ export interface PageHeaderProps {
   sub_name: string;
 }
 
+const LineHeader: React.FC<PageHeaderProps> = ({
+  link_to_prop,
+  page_name,
+  sub_name,
+}) => {
+  const { t } = useTranslation();
+  return (
+    <section>
+      <div className="section-header">
+        <h2>{t(page_name)}</h2>
+        <p>{t(sub_name)}</p>
+      </div>
+      <hr></hr>
+    </section>
+  );
+};
+
 const PageHeader: React.FC<PageHeaderProps> = ({
   link_to_prop,
   page_name,
@@ -17,13 +34,6 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   const { t } = useTranslation();
   return (
     <div>
-      <section>
-        <div className="section-header">
-          <h2>{t(page_name)}</h2>
-          <p>{t(sub_name)}</p>
-        </div>
-        <hr></hr>
-      </section>
       <div className="breadcrumbs">
         <div className="container">
           <div className="d-flex justify-content-between align-items-center">

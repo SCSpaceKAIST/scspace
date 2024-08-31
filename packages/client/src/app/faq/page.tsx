@@ -1,5 +1,5 @@
 import Faq from "@Components/FAQ/Faq";
-import PageHeader from "@Components/PageHeader";
+import PageHeader from "@/Components/_commons/PageHeader";
 export default function FaqPage() {
   return (
     <div>

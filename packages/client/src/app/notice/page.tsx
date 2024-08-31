@@ -1,5 +1,5 @@
 import Notice from "@Components/Notice/Notice";
-import PageHeader from "@Components/PageHeader";
+import PageHeader from "@/Components/_commons/PageHeader";
 export default function NoticePage() {
   return (
     <div>

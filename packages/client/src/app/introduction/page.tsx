@@ -1,5 +1,5 @@
 import Introduction from "@/Components/Introduction/Introduction";
-import PageHeader from "@Components/PageHeader";
+import PageHeader from "@/Components/_commons/PageHeader";
 
 export default function IntroPage() {
   return (

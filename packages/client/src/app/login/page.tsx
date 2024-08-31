@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation"; // next/router 대신 next/navigation 사용
-import LoginCheck from "@/Components/Auth/LoginCheck";
+import LoginCheck from "@/Hooks/LoginCheck";
 
 const LoginPage: React.FC = () => {
   const router = useRouter(); // next/router 대신 next/navigation 사용

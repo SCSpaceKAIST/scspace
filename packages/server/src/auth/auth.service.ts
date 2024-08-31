@@ -37,13 +37,13 @@ export class AuthService {
       const payload = this.ssoToUser(data);
       Logger.log('PAYLOAD');
       const user = await this.userRepository.getUser(payload.user_id);
-      Logger.log(user);
+      Logger.log(JSON.stringify(user));
       if (user === false) {
         Logger.log('ADD TO DB');
         await this.userRepository.addUser(payload);
       }
 
-      const token = this.jwtService.sign(payload, {
+      const token = this.jwtService.sign(user ? user : payload, {
         expiresIn: '7d',
         issuer: 'scspace',
         subject: 'userInfo',

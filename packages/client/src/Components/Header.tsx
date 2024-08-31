@@ -49,7 +49,13 @@ export const Header: React.FC = () => {
       ],
     },
     {
-      name: "예약",
+      name: "예약하기",
+      sub_menu: ["예약하기", "예약 현황"],
+      menu_link: "#",
+      sub_menu_link: ["/reservation", "/calendar"],
+    },
+    {
+      name: "예약 현황",
       sub_menu: ["예약하기", "예약 현황"],
       menu_link: "#",
       sub_menu_link: ["/reservation", "/calendar"],

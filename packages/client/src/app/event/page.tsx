@@ -1,5 +1,5 @@
 import Event from "@/Components/Event/Event";
-import PageHeader from "@Components/PageHeader";
+import PageHeader from "@/Components/_commons/PageHeader";
 export default function EventPage() {
   return (
     <div>
