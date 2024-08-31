@@ -7,12 +7,14 @@ export interface PageHeaderProps {
   link_to_prop: string;
   page_name: string;
   sub_name: string;
+  parent_name?: string;
 }
 
 const LineHeader: React.FC<PageHeaderProps> = ({
   link_to_prop,
   page_name,
   sub_name,
+  parent_name = "",
 }) => {
   const { t } = useTranslation();
   return (
@@ -30,6 +32,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   link_to_prop,
   page_name,
   sub_name,
+  parent_name,
 }) => {
   const { t } = useTranslation();
   return (
@@ -43,7 +46,9 @@ const PageHeader: React.FC<PageHeaderProps> = ({
                 <Link href="/">Home</Link>
               </li>
               <li>
-                <Link href={link_to_prop}>{t(page_name)}</Link>
+                <Link href={link_to_prop}>
+                  {t(parent_name ? parent_name : page_name)}
+                </Link>
               </li>
             </ol>
           </div>

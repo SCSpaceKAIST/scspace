@@ -1,18 +1,21 @@
 import { useState, useEffect } from "react";
 import LoginCheck from "@Hooks/LoginCheck";
 import { UserType } from "@depot/types/user";
+import { useLinkPush } from "./useLinkPush";
 
 export const useLoginCheck = () => {
   const [login, setLogin] = useState<boolean>(false);
-  const [userInfo, setUserInfo] = useState<UserType>();
-
+  const [userInfo, setUserInfo] = useState<UserType | null | undefined>(
+    undefined
+  );
+  const { linkPush } = useLinkPush();
   useEffect(() => {
     //userInfo 초기화
     LoginCheck().then((result) => {
       if (result !== false) {
         setUserInfo(result);
       } else {
-        setUserInfo(undefined);
+        setUserInfo(null);
       }
     });
   }, []);
@@ -35,5 +38,21 @@ export const useLoginCheck = () => {
     return <div />; // 로그인되지 않은 상태에서는 빈 div 반환
   };
 
-  return { login, withUserInfo, userInfo };
+  const needLogin = () => {
+    if (userInfo === undefined) return;
+    if (userInfo === null) {
+      alert("로그인이 필요합니다." + JSON.stringify(userInfo));
+      linkPush("/login");
+    }
+  };
+
+  const needAdmin = () => {
+    if (userInfo === undefined) return;
+    needLogin();
+    if (userInfo !== null && userInfo?.type !== "admin") {
+      alert("관리자만 접근 가능한 페이지입니다.");
+      linkPush("/");
+    }
+  };
+  return { login, withUserInfo, userInfo, needLogin, needAdmin };
 };

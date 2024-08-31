@@ -1,11 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import axios from "axios";
 import moment from "moment";
 import { VscEye } from "react-icons/vsc";
-import { NoticeType } from "@depot/types/notice";
+import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
+import { NoticeType } from "@depot/types/notice"; // NoticeType 타입 가져오기
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
+import { useLinkPush } from "@/Hooks/useLinkPush";
 
 interface NoticeViewProps {
   view_id: string;
@@ -13,33 +17,44 @@ interface NoticeViewProps {
 
 const NoticeView: React.FC<NoticeViewProps> = ({ view_id }) => {
   const [content, setContent] = useState<NoticeType | null>(null);
-
+  const { t } = useTranslation();
   const { login, userInfo } = useLoginCheck();
-  const handle = { wait: "대기중", receive: "접수됨", solve: "해결됨" };
-
+  const { linkPush } = useLinkPush();
   useEffect(() => {
-    if (view_id) {
-      callApi(view_id)
-        .then((res) => setContent(res))
-        .catch((err) => console.log(err));
-    }
-  }, [view_id]);
+    const fetchNotice = async () => {
+      if (view_id) {
+        const res = await axios.get(`/api/notice/${view_id}`);
+        setContent(res.data);
+      }
+    };
 
-  const callApi = async (id: string) => {
-    const res = await axios.get(`/api/Notice/${id}`);
-    return res.data;
+    fetchNotice();
+  }, []);
+
+  const callApiDelete = async () => {
+    if (view_id) {
+      await axios.get(`/api/notice/delete?id=${view_id}`);
+      linkPush("/notice");
+    }
   };
 
-  if (!content) return <div>Loading...</div>;
+  const editNotice = () => {
+    // Notice 수정 구현
+  };
+
+  if (!content) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div id="main">
       <section className="blog">
-        <div className="container">
-          <h4>
-            <b>문의사항</b>
-          </h4>
+        <div className="section-header">
+          <h2>{t("공지사항")}</h2>
+          <p>Notice</p>
           <hr />
+        </div>
+        <div className="container">
           <div className="row g-5">
             <div>
               <article className="blog-details">
@@ -47,13 +62,9 @@ const NoticeView: React.FC<NoticeViewProps> = ({ view_id }) => {
                 <div className="meta-top">
                   <ul>
                     <li className="d-flex align-items-center">
-                      <i className="bi bi-person"></i>
-                      {content.commenter_id}
-                    </li>
-                    <li className="d-flex align-items-center">
                       <i className="bi bi-clock"></i>{" "}
                       <time>
-                        {moment(content.time_post).format(
+                        {moment(content.time_edit || content.time_post).format(
                           "YYYY-MM-DD HH:mm:ss"
                         )}
                       </time>
@@ -64,22 +75,40 @@ const NoticeView: React.FC<NoticeViewProps> = ({ view_id }) => {
                     </li>
                   </ul>
                 </div>
-                <div className="content">
+                <div className="content newline">
                   <p>{content.content}</p>
                 </div>
-                <div className="meta-bottom manage">
-                  <p className="cats">
-                    <div className={content.state} />
-                    {handle[content.state]}
-                  </p>
+                <div className="meta-bottom">
+                  <i className="bi bi-folder"></i>
+                  <ul className="cats">
+                    <li>
+                      <Link href="/notice">Notice</Link>
+                    </li>
+                  </ul>
                 </div>
               </article>
             </div>
           </div>
-          {login && userInfo?.type === "admin" ? (
-            <NoticeCommentLeave view_id={view_id} />
-          ) : (
-            <NoticeComment content={content} />
+        </div>
+        <br />
+        <div className="container">
+          {login && userInfo?.type === "admin" && (
+            <div className="text-end">
+              <button
+                type="button"
+                className="modalButton2"
+                onClick={editNotice}
+              >
+                수정
+              </button>
+              <button
+                type="button"
+                className="modalButton1"
+                onClick={callApiDelete}
+              >
+                삭제
+              </button>
+            </div>
           )}
         </div>
       </section>
