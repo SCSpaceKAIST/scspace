@@ -1,21 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import axios from "axios";
 import moment from "moment";
 import { VscEye } from "react-icons/vsc";
-import AskComment from "@Components/Ask/AskComment";
-import { AskType } from "@depot/types/ask";
-import AskCommentLeave from "@Components/Manage/AskCommentLeave";
+import { NoticeType } from "@depot/types/notice";
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
 
-interface AskViewProps {
+interface NoticeViewProps {
   view_id: string;
 }
 
-const AskView: React.FC<AskViewProps> = ({ view_id }) => {
-  const [content, setContent] = useState<AskType | null>(null);
+const NoticeView: React.FC<NoticeViewProps> = ({ view_id }) => {
+  const [content, setContent] = useState<NoticeType | null>(null);
 
   const { login, userInfo } = useLoginCheck();
   const handle = { wait: "대기중", receive: "접수됨", solve: "해결됨" };
@@ -29,7 +26,7 @@ const AskView: React.FC<AskViewProps> = ({ view_id }) => {
   }, [view_id]);
 
   const callApi = async (id: string) => {
-    const res = await axios.get(`/api/ask/${id}`);
+    const res = await axios.get(`/api/Notice/${id}`);
     return res.data;
   };
 
@@ -51,7 +48,7 @@ const AskView: React.FC<AskViewProps> = ({ view_id }) => {
                   <ul>
                     <li className="d-flex align-items-center">
                       <i className="bi bi-person"></i>
-                      {content.user_id}
+                      {content.commenter_id}
                     </li>
                     <li className="d-flex align-items-center">
                       <i className="bi bi-clock"></i>{" "}
@@ -80,9 +77,9 @@ const AskView: React.FC<AskViewProps> = ({ view_id }) => {
             </div>
           </div>
           {login && userInfo?.type === "admin" ? (
-            <AskCommentLeave view_id={view_id} />
+            <NoticeCommentLeave view_id={view_id} />
           ) : (
-            <AskComment content={content} />
+            <NoticeComment content={content} />
           )}
         </div>
       </section>
@@ -90,4 +87,4 @@ const AskView: React.FC<AskViewProps> = ({ view_id }) => {
   );
 };
 
-export default AskView;
+export default NoticeView;

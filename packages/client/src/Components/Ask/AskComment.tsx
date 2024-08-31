@@ -5,7 +5,7 @@ interface ShowCommentProps {
 }
 
 const ShowComment: React.FC<ShowCommentProps> = ({ content }) => {
-  return content ? (
+  return content.comment ? (
     <div>
       <br />
       <article className="blog-details">
