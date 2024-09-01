@@ -2,8 +2,8 @@ import { Injectable, Inject, Logger } from '@nestjs/common';
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema } from '@schema';
-import { eq } from 'drizzle-orm';
-import { NoticeType } from '@depot/types/notice';
+import { eq, sql } from 'drizzle-orm';
+import { NoticeInputType, NoticeType } from '@depot/types/notice';
 
 @Injectable()
 export class NoticeRepository {
@@ -26,9 +26,24 @@ export class NoticeRepository {
     return result.length > 0 ? result[0] : false;
   }
 
-  async addNotice() {
-    // await this.db.insert(schema.users).values(user);
-    // Logger.log('ADD USER ' + JSON.stringify(user));
-    // Logger.log(user.user_id);
+  async addNotice(noticeContent: NoticeInputType): Promise<Boolean> {
+    const prev = await this.getNoticeAll();
+    const newNotice = {
+      ...noticeContent,
+      time_post: new Date(),
+      views: 0,
+    };
+    Logger.log('ADD Notice ' + JSON.stringify(newNotice));
+    await this.db.insert(schema.notices).values(newNotice);
+    const post = await this.getNoticeAll();
+    return prev && post ? prev.length !== post.length : false;
+  }
+  async incrementViewsById(id: number) {
+    await this.db
+      .update(schema.notices)
+      .set({
+        views: sql`${schema.notices.views} + 1`,
+      })
+      .where(eq(schema.notices.id, id));
   }
 }

@@ -11,10 +11,9 @@ export interface PageHeaderProps {
 }
 
 const LineHeader: React.FC<PageHeaderProps> = ({
-  link_to_prop,
+  link_to_prop = "",
   page_name,
   sub_name,
-  parent_name = "",
 }) => {
   const { t } = useTranslation();
   return (
@@ -37,6 +36,11 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   const { t } = useTranslation();
   return (
     <div>
+      <LineHeader
+        page_name={page_name}
+        sub_name={sub_name}
+        link_to_prop=""
+      ></LineHeader>
       <div className="breadcrumbs">
         <div className="container">
           <div className="d-flex justify-content-between align-items-center">

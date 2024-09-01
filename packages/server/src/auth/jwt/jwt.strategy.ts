@@ -9,7 +9,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { UserRepository } from 'src/user/user.repository';
-import { UserTypeWithoutID } from '@depot/types/user';
+import { UserInputType } from '@depot/types/user';
 import { UserType } from '@depot/types/user';
 
 @Injectable()
@@ -28,7 +28,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: UserTypeWithoutID) {
+  async validate(payload: UserInputType) {
     try {
       const user = await this.userRepository.getUser(payload.user_id);
       if (user) {

@@ -22,14 +22,14 @@ const NoticeView: React.FC<NoticeViewProps> = ({ view_id }) => {
   const { linkPush } = useLinkPush();
   useEffect(() => {
     const fetchNotice = async () => {
-      if (view_id) {
+      if (view_id && typeof window !== "undefined") {
         const res = await axios.get(`/api/notice/${view_id}`);
         setContent(res.data);
       }
     };
-
+    alert("API call");
     fetchNotice();
-  }, []);
+  }, [view_id]);
 
   const callApiDelete = async () => {
     if (view_id) {
@@ -49,11 +49,6 @@ const NoticeView: React.FC<NoticeViewProps> = ({ view_id }) => {
   return (
     <div id="main">
       <section className="blog">
-        <div className="section-header">
-          <h2>{t("공지사항")}</h2>
-          <p>Notice</p>
-          <hr />
-        </div>
         <div className="container">
           <div className="row g-5">
             <div>

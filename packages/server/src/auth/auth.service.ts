@@ -5,7 +5,7 @@ import * as crypto from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { UserRepository } from 'src/user/user.repository';
 import { Logger } from '@nestjs/common';
-import { UserTypeWithoutID } from '@depot/types/user';
+import { UserInputType } from '@depot/types/user';
 interface UserInfo {
   ku_std_no: string | null;
   kaist_uid: string;
@@ -113,13 +113,12 @@ export class AuthService {
     // }
   };
 
-  private ssoToUser = (ssoPayload: UserInfo): UserTypeWithoutID => {
+  private ssoToUser = (ssoPayload: UserInfo): UserInputType => {
     // 첫 가입시 DB에 넣기 좋게 변경하는 함수
-
     return {
       user_id: ssoPayload.ku_std_no
         ? ssoPayload.ku_std_no
-        : ssoPayload.ku_employee_number,
+        : (ssoPayload.ku_employee_number ?? '1'),
       name: ssoPayload.ku_kname ? ssoPayload.ku_kname : ssoPayload.displayname,
       email: ssoPayload.mail,
       type: 'user',

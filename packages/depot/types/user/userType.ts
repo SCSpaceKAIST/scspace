@@ -7,3 +7,4 @@ export interface UserType {
   email: string;
   type: UserTypeEnum;
 }
+export type UserInputType = Omit<UserType, "id">;

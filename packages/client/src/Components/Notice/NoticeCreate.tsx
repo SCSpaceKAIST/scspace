@@ -5,41 +5,50 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useLoginCheck } from "@Hooks/useLoginCheck";
-
-interface NoticeCreateProps {
-  title?: string;
-  content?: string;
-  important?: boolean;
-}
+import { NoticeInputType } from "@depot/types/notice";
+import { useLinkPush } from "@/Hooks/useLinkPush";
 
 const NoticeCreate: React.FC = () => {
-  const [_state, _setState] = useState<NoticeCreateProps>({
+  const { userInfo } = useLoginCheck();
+  const { linkPush } = useLinkPush();
+  const [noticeContent, setNoticeContent] = useState<NoticeInputType>({
     title: "",
     content: "",
-    important: false,
+    important: 0,
+    user_id: userInfo?.user_id ? userInfo?.user_id : "",
   });
-  const { userInfo } = useLoginCheck();
-  const router = useRouter();
 
-  const sendPost = () => {
-    const url = `/api/notice/`;
-    const config = {
+  useEffect(() => {
+    setNoticeContent({
+      title: "",
+      content: "",
+      important: 0,
+      user_id: userInfo?.user_id ? userInfo?.user_id : "",
+    });
+  }, [userInfo]);
+
+  const sendPost = async () => {
+    alert(JSON.stringify(noticeContent));
+
+    const response = await fetch("/api/notice", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-    };
-    return axios.post(url, JSON.stringify(_state), config);
+      body: JSON.stringify(noticeContent),
+    });
+    return response;
   };
 
   const checkSubmit = () => {
-    return true;
+    return userInfo ? true : false;
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (checkSubmit()) {
       sendPost().then(() => {
-        router.push("/notice");
+        linkPush("/notice");
       });
     } else {
       alert("Error occurred. Please check the form.");
@@ -49,16 +58,16 @@ const NoticeCreate: React.FC = () => {
   const handleValueChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    _setState((prevState) => ({
+    setNoticeContent((prevState) => ({
       ...prevState,
       [event.target.name]: event.target.value,
     }));
   };
 
   const onChangeValue = () => {
-    _setState((prevState) => ({
+    setNoticeContent((prevState) => ({
       ...prevState,
-      important: !prevState.important,
+      important: prevState.important ? 0 : 1,
     }));
   };
 
@@ -75,7 +84,7 @@ const NoticeCreate: React.FC = () => {
                     className="form-control"
                     name="title"
                     placeholder="제목"
-                    value={_state.title}
+                    value={noticeContent.title}
                     onChange={handleValueChange}
                     required
                   />
@@ -85,7 +94,7 @@ const NoticeCreate: React.FC = () => {
                     className="form-control"
                     name="content"
                     placeholder="공지 내용"
-                    value={_state.content}
+                    value={noticeContent.content}
                     onChange={handleValueChange}
                     required
                   />
@@ -96,7 +105,7 @@ const NoticeCreate: React.FC = () => {
                     name="important"
                     type="checkbox"
                     id="isImportantNoticeChkbx"
-                    checked={_state.important}
+                    checked={Boolean(noticeContent.important)}
                     onChange={onChangeValue}
                   />
                   <label

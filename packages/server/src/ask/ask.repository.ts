@@ -12,16 +12,16 @@ export class AskRepository {
   ) {}
 
   async getAskAll(): Promise<AskType[] | false> {
-    const result = await this.db.select().from(schema.asks);
+    const result = (await this.db.select().from(schema.asks)) as AskType[];
     Logger.log('Asks ' + JSON.stringify(result));
-    return result.length > 0 ? result : false;
+    return result ? result : false;
   }
 
   async getAskById(ask_id: number): Promise<AskType | false> {
-    const result = await this.db
+    const result = (await this.db
       .select()
       .from(schema.asks)
-      .where(eq(schema.asks.id, ask_id));
+      .where(eq(schema.asks.id, ask_id))) as AskType[];
     Logger.log('Ask by ID ' + JSON.stringify(result));
     return result.length > 0 ? result[0] : false;
   }
