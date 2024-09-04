@@ -1,16 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import axios from "axios";
 import { useLinkPush } from "@/Hooks/useLinkPush";
+import { AskStateEnum, AskType } from "@depot/types/ask";
+import { sendPut } from "@/Hooks/useApi";
+import { useEffect } from "react";
+import { UserType } from "@depot/types/user";
 
 interface AskCommentLeaveProps {
-  view_id: string;
+  content: AskType | null;
+  setContent: React.Dispatch<React.SetStateAction<AskType | null>>;
+  userInfo: UserType;
 }
 
-const AskCommentLeave: React.FC<AskCommentLeaveProps> = ({ view_id }) => {
-  const [comment, setComment] = useState<string>("");
-  const [dot, setDot] = useState<"wait" | "receive" | "solve">("wait");
+const AskCommentLeave: React.FC<AskCommentLeaveProps> = ({
+  content,
+  setContent,
+  userInfo,
+}) => {
   const { linkPush } = useLinkPush();
   const handleStates = {
     wait: "대기중",
@@ -19,17 +25,22 @@ const AskCommentLeave: React.FC<AskCommentLeaveProps> = ({ view_id }) => {
   };
 
   useEffect(() => {
-    callApi()
-      .then((res) => {
-        setComment(res.comment);
-        setDot(res.state);
-      })
-      .catch((err) => console.log(err));
-  }, [view_id]);
+    if (userInfo)
+      setContent({ ...content, commenter_id: userInfo.user_id } as AskType);
+  }, [userInfo]);
 
-  const callApi = async () => {
-    const res = await axios.get(`/api/ask/comment/id?id=${view_id}`);
-    return res.data;
+  const setComment = (newComment: string) => {
+    setContent((prevContent) => {
+      if (prevContent === null) return null; // 현재 content가 없는 경우 null 반환
+      return { ...prevContent, comment: newComment }; // 기존 content를 복사하고, comment만 새로운 값으로 업데이트
+    });
+  };
+
+  const setState = (newState: AskStateEnum) => {
+    setContent((prevContent) => {
+      if (prevContent === null) return null; // 현재 state 없는 경우 null 반환
+      return { ...prevContent, state: newState }; // 기존 content를 복사하고, state만 새로운 값으로 업데이트
+    });
   };
 
   const handleChange = (
@@ -37,27 +48,13 @@ const AskCommentLeave: React.FC<AskCommentLeaveProps> = ({ view_id }) => {
   ) => {
     const { name, value } = e.target;
     if (name === "comment") setComment(value);
-    if (name === "dot") setDot(value as "wait" | "receive" | "solve");
-  };
-
-  const sendPost = async () => {
-    const url = "/api/ask/comment/create";
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    await axios.post(url, JSON.stringify({ comment, dot, view_id }), config);
-  };
-
-  const checkSubmit = () => {
-    return true;
+    if (name === "dot") setState(value as AskStateEnum);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (checkSubmit()) {
-      sendPost()
+    if (content) {
+      sendPut("/ask/comment", content)
         .then(() => {
           linkPush("/ask");
         })
@@ -74,7 +71,7 @@ const AskCommentLeave: React.FC<AskCommentLeaveProps> = ({ view_id }) => {
         <form onSubmit={handleSubmit}>
           <select
             name="dot"
-            value={dot}
+            value={content?.state}
             onChange={handleChange}
             className="ask-handle"
           >
@@ -88,7 +85,7 @@ const AskCommentLeave: React.FC<AskCommentLeaveProps> = ({ view_id }) => {
               <textarea
                 name="comment"
                 className="form-control"
-                value={comment}
+                value={content?.comment}
                 onChange={handleChange}
                 placeholder="Your Comment"
               ></textarea>

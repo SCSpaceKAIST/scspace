@@ -7,7 +7,7 @@ import moment from "moment";
 import { VscEye } from "react-icons/vsc";
 import AskComment from "@Components/Ask/AskComment";
 import { AskType } from "@depot/types/ask";
-import AskCommentLeave from "@Components/Manage/AskCommentLeave";
+import AskCommentLeave from "@/Components/Ask/AskCommentLeave";
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
 
 interface AskViewProps {
@@ -68,19 +68,23 @@ const AskView: React.FC<AskViewProps> = ({ view_id }) => {
                   </ul>
                 </div>
                 <div className="content">
-                  <p>{content.content}</p>
+                  <div>{content.content}</div>
                 </div>
                 <div className="meta-bottom manage">
-                  <p className="cats">
+                  <div className="cats">
                     <div className={content.state} />
                     {handle[content.state]}
-                  </p>
+                  </div>
                 </div>
               </article>
             </div>
           </div>
           {login && userInfo?.type === "admin" ? (
-            <AskCommentLeave view_id={view_id} />
+            <AskCommentLeave
+              content={content}
+              setContent={setContent}
+              userInfo={userInfo}
+            />
           ) : (
             <AskComment content={content} />
           )}

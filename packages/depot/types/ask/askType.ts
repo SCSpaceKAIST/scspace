@@ -13,3 +13,14 @@ export interface AskType {
   comment: string; // text
   commenter_id: string; // char(8)
 }
+
+export type AskInputType = Omit<
+  AskType,
+  | "id"
+  | "time_post"
+  | "time_edit"
+  | "views"
+  | "state"
+  | "comment"
+  | "commenter_id"
+>;

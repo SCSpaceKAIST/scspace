@@ -1,0 +1,1 @@
+export const noticeUrl = "/notice";

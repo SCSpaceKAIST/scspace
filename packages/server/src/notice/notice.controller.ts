@@ -14,8 +14,9 @@ import {
 import { NoticeService } from './notice.service';
 import { NoticeInputType } from '@depot/types/notice';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt-guard';
+import { noticeUrl } from '@depot/urls/notice';
 
-@Controller('notice')
+@Controller(noticeUrl)
 export class NoticeController {
   constructor(private readonly noticeService: NoticeService) {}
 

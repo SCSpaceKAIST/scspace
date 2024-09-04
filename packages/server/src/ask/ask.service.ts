@@ -1,4 +1,4 @@
-import { AskType } from '@depot/types/ask';
+import { AskInputType, AskType } from '@depot/types/ask';
 import { Injectable } from '@nestjs/common';
 import { AskRepository } from './ask.repository';
 
@@ -6,11 +6,18 @@ import { AskRepository } from './ask.repository';
 export class AskService {
   constructor(private readonly askRepository: AskRepository) {}
 
-  async getAsk(Ask_id: number): Promise<AskType | false> {
-    return await this.askRepository.getAskById(Ask_id);
+  async get(id: number): Promise<AskType | false> {
+    await this.askRepository.incrementViewsById(id);
+    return await this.askRepository.getById(id);
   }
 
-  async getAskAll(): Promise<AskType[] | false> {
-    return await this.askRepository.getAskAll();
+  async getAll(): Promise<AskType[] | false> {
+    return await this.askRepository.getAll();
+  }
+  async add(newObj: AskInputType): Promise<Boolean> {
+    return await this.askRepository.add(newObj);
+  }
+  async addComment(content: AskType) {
+    await this.askRepository.addComment(content);
   }
 }

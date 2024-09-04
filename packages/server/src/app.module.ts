@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { FaqModule } from './faq/faq.module';
 import { NoticeModule } from './notice/notice.module';
 import { AskModule } from './ask/ask.module';
+import { SpaceModule } from './space/space.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AskModule } from './ask/ask.module';
     FaqModule,
     NoticeModule,
     AskModule,
+    SpaceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

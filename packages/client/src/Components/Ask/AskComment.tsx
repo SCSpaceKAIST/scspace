@@ -1,10 +1,10 @@
 import { AskType } from "@depot/types/ask";
 
-interface ShowCommentProps {
+interface AskCommentProps {
   content: AskType;
 }
 
-const ShowComment: React.FC<ShowCommentProps> = ({ content }) => {
+const AskComment: React.FC<AskCommentProps> = ({ content }) => {
   return content.comment ? (
     <div>
       <br />
@@ -12,7 +12,7 @@ const ShowComment: React.FC<ShowCommentProps> = ({ content }) => {
         <h4 className="title">문의에 대한 답변입니다.</h4>
         <div className="meta-top" />
         <div className="content">
-          <p>{content.comment}</p>
+          <div>{content.comment}</div>
         </div>
       </article>
     </div>
@@ -26,4 +26,4 @@ const ShowComment: React.FC<ShowCommentProps> = ({ content }) => {
   );
 };
 
-export default ShowComment;
+export default AskComment;

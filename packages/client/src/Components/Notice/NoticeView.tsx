@@ -5,11 +5,11 @@ import Link from "next/link";
 import axios from "axios";
 import moment from "moment";
 import { VscEye } from "react-icons/vsc";
-import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { NoticeType } from "@depot/types/notice"; // NoticeType 타입 가져오기
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
 import { useLinkPush } from "@/Hooks/useLinkPush";
+import { noticeUrl } from "@depot/urls/notice";
 
 interface NoticeViewProps {
   view_id: string;
@@ -27,20 +27,17 @@ const NoticeView: React.FC<NoticeViewProps> = ({ view_id }) => {
         setContent(res.data);
       }
     };
-    alert("API call");
     fetchNotice();
   }, [view_id]);
 
   const callApiDelete = async () => {
     if (view_id) {
       await axios.get(`/api/notice/delete?id=${view_id}`);
-      linkPush("/notice");
+      linkPush(noticeUrl);
     }
   };
 
-  const editNotice = () => {
-    // Notice 수정 구현
-  };
+  const editNotice = () => {};
 
   if (!content) {
     return <div>Loading...</div>;
@@ -77,7 +74,7 @@ const NoticeView: React.FC<NoticeViewProps> = ({ view_id }) => {
                   <i className="bi bi-folder"></i>
                   <ul className="cats">
                     <li>
-                      <Link href="/notice">Notice</Link>
+                      <Link href={noticeUrl}>Notice</Link>
                     </li>
                   </ul>
                 </div>

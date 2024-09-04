@@ -3,6 +3,7 @@
 import PageHeader from "@/Components/_commons/PageHeader";
 import NoticeCreate from "@/Components/Notice/NoticeCreate";
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
+import { noticeUrl } from "@depot/urls/notice";
 
 export default function NoticeCreatePage() {
   const { needAdmin } = useLoginCheck();
@@ -10,7 +11,7 @@ export default function NoticeCreatePage() {
   return (
     <div>
       <PageHeader
-        link_to_prop={"/notice"}
+        link_to_prop={noticeUrl}
         page_name={"공지사항 작성"}
         sub_name={"Notice"}
         parent_name="공지사항"

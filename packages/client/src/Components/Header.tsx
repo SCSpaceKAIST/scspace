@@ -4,6 +4,9 @@ import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { LoginBtn } from "./Auth/LoginBtn";
 import Image from "next/image";
+import { noticeUrl } from "@depot/urls/notice";
+import { askUrl } from "@depot/urls/ask";
+import { SpaceTypeNames, SpaceTypesArray } from "@depot/types/space";
 
 interface MenuItem {
   name: string;
@@ -15,7 +18,7 @@ interface MenuItem {
 export const Header: React.FC = () => {
   const { t } = useTranslation();
   const [menu, setMenu] = useState<MenuItem[]>([
-    { name: "공지사항", sub_menu: [], menu_link: "/notice", sub_menu_link: [] },
+    { name: "공지사항", sub_menu: [], menu_link: noticeUrl, sub_menu_link: [] },
     {
       name: "소개",
       sub_menu: [],
@@ -24,47 +27,39 @@ export const Header: React.FC = () => {
     },
     {
       name: "공간",
-      sub_menu: [
-        "개인연습실",
-        "피아노실",
-        "합주실",
-        "무예실",
-        "울림홀",
-        "미래홀",
-        "세미나실",
-        "창작공방",
-        "오픈스페이스",
-      ],
+      sub_menu: SpaceTypesArray.map((value, idx) => {
+        return SpaceTypeNames[value];
+      }),
       menu_link: "#",
-      sub_menu_link: [
-        "/space/individual-practice-room",
-        "/space/piano-room",
-        "/space/group-practice-room",
-        "/space/dance-studio",
-        "/space/ullim-hall",
-        "/space/mirae-hall",
-        "/space/seminar-room",
-        "/space/workshop",
-        "/space/open-space",
-      ],
+      sub_menu_link: SpaceTypesArray.map((value, idx) => {
+        return `/space/${idx}`;
+      }),
     },
     {
       name: "예약하기",
-      sub_menu: ["예약하기", "예약 현황"],
+      sub_menu: SpaceTypesArray.map((value, idx) => {
+        return SpaceTypeNames[value];
+      }),
       menu_link: "#",
-      sub_menu_link: ["/reservation", "/calendar"],
+      sub_menu_link: SpaceTypesArray.map((value, idx) => {
+        return `/reservation/${idx}`;
+      }),
     },
     {
       name: "예약 현황",
-      sub_menu: ["예약하기", "예약 현황"],
+      sub_menu: SpaceTypesArray.map((value, idx) => {
+        return SpaceTypeNames[value];
+      }),
       menu_link: "#",
-      sub_menu_link: ["/reservation", "/calendar"],
+      sub_menu_link: SpaceTypesArray.map((value, idx) => {
+        return `/calendar/${idx}`;
+      }),
     },
     {
       name: "문의",
       sub_menu: ["FAQ", "문의사항"],
       menu_link: "#",
-      sub_menu_link: ["/faq", "/ask"],
+      sub_menu_link: ["/faq", askUrl],
     },
     { name: "이벤트", sub_menu: [], menu_link: "/event", sub_menu_link: [] },
   ]);

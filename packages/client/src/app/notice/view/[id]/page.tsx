@@ -3,15 +3,16 @@
 import PageHeader from "@/Components/_commons/PageHeader";
 import { useParams } from "next/navigation"; // useParams를 사용하여 동적 라우팅 파라미터를 가져옴
 import NoticeView from "@/Components/Notice/NoticeView";
+import { noticeUrl } from "@depot/urls/notice";
 
-export default function AskPage() {
+export default function AskViewPage() {
   const params = useParams();
   const id = params.id; // URL의 [id] 부분을 가져옴
 
   return (
     <div>
       <PageHeader
-        link_to_prop={"/notice"}
+        link_to_prop={noticeUrl}
         page_name={"공지사항"}
         sub_name={"Notice"}
       />

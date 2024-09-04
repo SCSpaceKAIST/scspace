@@ -72,7 +72,7 @@ const Notice: React.FC = () => {
                             필독
                           </b>
                         ) : (
-                          (pageNumber - 1) * ROW_PER_PAGE + idx + 1
+                          contents.id //(pageNumber - 1) * ROW_PER_PAGE + idx + 1
                         )}
                       </td>
                       <td>{contents.title}</td>

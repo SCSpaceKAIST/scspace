@@ -4,17 +4,17 @@ import { NoticeInputType, NoticeType } from '@depot/types/notice';
 
 @Injectable()
 export class NoticeService {
-  constructor(private readonly NoticeRepository: NoticeRepository) {}
+  constructor(private readonly noticeRepository: NoticeRepository) {}
 
   async getNotice(notice_id: number): Promise<NoticeType | false> {
-    await this.NoticeRepository.incrementViewsById(notice_id);
-    return await this.NoticeRepository.getNoticeById(notice_id);
+    await this.noticeRepository.incrementViewsById(notice_id);
+    return await this.noticeRepository.getNoticeById(notice_id);
   }
 
   async getNoticeAll(): Promise<NoticeType[] | false> {
-    return await this.NoticeRepository.getNoticeAll();
+    return await this.noticeRepository.getNoticeAll();
   }
   async addNotice(newNotice: NoticeInputType): Promise<Boolean> {
-    return await this.NoticeRepository.addNotice(newNotice);
+    return await this.noticeRepository.addNotice(newNotice);
   }
 }
