@@ -1,12 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { LoginBtn } from "./Auth/LoginBtn";
 import Image from "next/image";
 import { noticeUrl } from "@depot/urls/notice";
 import { askUrl } from "@depot/urls/ask";
-import { SpaceTypeNames, SpaceTypesArray } from "@depot/types/space";
+import { SpaceTypeNames, SpaceTypesArray, SpaceType } from "@depot/types/space";
+import { sendGet } from "@/Hooks/useApi";
 
 interface MenuItem {
   name: string;
@@ -30,9 +31,9 @@ export const Header: React.FC = () => {
       sub_menu: SpaceTypesArray.map((value, idx) => {
         return SpaceTypeNames[value];
       }),
-      menu_link: "#",
+      menu_link: "/space",
       sub_menu_link: SpaceTypesArray.map((value, idx) => {
-        return `/space/${idx}`;
+        return `/${idx}`;
       }),
     },
     {
@@ -40,9 +41,9 @@ export const Header: React.FC = () => {
       sub_menu: SpaceTypesArray.map((value, idx) => {
         return SpaceTypeNames[value];
       }),
-      menu_link: "#",
+      menu_link: "/reservation",
       sub_menu_link: SpaceTypesArray.map((value, idx) => {
-        return `/reservation/${idx}`;
+        return `/${idx}`;
       }),
     },
     {
@@ -50,19 +51,50 @@ export const Header: React.FC = () => {
       sub_menu: SpaceTypesArray.map((value, idx) => {
         return SpaceTypeNames[value];
       }),
-      menu_link: "#",
+      menu_link: "/calendar",
       sub_menu_link: SpaceTypesArray.map((value, idx) => {
-        return `/calendar/${idx}`;
+        return `/${idx}`;
       }),
     },
     {
       name: "문의",
       sub_menu: ["FAQ", "문의사항"],
-      menu_link: "#",
+      menu_link: "",
       sub_menu_link: ["/faq", askUrl],
     },
     { name: "이벤트", sub_menu: [], menu_link: "/event", sub_menu_link: [] },
   ]);
+
+  useEffect(() => {
+    sendGet<SpaceType[]>("/space/all").then((res) => {
+      if (res) {
+        setMenu([
+          ...menu.slice(0, 3),
+          {
+            name: "예약하기",
+            sub_menu: res.map((value, idx) => {
+              return value.name;
+            }),
+            menu_link: "/reservation",
+            sub_menu_link: res.map((value, idx) => {
+              return `/${value.space_id}`;
+            }),
+          },
+          {
+            name: "예약 현황",
+            sub_menu: res.map((value, idx) => {
+              return value.name;
+            }),
+            menu_link: "/calendar",
+            sub_menu_link: res.map((value, idx) => {
+              return `/${value.space_id}`;
+            }),
+          },
+          menu[5],
+        ]);
+      }
+    });
+  }, []);
 
   const onClickEvent = () => {
     // 모바일 화면에서 탭 나오게 하는 부분
@@ -117,7 +149,12 @@ export const Header: React.FC = () => {
                     <li>
                       {menuItem.sub_menu.map((sub_name, idx2) => {
                         return (
-                          <Link key={idx2} href={menuItem.sub_menu_link[idx2]}>
+                          <Link
+                            key={idx2}
+                            href={
+                              menuItem.menu_link + menuItem.sub_menu_link[idx2]
+                            }
+                          >
                             {t(sub_name)}
                           </Link>
                         );

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import LoginCheck from "@Hooks/LoginCheck";
-import { UserType } from "@depot/types/user";
+import { UserType, UserTypeEnum } from "@depot/types/user";
 import { useLinkPush } from "./useLinkPush";
 
 export const useLoginCheck = () => {
@@ -54,5 +54,26 @@ export const useLoginCheck = () => {
       linkPush("/");
     }
   };
-  return { login, withUserInfo, userInfo, needLogin, needAdmin };
+
+  const ckLogin = () => {
+    return login;
+  };
+
+  const ckAdmin = (type: UserTypeEnum) => {
+    if (userInfo?.type === type) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  return {
+    login,
+    withUserInfo,
+    userInfo,
+    needLogin,
+    needAdmin,
+    ckLogin,
+    ckAdmin,
+  };
 };

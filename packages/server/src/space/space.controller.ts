@@ -20,6 +20,11 @@ export class SpaceController {
     return this.spaceService.getSpaceIntroByID(id);
   }
 
+  @Get('all')
+  findAllSpace() {
+    return this.spaceService.getSpaceAll();
+  }
+
   @Get(':id')
   findSpaceByID(@Param('id') id: number) {
     return this.spaceService.getSpaceByID(id);

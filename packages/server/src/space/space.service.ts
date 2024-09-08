@@ -44,4 +44,8 @@ export class SpaceService {
       return false;
     else return { ...res } as SpaceIntroductionOutputType;
   }
+
+  async getSpaceAll(): Promise<SpaceType[] | false> {
+    return await this.spaceRepository.getSpaceAll();
+  }
 }

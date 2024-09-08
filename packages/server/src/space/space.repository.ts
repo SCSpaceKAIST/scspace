@@ -64,4 +64,10 @@ export class SpaceRepository {
       return result[0].info;
     }
   }
+
+  async getSpaceAll(): Promise<SpaceType[] | false> {
+    const result = (await this.db.select().from(schema.spaces)) as SpaceType[];
+    Logger.log('All Space ' + JSON.stringify(result));
+    return result ? result : false;
+  }
 }

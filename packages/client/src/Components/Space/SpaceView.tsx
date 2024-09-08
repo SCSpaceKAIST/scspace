@@ -89,7 +89,7 @@ const SpaceView: React.FC<SpaceViewProps> = ({ space_id }) => {
                           setMenu(0);
                         }}
                       >
-                        Intro
+                        소개
                       </button>
                     </li>
                     <li>
@@ -100,7 +100,7 @@ const SpaceView: React.FC<SpaceViewProps> = ({ space_id }) => {
                           setMenu(1);
                         }}
                       >
-                        Usage
+                        사용법
                       </button>
                     </li>
                     <li>
@@ -111,7 +111,7 @@ const SpaceView: React.FC<SpaceViewProps> = ({ space_id }) => {
                           setMenu(2);
                         }}
                       >
-                        Caution
+                        주의사항
                       </button>
                     </li>
                   </ul>
