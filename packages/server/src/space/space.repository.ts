@@ -23,7 +23,7 @@ export class SpaceRepository {
     const result = (await this.db
       .select()
       .from(schema.spaces)
-      .where(eq(schema.spaces, space_id))) as SpaceType[];
+      .where(eq(schema.spaces.space_id, space_id))) as SpaceType[];
     Logger.log('Space ' + JSON.stringify(result));
     return result ? result[0] : false;
   }

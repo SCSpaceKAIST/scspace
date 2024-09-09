@@ -10,7 +10,7 @@ import {
 } from "@depot/types/space";
 import { useSpaces } from "@/Hooks/useSpaces";
 
-const Calendar: React.FC = () => {
+const Reservation: React.FC = () => {
   const { t } = useTranslation();
   const { spaceArray } = useSpaces();
   return (
@@ -29,16 +29,16 @@ const Calendar: React.FC = () => {
                 <div className="tab-pane active show">
                   <div className="row gy-4">
                     <div>
-                      <h3>공간위 예약 확인</h3>
+                      <h3>공간위 예약</h3>
                       <hr />
                       <p>
-                        <b>아래 공간들의 예약을 확인하실 수 있습니다</b>
+                        <b>아래 공간들의 예약을 진행하실 수 있습니다</b>
                       </p>
                       <hr />
                       {spaceArray?.map((space) => {
                         return (
                           <div>
-                            <Link href={`/calendar/${space.space_id}`}>
+                            <Link href={`/reservation/${space.space_id}`}>
                               {space.name}
                             </Link>
                             <br />
@@ -57,4 +57,4 @@ const Calendar: React.FC = () => {
   );
 };
 
-export default Calendar;
+export default Reservation;

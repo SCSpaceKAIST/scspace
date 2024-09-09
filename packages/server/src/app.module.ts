@@ -9,6 +9,7 @@ import { FaqModule } from './faq/faq.module';
 import { NoticeModule } from './notice/notice.module';
 import { AskModule } from './ask/ask.module';
 import { SpaceModule } from './space/space.module';
+import { ReservationModule } from './reservation/reservation.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { SpaceModule } from './space/space.module';
     NoticeModule,
     AskModule,
     SpaceModule,
+    ReservationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

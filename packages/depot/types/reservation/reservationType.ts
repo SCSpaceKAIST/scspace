@@ -20,7 +20,7 @@ export interface ReservationType {
   worker_need: WorkerNeedEnum;
 }
 
-export type ContentTypeEnum =
+export type ReservationContentTypeEnum =
   | IndividualContentType
   | PianoContentType
   | SeminarContentType
