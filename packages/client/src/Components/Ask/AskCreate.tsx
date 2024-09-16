@@ -31,9 +31,9 @@ const AskCreate: React.FC = () => {
     e.preventDefault();
     if (checkSubmit()) {
       //alert(JSON.stringify(content));
-      sendPost(askUrl, content)
+      sendPost<boolean>(askUrl, content)
         .then((res) => {
-          console.log(res.status);
+          console.log(res);
           linkPush(askUrl);
         })
         .catch((err) => console.error(err));

@@ -8,5 +8,6 @@ import { SpaceRepository } from './space.repository';
   imports: [DBModule],
   providers: [SpaceService, SpaceRepository],
   controllers: [SpaceController],
+  exports: [SpaceRepository],
 })
 export class SpaceModule {}

@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
+import { EventInput } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
@@ -12,7 +13,7 @@ import { ReservationType } from "@depot/types/reservation";
 import { SpaceType } from "@depot/types/space";
 import { useSpaces } from "@/Hooks/useSpaces";
 import { useLinkPush } from "@/Hooks/useLinkPush";
-import { EventInput } from "@fullcalendar/core";
+import { Tooltip } from "react-tooltip"; // 수정된 import 문
 
 interface ResourceData {
   text: string;
@@ -27,7 +28,7 @@ interface CalendarProps {
 }
 
 const resourcesData: ResourceData[] = [
-  // Your resourcesData items
+  // 필요한 리소스 데이터를 여기에 추가하세요
 ];
 
 const spaceDict: { [key: string]: string } = {};
@@ -67,34 +68,50 @@ const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
     if (!spaceArray) return [];
     return data.map((r) => ({
       id: r.reservation_id.toString(),
-      resourceId: spaceArray[r.space_id]?.name || "", // Ensure this mapping is correct
-      start: r.time_from, // FullCalendar expects ISO date strings or JavaScript Date objects
+      resourceId:
+        spaceArray.find((space) => space.space_id === r.space_id)?.name || "",
+      start: r.time_from,
       end: r.time_to,
-      title: `${moment(r.time_from).format("HH:mm")} - ${moment(r.time_to).format("HH:mm")} ${r.user_id}`,
+      title: `${moment(r.time_from).format("HH:mm")} - ${moment(
+        r.time_to
+      ).format("HH:mm")} | ${r.user_id}`,
+
       extendedProps: { user_id: r.user_id },
     }));
   };
 
   const handleEventClick = (info: any) => {
     const event = info.event;
+
+    // moment를 사용하여 날짜 형식을 MM:DD HH:MM으로 변환
+    const formattedStart = moment(event.start).format("MM월 DD일 HH:mm");
+    const formattedEnd = moment(event.end).format("MM월 DD일 HH:mm");
     alert(
-      `Reservation ID: ${event.id}\nUser ID: ${event.extendedProps.user_id}\nFrom: ${event.start.toISOString()}\nTo: ${event.end.toISOString()}`
+      `Reservation ID: ${event.id}\nUser ID: ${event.extendedProps.user_id}\nFrom: ${formattedStart}\nTo: ${formattedEnd}`
     );
   };
 
   const handleEventMouseEnter = (info: any) => {
     const event = info.event;
-    // Optionally show additional details in a tooltip or popup
-    console.log(
-      `Event details:\nFrom: ${event.start.toISOString()}\nTo: ${event.end.toISOString()}\nUser ID: ${event.extendedProps.user_id}`
-    );
+    // 추가적인 이벤트 정보를 표시하려면 이곳에 코드를 추가하세요
   };
 
   const eventContent = (eventInfo: any) => {
     return (
-      <div>
-        <b>{eventInfo.event.title}</b>
-      </div>
+      <>
+        <div
+          style={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+          data-tooltip-id="event-tooltip"
+          data-tooltip-content={eventInfo.event.title}
+        >
+          <b>{eventInfo.event.title}</b>
+        </div>
+        <Tooltip id="event-tooltip" place="top" />
+      </>
     );
   };
 
