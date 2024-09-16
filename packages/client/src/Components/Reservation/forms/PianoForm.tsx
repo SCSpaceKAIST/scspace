@@ -56,7 +56,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
 
   return (
     <div>
-      <h3>개인연습실 예약 폼</h3>
+      <h3>피아노실 예약 폼</h3>
       <TimeTooltips spaceType={space.space_type} />
       <hr />
       <DateTimeInput

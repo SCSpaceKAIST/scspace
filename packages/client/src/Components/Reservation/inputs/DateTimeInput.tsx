@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useTranslation } from "react-i18next";
@@ -24,6 +24,27 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({
 }) => {
   const { t } = useTranslation();
 
+  const [diffInMs, setDiffInMs] = useState<number>(
+    dateTo.getTime() - dateFrom.getTime()
+  );
+  useEffect(() => {
+    if (dateFrom.getTime() + diffInMs <= maxDate.getTime()) {
+      handleDateToChange(new Date(dateFrom.getTime() + diffInMs));
+    } else {
+      handleDateToChange(new Date(maxDate.getTime()));
+    }
+  }, [dateFrom]);
+
+  useEffect(() => {
+    setDiffInMs(dateTo.getTime() - dateFrom.getTime());
+  }, [dateTo]);
+
+  // 시간 조정 함수 (분 단위로 추가 또는 감소)
+  const adjustMinutesToDateFrom = (minutes: number) => {
+    const newDate = new Date(dateFrom.getTime() + minutes * 60000);
+    handleDateFromChange(newDate);
+  };
+
   // 시간 조정 함수 (분 단위로 추가 또는 감소)
   const adjustMinutesToDateTo = (minutes: number) => {
     const newDate = new Date(dateTo.getTime() + minutes * 60000);
@@ -32,7 +53,6 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({
 
   // 총 예약 시간 계산 함수
   const getTotalReservationTime = () => {
-    const diffInMs = dateTo.getTime() - dateFrom.getTime();
     const diffInMinutes = Math.floor(diffInMs / 60000);
     const hours = Math.floor(diffInMinutes / 60);
     const minutes = diffInMinutes % 60;
@@ -44,6 +64,20 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     return { hours, minutes: mins };
+  };
+
+  const handleDateFromChange = (date: Date | null) => {
+    if (date) {
+      if (date.getTime() < minDate.getTime()) {
+        alert(`예약은 ${minDate.toLocaleString()} 이후부터 가능합니다.`);
+        return;
+      }
+      if (date.getTime() >= maxDate.getTime()) {
+        alert(`예약은 ${maxDate.toLocaleString()} 까지 가능합니다.`);
+        return;
+      }
+      setDateFrom(date);
+    }
   };
 
   // dateTo 변경 함수
@@ -80,28 +114,55 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({
     <div>
       <div className="row">
         <h5>{t("예약 시간")}</h5>
+
         <div className="col-md-3 form-group">
           {t("시작 시간")}
           <br />
           <DatePicker
             selected={dateFrom}
-            onChange={(date) => {
-              if (date) {
-                setDateFrom(date);
-                // 시작 시간을 변경하면 종료 시간을 시작 시간으로 설정
-                setDateTo(date);
-              }
-            }}
+            onChange={handleDateFromChange}
             minDate={minDate}
             maxDate={maxDate}
             dateFormat="yyyy/MM/dd h:mm aa"
             className="form-control"
             selectsStart
             placeholderText={t("예약 시작 시간 ~")}
-            timeIntervals={10}
+            timeIntervals={30}
             showTimeSelect
             required
           />
+          {/* 시간 조정 버튼 */}
+
+          <div className="mt-2">
+            <button
+              type="button"
+              className="btn btn-outline-primary btn-sm me-2"
+              onClick={() => adjustMinutesToDateFrom(60)}
+            >
+              +1시간
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-primary btn-sm me-2"
+              onClick={() => adjustMinutesToDateFrom(-60)}
+            >
+              -1시간
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-primary btn-sm me-2"
+              onClick={() => adjustMinutesToDateFrom(30)}
+            >
+              +30분
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-primary btn-sm"
+              onClick={() => adjustMinutesToDateFrom(-30)}
+            >
+              -30분
+            </button>
+          </div>
         </div>
 
         <div className="col-md-3 form-group mt-3 mt-md-0">
@@ -115,7 +176,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({
             dateFormat="yyyy/MM/dd h:mm aa"
             className="form-control"
             selectsEnd
-            timeIntervals={10}
+            timeIntervals={30}
             showTimeSelect
             required
           />

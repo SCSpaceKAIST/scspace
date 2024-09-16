@@ -72,7 +72,7 @@ const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
         spaceArray.find((space) => space.space_id === r.space_id)?.name || "",
       start: r.time_from,
       end: r.time_to,
-      title: `${moment(r.time_from).format("HH:mm")} - ${moment(
+      title: `${r.state === "grant" ? "" : "[미승인] "}${moment(r.time_from).format("HH:mm")} - ${moment(
         r.time_to
       ).format("HH:mm")} | ${r.user_id}`,
 

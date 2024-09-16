@@ -24,11 +24,14 @@ export interface ReservationType {
 
 export type ReservationInputType = Omit<
   ReservationType,
-  "reservation_id" | "time_post" | "comment"
->;
+  "reservation_id" | "time_post" | "comment" | "time_from" | "time_to"
+> & {
+  time_from: string; // time_from을 string 타입으로 변경
+  time_to: string; // time_to를 string 타입으로 변경
+};
 
 export type SpaceTimeCheckInputType = Pick<
-  ReservationType,
+  ReservationInputType,
   "space_id" | "time_from" | "time_to"
 >;
 

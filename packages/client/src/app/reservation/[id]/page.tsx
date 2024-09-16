@@ -1,12 +1,12 @@
 "use client";
 import PageHeader from "@/Components/_commons/PageHeader";
-
 import CalendarView from "@/Components/Calendar/CalendarView";
-import TestForm from "@/Components/Reservation/forms/TestForm";
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
 import { useSpaces } from "@/Hooks/useSpaces";
 import { useParams } from "next/navigation";
 import IndividualForm from "@/Components/Reservation/forms/IndividualForm";
+import PianoForm from "@/Components/Reservation/forms/PianoForm";
+import SeminarForm from "@/Components/Reservation/forms/SeminarForm";
 import { useState } from "react";
 import { SpaceType } from "@depot/types/space";
 
@@ -25,6 +25,8 @@ export default function SpacePage() {
 
   const spaceComponent = {
     individual: <IndividualForm space={space} space_id={id} />,
+    piano: <PianoForm space={space} space_id={id} />,
+    seminar: <SeminarForm space={space} space_id={id} />,
   };
   // const spaceComponent = {
   //   individual: <IndividualForm space={space} space_id={id} />,
@@ -48,9 +50,9 @@ export default function SpacePage() {
       <section>
         <button
           onClick={() => setShowCalendar(!showCalendar)}
-          className="modalButton1"
+          className={showCalendar ? "modalButton1" : "modalButton2"}
         >
-          예약 보기
+          {showCalendar ? "예약 접기" : "예약 보기"}
         </button>
         {showCalendar && (
           <CalendarView space_id={id} space={space} date={new Date()} />

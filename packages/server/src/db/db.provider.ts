@@ -19,6 +19,7 @@ export const DBProvider = [
         user: DB_USER,
         password: DB_PWD,
         database: DB_NAME,
+        timezone: 'Z', // UTC 시간대로 설정
       });
       const db = drizzle(connection, { schema, mode: 'default' });
       return db;

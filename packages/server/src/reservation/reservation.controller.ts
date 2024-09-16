@@ -32,8 +32,8 @@ export class ReservationController {
   ): Promise<boolean> {
     const query: SpaceTimeCheckInputType = {
       space_id: spaceId,
-      time_from: new Date(timeFrom),
-      time_to: new Date(timeTo),
+      time_from: timeFrom,
+      time_to: timeTo,
     };
 
     try {
@@ -56,8 +56,8 @@ export class ReservationController {
     const query: UserTimeCheckInputType = {
       space_id: spaceId,
       user_id: userId,
-      time_from: new Date(timeFrom),
-      time_to: new Date(timeTo),
+      time_from: timeFrom,
+      time_to: timeTo,
     };
     Logger.log(JSON.stringify(query));
 
@@ -75,14 +75,13 @@ export class ReservationController {
   async createReservation(
     @Body() reservationInput: ReservationInputType,
   ): Promise<boolean> {
-    Logger.log(JSON.stringify(reservationInput));
-    return true;
-    // try {
-    //   const result =
-    //     await this.reservationService.createReservation(reservationInput);
-    //   return result;
-    // } catch (error) {
-    //   throw new BadRequestException('Error creating reservation.');
-    // }
+    Logger.log('Create Reservation: ' + JSON.stringify(reservationInput));
+    try {
+      const result =
+        await this.reservationService.createReservation(reservationInput);
+      return result;
+    } catch (error) {
+      throw new BadRequestException('Error creating reservation.');
+    }
   }
 }

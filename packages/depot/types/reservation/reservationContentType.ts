@@ -21,51 +21,51 @@ export interface PianoContentType {
 
 // Seminar spaces
 export interface SeminarContentType {
-  number: string;
-  contents: string;
   eventName: string;
   organizationName: string;
+  contents: string;
+  number: string;
 }
 
 // Dance spaces
 export interface DanceContentType {
-  contents: string;
   eventName: string;
+  contents: string;
   teamMember: string[];
 }
 
 // Group spaces
 export interface GroupContentType {
-  contents: string;
   eventName: string;
+  contents: string;
   teamMember: string[];
 }
 
 // Mirae spaces
 export interface MiraeContentType {
-  food: string;
+  eventName: string;
+  organizationName: string;
   contents: string;
   equipment: string[];
-  eventName: string;
   innerNumber: number;
   outerNumber: number;
   eventPurpose: string;
-  organizationName: string;
+  food: string;
 }
 
 // Sumi spaces
 export interface SumiContentType {
-  desk: number;
-  chair: number;
-  food: string;
-  lobby: boolean;
+  eventName: string;
+  organizationName: string;
   contents: string;
   equipment: string[];
-  eventName: string;
   innerNumber: number;
   outerNumber: number;
   eventPurpose: string;
-  organizationName: string;
+  food: string;
+  desk: number;
+  chair: number;
+  lobby: boolean;
 }
 
 // Work spaces
@@ -76,11 +76,11 @@ export interface WorkContentType {
 
 // Open spaces
 export interface OpenContentType {
-  contents?: string;
   eventName?: string;
+  organizationName?: string;
+  contents?: string;
   innerNumber?: number;
   outerNumber?: number;
   eventPurpose?: string;
   workComplete?: boolean | null;
-  organizationName?: string;
 }

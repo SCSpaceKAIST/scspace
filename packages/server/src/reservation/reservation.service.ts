@@ -1,4 +1,5 @@
 import {
+  ReservationInputType,
   ReservationType,
   SpaceTimeCheckInputType,
   UserTimeCheckInputType,
@@ -31,16 +32,21 @@ export class ReservationService {
   ): Promise<boolean> {
     return await this.reservationRepository.checkTimeOverlap(
       query.space_id,
-      query.time_from,
-      query.time_to,
+      new Date(query.time_from),
+      new Date(query.time_to),
     );
   }
 
   async checkUserReservationTime(
     query: UserTimeCheckInputType,
   ): Promise<boolean> {
-    const getDifferenceInMinutes = (dateFrom: Date, dateTo: Date): number => {
-      const diffInMs = dateTo.getTime() - dateFrom.getTime(); // 밀리초 단위의 차이 계산
+    const getDifferenceInMinutes = (
+      dateFrom: string,
+      dateTo: string,
+    ): number => {
+      const from = new Date(dateFrom);
+      const to = new Date(dateTo);
+      const diffInMs = to.getTime() - from.getTime(); // 밀리초 단위의 차이 계산
       const diffInMinutes = Math.floor(diffInMs / (1000 * 60)); // 밀리초를 분으로 변환
       return diffInMinutes;
     };
@@ -48,12 +54,12 @@ export class ReservationService {
     const daily = await this.reservationRepository.getDailyReservationTime(
       query.user_id,
       query.space_id,
-      query.time_from,
+      new Date(query.time_from),
     );
     const weekly = await this.reservationRepository.getWeeklyReservationTime(
       query.user_id,
       query.space_id,
-      query.time_from,
+      new Date(query.time_from),
     );
     const newReservationTime = getDifferenceInMinutes(
       query.time_from,
@@ -73,9 +79,19 @@ export class ReservationService {
         maxW: reservationMaxWeekTime[spaceType],
       }),
     );
+    Logger.log(daily + newReservationTime <= reservationMaxDayTime[spaceType]);
+    Logger.log(
+      weekly + newReservationTime <= reservationMaxWeekTime[spaceType],
+    );
     return (
       daily + newReservationTime <= reservationMaxDayTime[spaceType] &&
       weekly + newReservationTime <= reservationMaxWeekTime[spaceType]
     );
+  }
+
+  async createReservation(
+    reservationInput: ReservationInputType,
+  ): Promise<boolean> {
+    return await this.reservationRepository.createReservation(reservationInput);
   }
 }
