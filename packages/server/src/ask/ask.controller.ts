@@ -20,20 +20,25 @@ export class AskController {
   constructor(private readonly askService: AskService) {}
 
   @Get('all')
-  findUAskWithID(@Param('id') id: string) {
-    return this.askService.getAll();
+  async findAskAll() {
+    return await this.askService.getAll();
   }
+  @Get('latest')
+  async findAskLatest() {
+    return await this.askService.getLatest();
+  }
+
   @Get(':id')
-  findAskWithID(@Param('id') id: number) {
-    return this.askService.get(id);
+  async findAskWithID(@Param('id') id: number) {
+    return await this.askService.get(id);
   }
   @Post('')
-  insertAsk(@Body() content: AskInputType) {
-    return this.askService.add(content);
+  async insertAsk(@Body() content: AskInputType) {
+    return await this.askService.add(content);
   }
 
   @Put(commentUrl)
-  changeComment(@Body() content: AskType) {
-    this.askService.addComment(content);
+  async changeComment(@Body() content: AskType) {
+    return await this.askService.addComment(content);
   }
 }

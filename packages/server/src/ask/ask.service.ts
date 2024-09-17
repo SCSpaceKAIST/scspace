@@ -14,10 +14,15 @@ export class AskService {
   async getAll(): Promise<AskType[] | false> {
     return await this.askRepository.getAll();
   }
+
+  async getLatest(): Promise<AskType[] | false> {
+    return await this.askRepository.getLatest();
+  }
+
   async add(newObj: AskInputType): Promise<Boolean> {
     return await this.askRepository.add(newObj);
   }
   async addComment(content: AskType) {
-    await this.askRepository.addComment(content);
+    return await this.askRepository.addComment(content);
   }
 }

@@ -10,6 +10,7 @@ import { NoticeModule } from './notice/notice.module';
 import { AskModule } from './ask/ask.module';
 import { SpaceModule } from './space/space.module';
 import { ReservationModule } from './reservation/reservation.module';
+import { TeamModule } from './team/team.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ReservationModule } from './reservation/reservation.module';
     AskModule,
     SpaceModule,
     ReservationModule,
+    TeamModule,
   ],
   controllers: [AppController],
   providers: [AppService],

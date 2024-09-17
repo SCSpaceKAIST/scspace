@@ -2,7 +2,7 @@ import { Injectable, Inject, Logger } from '@nestjs/common';
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema } from '@schema';
-import { eq, sql } from 'drizzle-orm';
+import { asc, eq, or, sql } from 'drizzle-orm';
 import { AskInputType, AskType } from '@depot/types/ask';
 
 @Injectable()
@@ -13,6 +13,18 @@ export class AskRepository {
 
   async getAll(): Promise<AskType[] | false> {
     const result = (await this.db.select().from(schema.asks)) as AskType[];
+    Logger.log('Asks ' + JSON.stringify(result));
+    return result ? result : false;
+  }
+
+  async getLatest(): Promise<AskType[] | false> {
+    const result = (await this.db
+      .select()
+      .from(schema.asks)
+      .where(
+        or(eq(schema.asks.state, 'wait'), eq(schema.asks.state, 'receive')),
+      )
+      .orderBy(asc(schema.asks.time_post))) as AskType[];
     Logger.log('Asks ' + JSON.stringify(result));
     return result ? result : false;
   }
@@ -48,7 +60,7 @@ export class AskRepository {
       .where(eq(schema.asks.id, id));
   }
 
-  async addComment(content: AskType) {
+  async addComment(content: AskType): Promise<boolean> {
     await this.db
       .update(schema.asks)
       .set({
@@ -57,5 +69,6 @@ export class AskRepository {
         state: content.state,
       })
       .where(eq(schema.asks.id, content.id));
+    return true;
   }
 }
