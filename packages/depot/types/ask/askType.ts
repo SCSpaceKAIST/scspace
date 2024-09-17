@@ -24,3 +24,9 @@ export type AskInputType = Omit<
   | "comment"
   | "commenter_id"
 >;
+
+export const askStateOptions: { [key in AskStateEnum]: string } = {
+  wait: "대기중",
+  receive: "접수됨",
+  solve: "해결됨",
+};

@@ -2,20 +2,9 @@
 
 import PageHeader from "@/Components/_commons/PageHeader";
 import { useParams } from "next/navigation";
-import {
-  SpaceTypeEnum,
-  SpaceTypeNames,
-  SpaceTypesArray,
-} from "@depot/types/space";
-import SpaceView from "@/Components/Space/SpaceView";
-import FormIndividual from "@/Components/Reservation/FormIndividual";
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
-import { useEffect, useState } from "react";
-import { SpaceType } from "@depot/types/space";
-import { sendGet } from "@/Hooks/useApi";
 import CalendarView from "@/Components/Calendar/CalendarView";
 import { useSpaces } from "@/Hooks/useSpaces";
-import { get } from "http";
 
 export default function SpaceIntroPage() {
   const params = useParams();

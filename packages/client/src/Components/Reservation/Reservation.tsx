@@ -3,11 +3,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
-import {
-  SpaceTypeEnum,
-  SpaceTypeNames,
-  SpaceTypesArray,
-} from "@depot/types/space";
 import { useSpaces } from "@/Hooks/useSpaces";
 
 const Reservation: React.FC = () => {

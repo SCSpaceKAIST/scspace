@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { useTranslation } from "react-i18next";
 
 interface TimeSelectorProps {
@@ -11,6 +10,7 @@ interface TimeSelectorProps {
   maxTime: number; // 최대 예약 시간 (분 단위)
   minDate: Date; // 예약 가능 시작 날짜
   maxDate: Date; // 예약 가능 종료 날짜
+  ignoreMidnight?: boolean; // 자정을 넘어서 예약 가능 여부
 }
 
 const TimeSelector: React.FC<TimeSelectorProps> = ({
@@ -21,6 +21,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({
   maxTime,
   minDate,
   maxDate,
+  ignoreMidnight = false,
 }) => {
   const { t } = useTranslation();
 
@@ -95,7 +96,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({
       nextDayMidnight.setHours(0, 0, 0, 0); // 00:00:00으로 설정
 
       // 종료 시간이 다음 날 00:00:00을 넘지 않도록 검증
-      if (date.getTime() > nextDayMidnight.getTime()) {
+      if (!ignoreMidnight && date.getTime() > nextDayMidnight.getTime()) {
         alert(t("종료 시간은 자정을 넘을 수 없습니다."));
         return;
       }

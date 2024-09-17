@@ -6,7 +6,7 @@ import axios from "axios";
 import moment from "moment";
 import { VscEye } from "react-icons/vsc";
 import AskComment from "@Components/Ask/AskComment";
-import { AskType, askStateOptions } from "@depot/types/ask";
+import { AskType } from "@depot/types/ask";
 import AskCommentLeave from "@/Components/Ask/AskCommentLeave";
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
 
@@ -14,10 +14,11 @@ interface AskViewProps {
   view_id: string;
 }
 
-const AskView: React.FC<AskViewProps> = ({ view_id }) => {
+const ReservationView: React.FC<AskViewProps> = ({ view_id }) => {
   const [content, setContent] = useState<AskType | null>(null);
 
   const { login, userInfo } = useLoginCheck();
+  const handle = { wait: "대기중", receive: "접수됨", solve: "해결됨" };
 
   useEffect(() => {
     if (view_id) {
@@ -72,7 +73,7 @@ const AskView: React.FC<AskViewProps> = ({ view_id }) => {
                 <div className="meta-bottom manage">
                   <div className="cats">
                     <div className={content.state} />
-                    {askStateOptions[content.state]}
+                    {handle[content.state]}
                   </div>
                 </div>
               </article>
@@ -93,4 +94,4 @@ const AskView: React.FC<AskViewProps> = ({ view_id }) => {
   );
 };
 
-export default AskView;
+export default ReservationView;

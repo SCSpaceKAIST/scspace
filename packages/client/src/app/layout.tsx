@@ -9,7 +9,7 @@ import "../../static/css/main.css";
 import { Header } from "@Components/Header";
 import { ReactNode } from "react";
 import Footer from "@Components/Footer";
-
+import "react-datepicker/dist/react-datepicker.css";
 export const metadata = {
   title: "학생문화공간위원회",
   description: "학생문화공간위원회 웹사이트",

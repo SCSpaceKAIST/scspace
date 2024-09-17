@@ -49,8 +49,23 @@ export const reservationStateOptions: {
 };
 
 export const workerNeedOptions: { [key in WorkerNeedEnum]: string } = {
-  unnecessary: "근로 필요",
-  required: "근로 요청",
+  unnecessary: "근로 필요 없음",
+  required: "근로 필요",
   completed: "근로 배치 완료",
   failed: "근로 배치 실패",
 };
+
+export const workerNeedInputOptions = {
+  unnecessary: "근로 필요 없음",
+  required: "근로 필요",
+};
+
+export const hallEquips = {
+  light: "조명",
+  sound: "음향",
+  projector: "프로젝터",
+};
+
+export function isValidWorkerNeed(input: string): input is WorkerNeedEnum {
+  return ["unnecessary", "required", "completed", "failed"].includes(input);
+}

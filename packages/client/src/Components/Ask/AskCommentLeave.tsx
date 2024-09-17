@@ -18,11 +18,6 @@ const AskCommentLeave: React.FC<AskCommentLeaveProps> = ({
   userInfo,
 }) => {
   const { linkPush } = useLinkPush();
-  const handleStates = {
-    wait: "대기중",
-    receive: "접수됨",
-    solve: "해결됨",
-  };
 
   useEffect(() => {
     if (userInfo)
@@ -56,7 +51,8 @@ const AskCommentLeave: React.FC<AskCommentLeaveProps> = ({
     if (content) {
       sendPut("/ask/comment", content)
         .then(() => {
-          linkPush("/ask");
+          alert("답변 완료");
+          userInfo.type === "admin" ? linkPush("/manage") : linkPush("/ask");
         })
         .catch((err) => console.error(err));
     } else {

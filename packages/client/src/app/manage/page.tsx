@@ -1,11 +1,21 @@
-import Space from "@/Components/Space/Space";
+"use client";
+
+import Manage from "@/Components/Manage/Manage";
 import PageHeader from "@/Components/_commons/PageHeader";
+import { useLoginCheck } from "@/Hooks/useLoginCheck";
 
 export default function SpacePage() {
+  const { needAdmin } = useLoginCheck();
+  needAdmin();
+
   return (
     <div>
-      <PageHeader link_to_prop={"/space"} page_name={"공간"} sub_name="Space" />
-      <Space />
+      <PageHeader
+        link_to_prop={"/manage"}
+        page_name={"관리"}
+        sub_name="Manage"
+      />
+      <Manage />
     </div>
   );
 }

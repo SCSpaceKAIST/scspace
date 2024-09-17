@@ -1,5 +1,4 @@
 import PageHeader from "@/Components/_commons/PageHeader";
-import Calendar from "@/Components/Calendar/Calendar";
 import Reservation from "@/Components/Reservation/Reservation";
 
 export default function SpacePage() {

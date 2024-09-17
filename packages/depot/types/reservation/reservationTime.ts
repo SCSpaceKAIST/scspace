@@ -8,7 +8,7 @@ export const reservationMaxDayTime: { [key in SpaceTypeEnum]: number } = {
   group: 120, // 합주실, 하루 최대 2시간
   mirae: 1440, // 미래홀, 제한 없음 (하루 24시간 가능)
   sumi: 1440, // 조수미홀, 제한 없음 (하루 24시간 가능)
-  open: 1440, // 오픈스페이스, 최대 14일 동안 사용 가능
+  open: 1440 * 7, // 오픈스페이스, 최대 14일 동안 사용 가능
   work: 360, // 창작공방, 하루 최대 6시간
 };
 

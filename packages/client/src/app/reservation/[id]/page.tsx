@@ -7,8 +7,13 @@ import { useParams } from "next/navigation";
 import IndividualForm from "@/Components/Reservation/forms/IndividualForm";
 import PianoForm from "@/Components/Reservation/forms/PianoForm";
 import SeminarForm from "@/Components/Reservation/forms/SeminarForm";
+import DanceForm from "@/Components/Reservation/forms/DanceForm";
+import GroupForm from "@/Components/Reservation/forms/GroupForm";
+import MiraeForm from "@/Components/Reservation/forms/MiraeForm";
+import SumiForm from "@/Components/Reservation/forms/SumiForm";
+import WorkForm from "@/Components/Reservation/forms/WorkForm";
+import OpenForm from "@/Components/Reservation/forms/OpenForm";
 import { useState } from "react";
-import { SpaceType } from "@depot/types/space";
 
 export default function SpacePage() {
   const params = useParams();
@@ -27,25 +32,20 @@ export default function SpacePage() {
     individual: <IndividualForm space={space} space_id={id} />,
     piano: <PianoForm space={space} space_id={id} />,
     seminar: <SeminarForm space={space} space_id={id} />,
+    dance: <DanceForm space={space} space_id={id} />,
+    group: <GroupForm space={space} space_id={id} />,
+    mirae: <MiraeForm space={space} space_id={id} />,
+    sumi: <SumiForm space={space} space_id={id} />,
+    work: <WorkForm space={space} space_id={id} />,
+    open: <OpenForm space={space} space_id={id} />,
   };
-  // const spaceComponent = {
-  //   individual: <IndividualForm space={space} space_id={id} />,
-  //   piano: <PianoForm space={space} space_id={id} />,
-  //   seminar: <SeminarForm space={space} space_id={id} />,
-  //   dance: <DanceForm space={space} space_id={id} />,
-  //   group: <GroupForm space={space} space_id={id} />,
-  //   mirae: <MiraeForm space={space} space_id={id} />,
-  //   sumi: <SumiForm space={space} space_id={id} />,
-  //   open: <OpenForm space={space} space_id={id} />,
-  //   work: <WorkForm space={space} space_id={id} />,
-  // };
 
   return (
     <div>
       <PageHeader
         link_to_prop={"/reservation"}
-        page_name={"예약"}
-        sub_name="Reservation"
+        page_name={`${space.name} 예약`}
+        sub_name={`${space.name_eng} Reservation`}
       />
       <section>
         <button
@@ -58,8 +58,7 @@ export default function SpacePage() {
           <CalendarView space_id={id} space={space} date={new Date()} />
         )}
       </section>
-
-      {spaceComponent[space.space_type]}
+      <section>{spaceComponent[space.space_type]}</section>
     </div>
   );
 }

@@ -3,15 +3,17 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 
-import { AskType, askStateOptions } from "@depot/types/ask";
+import { AskType } from "@depot/types/ask";
 import BoardPageSelector from "@Components/_commons/BoardPageSelector";
 import ConditionalButton from "@/Components/_commons/ConditionalButton";
 import { useLinkPush } from "@Hooks/useLinkPush";
 import { useBoardData } from "@/Hooks/useBoardData";
 import AlertBtn from "@Components/_commons/AlertBtn";
 
-const Ask: React.FC = () => {
+const ReservationList: React.FC = () => {
   const { linkPush } = useLinkPush();
+
+  const handleStates = { wait: "대기중", receive: "접수됨", solve: "해결됨" };
 
   const { list, pageNumber, totalPageNumber, setPageNumber, login } =
     useBoardData<AskType>({
@@ -52,7 +54,7 @@ const Ask: React.FC = () => {
                     <td>{contents.id}</td>
                     <td>
                       <div className={contents.state} />
-                      {askStateOptions[contents.state]}
+                      {handleStates[contents.state]}
                     </td>
                     <td>{contents.title}</td>
                     <td>{contents.user_id}</td>
@@ -75,4 +77,4 @@ const Ask: React.FC = () => {
   );
 };
 
-export default Ask;
+export default ReservationList;

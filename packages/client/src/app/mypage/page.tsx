@@ -4,8 +4,11 @@ import PageHeader from "@/Components/_commons/PageHeader";
 export default function SpacePage() {
   return (
     <div>
-      <PageHeader link_to_prop={"/space"} page_name={"공간"} sub_name="Space" />
-      <Space />
+      <PageHeader
+        link_to_prop={"/mypage"}
+        page_name={"마이페이지"}
+        sub_name="Mypage"
+      />
     </div>
   );
 }
