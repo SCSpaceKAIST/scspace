@@ -1,0 +1,1 @@
+ALTER TABLE `passwords` ADD `user_id` char(8) DEFAULT '20210044' NOT NULL;

@@ -59,7 +59,8 @@ export const useLoginCheck = () => {
     return login;
   };
 
-  const ckAdmin = (type: UserTypeEnum) => {
+  const ckUserType = (type: UserTypeEnum | null | undefined) => {
+    if (!type) return false;
     if (userInfo?.type === type) {
       return true;
     } else {
@@ -74,6 +75,6 @@ export const useLoginCheck = () => {
     needLogin,
     needAdmin,
     ckLogin,
-    ckAdmin,
+    ckUserType,
   };
 };

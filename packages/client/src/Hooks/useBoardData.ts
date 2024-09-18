@@ -8,30 +8,41 @@ export const useBoardData = <T extends { time_post: string | Date }>({
   apiEndpoint,
   initialPageNumber = 1,
   itemsPerPage = 10,
+  sortDesc = false,
 }: {
   apiEndpoint: string;
   initialPageNumber?: number;
   itemsPerPage?: number;
+  sortDesc?: boolean;
 }) => {
   const { login, userInfo } = useLoginCheck();
 
   const [list, setList] = useState<T[]>([]);
   const [pageNumber, setPageNumber] = useState(initialPageNumber);
   const [totalPageNumber, setTotalPageNumber] = useState(1);
+  const [boardDataRefreshBtn, setBoardDataRefreshBtn] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
       const res = await axios.get(apiEndpoint);
+      if (!res.data) return;
       const sortedData = res.data.sort(
-        (a: T, b: T) =>
-          new Date(b.time_post).getTime() - new Date(a.time_post).getTime()
+        sortDesc
+          ? (a: T, b: T) =>
+              new Date(a.time_post).getTime() - new Date(b.time_post).getTime()
+          : (a: T, b: T) =>
+              new Date(b.time_post).getTime() - new Date(a.time_post).getTime()
       );
       setList(sortedData);
       setTotalPageNumber(Math.ceil(sortedData.length / itemsPerPage));
     };
-
     fetchData();
-  }, [apiEndpoint, login]);
+  }, [apiEndpoint, login, boardDataRefreshBtn]);
+
+  const boardDataRefreshBtnClick = () => {
+    setBoardDataRefreshBtn(!boardDataRefreshBtn);
+  };
 
   return {
     list,
@@ -40,5 +51,6 @@ export const useBoardData = <T extends { time_post: string | Date }>({
     setPageNumber,
     login,
     userInfo,
+    boardDataRefreshBtnClick,
   };
 };

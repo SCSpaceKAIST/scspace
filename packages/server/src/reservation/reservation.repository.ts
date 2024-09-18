@@ -2,11 +2,13 @@ import { Injectable, Inject, Logger } from '@nestjs/common';
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema } from '@schema';
-import { eq, sql, and, lt, gt, lte, gte, or } from 'drizzle-orm';
+import { eq, sql, and, lt, gt, lte, gte, or, ne } from 'drizzle-orm';
 import {
   ReservationInputType,
+  ReservationOutputType,
   ReservationType,
 } from '@depot/types/reservation';
+import e from 'express';
 
 @Injectable()
 export class ReservationRepository {
@@ -188,5 +190,106 @@ export class ReservationRepository {
       console.error('Error inserting reservation:', e);
       return false;
     }
+  }
+
+  async updateReservation(reservation: ReservationType): Promise<boolean> {
+    try {
+      await this.db
+        .update(schema.reservations)
+        .set({
+          state: reservation.state,
+          worker_need: reservation.worker_need,
+          comment: reservation.comment,
+        })
+        .where(
+          eq(schema.reservations.reservation_id, reservation.reservation_id),
+        );
+      return true;
+    } catch (e) {
+      console.error('Error updating reservation:', e);
+      return false;
+    }
+  }
+
+  async getManageReservation(): Promise<ReservationOutputType[] | false> {
+    const result = (await this.db
+      .select({
+        reservation_id: schema.reservations.reservation_id,
+        user_id: schema.reservations.user_id,
+        team_id: schema.reservations.team_id,
+        space_id: schema.reservations.space_id,
+        time_from: schema.reservations.time_from,
+        time_to: schema.reservations.time_to,
+        time_post: schema.reservations.time_post,
+        content: schema.reservations.content,
+        comment: schema.reservations.comment,
+        state: schema.reservations.state,
+        worker_need: schema.reservations.worker_need,
+        name: schema.spaces.name,
+        space_type: schema.spaces.space_type,
+        userInfo: schema.users,
+      })
+      .from(schema.reservations)
+      .innerJoin(
+        schema.spaces,
+        eq(schema.reservations.space_id, schema.spaces.space_id),
+      )
+      .innerJoin(
+        schema.users,
+        eq(schema.reservations.user_id, schema.users.user_id),
+      )
+      .where(
+        or(
+          or(
+            eq(schema.reservations.state, 'wait'),
+            eq(schema.reservations.state, 'received'),
+          ),
+          and(
+            eq(schema.reservations.state, 'grant'),
+            or(
+              eq(schema.reservations.worker_need, 'required'),
+              eq(schema.reservations.worker_need, 'failed'),
+            ),
+          ),
+        ),
+      )) as ReservationOutputType[];
+    Logger.log('Manage Reservations: ' + JSON.stringify(result));
+    return result.length > 0 ? result : false;
+  }
+
+  async getReservationListByUserId(
+    user_id: string,
+  ): Promise<ReservationOutputType[] | false> {
+    const result = (await this.db
+      .select({
+        reservation_id: schema.reservations.reservation_id,
+        user_id: schema.reservations.user_id,
+        team_id: schema.reservations.team_id,
+        space_id: schema.reservations.space_id,
+        time_from: schema.reservations.time_from,
+        time_to: schema.reservations.time_to,
+        time_post: schema.reservations.time_post,
+        content: schema.reservations.content,
+        comment: schema.reservations.comment,
+        state: schema.reservations.state,
+        worker_need: schema.reservations.worker_need,
+        name: schema.spaces.name,
+        space_type: schema.spaces.space_type,
+        userInfo: schema.users,
+      })
+      .from(schema.reservations)
+      .innerJoin(
+        schema.spaces,
+        eq(schema.reservations.space_id, schema.spaces.space_id),
+      )
+      .innerJoin(
+        schema.users,
+        eq(schema.reservations.user_id, schema.users.user_id),
+      )
+      .where(
+        eq(schema.reservations.user_id, user_id),
+      )) as ReservationOutputType[];
+    Logger.log('User Reservations: ' + JSON.stringify(result));
+    return result.length > 0 ? result : false;
   }
 }

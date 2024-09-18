@@ -14,6 +14,7 @@ const AskLatestList: React.FC = () => {
     useBoardData<AskType>({
       apiEndpoint: "/api/ask/latest",
       itemsPerPage: 5,
+      sortDesc: true,
     });
 
   const [wait, setWait] = useState<number>(list.length);

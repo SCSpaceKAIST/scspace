@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 interface RadioInputProps {
@@ -30,7 +30,7 @@ const MultipleRadioInput: React.FC<RadioInputProps> = ({
           <input
             className="form-check-input"
             type="radio"
-            name="customRadioGroup"
+            name={`customRadioGroup-${header}`}
             id={`RadioInput${index}`}
             value={content}
             checked={selected === content} // 선택된 값과 비교하여 checked 설정

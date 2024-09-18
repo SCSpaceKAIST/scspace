@@ -15,6 +15,7 @@ import { useReservationSend } from "@/Hooks/useReservationSend";
 import TimeTooltips from "../utils/TimeTooltips";
 import { validateReservationInput } from "./validateReservationInput";
 import { setTimes } from "./setTimes";
+import TeamInput from "../inputs/TeamInput";
 
 interface ReservationFormProps {
   space_id: number;
@@ -78,6 +79,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
       <TextInput label="이벤트명" text={eventName} setText={setEventName} />
       <TextInput label="내용" text={contents} setText={setContents} />
       {/* 팀 나중에 추가해야 함 */}
+      <TeamInput />
       <AgreeCheck checked={agreeCheck} setChecked={setAgreeCheck} />
       <button className="modalButton2" onClick={handleSubmit}>
         예약하기

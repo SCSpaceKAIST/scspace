@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { LoginBtn } from "./Auth/LoginBtn";
@@ -8,6 +8,8 @@ import { noticeUrl } from "@depot/urls/notice";
 import { askUrl } from "@depot/urls/ask";
 import { SpaceTypeNames, SpaceTypesArray, SpaceType } from "@depot/types/space";
 import { sendGet } from "@/Hooks/useApi";
+import PasswordView from "@Components/Password/PasswordView";
+import { useLoginCheck } from "@/Hooks/useLoginCheck";
 
 interface MenuItem {
   name: string;
@@ -18,6 +20,7 @@ interface MenuItem {
 
 export const Header: React.FC = () => {
   const { t } = useTranslation();
+  const { userInfo } = useLoginCheck();
   const [menu, setMenu] = useState<MenuItem[]>([
     { name: "공지사항", sub_menu: [], menu_link: noticeUrl, sub_menu_link: [] },
     {
@@ -91,6 +94,7 @@ export const Header: React.FC = () => {
             }),
           },
           menu[5],
+          menu[6],
         ]);
       }
     });
@@ -175,6 +179,7 @@ export const Header: React.FC = () => {
 
         <LoginBtn></LoginBtn>
       </div>
+      {userInfo ? <PasswordView userInfo={userInfo} /> : <div />}
     </header>
   );
 };

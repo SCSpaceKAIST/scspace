@@ -8,6 +8,27 @@
       "when": 1724954838141,
       "tag": "0000_wandering_red_skull",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1726601645008,
+      "tag": "0001_tense_morlun",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1726601760884,
+      "tag": "0002_burly_killraven",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1726602210424,
+      "tag": "0003_neat_tarantula",
+      "breakpoints": true
     }
   ]
 }

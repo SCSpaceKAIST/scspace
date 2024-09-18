@@ -6,8 +6,9 @@ import DateTimeInput from "../inputs/DateTimeInput";
 import {
   ReservationInputType,
   SumiContentType,
-  hallEquips,
+  hallEquipsOptions,
   isValidWorkerNeed,
+  reservationCharacterOptions,
   workerNeedInputOptions,
 } from "@depot/types/reservation";
 import AgreeCheck from "../inputs/AgreeCheck";
@@ -49,6 +50,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   const [chair, setChair] = useState<number | undefined>(0);
   const [lobby, setLobby] = useState<boolean>(false);
   const [worker_need, setWorkerNeed] = useState<string>("unnecessary");
+  const [character, setCharacter] = useState<string[]>([]);
   const { userInfo } = useLoginCheck();
   const { handleReservationSend } = useReservationSend();
   const handleSubmit = () => {
@@ -114,8 +116,8 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
       />
       <TextInput label="행사 내용" text={contents} setText={setContents} />
       <MultipleCheckboxInput
-        contents={Object.keys(hallEquips)}
-        labels={Object.values(hallEquips)}
+        contents={Object.keys(hallEquipsOptions)}
+        labels={Object.values(hallEquipsOptions)}
         header="사용 장비 선택"
         selected={equipment}
         setSelected={setEquipment}
@@ -146,6 +148,13 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
         label="로비 사용 여부"
         checked={lobby}
         setChecked={setLobby}
+      />
+      <MultipleCheckboxInput
+        contents={Object.keys(reservationCharacterOptions)}
+        labels={Object.values(reservationCharacterOptions)}
+        header="행사 목적성 해당 시 선택"
+        selected={character}
+        setSelected={setCharacter}
       />
       <MultipleRadioInput
         contents={Object.keys(workerNeedInputOptions)}

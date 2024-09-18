@@ -1,79 +1,134 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import ReservationModal, { handleReservationSubmit } from "./ReservationModal";
 import moment from "moment";
-
-import { AskType } from "@depot/types/ask";
-import BoardPageSelector from "@Components/_commons/BoardPageSelector";
-import ConditionalButton from "@/Components/_commons/ConditionalButton";
-import { useLinkPush } from "@Hooks/useLinkPush";
 import { useBoardData } from "@/Hooks/useBoardData";
-import AlertBtn from "@Components/_commons/AlertBtn";
+import {
+  ReservationOutputType,
+  ReservationType,
+  reservationStateOptions,
+  workerNeedOptions,
+} from "@depot/types/reservation";
+import { UserType } from "@depot/types/user";
+import { useLoginCheck } from "@/Hooks/useLoginCheck";
 
 const ReservationList: React.FC = () => {
-  const { linkPush } = useLinkPush();
+  const { userInfo } = useLoginCheck();
+  const {
+    list,
+    pageNumber,
+    totalPageNumber,
+    setPageNumber,
+    boardDataRefreshBtnClick,
+  } = useBoardData<ReservationOutputType>({
+    apiEndpoint: `/api/reservation/user/${userInfo?.user_id}`,
+    itemsPerPage: 10,
+  });
+  const [reservation, setReservation] = useState<ReservationType | null>(null);
+  const [reserverInfo, setReserverInfo] = useState<UserType | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
-  const handleStates = { wait: "대기중", receive: "접수됨", solve: "해결됨" };
+  const handleShowModal = () => {
+    setShowModal(!showModal);
+  };
 
-  const { list, pageNumber, totalPageNumber, setPageNumber, login } =
-    useBoardData<AskType>({
-      apiEndpoint: "/api/ask/all",
-    });
+  const handleSubmit = () => {
+    if (!reservation || !userInfo) return;
+    handleReservationSubmit(
+      reservation,
+      userInfo,
+      setShowModal,
+      boardDataRefreshBtnClick
+    );
+  };
+
+  const handleReservationClick = (contents: ReservationOutputType) => {
+    setReservation(contents);
+    setReserverInfo(contents.userInfo);
+    setShowModal(true);
+  };
 
   return (
-    <div id="main">
-      <section>
-        <div className="container">
-          <ConditionalButton condition={login} btnLink="/ask/create">
-            작성하기
-          </ConditionalButton>
-        </div>
+    <main id="main">
+      <div className="container">
         <br />
+        <h4>
+          <b>나의 예약신청 목록</b>
+        </h4>
+        <hr />
 
-        <div className="container">
-          <table className="table manage">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>처리 상태</th>
-                <th>제목</th>
-                <th>글쓴이</th>
-                <th>날짜</th>
-                <th>조회수</th>
-              </tr>
-            </thead>
+        <table className="table manage">
+          <thead>
+            <tr>
+              <th>공간</th>
+              <th>예약 id</th>
+              <th>시간</th>
+              <th>예약한 시간</th>
+              <th>상태</th>
+              <th>근로 배정</th>
+            </tr>
+          </thead>
+          <tbody>
+            {list
+              .slice((pageNumber - 1) * 10, pageNumber * 10)
+              .map((contents: ReservationOutputType) => (
+                <tr
+                  key={contents.reservation_id}
+                  onClick={() => handleReservationClick(contents)}
+                >
+                  <td>{contents.name}</td>
+                  <td>{contents.reservation_id}</td>
+                  <td>
+                    {moment(contents.time_from).format("MM월 DD일 HH:mm")}~
+                    {moment(contents.time_to).format("MM월 DD일 HH:mm")}
+                  </td>
+                  <td>
+                    {moment(contents.time_post).format("YY년 MM월 DD일 HH:mm")}
+                  </td>
+                  <td>
+                    <div className={contents.state} />
+                    {reservationStateOptions[contents.state]}
+                  </td>
 
-            <tbody>
-              {list
-                .slice((pageNumber - 1) * 10, pageNumber * 10)
-                .map((contents, idx) => (
-                  <tr
-                    key={idx}
-                    onClick={() => linkPush(`/ask/view/${contents.id}`)}
-                  >
-                    <td>{contents.id}</td>
-                    <td>
-                      <div className={contents.state} />
-                      {handleStates[contents.state]}
-                    </td>
-                    <td>{contents.title}</td>
-                    <td>{contents.user_id}</td>
-                    <td>
-                      {moment(contents.time_post).format("YYYY-MM-DD HH:mm:ss")}
-                    </td>
-                    <td>{contents.views}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+                  <td>
+                    <div className={contents.worker_need} />
+                    {workerNeedOptions[contents.worker_need]}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="blog">
+        <div className="blog-pagination">
+          <ul className="justify-content-center">
+            {Array.from({ length: totalPageNumber }, (_, i) => i + 1).map(
+              (pageNum) => (
+                <li
+                  key={pageNum}
+                  className={pageNumber === pageNum ? "active" : ""}
+                  onClick={() => setPageNumber(pageNum)}
+                >
+                  <Link href="#">{pageNum}</Link>
+                </li>
+              )
+            )}
+          </ul>
         </div>
-        <BoardPageSelector
-          totalPageNumber={totalPageNumber}
-          pageNumber={pageNumber}
-          setPageNumber={setPageNumber}
-        />
-      </section>
-    </div>
+      </div>
+
+      <ReservationModal
+        showHide={showModal}
+        setShowHide={handleShowModal}
+        reservationInfo={reservation}
+        reserverInfo={reserverInfo}
+        setReservationInfo={setReservation}
+        handleSubmit={handleSubmit}
+      />
+    </main>
   );
 };
 

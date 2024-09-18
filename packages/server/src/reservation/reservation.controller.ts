@@ -7,10 +7,13 @@ import {
   Body,
   BadRequestException,
   Logger,
+  Put,
 } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 import {
   ReservationInputType,
+  ReservationOutputType,
+  ReservationType,
   SpaceTimeCheckInputType,
   UserTimeCheckInputType,
 } from '@depot/types/reservation';
@@ -70,6 +73,18 @@ export class ReservationController {
     }
   }
 
+  @Get('manage')
+  async getManageReservation(): Promise<ReservationOutputType[] | false> {
+    return await this.reservationService.getManageReservation();
+  }
+
+  @Get('user/:id')
+  async getReservationListByUserId(
+    @Param('id') userid: string,
+  ): Promise<ReservationOutputType[] | false> {
+    return this.reservationService.getReservationListByUserId(userid);
+  }
+
   // 예약을 등록하는 POST 요청
   @Post()
   async createReservation(
@@ -82,6 +97,20 @@ export class ReservationController {
       return result;
     } catch (error) {
       throw new BadRequestException('Error creating reservation.');
+    }
+  }
+
+  @Put()
+  async updateReservation(
+    @Body() reservationInput: ReservationType,
+  ): Promise<boolean> {
+    Logger.log('Update Reservation: ' + JSON.stringify(reservationInput));
+    try {
+      const result =
+        await this.reservationService.updateReservation(reservationInput);
+      return result;
+    } catch (error) {
+      throw new BadRequestException('Error updating reservation.');
     }
   }
 }

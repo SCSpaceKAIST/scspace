@@ -1,0 +1,1 @@
+ALTER TABLE `passwords` ADD `time_post` datetime DEFAULT '2024-09-17 19:36:00.863' NOT NULL;

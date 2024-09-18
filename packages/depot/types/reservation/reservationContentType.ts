@@ -51,6 +51,7 @@ export interface MiraeContentType {
   outerNumber: number;
   eventPurpose: string;
   food: string;
+  character: string[] | null;
 }
 
 // Sumi spaces
@@ -66,6 +67,7 @@ export interface SumiContentType {
   desk: number;
   chair: number;
   lobby: boolean;
+  character: string[] | null;
 }
 
 // Work spaces
@@ -83,4 +85,10 @@ export interface OpenContentType {
   outerNumber?: number;
   eventPurpose?: string;
   workComplete?: boolean | null;
+}
+
+export function isTeamContent(
+  content: ReservationContentTypeEnum
+): content is DanceContentType | GroupContentType {
+  return "teamMember" in content;
 }

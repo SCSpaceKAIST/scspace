@@ -1,5 +1,6 @@
 import {
   ReservationInputType,
+  ReservationOutputType,
   ReservationType,
   SpaceTimeCheckInputType,
   UserTimeCheckInputType,
@@ -93,5 +94,19 @@ export class ReservationService {
     reservationInput: ReservationInputType,
   ): Promise<boolean> {
     return await this.reservationRepository.createReservation(reservationInput);
+  }
+
+  async updateReservation(reservationInput: ReservationType): Promise<boolean> {
+    return await this.reservationRepository.updateReservation(reservationInput);
+  }
+
+  async getManageReservation(): Promise<ReservationOutputType[] | false> {
+    return await this.reservationRepository.getManageReservation();
+  }
+
+  async getReservationListByUserId(
+    userid: string,
+  ): Promise<ReservationOutputType[] | false> {
+    return await this.reservationRepository.getReservationListByUserId(userid);
   }
 }

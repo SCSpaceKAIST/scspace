@@ -1,3 +1,5 @@
+import { SpaceTypeEnum } from "../space";
+import { UserType } from "../user";
 import { ReservationContentTypeEnum } from "./reservationContentType";
 
 export type ReservationStateEnum = "grant" | "wait" | "rejected" | "received";
@@ -21,6 +23,12 @@ export interface ReservationType {
   state: ReservationStateEnum;
   worker_need: WorkerNeedEnum;
 }
+
+export type ReservationOutputType = ReservationType & {
+  name: string;
+  space_type: SpaceTypeEnum;
+  userInfo: UserType;
+};
 
 export type ReservationInputType = Omit<
   ReservationType,
@@ -60,10 +68,16 @@ export const workerNeedInputOptions = {
   required: "근로 필요",
 };
 
-export const hallEquips = {
+export const hallEquipsOptions = {
   light: "조명",
   sound: "음향",
   projector: "프로젝터",
+};
+
+export const reservationCharacterOptions = {
+  religion: "종교적",
+  rentability: "영리성",
+  politic: "정치적",
 };
 
 export function isValidWorkerNeed(input: string): input is WorkerNeedEnum {
