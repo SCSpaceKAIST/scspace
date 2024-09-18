@@ -2,11 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
 import { useSpaces } from "@/Hooks/useSpaces";
 
 const Reservation: React.FC = () => {
-  const { t } = useTranslation();
   const { spaceArray } = useSpaces();
   return (
     <main id="main">
@@ -32,7 +30,7 @@ const Reservation: React.FC = () => {
                       <hr />
                       {spaceArray?.map((space) => {
                         return (
-                          <div>
+                          <div key={`spaceReservationKey${space.space_id}`}>
                             <Link href={`/reservation/${space.space_id}`}>
                               {space.name}
                             </Link>

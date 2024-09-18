@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-
 import axios from "axios";
-
-import { useTranslation } from "react-i18next";
 import {
   IntroductionType,
-  ShortIntroType,
   SpaceIntroductionOutputType,
-  SpaceIntroductionType,
   SpaceTypeNames,
 } from "@depot/types/space";
 import SpaceIntro from "@Components/Space/SpaceIntro";
@@ -18,7 +13,6 @@ interface SpaceViewProps {
 }
 
 const SpaceView: React.FC<SpaceViewProps> = ({ space_id }) => {
-  const { t } = useTranslation();
   const [spaceInfo, setSpaceInfo] = useState<SpaceIntroductionOutputType>();
   const [menu, setMenu] = useState<0 | 1 | 2>(0);
   const [intro, setIntro] = useState<React.FC>();

@@ -2,13 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
 //import AOS from "aos";
 //import "aos/dist/aos.css";
 import LoginCheck from "@/Hooks/LoginCheck";
 
 const Event: React.FC = () => {
-  const { t } = useTranslation();
   const [login, setLogin] = useState(false);
   const [userInfo, setUserInfo] = useState<{ type: string } | null>(null);
 

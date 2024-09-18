@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useLayoutEffect, useState } from "react";
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
+
 import { LoginBtn } from "./Auth/LoginBtn";
 import Image from "next/image";
 import { noticeUrl } from "@depot/urls/notice";
@@ -19,7 +19,6 @@ interface MenuItem {
 }
 
 export const Header: React.FC = () => {
-  const { t } = useTranslation();
   const { userInfo } = useLoginCheck();
   const [menu, setMenu] = useState<MenuItem[]>([
     { name: "공지사항", sub_menu: [], menu_link: noticeUrl, sub_menu_link: [] },
@@ -133,7 +132,7 @@ export const Header: React.FC = () => {
               return menuItem.sub_menu.length === 0 ? (
                 <li key={idx}>
                   <Link className="nav-link scrollto" href={menuItem.menu_link}>
-                    {t(menuItem.name)}
+                    {menuItem.name}
                   </Link>
                 </li>
               ) : (
@@ -143,7 +142,7 @@ export const Header: React.FC = () => {
                   onClick={() => onClickEvent2(idx)}
                 >
                   <Link href={menuItem.menu_link}>
-                    <span>{t(menuItem.name)}</span>{" "}
+                    <span>{menuItem.name}</span>{" "}
                     <i
                       id={"button" + idx}
                       className="bi bi-chevron-down dropdown-indicator"
@@ -159,7 +158,7 @@ export const Header: React.FC = () => {
                               menuItem.menu_link + menuItem.sub_menu_link[idx2]
                             }
                           >
-                            {t(sub_name)}
+                            {sub_name}
                           </Link>
                         );
                       })}

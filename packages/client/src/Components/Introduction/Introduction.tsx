@@ -5,11 +5,8 @@ import Link from "next/link";
 import Scspace from "./Scspace";
 import Business from "./Business";
 import Rule from "./Rule";
-import { useTranslation } from "react-i18next";
 
 const Introduction: React.FC = () => {
-  const { t } = useTranslation();
-
   const [info, setInfo] = useState([
     { which: "소개", text: <Scspace />, clicked: true },
     { which: "사업소개", text: <Business />, clicked: false },

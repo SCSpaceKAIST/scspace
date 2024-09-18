@@ -1,5 +1,4 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 
 interface MultipleCheckboxInputProps {
   contents: string[]; // 체크박스의 value 값
@@ -16,8 +15,6 @@ const MultipleCheckboxInput: React.FC<MultipleCheckboxInputProps> = ({
   selected,
   setSelected,
 }) => {
-  const { t } = useTranslation();
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
 
@@ -32,7 +29,7 @@ const MultipleCheckboxInput: React.FC<MultipleCheckboxInputProps> = ({
 
   return (
     <div>
-      <h5>{t(header)}</h5>
+      <h5>{header}</h5>
       {contents.map((content, index) => (
         <div className="form-check form-check-inline" key={index}>
           <input
@@ -44,7 +41,7 @@ const MultipleCheckboxInput: React.FC<MultipleCheckboxInputProps> = ({
             onChange={handleChange}
           />
           <label className="form-check-label" htmlFor={`CheckboxInput${index}`}>
-            {t(labels[index])}
+            {labels[index]}
           </label>
         </div>
       ))}

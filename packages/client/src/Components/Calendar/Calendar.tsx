@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
+
 import {
   SpaceTypeEnum,
   SpaceTypeNames,
@@ -11,7 +11,6 @@ import {
 import { useSpaces } from "@/Hooks/useSpaces";
 
 const Calendar: React.FC = () => {
-  const { t } = useTranslation();
   const { spaceArray } = useSpaces();
   return (
     <main id="main">
@@ -35,9 +34,9 @@ const Calendar: React.FC = () => {
                         <b>아래 공간들의 예약을 확인하실 수 있습니다</b>
                       </p>
                       <hr />
-                      {spaceArray?.map((space) => {
+                      {spaceArray?.map((space, idx) => {
                         return (
-                          <div>
+                          <div key={`calendarKey${idx}`}>
                             <Link href={`/calendar/${space.space_id}`}>
                               {space.name}
                             </Link>

@@ -6,7 +6,6 @@ import interactionPlugin from "@fullcalendar/interaction";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import Dropdown from "react-bootstrap/Dropdown";
 import moment from "moment";
-import { useTranslation } from "react-i18next";
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
 import { sendGet } from "@Hooks/useApi";
 import { ReservationType } from "@depot/types/reservation";
@@ -40,7 +39,6 @@ const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [data, setData] = useState<EventInput[]>([]);
   const { login, userInfo } = useLoginCheck();
-  const { t } = useTranslation();
   const { spaceArray, loaded } = useSpaces(space_id);
   const { linkPush } = useLinkPush();
   const [reservations, setReservations] = useState<ReservationType[]>();
@@ -120,7 +118,7 @@ const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
       <div className="calendar form-inline shadow bg-white p-5">
         <Dropdown>
           <Dropdown.Toggle className="space-filter" id="dropdown-basic">
-            {t(space.name)}
+            {space.name}
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
@@ -129,7 +127,7 @@ const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
                 key={one_space.space_id}
                 onClick={() => linkPush(`/calendar/${one_space.space_id}`)}
               >
-                {t(one_space.name)}
+                {one_space.name}
               </Dropdown.Item>
             ))}
           </Dropdown.Menu>

@@ -33,7 +33,9 @@ const PasswordView: React.FC<PasswordProps> = ({ userInfo }) => {
         if (val.valid) {
           return list.map((ptype) => {
             if (ptype.space_id === val.space_id) {
-              return <PasswordBar password={ptype} />;
+              return (
+                <PasswordBar password={ptype} key={`key${ptype.space_id}`} />
+              );
             }
             return null; // if 조건이 일치하지 않을 때 아무것도 반환하지 않음
           });

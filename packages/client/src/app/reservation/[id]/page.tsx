@@ -19,14 +19,14 @@ export default function SpacePage() {
   const params = useParams();
   const id = parseInt(params.id as string, 10); // URL의 [id] 부분을 숫자로 변환
   const { login, userInfo, needLogin } = useLoginCheck();
+  const [showCalendar, setShowCalendar] = useState(false);
+  const { space } = useSpaces(id);
   needLogin();
   if (isNaN(id) || id <= 0 || id >= 18) {
     // 18 is the number of spaces
     // id가 유효한 숫자가 아닌 경우 처리
     return <p>Invalid ID provided.</p>;
   }
-  const [showCalendar, setShowCalendar] = useState(false);
-  const { space } = useSpaces(id);
 
   const spaceComponent = {
     individual: <IndividualForm space={space} space_id={id} />,

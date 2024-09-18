@@ -13,8 +13,12 @@ import Guitar from "./Guitar";
 const Business: React.FC = () => {
   const [menu, setMenu] = useState<number>(0);
 
-  const menulist = [<Shinhak />, <Student />, <Culture />, <Guitar />];
-
+  const menulist = [
+    <Shinhak key="shinhak" />,
+    <Student key="student" />,
+    <Culture key="culture" />,
+    <Guitar key="guitar" />,
+  ];
   const changeMenu = (menuIndex: number) => {
     document.querySelector(`#menu${menu}`)?.classList.toggle("active");
     document.querySelector(`#menu${menuIndex}`)?.classList.toggle("active");

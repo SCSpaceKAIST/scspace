@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
 import {
   SpaceTypeEnum,
   SpaceTypeNames,
@@ -10,8 +9,6 @@ import {
 } from "@depot/types/space";
 
 const Space: React.FC = () => {
-  const { t } = useTranslation();
-
   return (
     <main id="main">
       <section>
@@ -42,7 +39,7 @@ const Space: React.FC = () => {
                       <hr />
                       {SpaceTypesArray.map((spaceType, idx) => {
                         return (
-                          <div>
+                          <div key={`spaceReservationKey${spaceType}`}>
                             <Link href={`/space/${idx}`}>
                               {SpaceTypeNames[spaceType as SpaceTypeEnum]}{" "}
                             </Link>

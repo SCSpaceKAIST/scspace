@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 
 interface RadioInputProps {
   contents: string[]; // 라디오 버튼의 value 값
@@ -16,15 +15,13 @@ const MultipleRadioInput: React.FC<RadioInputProps> = ({
   selected,
   setSelected,
 }) => {
-  const { t } = useTranslation();
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelected(event.target.value); // 선택된 값을 업데이트
   };
 
   return (
     <div>
-      <h5>{t(header)}</h5>
+      <h5>{header}</h5>
       {contents.map((content, index) => (
         <div className="form-check form-check-inline" key={index}>
           <input
@@ -38,7 +35,7 @@ const MultipleRadioInput: React.FC<RadioInputProps> = ({
             required
           />
           <label className="form-check-label" htmlFor={`RadioInput${index}`}>
-            {t(labels[index])}
+            {labels[index]}
           </label>
         </div>
       ))}

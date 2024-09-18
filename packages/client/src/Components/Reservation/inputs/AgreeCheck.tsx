@@ -1,4 +1,3 @@
-import { useTranslation } from "react-i18next";
 import React from "react";
 import CheckboxInput from "./CheckboxInput";
 
@@ -8,7 +7,6 @@ interface AgreeCheckProps {
 }
 
 const AgreeInput: React.FC<AgreeCheckProps> = ({ checked, setChecked }) => {
-  const { t } = useTranslation();
   return (
     <div>
       <a
@@ -16,7 +14,7 @@ const AgreeInput: React.FC<AgreeCheckProps> = ({ checked, setChecked }) => {
         target="_blank"
         rel="noopener noreferrer"
       >
-        {t("공간위 통합 약관 확인하기")}
+        {"공간위 통합 약관 확인하기"}
       </a>
       <br />
       <CheckboxInput

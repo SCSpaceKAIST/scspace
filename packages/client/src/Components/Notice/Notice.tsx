@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
-
-import { useTranslation } from "react-i18next";
 import { NoticeType } from "@depot/types/notice";
 import BoardPageSelector from "@Components/_commons/BoardPageSelector";
 import ConditionalButton from "@Components/_commons/ConditionalButton";
@@ -12,8 +10,6 @@ import { useLinkPush } from "@Hooks/useLinkPush";
 import { useBoardData } from "@/Hooks/useBoardData";
 
 const Notice: React.FC = () => {
-  const { t } = useTranslation();
-
   const { linkPush } = useLinkPush();
 
   const ROW_PER_PAGE = 10;
@@ -49,9 +45,9 @@ const Notice: React.FC = () => {
             <thead>
               <tr>
                 <th>No</th>
-                <th>{t("제목")}</th>
-                <th>{t("날짜")}</th>
-                <th>{t("조회수")}</th>
+                <th>{"제목"}</th>
+                <th>{"날짜"}</th>
+                <th>{"조회수"}</th>
               </tr>
             </thead>
             <tbody>

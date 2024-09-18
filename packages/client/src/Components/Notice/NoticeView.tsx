@@ -5,7 +5,6 @@ import Link from "next/link";
 import axios from "axios";
 import moment from "moment";
 import { VscEye } from "react-icons/vsc";
-import { useTranslation } from "react-i18next";
 import { NoticeType } from "@depot/types/notice"; // NoticeType 타입 가져오기
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
 import { useLinkPush } from "@/Hooks/useLinkPush";
@@ -17,7 +16,6 @@ interface NoticeViewProps {
 
 const NoticeView: React.FC<NoticeViewProps> = ({ view_id }) => {
   const [content, setContent] = useState<NoticeType | null>(null);
-  const { t } = useTranslation();
   const { login, userInfo } = useLoginCheck();
   const { linkPush } = useLinkPush();
   useEffect(() => {

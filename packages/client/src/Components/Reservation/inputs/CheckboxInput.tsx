@@ -1,5 +1,4 @@
 import React, { ChangeEvent } from "react";
-import { useTranslation } from "react-i18next";
 
 interface CheckboxProps {
   label: string;
@@ -16,7 +15,6 @@ const CheckboxInput: React.FC<CheckboxProps> = ({
     setChecked(e.target.checked);
   };
 
-  const { t } = useTranslation();
   return (
     <div>
       <div className="form-check form-check-inline">
@@ -29,7 +27,7 @@ const CheckboxInput: React.FC<CheckboxProps> = ({
           onChange={handleChange}
         />
         <label className="form-check-label" htmlFor="AgreeToTerms">
-          {t(label)}
+          {label}
         </label>
       </div>
       <hr />

@@ -1,9 +1,7 @@
 import React from "react";
 import Link from "next/link"; // react-router-dom 대신 next/link 사용
-import { useTranslation } from "react-i18next";
 
 const Banner: React.FC = () => {
-  //const { t } = useTranslation();
   const t = (text: string): string => text;
 
   return (

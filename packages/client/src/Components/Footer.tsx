@@ -1,10 +1,8 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import { useTranslation } from "react-i18next";
 
 const Footer: React.FC = () => {
-  const { t } = useTranslation();
   return (
     <footer id="footer" className="footer">
       <div className="footer-content">
