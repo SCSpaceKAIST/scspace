@@ -16,7 +16,6 @@ interface UserInfo {
   ku_kname: string;
 }
 
-const FRONT_BASE_URL = 'https://localhost';
 @Injectable()
 export class AuthService {
   constructor(
@@ -57,7 +56,7 @@ export class AuthService {
         path: '/',
       });
 
-      res.redirect(FRONT_BASE_URL + '/');
+      res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL') + '/');
     } catch (error) {
       console.error(error);
       res.status(500).send('Internal Server Error');
@@ -88,7 +87,7 @@ export class AuthService {
 
   logout(res): void {
     res.clearCookie('scspacetoken1', { path: '/' });
-    res.redirect(FRONT_BASE_URL);
+    res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
   }
 
   private decrypt = (
