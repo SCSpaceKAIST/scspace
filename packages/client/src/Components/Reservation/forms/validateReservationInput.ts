@@ -198,10 +198,7 @@ export const validateReservationInput = (
   const errors: string[] = [];
 
   // 기본 필드 검증 (user_id, space_id 등)
-  if (
-    typeof reservationInput.user_id !== "string" ||
-    reservationInput.user_id.length !== 8
-  ) {
+  if (typeof reservationInput.user_id !== "string") {
     errors.push("user_id는 8자 문자열이어야 합니다.");
   }
 
