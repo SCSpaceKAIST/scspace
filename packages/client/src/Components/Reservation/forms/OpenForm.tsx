@@ -28,7 +28,9 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   space_id,
   space,
 }) => {
-  const { maxTime, minDate, maxDate } = setTimes(space);
+  const { userInfo, ckUserType } = useLoginCheck();
+  const { handleReservationSend } = useReservationSend();
+  const { maxTime, minDate, maxDate } = setTimes(space, ckUserType);
   const [timeFrom, setTimeFrom] = useState<Date>(minDate);
   const [timeTo, setTimeTo] = useState<Date>(minDate);
   const [agreeCheck, setAgreeCheck] = useState<boolean>(false);
@@ -38,8 +40,6 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   const [innerNumber, setInnerNumber] = useState<number | undefined>(1);
   const [outerNumber, setOuterNumber] = useState<number | undefined>(1);
   const [eventPurpose, setEventPurpose] = useState<string>("");
-  const { userInfo } = useLoginCheck();
-  const { handleReservationSend } = useReservationSend();
   const handleSubmit = () => {
     if (!userInfo) return; // 로그인 안한 경우, 나올 일은 없으나 컴파일 에러 방지
     if (!innerNumber || !outerNumber) {
@@ -73,7 +73,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
       alert(inputVal.errors);
       return;
     }
-    handleReservationSend(reservationInput, space);
+    handleReservationSend(reservationInput, space, ckUserType);
   };
 
   return (
