@@ -39,7 +39,11 @@ const resourcesData: ResourceData[] = [
 
 type ReservationEvent = EventInput & {
   extendedProps: {
-    reservation: ReservationType & { name: string; space_type: SpaceTypeEnum };
+    reservation: ReservationType & {
+      name: string;
+      space_type: SpaceTypeEnum;
+      user_id: string;
+    };
   };
 };
 
@@ -68,7 +72,9 @@ const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
   const handleReservationClick = (info: any) => {
     const reservation = info.event.extendedProps.reservation;
     setSelectedReservation(reservation);
-    setSelectedReserverInfo(null);
+    setSelectedReserverInfo(
+      userInfo && userInfo?.user_id === reservation.user_id ? userInfo : null
+    );
     setShowModal(true);
   };
 
@@ -109,6 +115,7 @@ const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
           ...r,
           name: space.name,
           space_type: space.space_type,
+          user_id: r.user_id,
         },
       },
     }));

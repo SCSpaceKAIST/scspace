@@ -275,37 +275,39 @@ const ReservModal: React.FC<ReservModalProps> = ({
         <br />
         {reserverInfo ? (
           <div>
-            <div>
-              <h5 className="modal-ttl">예약자</h5>
-              <hr />
-              <div className="wrap">
-                <p className="modal-first">예약자 학번</p>
-                <p className="modal-second">
-                  {reserverInfo ? reserverInfo.user_id : ""}
-                </p>
-              </div>
-              <div className="wrap">
-                <p className="modal-first">예약자 이름</p>
-                <p className="modal-second">
-                  {reserverInfo ? reserverInfo.name : ""}
-                </p>
-              </div>
-              <div className="wrap">
-                <p className="modal-first">예약자 이메일</p>
-                <p className="modal-second">
-                  {reserverInfo ? reserverInfo.email : ""}
-                </p>
-              </div>
+            <h5 className="modal-ttl">예약자</h5>
+            <hr />
+            <div className="wrap">
+              <p className="modal-first">예약자 학번</p>
+              <p className="modal-second">
+                {reserverInfo ? reserverInfo.user_id : ""}
+              </p>
             </div>
-            <br />
-            <div>
-              <h5 className="modal-ttl">예약 내용</h5>
-              <hr />
-              {reservationInfo !== null && reservationInfo.content !== null
-                ? reservationContent()
-                : ""}
+            <div className="wrap">
+              <p className="modal-first">예약자 이름</p>
+              <p className="modal-second">
+                {reserverInfo ? reserverInfo.name : ""}
+              </p>
             </div>
-            <br />{" "}
+            <div className="wrap">
+              <p className="modal-first">예약자 이메일</p>
+              <p className="modal-second">
+                {reserverInfo ? reserverInfo.email : ""}
+              </p>
+            </div>
+          </div>
+        ) : null}
+        <br />
+        <div>
+          <h5 className="modal-ttl">예약 내용</h5>
+          <hr />
+          {reservationInfo !== null && reservationInfo.content !== null
+            ? reservationContent()
+            : ""}
+        </div>
+        <br />{" "}
+        {reserverInfo ? (
+          <div>
             <div>
               {/* 예약 처리 부분 */}
               <MultipleRadioInput
