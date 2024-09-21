@@ -8,11 +8,18 @@ import Dropdown from "react-bootstrap/Dropdown";
 import moment from "moment";
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
 import { sendGet } from "@Hooks/useApi";
-import { ReservationType } from "@depot/types/reservation";
-import { SpaceType } from "@depot/types/space";
+import {
+  ReservationOutputType,
+  ReservationType,
+} from "@depot/types/reservation";
+import { SpaceType, SpaceTypeEnum } from "@depot/types/space";
 import { useSpaces } from "@/Hooks/useSpaces";
 import { useLinkPush } from "@/Hooks/useLinkPush";
 import { Tooltip } from "react-tooltip"; // 수정된 import 문
+import ReservationModal, {
+  handleReservationSubmit,
+} from "@Components/Reservation/ReservationModal";
+import { UserType } from "@depot/types/user";
 
 interface ResourceData {
   text: string;
@@ -30,6 +37,12 @@ const resourcesData: ResourceData[] = [
   // 필요한 리소스 데이터를 여기에 추가하세요
 ];
 
+type ReservationEvent = EventInput & {
+  extendedProps: {
+    reservation: ReservationType & { name: string; space_type: SpaceTypeEnum };
+  };
+};
+
 const spaceDict: { [key: string]: string } = {};
 resourcesData.forEach((resource) => {
   spaceDict[resource.id] = resource.text;
@@ -37,11 +50,27 @@ resourcesData.forEach((resource) => {
 
 const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
-  const [data, setData] = useState<EventInput[]>([]);
+  const [data, setData] = useState<ReservationEvent[]>([]);
   const { login, userInfo } = useLoginCheck();
   const { spaceArray, loaded } = useSpaces(space_id);
   const { linkPush } = useLinkPush();
   const [reservations, setReservations] = useState<ReservationType[]>();
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [selectedReservation, setSelectedReservation] =
+    useState<ReservationType | null>(null);
+  const [selectedReserverInfo, setSelectedReserverInfo] =
+    useState<UserType | null>(null);
+
+  const handleShowModal = () => {
+    setShowModal(!showModal);
+  };
+
+  const handleReservationClick = (info: any) => {
+    const reservation = info.event.extendedProps.reservation;
+    setSelectedReservation(reservation);
+    setSelectedReserverInfo(null);
+    setShowModal(true);
+  };
 
   useEffect(() => {
     callApi();
@@ -62,7 +91,7 @@ const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
     }
   };
 
-  const changeSpace = (data: ReservationType[]): EventInput[] => {
+  const changeSpace = (data: ReservationType[]): ReservationEvent[] => {
     if (!spaceArray) return [];
     return data.map((r) => ({
       id: r.reservation_id.toString(),
@@ -74,7 +103,14 @@ const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
         r.time_to
       ).format("HH:mm")} | ${r.user_id}`,
 
-      extendedProps: { user_id: r.user_id },
+      extendedProps: {
+        user_id: r.user_id,
+        reservation: {
+          ...r,
+          name: space.name,
+          space_type: space.space_type,
+        },
+      },
     }));
   };
 
@@ -145,11 +181,20 @@ const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
             center: "title",
             right: "dayGridMonth,timeGridWeek,timeGridDay",
           }}
-          eventClick={handleEventClick}
+          eventClick={handleReservationClick}
+          //eventClick={handleEventClick}
           eventMouseEnter={handleEventMouseEnter}
           eventContent={eventContent}
         />
       </div>
+      <ReservationModal
+        showHide={showModal}
+        setShowHide={handleShowModal}
+        reservationInfo={selectedReservation}
+        reserverInfo={selectedReserverInfo}
+        setReservationInfo={setSelectedReservation}
+        handleSubmit={() => {}}
+      />
     </div>
   );
 };

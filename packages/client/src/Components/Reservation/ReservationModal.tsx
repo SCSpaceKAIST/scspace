@@ -18,7 +18,6 @@ import { sendGet, sendPut } from "@/Hooks/useApi";
 import { useSpaces } from "@/Hooks/useSpaces";
 import MultipleRadioInput from "./inputs/MultipleRadioInput";
 import TextInput from "./inputs/TextInput";
-import { useLinkPush } from "@/Hooks/useLinkPush";
 
 interface ReservModalProps {
   reservationInfo: ReservationType | null;
@@ -274,63 +273,67 @@ const ReservModal: React.FC<ReservModalProps> = ({
           </div>
         </div>
         <br />
-        <div>
-          <h5 className="modal-ttl">예약자</h5>
-          <hr />
-          <div className="wrap">
-            <p className="modal-first">예약자 학번</p>
-            <p className="modal-second">
-              {reserverInfo ? reserverInfo.user_id : ""}
-            </p>
-          </div>
-          <div className="wrap">
-            <p className="modal-first">예약자 이름</p>
-            <p className="modal-second">
-              {reserverInfo ? reserverInfo.name : ""}
-            </p>
-          </div>
-          <div className="wrap">
-            <p className="modal-first">예약자 이메일</p>
-            <p className="modal-second">
-              {reserverInfo ? reserverInfo.email : ""}
-            </p>
-          </div>
-        </div>
-        <br />
-        <div>
-          <h5 className="modal-ttl">예약 내용</h5>
-          <hr />
-          {reservationInfo !== null && reservationInfo.content !== null
-            ? reservationContent()
-            : ""}
-        </div>
-        <br />{" "}
-        <div>
-          {/* 예약 처리 부분 */}
-          <MultipleRadioInput
-            contents={Object.keys(reservationStateOptions)} // 예약 처리의 key들
-            labels={Object.values(reservationStateOptions)} // 예약 처리에 대한 라벨들
-            header="예약 처리" // 라벨로 표시될 헤더
-            selected={reservationInfo.state} // 선택된 값
-            setSelected={setState} // 선택값 변경 핸들러
-          />
+        {reserverInfo ? (
+          <div>
+            <div>
+              <h5 className="modal-ttl">예약자</h5>
+              <hr />
+              <div className="wrap">
+                <p className="modal-first">예약자 학번</p>
+                <p className="modal-second">
+                  {reserverInfo ? reserverInfo.user_id : ""}
+                </p>
+              </div>
+              <div className="wrap">
+                <p className="modal-first">예약자 이름</p>
+                <p className="modal-second">
+                  {reserverInfo ? reserverInfo.name : ""}
+                </p>
+              </div>
+              <div className="wrap">
+                <p className="modal-first">예약자 이메일</p>
+                <p className="modal-second">
+                  {reserverInfo ? reserverInfo.email : ""}
+                </p>
+              </div>
+            </div>
+            <br />
+            <div>
+              <h5 className="modal-ttl">예약 내용</h5>
+              <hr />
+              {reservationInfo !== null && reservationInfo.content !== null
+                ? reservationContent()
+                : ""}
+            </div>
+            <br />{" "}
+            <div>
+              {/* 예약 처리 부분 */}
+              <MultipleRadioInput
+                contents={Object.keys(reservationStateOptions)} // 예약 처리의 key들
+                labels={Object.values(reservationStateOptions)} // 예약 처리에 대한 라벨들
+                header="예약 처리" // 라벨로 표시될 헤더
+                selected={reservationInfo.state} // 선택된 값
+                setSelected={setState} // 선택값 변경 핸들러
+              />
 
-          {/* 근로 배정 부분 */}
-          <MultipleRadioInput
-            contents={Object.keys(workerNeedOptions)} // 근로 배정의 key들
-            labels={Object.values(workerNeedOptions)}
-            header="근로 배정" // 헤더
-            selected={reservationInfo.worker_need} // 선택된 근로 배정 상태
-            setSelected={setWorkerNeed} // 근로 배정 선택 핸들러
-          />
+              {/* 근로 배정 부분 */}
+              <MultipleRadioInput
+                contents={Object.keys(workerNeedOptions)} // 근로 배정의 key들
+                labels={Object.values(workerNeedOptions)}
+                header="근로 배정" // 헤더
+                selected={reservationInfo.worker_need} // 선택된 근로 배정 상태
+                setSelected={setWorkerNeed} // 근로 배정 선택 핸들러
+              />
 
-          {/* 코멘트 입력 부분 */}
-          <TextInput
-            label="Comment"
-            text={reservationInfo.comment ? reservationInfo.comment : ""}
-            setText={setComment}
-          />
-        </div>
+              {/* 코멘트 입력 부분 */}
+              <TextInput
+                label="Comment"
+                text={reservationInfo.comment ? reservationInfo.comment : ""}
+                setText={setComment}
+              />
+            </div>
+          </div>
+        ) : null}
       </Modal.Body>
       <Modal.Footer>
         {userInfo && ckUserType("admin") ? (
