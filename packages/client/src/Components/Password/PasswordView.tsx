@@ -4,24 +4,39 @@ import { PasswordType, PasswordValidationType } from "@depot/types/password";
 import { UserType } from "@depot/types/user";
 import { sendGet } from "@/Hooks/useApi";
 import PasswordBar from "./PasswordBar";
+import { useSpaces } from "@/Hooks/useSpaces";
 
 interface PasswordProps {
   userInfo: UserType;
+  forManage?: boolean;
 }
 
-const PasswordView: React.FC<PasswordProps> = ({ userInfo }) => {
+const PasswordView: React.FC<PasswordProps> = ({
+  userInfo,
+  forManage = false,
+}) => {
   const [validationList, setValidationList] = useState<
     PasswordValidationType[]
   >([]);
+  const { spaceArray } = useSpaces();
   useEffect(() => {
-    sendGet<PasswordValidationType[]>("/password/validSpaces", {
-      user_id: userInfo.user_id,
-    }).then((response) => {
-      if (response) {
-        setValidationList(response);
-      }
-    });
-  }, [userInfo]);
+    if (forManage) {
+      setValidationList(
+        spaceArray?.map((space) => ({
+          space_id: space.space_id,
+          valid: true,
+        })) || []
+      );
+    } else {
+      sendGet<PasswordValidationType[]>("/password/validSpaces", {
+        user_id: userInfo.user_id,
+      }).then((response) => {
+        if (response) {
+          setValidationList(response);
+        }
+      });
+    }
+  }, [userInfo, spaceArray, forManage]);
 
   const { list } = useBoardData<PasswordType>({
     apiEndpoint: "/api/password/validAll",
