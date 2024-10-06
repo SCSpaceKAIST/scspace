@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React, { useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 
@@ -156,13 +157,19 @@ const Rule: React.FC = () => {
                 <b>{fileTitle}</b>
               </h4>
               <hr />
-              <div className="container viewer img-fluid">
+              {/*
+               <div className="container viewer img-fluid">
+                              
                 <Document file={fileName} onLoadSuccess={onDocumentLoadSuccess}>
                   {Array.from(new Array(numPages), (el, index) => (
                     <Page key={index} scale={1.2} pageNumber={index + 1} />
                   ))}
-                </Document>
-              </div>
+                  </Document>
+              </div>*/}
+              <Link href={fileName}>
+                {" "}
+                <button type="button">링크 바로 가기</button>{" "}
+              </Link>
               <div className="text-end">
                 <a href={fileName} download>
                   <button type="button">다운받기</button>
