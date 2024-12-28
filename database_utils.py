@@ -37,7 +37,7 @@ def export_tables_to_csv(output_dir='./csv_files'):
         columns = [i[0] for i in cursor.description]
 
         df = pd.DataFrame(rows, columns=columns)
-        df.to_csv(os.path.join(output_dir, f"{table_name}.csv"), index=False)
+        df.to_csv(os.path.join(output_dir, f"{table_name}.csv"), index=False, encoding='utf-8') 
         print(f"Table {table_name} exported to {os.path.join(output_dir, f'{table_name}.csv')}")
 
     cursor.close()
@@ -56,7 +56,8 @@ def import_csv_to_tables(input_dir='./csv_files'):
     for csv_file in csv_files:
         table_name = os.path.splitext(csv_file)[0]
         file_path = os.path.join(input_dir, csv_file)
-        df = pd.read_csv(file_path)
+        df = pd.read_csv(file_path, encoding='utf-8')
+        print(f"Uploading {csv_file} to {table_name} table...")
 
         for _, row in df.iterrows():
             columns = ', '.join(row.index)
@@ -68,7 +69,7 @@ def import_csv_to_tables(input_dir='./csv_files'):
                 print(f"Error: {err}")
                 connection.rollback()
                 continue
-
+        input()
         connection.commit()
         print(f"Data from {csv_file} uploaded to {table_name} table.")
 
@@ -112,5 +113,5 @@ if __name__ == "__main__":
 ## CSV to db
 # python database_utils.py --import --dir=./import_csv_files
 
-
-# scp -i ./to_key.pem ./database_utils.py ec2-user@3.36.210.28:/home/ec2-user/
+# 파일 폴더에서
+# scp -i ../2024SCSpace.pem -r ubuntu@3.36.210.28:~/scspace/exported_csv_files ./exported_csv_files
