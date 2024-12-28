@@ -16,7 +16,7 @@ export const passwords = mysqlTable('passwords', {
   time_post: datetime('time_post').notNull().default(new Date()),
   time_edit: datetime('time_edit').notNull(),
   changed: tinyint('changed').default(0).notNull(),
-  user_id: char('user_id', { length: 8 }),
+  user_id: int('user_id'),
   // Foreign key
   // space_id references spaces.space_id O
 });

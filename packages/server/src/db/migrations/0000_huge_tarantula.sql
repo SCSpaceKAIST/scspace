@@ -1,6 +1,6 @@
 CREATE TABLE `asks` (
 	`id` serial AUTO_INCREMENT NOT NULL,
-	`user_id` char(8) NOT NULL,
+	`user_id` int,
 	`time_post` datetime NOT NULL,
 	`time_edit` datetime,
 	`title` varchar(255) NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE `asks` (
 	`views` int NOT NULL DEFAULT 0,
 	`state` enum('wait','receive','solve') NOT NULL,
 	`comment` text,
-	`commenter_id` char(8),
+	`commenter_id` int,
 	CONSTRAINT `asks_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
@@ -37,8 +37,10 @@ CREATE TABLE `passwords` (
 	`id` serial AUTO_INCREMENT NOT NULL,
 	`password` char(10) NOT NULL,
 	`space_id` int NOT NULL,
+	`time_post` datetime NOT NULL DEFAULT '2024-12-28 11:23:41.295',
 	`time_edit` datetime NOT NULL,
 	`changed` tinyint NOT NULL DEFAULT 0,
+	`user_id` int,
 	CONSTRAINT `passwords_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
@@ -101,9 +103,9 @@ CREATE TABLE `teams` (
 --> statement-breakpoint
 CREATE TABLE `users` (
 	`id` serial AUTO_INCREMENT NOT NULL,
-	`user_id` char(8) NOT NULL,
-	`name` varchar(128) NOT NULL,
-	`email` varchar(128) NOT NULL,
+	`user_id` varchar(20) NOT NULL,
+	`name` varchar(128),
+	`email` varchar(128),
 	`type` enum('user','manager','admin','chief') NOT NULL,
 	CONSTRAINT `users_id` PRIMARY KEY(`id`),
 	CONSTRAINT `users_user_id_unique` UNIQUE(`user_id`)

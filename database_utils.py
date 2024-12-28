@@ -43,7 +43,6 @@ def export_tables_to_csv(output_dir='./csv_files'):
     cursor.close()
     connection.close()
 
-
 def import_csv_to_tables(input_dir='./csv_files'):
     """
     CSV 파일을 MySQL 테이블로 가져옵니다.
@@ -59,19 +58,27 @@ def import_csv_to_tables(input_dir='./csv_files'):
         df = pd.read_csv(file_path, encoding='utf-8')
         print(f"Uploading {csv_file} to {table_name} table...")
 
+        # NaN 값을 None으로 변환
+        df = df.astype(object).where(pd.notnull(df), None)
+
+        # 테이블 컬럼 가져오기
+        columns = ', '.join(df.columns)
+        placeholders = ', '.join(['%s'] * len(df.columns))  # %s placeholder 생성
+        insert_query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+
+        # 데이터 삽입
         for _, row in df.iterrows():
-            columns = ', '.join(row.index)
-            values = ', '.join([f"'{str(x).replace('nan', 'NULL')}'" for x in row.values])
-            insert_query = f"INSERT INTO {table_name} ({columns}) VALUES ({values})"
+            #print(row.values)
             try:
-                cursor.execute(insert_query)
+                cursor.execute(insert_query, tuple(row.values))  # 이미 None으로 변환된 값 사용
             except mysql.connector.Error as err:
                 print(f"Error: {err}")
-                connection.rollback()
+                print(f"Error data: {row.values}")
+                connection.rollback()  # 트랜잭션 롤백
                 continue
-        input()
         connection.commit()
         print(f"Data from {csv_file} uploaded to {table_name} table.")
+        input(f"Press Enter to continue...")
 
     cursor.close()
     connection.close()
@@ -109,9 +116,9 @@ if __name__ == "__main__":
     main()
 
 ## db to CSV
-# python database_utils.py --export --dir=./exported_csv_files
+# python3 database_utils.py --export --dir=./exported_csv_files
 ## CSV to db
-# python database_utils.py --import --dir=./import_csv_files
+# python3 database_utils.py --import --dir=./import_csv_files
 
 # 파일 폴더에서
 # scp -i ../2024SCSpace.pem -r ubuntu@3.36.210.28:~/scspace/exported_csv_files ./exported_csv_files

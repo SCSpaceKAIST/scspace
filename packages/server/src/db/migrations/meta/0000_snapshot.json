@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "2c3e83cf-1159-4c42-b93b-21329af139fd",
+  "id": "98b535da-30c6-4cf2-97cd-1c2b7fe2290f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "asks": {
@@ -16,9 +16,9 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "char(8)",
+          "type": "int",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "time_post": {
@@ -73,7 +73,7 @@
         },
         "commenter_id": {
           "name": "commenter_id",
-          "type": "char(8)",
+          "type": "int",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -240,6 +240,14 @@
           "notNull": true,
           "autoincrement": false
         },
+        "time_post": {
+          "name": "time_post",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'2024-12-28 11:23:41.295'"
+        },
         "time_edit": {
           "name": "time_edit",
           "type": "datetime",
@@ -254,6 +262,13 @@
           "notNull": true,
           "autoincrement": false,
           "default": 0
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -609,7 +624,7 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "char(8)",
+          "type": "varchar(20)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -618,14 +633,14 @@
           "name": "name",
           "type": "varchar(128)",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "email": {
           "name": "email",
           "type": "varchar(128)",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "type": {
