@@ -1,1 +1,1 @@
-export * from "./calendarType";
+export * from "./calendar.type";

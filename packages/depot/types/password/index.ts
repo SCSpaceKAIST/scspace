@@ -1,1 +1,1 @@
-export * from "./passwordType";
+export * from "./password.type";
