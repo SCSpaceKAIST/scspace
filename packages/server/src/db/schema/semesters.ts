@@ -1,9 +1,10 @@
-import { mysqlTable, char, datetime, int } from 'drizzle-orm/mysql-core';
+import { mysqlTable, datetime, int, serial } from 'drizzle-orm/mysql-core';
 
 export const semesters = mysqlTable('semesters', {
-  semester_id: char('semester_id', { length: 3 }).primaryKey(),
+  id: serial('id').primaryKey(),
   date_from: datetime('date_from').notNull(),
   date_to: datetime('date_to').notNull(),
   year: int('year').notNull(),
-  season: int('season').notNull(),
+  season: int('season').notNull(), // SemesterSeasonEnum
+  type: int('type').notNull(), // SemesterTypeEnum
 });

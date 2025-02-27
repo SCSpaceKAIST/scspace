@@ -1,5 +1,5 @@
 // Table: faqs
-export interface FaqType {
+export interface IFaq {
   id: number;
   question: string; // varchar(255)
   answer: string; // text

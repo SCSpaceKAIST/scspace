@@ -3,8 +3,11 @@ import { mysqlTable, varchar, serial, int } from 'drizzle-orm/mysql-core';
 // users 테이블 정의
 export const users = mysqlTable('users', {
   id: serial('id').primaryKey(), // id는 기본 키이면서 자동 증가
-  user_id: varchar('user_id', { length: 20 }).notNull().unique(), // user_id는 8자리의 char, 고유 값
-  name: varchar('name', { length: 128 }), // name은 128자리의 varchar
+  kaist_uid: varchar('kaist_uid', { length: 50 }).notNull().unique(), // user_id는 8자리의 char, 고유 값
+  user_sso_id: varchar('user_sso_id', { length: 50 }), // user_id는 8자리의 char, 고유 값
+  name_kr: varchar('name_kr', { length: 128 }), // name은 128자리의 varchar
+  name_en: varchar('name_en', { length: 128 }), // email은 128자리의 varchar
+  user_number: varchar('user_number', { length: 128 }).notNull(), // 학번(student_number) or 사번(employee_number)
   email: varchar('email', { length: 128 }), // email은 128자리의 varchar
-  type: int('type').notNull(), // type은 enum 필드
+  type: int('type').notNull().default(1), // type은 enum 필드 user, manager, admin, chief
 });

@@ -8,7 +8,6 @@ import {
   text,
   tinyint,
 } from 'drizzle-orm/mysql-core';
-import { users } from './users';
 
 // Notices Table
 export const notices = mysqlTable('notices', {

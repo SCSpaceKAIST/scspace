@@ -6,7 +6,6 @@ import {
   tinyint,
   int,
 } from 'drizzle-orm/mysql-core';
-import { spaces } from './spaces';
 
 // Passwords Table
 export const passwords = mysqlTable('passwords', {

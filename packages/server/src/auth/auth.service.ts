@@ -1,20 +1,11 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { LoginRequestDto } from './dto/login.request.dto';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as crypto from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { UserRepository } from 'src/user/user.repository';
 import { Logger } from '@nestjs/common';
 import { UserInputType } from '@depot/types/user';
-interface UserInfo {
-  ku_std_no: string | null;
-  kaist_uid: string;
-  mail: string;
-  ku_employee_number: string | null;
-  displayname: string;
-  mobile: string;
-  ku_kname: string;
-}
+import { UserSSOType2022 } from 'src/user/user.type';
 
 @Injectable()
 export class AuthService {
@@ -28,7 +19,7 @@ export class AuthService {
     const secretKey = this.configService.get<string>('SECRETKEY') + state;
     const keySpec = Buffer.from(secretKey.substring(80, 96), 'utf8');
     const iv = Buffer.from(secretKey.substring(80, 96), 'utf8');
-    const userInfo: UserInfo = this.decrypt(result, keySpec, iv);
+    const userInfo: UserSSOType2022 = this.decrypt(result, keySpec, iv);
 
     try {
       const data = userInfo;
@@ -94,7 +85,7 @@ export class AuthService {
     encrypted: string,
     keySpec: Buffer,
     iv: Buffer,
-  ): UserInfo => {
+  ): UserSSOType2022 => {
     const decipher = crypto.createDecipheriv('aes-128-cbc', keySpec, iv);
     const encryptedBuffer = Buffer.from(encrypted, 'base64');
     const decrypted = Buffer.concat([
@@ -103,16 +94,9 @@ export class AuthService {
     ]).toString();
 
     return JSON.parse(decrypted).dataMap.USER_INFO;
-
-    // interface USERINFO {
-    //   // decrypted 후의 결과
-    //   dataMap: {
-    //     USER_INFO: UserInfo;
-    //   };
-    // }
   };
 
-  private ssoToUser = (ssoPayload: UserInfo): UserInputType => {
+  private ssoToUser = (ssoPayload: UserSSOType2022): UserInputType => {
     // 첫 가입시 DB에 넣기 좋게 변경하는 함수
     return {
       user_id: ssoPayload.ku_std_no

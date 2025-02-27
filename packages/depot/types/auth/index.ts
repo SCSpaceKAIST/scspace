@@ -1,1 +1,1 @@
-export * from "./loginCheckResponse";
+export * from "./auth.type";

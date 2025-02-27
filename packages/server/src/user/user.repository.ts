@@ -4,7 +4,6 @@ import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema } from 'src/db/schema';
 import { eq } from 'drizzle-orm';
 import { UserInputType } from '@depot/types/user';
-import { UserType } from '@depot/types/user';
 import { LckResType } from '@depot/types/auth/loginCheckResponse';
 
 @Injectable()

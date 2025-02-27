@@ -1,1 +1,1 @@
-export * from "./faqType";
+export * from "./faq.type";

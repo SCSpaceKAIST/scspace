@@ -1,5 +1,4 @@
-type SemesterSeasonEnum = "봄" | "가을";
-
+import { SemesterSeasonEnum } from "../../enums/semester.enum";
 // Table: semesters
 export interface SemestersType {
   semester_id: string; // char(3)
@@ -8,3 +7,4 @@ export interface SemestersType {
   year: number;
   season: SemesterSeasonEnum;
 }
+

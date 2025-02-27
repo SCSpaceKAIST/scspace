@@ -1,7 +1,7 @@
-export type AskStateEnum = "wait" | "receive" | "solve";
+import { AskStateEnum } from "../../enums/ask.enum";
 
 // Table: asks
-export interface AskType {
+export interface IAsk {
   id: number;
   user_id: string; // char(8)
   time_post: Date;
@@ -14,8 +14,8 @@ export interface AskType {
   commenter_id: string; // char(8)
 }
 
-export type AskInputType = Omit<
-  AskType,
+export type IAskCreate = Omit<
+  IAsk,
   | "id"
   | "time_post"
   | "time_edit"
@@ -26,7 +26,7 @@ export type AskInputType = Omit<
 >;
 
 export const askStateOptions: { [key in AskStateEnum]: string } = {
-  wait: "대기중",
-  receive: "접수됨",
-  solve: "해결됨",
+  [AskStateEnum.WAIT]: "대기중",
+  [AskStateEnum.RECEIVE]: "접수됨",
+  [AskStateEnum.SOLVE]: "해결됨",
 };

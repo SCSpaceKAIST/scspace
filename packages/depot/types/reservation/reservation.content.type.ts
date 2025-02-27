@@ -1,26 +1,26 @@
-export type ReservationContentTypeEnum =
-  | IndividualContentType
-  | PianoContentType
-  | SeminarContentType
-  | DanceContentType
-  | GroupContentType
-  | MiraeContentType
-  | SumiContentType
-  | WorkContentType
-  | OpenContentType;
+export type IReservationContent =
+  | IIndividualContent
+  | IPianoContent
+  | ISeminarContent
+  | IDanceContent
+  | IGroupContent
+  | IMiraeContent
+  | ISumiContent
+  | IWorkContent
+  | IOpenContent;
 
 // Individual spaces
-export interface IndividualContentType {
+export interface IIndividualContent {
   eventName: string | null;
 }
 
 // Piano spaces
-export interface PianoContentType {
+export interface IPianoContent {
   eventName: string | null; // Placeholder for unspecified structure
 }
 
 // Seminar spaces
-export interface SeminarContentType {
+export interface ISeminarContent {
   eventName: string;
   organizationName: string;
   contents: string;
@@ -28,21 +28,21 @@ export interface SeminarContentType {
 }
 
 // Dance spaces
-export interface DanceContentType {
+export interface IDanceContent {
   eventName: string;
   contents: string;
   teamMember: string[];
 }
 
 // Group spaces
-export interface GroupContentType {
+export interface IGroupContent {
   eventName: string;
   contents: string;
   teamMember: string[];
 }
 
 // Mirae spaces
-export interface MiraeContentType {
+export interface IMiraeContent {
   eventName: string;
   organizationName: string;
   contents: string;
@@ -55,7 +55,7 @@ export interface MiraeContentType {
 }
 
 // Sumi spaces
-export interface SumiContentType {
+export interface ISumiContent {
   eventName: string;
   organizationName: string;
   contents: string;
@@ -71,13 +71,13 @@ export interface SumiContentType {
 }
 
 // Work spaces
-export interface WorkContentType {
+export interface IWorkContent {
   eventName: string;
   organizationName: string;
 }
 
 // Open spaces
-export interface OpenContentType {
+export interface IOpenContent {
   eventName?: string;
   organizationName?: string;
   contents?: string;
@@ -88,7 +88,7 @@ export interface OpenContentType {
 }
 
 export function isTeamContent(
-  content: ReservationContentTypeEnum
-): content is DanceContentType | GroupContentType {
+  content: IReservationContent
+): content is IDanceContent | IGroupContent {
   return "teamMember" in content;
 }

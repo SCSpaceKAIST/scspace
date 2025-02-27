@@ -1,1 +1,1 @@
-export * from "./noticeType";
+export * from "./notice.type";

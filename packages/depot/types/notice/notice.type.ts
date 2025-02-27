@@ -1,5 +1,5 @@
 // Table: notices
-export interface NoticeType {
+export interface INotice {
   id: number;
   time_post: Date;
   time_edit?: Date | null;
@@ -10,7 +10,7 @@ export interface NoticeType {
   user_id: string; // char(8)
 }
 
-export type NoticeInputType = Omit<
-  NoticeType,
+export type INoticeCreate = Omit<
+  INotice,
   "id" | "time_post" | "time_edit" | "views"
 >;
