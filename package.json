@@ -22,7 +22,8 @@
     "@types/passport-local": "^1.0.38",
     "@types/react-pdf": "^7.0.0",
     "dotenv-cli": "^7.4.2",
-    "drizzle-kit": "^0.24.0"
+    "drizzle-kit": "^0.24.0",
+    "zod": "^3.24.1"
   },
   "dependencies": {
     "@chakra-ui/next-js": "^2.2.0",

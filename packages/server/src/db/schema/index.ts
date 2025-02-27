@@ -10,6 +10,18 @@ import { team_members } from './team_members';
 import { teams } from './teams';
 import { users } from './users';
 
+export { asks } from './asks';
+export { faqs } from './faqs';
+export { notices } from './notices';
+export { passwords } from './passwords';
+export { reservations } from './reservations';
+export { semesters } from './semesters';
+export { space_introductions } from './space_introductions';
+export { spaces } from './spaces';
+export { team_members } from './team_members';
+export { teams } from './teams';
+export { users } from './users';
+
 // 스키마에 정의된 모든 테이블을 모아 내보냅니다.
 export const schema = {
   asks,

@@ -5,11 +5,8 @@ import {
   datetime,
   int,
   json,
-  mysqlEnum,
   serial,
 } from 'drizzle-orm/mysql-core';
-import { users } from './users';
-import { spaces } from './spaces';
 
 // Reservations Table
 export const reservations = mysqlTable('reservations', {
@@ -22,19 +19,6 @@ export const reservations = mysqlTable('reservations', {
   time_post: datetime('time_post').notNull(),
   content: json('content'),
   comment: varchar('comment', { length: 300 }),
-  state: mysqlEnum('state', ['grant', 'wait', 'received', 'rejected'])
-    .notNull()
-    .default('wait'),
-  worker_need: mysqlEnum('worker_need', [
-    'unnecessary',
-    'required',
-    'completed',
-    'failed',
-  ])
-    .notNull()
-    .default('unnecessary'),
-  // Foreign keys
-  // space_id references spaces.space_id O
-  // user_id references users.user_id O
-  // team_id references teams.team_id O
+  state: int('state').notNull().default(1), // ['grant', 'wait', 'received', 'rejected']
+  worker_need: int('worker_need').notNull().default(1), // ['unnecessary', 'required', 'completed', 'failed']
 });

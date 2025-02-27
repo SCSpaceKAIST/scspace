@@ -8,7 +8,6 @@ import {
   ReservationOutputType,
   ReservationType,
 } from '@depot/types/reservation';
-import e from 'express';
 
 @Injectable()
 export class ReservationRepository {
@@ -40,7 +39,7 @@ export class ReservationRepository {
     time_to,
     space_id,
     user_id,
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     const newReservation = {
       space_id: space_id,
       user_id: user_id,

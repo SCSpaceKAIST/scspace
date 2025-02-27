@@ -2,13 +2,10 @@ import {
   mysqlTable,
   serial,
   varchar,
-  char,
   datetime,
   int,
   text,
-  mysqlEnum,
 } from 'drizzle-orm/mysql-core';
-import { users } from './users';
 
 // Asks Table
 export const asks = mysqlTable('asks', {
@@ -19,11 +16,7 @@ export const asks = mysqlTable('asks', {
   title: varchar('title', { length: 255 }).notNull(),
   content: text('content').notNull(),
   views: int('views').default(0).notNull(),
-  state: mysqlEnum('state', ['wait', 'receive', 'solve']).notNull(),
+  state: int('state').notNull(), //['wait', 'receive', 'solve']
   comment: text('comment'),
   commenter_id: int('commenter_id'),
-  //.references(() => users.user_id),
-  // Foreign key
-  // user_id references users.user_id O
-  // commenter_id references users.user_id O
 });
