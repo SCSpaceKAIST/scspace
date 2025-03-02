@@ -30,8 +30,8 @@ const Reservation: React.FC = () => {
                       <hr />
                       {spaceArray?.map((space) => {
                         return (
-                          <div key={`spaceReservationKey${space.space_id}`}>
-                            <Link href={`/reservation/${space.space_id}`}>
+                          <div key={`spaceReservationKey${space.spaceId}`}>
+                            <Link href={`/reservation/${space.spaceId}`}>
                               {space.name}
                             </Link>
                             <br />

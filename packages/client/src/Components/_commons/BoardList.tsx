@@ -16,8 +16,8 @@ type StateType = keyof typeof handleStates;
 interface boardTypes {
   title: string;
   state: StateType;
-  user_id: string;
-  time_post: Date;
+  userId: string;
+  timePost: Date;
   views: number;
 }
 // 파라미터를 객체로 그룹화
@@ -64,9 +64,9 @@ const BoardList = <T extends boardTypes>({
       </>
     ),
     제목: ({ contents }) => contents.title,
-    글쓴이: ({ contents }) => contents.user_id,
+    글쓴이: ({ contents }) => contents.userId,
     날짜: ({ contents }) =>
-      moment(contents.time_post).format("YYYY-MM-DD HH:mm:ss"),
+      moment(contents.timePost).format("YYYY-MM-DD HH:mm:ss"),
     조회수: ({ contents }) => contents.views,
   };
 

@@ -197,31 +197,31 @@ export const validateReservationInput = (
 ): { valid: boolean; errors: string } => {
   const errors: string[] = [];
 
-  // 기본 필드 검증 (user_id, space_id 등)
-  if (typeof reservationInput.user_id !== "string") {
-    errors.push("user_id는 8자 문자열이어야 합니다.");
+  // 기본 필드 검증 (userId, spaceId 등)
+  if (typeof reservationInput.userId !== "string") {
+    errors.push("userId는 8자 문자열이어야 합니다.");
   }
 
   if (
-    typeof reservationInput.space_id !== "number" ||
-    isNaN(reservationInput.space_id)
+    typeof reservationInput.spaceId !== "number" ||
+    isNaN(reservationInput.spaceId)
   ) {
-    errors.push("space_id는 숫자여야 합니다.");
+    errors.push("spaceId는 숫자여야 합니다.");
   }
 
-  const timeFrom = new Date(reservationInput.time_from);
-  const timeTo = new Date(reservationInput.time_to);
+  const timeFrom = new Date(reservationInput.timeFrom);
+  const timeTo = new Date(reservationInput.timeTo);
 
   if (isNaN(timeFrom.getTime())) {
-    errors.push("time_from 값이 유효한 날짜 형식이 아닙니다.");
+    errors.push("timeFrom 값이 유효한 날짜 형식이 아닙니다.");
   }
 
   if (isNaN(timeTo.getTime())) {
-    errors.push("time_to 값이 유효한 날짜 형식이 아닙니다.");
+    errors.push("timeTo 값이 유효한 날짜 형식이 아닙니다.");
   }
 
   if (timeFrom.getTime() > timeTo.getTime()) {
-    errors.push("time_from은 time_to보다 이전이어야 합니다.");
+    errors.push("timeFrom은 timeTo보다 이전이어야 합니다.");
   }
 
   if (timeFrom.getTime() == timeTo.getTime()) {

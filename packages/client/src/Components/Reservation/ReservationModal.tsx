@@ -39,10 +39,10 @@ const ReservModal: React.FC<ReservModalProps> = ({
   const { userInfo, ckUserType } = useLoginCheck();
   const [teamData, setTeamData] = useState<TeamType>();
   const [teamMembers, setTeamMembers] = useState<TeamMemberOuptutType[]>([]);
-  const { space } = useSpaces(reservationInfo ? reservationInfo.space_id : 0);
+  const { space } = useSpaces(reservationInfo ? reservationInfo.spaceId : 0);
 
   useEffect(() => {
-    if (reservationInfo && reservationInfo.team_id && teamData === undefined) {
+    if (reservationInfo && reservationInfo.teamId && teamData === undefined) {
       callApiTeam();
     }
   }, [reservationInfo, teamData]);
@@ -51,11 +51,11 @@ const ReservModal: React.FC<ReservModalProps> = ({
     if (!reservationInfo) return;
     try {
       const res = await sendGet<TeamType>("team", {
-        team_id: reservationInfo.team_id,
+        teamId: reservationInfo.teamId,
       });
       setTeamData(res);
       const members = await sendGet<TeamMemberOuptutType[]>("team/members", {
-        team_id: reservationInfo.team_id,
+        teamId: reservationInfo.teamId,
       });
       setTeamMembers(members);
     } catch (err) {
@@ -74,11 +74,11 @@ const ReservModal: React.FC<ReservModalProps> = ({
       state: state as ReservationStateEnum,
     });
   };
-  const setWorkerNeed = (worker_need: string) => {
+  const setWorkerNeed = (workerNeed: string) => {
     if (!userInfo || !ckUserType("admin") || !reservationInfo) return;
     setReservationInfo({
       ...reservationInfo,
-      worker_need: worker_need as WorkerNeedEnum,
+      workerNeed: workerNeed as WorkerNeedEnum,
     });
   };
 
@@ -97,9 +97,9 @@ const ReservModal: React.FC<ReservModalProps> = ({
 
     if (
       reservation &&
-      reservation.team_id &&
+      reservation.teamId &&
       teamData &&
-      teamData.team_id === reservation.team_id &&
+      teamData.teamId === reservation.teamId &&
       reservation.content &&
       isTeamContent(reservation.content)
     ) {
@@ -265,9 +265,9 @@ const ReservModal: React.FC<ReservModalProps> = ({
             <p className="modal-first">예약 시간</p>
             <p className="modal-second">
               {reservationInfo
-                ? moment(reservationInfo.time_from).format("MM월 DD일 HH:mm") +
+                ? moment(reservationInfo.timeFrom).format("MM월 DD일 HH:mm") +
                   "~" +
-                  moment(reservationInfo.time_to).format("MM월 DD일 HH:mm")
+                  moment(reservationInfo.timeTo).format("MM월 DD일 HH:mm")
                 : ""}
             </p>
           </div>
@@ -280,7 +280,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
             <div className="wrap">
               <p className="modal-first">예약자 학번</p>
               <p className="modal-second">
-                {reserverInfo ? reserverInfo.user_id : ""}
+                {reserverInfo ? reserverInfo.userId : ""}
               </p>
             </div>
             <div className="wrap">
@@ -323,7 +323,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
                 contents={Object.keys(workerNeedOptions)} // 근로 배정의 key들
                 labels={Object.values(workerNeedOptions)}
                 header="근로 배정" // 헤더
-                selected={reservationInfo.worker_need} // 선택된 근로 배정 상태
+                selected={reservationInfo.workerNeed} // 선택된 근로 배정 상태
                 setSelected={setWorkerNeed} // 근로 배정 선택 핸들러
               />
 

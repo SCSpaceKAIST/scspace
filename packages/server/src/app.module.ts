@@ -1,17 +1,18 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
+import { UserModule } from './feature/user/user.module';
 import { DBModule } from './db/db.module';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './feature/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { FaqModule } from './faq/faq.module';
-import { NoticeModule } from './notice/notice.module';
-import { AskModule } from './ask/ask.module';
-import { SpaceModule } from './space/space.module';
-import { ReservationModule } from './reservation/reservation.module';
-import { TeamModule } from './team/team.module';
-import { PasswordModule } from './password/password.module';
+import { FaqModule } from './feature/faq/faq.module';
+import { NoticeModule } from './feature/notice/notice.module';
+import { AskModule } from './feature/ask/ask.module';
+import { SpaceModule } from './feature/space/space.module';
+import { ReservationModule } from './feature/reservation/reservation.module';
+import { TeamModule } from './feature/team/team.module';
+import { PasswordModule } from './feature/password/password.module';
+import { SemesterModule } from './feature/semester/semester.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { PasswordModule } from './password/password.module';
     ReservationModule,
     TeamModule,
     PasswordModule,
+    SemesterModule,
   ],
   controllers: [AppController],
   providers: [AppService],

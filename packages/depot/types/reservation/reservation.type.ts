@@ -1,22 +1,22 @@
 import { IUser } from "../user";
 import { IReservationContent } from "./reservation.content.type";
-import { ReservationStateEnum, ReservationWorkerNeedEnum } from "../../enums/reservation.enum";
+import { ReservationCharacterEnum, ReservationHallEquipEnum, ReservationStateEnum, ReservationWorkerNeedEnum } from "../../enums/reservation.enum";
 import { ISpace } from "../space";
 import { ITeam } from "./team.type";
 
 // Table: reservations
 export interface IReservation {
-  reservation_id: number;
-  user_id: string; // char(8)
-  team_id?: number | null;
-  space_id: number;
-  time_from: Date;
-  time_to: Date;
-  time_post: Date;
-  content: IReservationContent | null; // json
+  id: number;
+  userId: number; // char(8)
+  teamId?: number | null;
+  spaceId: number;
+  timeFrom: Date;
+  timeTo: Date;
+  timePost: Date;
+  content: IReservationContent ; // 
   comment: string | null; // varchar(300)
   state: ReservationStateEnum;
-  worker_need: ReservationWorkerNeedEnum;
+  workerNeed: ReservationWorkerNeedEnum;
 }
 
 export type IReservationResponse = IReservation & {
@@ -27,19 +27,23 @@ export type IReservationResponse = IReservation & {
 
 export type IReservationCreate = Omit<
   IReservation,
-  "reservation_id" | "time_post" | "comment" | "time_from" | "time_to"
-> & {
-  time_from: string; // time_from을 string 타입으로 변경
-  time_to: string; // time_to를 string 타입으로 변경
-};
+  "id" | "timePost" | "comment" 
+> ;
 
-export type ISpaceTimeCheckCreate = Pick<
-  IReservationCreate,
-  "space_id" | "time_from" | "time_to"
+export type IReservationUpdate = Omit<
+  IReservation,
+  "userId" | "timePost" | "spaceId" | "timeFrom" | "timeTo" | "content"
 >;
 
-export type IUserTimeCheckCreate = ISpaceTimeCheckCreate & {
-  user_id: string;
+// 공간 예약 시간 체크 요청
+export type ISpaceTimeCheckRequest = Pick<
+  IReservationCreate,
+  "spaceId" | "timeFrom" | "timeTo"
+>;
+
+// 사용자 예약 시간 체크 요청
+export type IUserTimeCheckRequest = ISpaceTimeCheckRequest & {
+  userId: number;
 };
 
 export const reservationStateOptions: {
@@ -64,15 +68,15 @@ export const workerNeedUserOptions = {
 };
 
 export const hallEquipsOptions = {
-  light: "조명",
-  sound: "음향",
-  projector: "프로젝터",
+  [ReservationHallEquipEnum.LIGHT]: "조명",
+  [ReservationHallEquipEnum.SOUND]: "음향",
+  [ReservationHallEquipEnum.PROJECTOR]: "프로젝터",
 };
 
 export const reservationCharacterOptions = {
-  religion: "종교적",
-  rentability: "영리성",
-  politic: "정치적",
+  [ReservationCharacterEnum.RELIGION]: "종교적",
+  [ReservationCharacterEnum.RENTABILITY]: "영리성",
+  [ReservationCharacterEnum.POLITIC]: "정치적",
 };
 
 export function isValidWorkerNeed(input: ReservationWorkerNeedEnum): boolean {

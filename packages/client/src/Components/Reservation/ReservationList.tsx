@@ -23,7 +23,7 @@ const ReservationList: React.FC = () => {
     setPageNumber,
     boardDataRefreshBtnClick,
   } = useBoardData<ReservationOutputType>({
-    apiEndpoint: `/api/reservation/user/${userInfo?.user_id}`,
+    apiEndpoint: `/api/reservation/user/${userInfo?.userId}`,
     itemsPerPage: 10,
   });
   const [reservation, setReservation] = useState<ReservationType | null>(null);
@@ -81,11 +81,11 @@ const ReservationList: React.FC = () => {
                   <td>{contents.name}</td>
                   <td>{contents.reservation_id}</td>
                   <td>
-                    {moment(contents.time_from).format("MM월 DD일 HH:mm")}~
-                    {moment(contents.time_to).format("MM월 DD일 HH:mm")}
+                    {moment(contents.timeFrom).format("MM월 DD일 HH:mm")}~
+                    {moment(contents.timeTo).format("MM월 DD일 HH:mm")}
                   </td>
                   <td>
-                    {moment(contents.time_post).format("YY년 MM월 DD일 HH:mm")}
+                    {moment(contents.timePost).format("YY년 MM월 DD일 HH:mm")}
                   </td>
                   <td>
                     <div className={contents.state} />
@@ -93,8 +93,8 @@ const ReservationList: React.FC = () => {
                   </td>
 
                   <td>
-                    <div className={contents.worker_need} />
-                    {workerNeedOptions[contents.worker_need]}
+                    <div className={contents.workerNeed} />
+                    {workerNeedOptions[contents.workerNeed]}
                   </td>
                 </tr>
               ))}

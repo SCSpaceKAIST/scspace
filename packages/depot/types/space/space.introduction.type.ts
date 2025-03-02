@@ -1,8 +1,8 @@
 import { SpaceTypeEnum } from "../../enums/space.enum";
 import { SpaceIntroductionTypeEnum } from "../../enums/space.enum";
 
-export interface SpaceIntroductionOutputType {
-  space_type: SpaceTypeEnum;
+export interface ISpaceIntroductionResponse {
+  spaceType: SpaceTypeEnum;
   introduction: IIntroduction;
   usage: IIntroduction;
   caution: IIntroduction;
@@ -12,8 +12,8 @@ export interface SpaceIntroductionOutputType {
 // Table: space_introductions
 export interface ISpaceIntroduction {
   id: number;
-  space_type: SpaceTypeEnum;
-  intro_type: SpaceIntroductionTypeEnum;
+  spaceType: SpaceTypeEnum;
+  introType: SpaceIntroductionTypeEnum;
   info: IShortIntro | IIntroduction; // json
 }
 

@@ -79,7 +79,7 @@ export const Header: React.FC = () => {
             }),
             menu_link: "/reservation",
             sub_menu_link: res.map((value, idx) => {
-              return `/${value.space_id}`;
+              return `/${value.spaceId}`;
             }),
           },
           {
@@ -89,7 +89,7 @@ export const Header: React.FC = () => {
             }),
             menu_link: "/calendar",
             sub_menu_link: res.map((value, idx) => {
-              return `/${value.space_id}`;
+              return `/${value.spaceId}`;
             }),
           },
           menu[5],

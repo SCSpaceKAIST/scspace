@@ -87,14 +87,14 @@ const ReservationManageList: React.FC = () => {
                   onClick={() => handleReservationClick(contents)}
                 >
                   <td>{contents.name}</td>
-                  <td>{contents.user_id}</td>
+                  <td>{contents.userId}</td>
                   <td>{contents.reservation_id}</td>
                   <td>
-                    {moment(contents.time_from).format("MM월 DD일 HH:mm")}~
-                    {moment(contents.time_to).format("MM월 DD일 HH:mm")}
+                    {moment(contents.timeFrom).format("MM월 DD일 HH:mm")}~
+                    {moment(contents.timeTo).format("MM월 DD일 HH:mm")}
                   </td>
                   <td>
-                    {moment(contents.time_post).format("YY년 MM월 DD일 HH:mm")}
+                    {moment(contents.timePost).format("YY년 MM월 DD일 HH:mm")}
                   </td>
                   <td>
                     <div className={contents.state} />
@@ -102,8 +102,8 @@ const ReservationManageList: React.FC = () => {
                   </td>
 
                   <td>
-                    <div className={contents.worker_need} />
-                    {workerNeedOptions[contents.worker_need]}
+                    <div className={contents.workerNeed} />
+                    {workerNeedOptions[contents.workerNeed]}
                   </td>
                 </tr>
               ))}

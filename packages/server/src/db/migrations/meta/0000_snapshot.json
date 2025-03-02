@@ -14,22 +14,22 @@
           "notNull": true,
           "autoincrement": true
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "int",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "time_post": {
-          "name": "time_post",
+        "timePost": {
+          "name": "timePost",
           "type": "datetime",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "time_edit": {
-          "name": "time_edit",
+        "timeEdit": {
+          "name": "timeEdit",
           "type": "datetime",
           "primaryKey": false,
           "notNull": false,
@@ -71,8 +71,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "commenter_id": {
-          "name": "commenter_id",
+        "commenterId": {
+          "name": "commenterId",
           "type": "int",
           "primaryKey": false,
           "notNull": false,
@@ -115,15 +115,15 @@
           "notNull": true,
           "autoincrement": false
         },
-        "time_post": {
-          "name": "time_post",
+        "timePost": {
+          "name": "timePost",
           "type": "datetime",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "time_edit": {
-          "name": "time_edit",
+        "timeEdit": {
+          "name": "timeEdit",
           "type": "datetime",
           "primaryKey": false,
           "notNull": false,
@@ -152,15 +152,15 @@
           "notNull": true,
           "autoincrement": true
         },
-        "time_post": {
-          "name": "time_post",
+        "timePost": {
+          "name": "timePost",
           "type": "datetime",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "time_edit": {
-          "name": "time_edit",
+        "timeEdit": {
+          "name": "timeEdit",
           "type": "datetime",
           "primaryKey": false,
           "notNull": false,
@@ -196,8 +196,8 @@
           "autoincrement": false,
           "default": 0
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "char(8)",
           "primaryKey": false,
           "notNull": true,
@@ -233,23 +233,23 @@
           "notNull": true,
           "autoincrement": false
         },
-        "space_id": {
-          "name": "space_id",
+        "spaceId": {
+          "name": "spaceId",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "time_post": {
-          "name": "time_post",
+        "timePost": {
+          "name": "timePost",
           "type": "datetime",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "'2024-12-28 11:23:41.295'"
         },
-        "time_edit": {
-          "name": "time_edit",
+        "timeEdit": {
+          "name": "timeEdit",
           "type": "datetime",
           "primaryKey": false,
           "notNull": true,
@@ -263,8 +263,8 @@
           "autoincrement": false,
           "default": 0
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "int",
           "primaryKey": false,
           "notNull": false,
@@ -293,43 +293,43 @@
           "notNull": true,
           "autoincrement": true
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "char(8)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "team_id": {
-          "name": "team_id",
+        "teamId": {
+          "name": "teamId",
           "type": "int",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "space_id": {
-          "name": "space_id",
+        "spaceId": {
+          "name": "spaceId",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "time_from": {
-          "name": "time_from",
+        "timeFrom": {
+          "name": "timeFrom",
           "type": "datetime",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "time_to": {
-          "name": "time_to",
+        "timeTo": {
+          "name": "timeTo",
           "type": "datetime",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "time_post": {
-          "name": "time_post",
+        "timePost": {
+          "name": "timePost",
           "type": "datetime",
           "primaryKey": false,
           "notNull": true,
@@ -357,8 +357,8 @@
           "autoincrement": false,
           "default": "'wait'"
         },
-        "worker_need": {
-          "name": "worker_need",
+        "workerNeed": {
+          "name": "workerNeed",
           "type": "enum('unnecessary','required','completed','failed')",
           "primaryKey": false,
           "notNull": true,
@@ -381,22 +381,22 @@
     "semesters": {
       "name": "semesters",
       "columns": {
-        "semester_id": {
-          "name": "semester_id",
+        "semesterId": {
+          "name": "semesterId",
           "type": "char(3)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "date_from": {
-          "name": "date_from",
+        "dateFrom": {
+          "name": "dateFrom",
           "type": "datetime",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "date_to": {
-          "name": "date_to",
+        "dateTo": {
+          "name": "dateTo",
           "type": "datetime",
           "primaryKey": false,
           "notNull": true,
@@ -420,10 +420,10 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "semesters_semester_id": {
-          "name": "semesters_semester_id",
+        "semesters_semesterId": {
+          "name": "semesters_semesterId",
           "columns": [
-            "semester_id"
+            "semesterId"
           ]
         }
       },
@@ -439,15 +439,15 @@
           "notNull": true,
           "autoincrement": true
         },
-        "space_type": {
-          "name": "space_type",
+        "spaceType": {
+          "name": "spaceType",
           "type": "enum('individual','piano','seminar','dance','group','mirae','sumi','open','work')",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "intro_type": {
-          "name": "intro_type",
+        "introType": {
+          "name": "introType",
           "type": "enum('introduction','usage','caution','shortintro')",
           "primaryKey": false,
           "notNull": true,
@@ -476,8 +476,8 @@
     "spaces": {
       "name": "spaces",
       "columns": {
-        "space_id": {
-          "name": "space_id",
+        "spaceId": {
+          "name": "spaceId",
           "type": "serial",
           "primaryKey": false,
           "notNull": true,
@@ -490,15 +490,15 @@
           "notNull": true,
           "autoincrement": false
         },
-        "name_eng": {
-          "name": "name_eng",
+        "nameEng": {
+          "name": "nameEng",
           "type": "varchar(100)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "space_type": {
-          "name": "space_type",
+        "spaceType": {
+          "name": "spaceType",
           "type": "enum('individual','piano','seminar','dance','group','mirae','sumi','open','work')",
           "primaryKey": false,
           "notNull": true,
@@ -508,10 +508,10 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "spaces_space_id": {
-          "name": "spaces_space_id",
+        "spaces_spaceId": {
+          "name": "spaces_spaceId",
           "columns": [
-            "space_id"
+            "spaceId"
           ]
         }
       },
@@ -527,15 +527,15 @@
           "notNull": true,
           "autoincrement": true
         },
-        "team_id": {
-          "name": "team_id",
+        "teamId": {
+          "name": "teamId",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "char(8)",
           "primaryKey": false,
           "notNull": true,
@@ -564,8 +564,8 @@
     "teams": {
       "name": "teams",
       "columns": {
-        "team_id": {
-          "name": "team_id",
+        "teamId": {
+          "name": "teamId",
           "type": "serial",
           "primaryKey": false,
           "notNull": true,
@@ -578,22 +578,22 @@
           "notNull": true,
           "autoincrement": false
         },
-        "delegator_id": {
-          "name": "delegator_id",
+        "delegatorId": {
+          "name": "delegatorId",
           "type": "char(8)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "time_register": {
-          "name": "time_register",
+        "timeRegister": {
+          "name": "timeRegister",
           "type": "datetime",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "semester_id": {
-          "name": "semester_id",
+        "semesterId": {
+          "name": "semesterId",
           "type": "char(3)",
           "primaryKey": false,
           "notNull": true,
@@ -603,10 +603,10 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "teams_team_id": {
-          "name": "teams_team_id",
+        "teams_teamId": {
+          "name": "teams_teamId",
           "columns": [
-            "team_id"
+            "teamId"
           ]
         }
       },
@@ -622,8 +622,8 @@
           "notNull": true,
           "autoincrement": true
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "varchar(20)",
           "primaryKey": false,
           "notNull": true,
@@ -662,10 +662,10 @@
         }
       },
       "uniqueConstraints": {
-        "users_user_id_unique": {
-          "name": "users_user_id_unique",
+        "users_userId_unique": {
+          "name": "users_userId_unique",
           "columns": [
-            "user_id"
+            "userId"
           ]
         }
       }

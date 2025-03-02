@@ -19,12 +19,12 @@ import { setTimes } from "./setTimes";
 import NumberInput from "../inputs/NumberInput";
 
 interface ReservationFormProps {
-  space_id: number;
+  spaceId: number;
   space: SpaceType;
 }
 
 const ReservationForm: React.FC<ReservationFormProps> = ({
-  space_id,
+  spaceId,
   space,
 }) => {
   const { userInfo, ckUserType } = useLoginCheck();
@@ -44,10 +44,10 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
       return;
     }
     const reservationInput: ReservationInputType = {
-      space_id,
-      time_from: timeFrom.toISOString(),
-      time_to: timeTo.toISOString(),
-      user_id: userInfo?.user_id,
+      spaceId,
+      timeFrom: timeFrom.toISOString(),
+      timeTo: timeTo.toISOString(),
+      userId: userInfo?.userId,
       content: {
         eventName,
         organizationName,
@@ -55,11 +55,11 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
         number: numPeople.toString(),
       } as SeminarContentType,
       state: "grant",
-      worker_need: "unnecessary",
+      workerNeed: "unnecessary",
     };
     const inputVal = validateReservationInput(
       reservationInput,
-      space.space_type,
+      space.spaceType,
       agreeCheck
     );
     if (!inputVal.valid) {
@@ -72,7 +72,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   return (
     <div>
       <h3>세미나실 예약 폼</h3>
-      <TimeTooltips spaceType={space.space_type} />
+      <TimeTooltips spaceType={space.spaceType} />
       <hr />
       <DateTimeInput
         dateFrom={timeFrom}

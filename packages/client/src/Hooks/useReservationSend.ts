@@ -20,9 +20,9 @@ export const useReservationSend = () => {
     try {
       // 예약 시간대가 비었는지 확인하는 API 호출
       const timeResponse = await sendGet<boolean>("/reservation/timeCheck", {
-        space_id: reservationInput.space_id,
-        time_from: reservationInput.time_from,
-        time_to: reservationInput.time_to,
+        spaceId: reservationInput.spaceId,
+        timeFrom: reservationInput.timeFrom,
+        timeTo: reservationInput.timeTo,
       } as SpaceTimeCheckInputType);
 
       if (!timeResponse) {
@@ -33,10 +33,10 @@ export const useReservationSend = () => {
         // 관리자가 아닌 경우
         // 그 사람의 예약 시간이 괜찮은지 확인하는 API 호출
         const userResponse = await sendGet<boolean>("/reservation/userCheck", {
-          space_id: reservationInput.space_id,
-          time_from: reservationInput.time_from,
-          time_to: reservationInput.time_to,
-          user_id: reservationInput.user_id,
+          spaceId: reservationInput.spaceId,
+          timeFrom: reservationInput.timeFrom,
+          timeTo: reservationInput.timeTo,
+          userId: reservationInput.userId,
         } as UserTimeCheckInputType);
 
         if (!userResponse) {
@@ -52,7 +52,7 @@ export const useReservationSend = () => {
 
       if (postResponse) {
         alert("예약이 완료되었습니다.");
-        linkPush(`/calendar/${reservationInput.space_id}`);
+        linkPush(`/calendar/${reservationInput.spaceId}`);
       } else {
         alert("예약에 실패했습니다. 다시 시도해주세요.");
       }

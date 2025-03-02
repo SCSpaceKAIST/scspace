@@ -29,15 +29,15 @@ export default function SpacePage() {
   }
 
   const spaceComponent = {
-    individual: <IndividualForm space={space} space_id={id} />,
-    piano: <PianoForm space={space} space_id={id} />,
-    seminar: <SeminarForm space={space} space_id={id} />,
-    dance: <DanceForm space={space} space_id={id} />,
-    group: <GroupForm space={space} space_id={id} />,
-    mirae: <MiraeForm space={space} space_id={id} />,
-    sumi: <SumiForm space={space} space_id={id} />,
-    work: <WorkForm space={space} space_id={id} />,
-    open: <OpenForm space={space} space_id={id} />,
+    individual: <IndividualForm space={space} spaceId={id} />,
+    piano: <PianoForm space={space} spaceId={id} />,
+    seminar: <SeminarForm space={space} spaceId={id} />,
+    dance: <DanceForm space={space} spaceId={id} />,
+    group: <GroupForm space={space} spaceId={id} />,
+    mirae: <MiraeForm space={space} spaceId={id} />,
+    sumi: <SumiForm space={space} spaceId={id} />,
+    work: <WorkForm space={space} spaceId={id} />,
+    open: <OpenForm space={space} spaceId={id} />,
   };
 
   return (
@@ -45,7 +45,7 @@ export default function SpacePage() {
       <PageHeader
         link_to_prop={"/reservation"}
         page_name={`${space.name} 예약`}
-        sub_name={`${space.name_eng} Reservation`}
+        sub_name={`${space.nameEng} Reservation`}
       />
       <section>
         <button
@@ -55,10 +55,10 @@ export default function SpacePage() {
           {showCalendar ? "예약 접기" : "예약 보기"}
         </button>
         {showCalendar && (
-          <CalendarView space_id={id} space={space} date={new Date()} />
+          <CalendarView spaceId={id} space={space} date={new Date()} />
         )}
       </section>
-      <section>{spaceComponent[space.space_type]}</section>
+      <section>{spaceComponent[space.spaceType]}</section>
     </div>
   );
 }

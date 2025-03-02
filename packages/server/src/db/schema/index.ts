@@ -1,38 +1,45 @@
-import { asks } from './asks';
-import { faqs } from './faqs';
-import { notices } from './notices';
-import { passwords } from './passwords';
-import { reservations } from './reservations';
-import { semesters } from './semesters';
-import { space_introductions } from './space_introductions';
-import { spaces } from './spaces';
-import { team_members } from './team_members';
-import { teams } from './teams';
-import { users } from './users';
+import { Ask } from './ask';
+import { Faq } from './faq';
+import { Notice } from './notice';
+import { Password } from './password';
+import {
+  Reservation,
+  ReservationContent,
+  ReservationContentArrayElement,
+} from './reservation';
+import { Semester } from './semester';
+import { Space, SpaceIntroduction } from './space';
+import { Team, TeamMember } from './team';
+import { User } from './user';
 
-export { asks } from './asks';
-export { faqs } from './faqs';
-export { notices } from './notices';
-export { passwords } from './passwords';
-export { reservations } from './reservations';
-export { semesters } from './semesters';
-export { space_introductions } from './space_introductions';
-export { spaces } from './spaces';
-export { team_members } from './team_members';
-export { teams } from './teams';
-export { users } from './users';
+export { Ask } from './ask';
+export { Faq } from './faq';
+export { Notice } from './notice';
+export { Password } from './password';
+export {
+  Reservation,
+  ReservationContent,
+  ReservationContentArrayElement,
+} from './reservation';
+export { Semester } from './semester';
+export { Space, SpaceIntroduction } from './space';
+
+export { Team, TeamMember } from './team';
+export { User } from './user';
 
 // 스키마에 정의된 모든 테이블을 모아 내보냅니다.
 export const schema = {
-  asks,
-  faqs,
-  notices,
-  passwords,
-  reservations,
-  semesters,
-  space_introductions,
-  spaces,
-  team_members,
-  teams,
-  users,
+  Ask,
+  Faq,
+  Notice,
+  Password,
+  Reservation,
+  ReservationContent,
+  Semester,
+  Space,
+  SpaceIntroduction,
+  Team,
+  TeamMember,
+  User,
+  ReservationContentArrayElement,
 };

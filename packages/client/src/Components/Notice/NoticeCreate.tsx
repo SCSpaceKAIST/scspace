@@ -14,13 +14,13 @@ const NoticeCreate: React.FC = () => {
     title: "",
     content: "",
     important: 0,
-    user_id: userInfo?.user_id ? userInfo?.user_id : "",
+    userId: userInfo?.userId ? userInfo?.userId : "",
   });
 
   useEffect(() => {
     setContent({
       ...content,
-      user_id: userInfo?.user_id ? userInfo?.user_id : "",
+      userId: userInfo?.userId ? userInfo?.userId : "",
     });
   }, [userInfo]);
 

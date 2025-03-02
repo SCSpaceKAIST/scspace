@@ -28,7 +28,7 @@ interface ResourceData {
 }
 
 interface CalendarProps {
-  space_id: number;
+  spaceId: number;
   space: SpaceType;
   date: Date;
 }
@@ -41,8 +41,8 @@ type ReservationEvent = EventInput & {
   extendedProps: {
     reservation: ReservationType & {
       name: string;
-      space_type: SpaceTypeEnum;
-      user_id: string;
+      spaceType: SpaceTypeEnum;
+      userId: string;
     };
   };
 };
@@ -52,11 +52,11 @@ resourcesData.forEach((resource) => {
   spaceDict[resource.id] = resource.text;
 });
 
-const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
+const CalendarView: React.FC<CalendarProps> = ({ spaceId, space }) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [data, setData] = useState<ReservationEvent[]>([]);
   const { login, userInfo } = useLoginCheck();
-  const { spaceArray, loaded } = useSpaces(space_id);
+  const { spaceArray, loaded } = useSpaces(spaceId);
   const { linkPush } = useLinkPush();
   const [reservations, setReservations] = useState<ReservationType[]>();
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -73,7 +73,7 @@ const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
     const reservation = info.event.extendedProps.reservation;
     setSelectedReservation(reservation);
     setSelectedReserverInfo(
-      userInfo && userInfo?.user_id === reservation.user_id ? userInfo : null
+      userInfo && userInfo?.userId === reservation.userId ? userInfo : null
     );
     setShowModal(true);
   };
@@ -85,7 +85,7 @@ const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
   const callApi = async () => {
     try {
       const res = await sendGet<ReservationType[] | false>(
-        `/reservation/space/${space_id}`
+        `/reservation/space/${spaceId}`
       );
       if (res !== false) {
         setReservations(res);
@@ -102,20 +102,20 @@ const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
     return data.map((r) => ({
       id: r.reservation_id.toString(),
       resourceId:
-        spaceArray.find((space) => space.space_id === r.space_id)?.name || "",
-      start: r.time_from,
-      end: r.time_to,
-      title: `${r.state === "grant" ? "" : "[미승인] "}${moment(r.time_from).format("HH:mm")} - ${moment(
-        r.time_to
-      ).format("HH:mm")} | ${r.user_id}`,
+        spaceArray.find((space) => space.spaceId === r.spaceId)?.name || "",
+      start: r.timeFrom,
+      end: r.timeTo,
+      title: `${r.state === "grant" ? "" : "[미승인] "}${moment(r.timeFrom).format("HH:mm")} - ${moment(
+        r.timeTo
+      ).format("HH:mm")} | ${r.userId}`,
 
       extendedProps: {
-        user_id: r.user_id,
+        userId: r.userId,
         reservation: {
           ...r,
           name: space.name,
-          space_type: space.space_type,
-          user_id: r.user_id,
+          spaceType: space.spaceType,
+          userId: r.userId,
         },
       },
     }));
@@ -128,7 +128,7 @@ const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
     const formattedStart = moment(event.start).format("MM월 DD일 HH:mm");
     const formattedEnd = moment(event.end).format("MM월 DD일 HH:mm");
     alert(
-      `Reservation ID: ${event.id}\nUser ID: ${event.extendedProps.user_id}\nFrom: ${formattedStart}\nTo: ${formattedEnd}`
+      `Reservation ID: ${event.id}\nUser ID: ${event.extendedProps.userId}\nFrom: ${formattedStart}\nTo: ${formattedEnd}`
     );
   };
 
@@ -167,8 +167,8 @@ const CalendarView: React.FC<CalendarProps> = ({ space_id, space }) => {
           <Dropdown.Menu>
             {spaceArray?.map((one_space) => (
               <Dropdown.Item
-                key={one_space.space_id}
-                onClick={() => linkPush(`/calendar/${one_space.space_id}`)}
+                key={one_space.spaceId}
+                onClick={() => linkPush(`/calendar/${one_space.spaceId}`)}
               >
                 {one_space.name}
               </Dropdown.Item>

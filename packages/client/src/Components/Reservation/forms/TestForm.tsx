@@ -14,12 +14,12 @@ import CheckboxInput from "../inputs/CheckboxInput";
 import { useReservationSend } from "@/Hooks/useReservationSend";
 
 interface ReservationFormProps {
-  space_id: number;
+  spaceId: number;
   space: SpaceType;
 }
 
 const ReservationForm: React.FC<ReservationFormProps> = ({
-  space_id,
+  spaceId,
   space,
 }) => {
   const [timeFrom, setTimeFrom] = useState<Date>(new Date());

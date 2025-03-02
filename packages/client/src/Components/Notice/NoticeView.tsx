@@ -54,7 +54,7 @@ const NoticeView: React.FC<NoticeViewProps> = ({ view_id }) => {
                     <li className="d-flex align-items-center">
                       <i className="bi bi-clock"></i>{" "}
                       <time>
-                        {moment(content.time_edit || content.time_post).format(
+                        {moment(content.timeEdit || content.timePost).format(
                           "YYYY-MM-DD HH:mm:ss"
                         )}
                       </time>

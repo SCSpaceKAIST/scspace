@@ -1,29 +1,40 @@
 import { AskStateEnum } from "../../enums/ask.enum";
+import { IUser } from "../user";
 
 // Table: asks
 export interface IAsk {
   id: number;
-  user_id: string; // char(8)
-  time_post: Date;
-  time_edit?: Date | null;
+  userId: number; // char(8)
+  timePost: Date;
+  timeEdit?: Date | null;
   title: string; // varchar(255)
   content: string; // text
   views: number;
   state: AskStateEnum;
-  comment: string; // text
-  commenter_id: string; // char(8)
+  comment: string | null; // text
+  commenterId: number | null; // userId
 }
 
 export type IAskCreate = Omit<
   IAsk,
   | "id"
-  | "time_post"
-  | "time_edit"
+  | "timePost"
+  | "timeEdit"
   | "views"
   | "state"
   | "comment"
-  | "commenter_id"
+  | "commenterId"
 >;
+
+export type IAskCommentCreate = Pick<
+  IAsk,
+  "id" | "comment" | "commenterId" | "state"
+>;
+
+export type IAskResponse = IAsk & {
+  user: IUser;
+  commenter: IUser | null;
+};
 
 export const askStateOptions: { [key in AskStateEnum]: string } = {
   [AskStateEnum.WAIT]: "대기중",

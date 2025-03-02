@@ -6,8 +6,8 @@ interface PasswordBarProps {
   password: PasswordType;
 }
 
-const PasswordView: React.FC<PasswordBarProps> = ({ password }) => {
-  const { space } = useSpaces(password.space_id);
+const hPasswordView: React.FC<PasswordBarProps> = ({ password }) => {
+  const { space } = useSpaces(password.spaceId);
 
   return (
     <div>

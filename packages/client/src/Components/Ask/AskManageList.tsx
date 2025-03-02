@@ -62,9 +62,9 @@ const AskLatestList: React.FC = () => {
                     {askStateOptions[contents.state]}
                   </td>
                   <td>{contents.title}</td>
-                  <td>{contents.user_id}</td>
+                  <td>{contents.userId}</td>
                   <td>
-                    {moment(contents.time_post).format("YYYY-MM-DD HH:mm:ss")}
+                    {moment(contents.timePost).format("YYYY-MM-DD HH:mm:ss")}
                   </td>
                 </tr>
               ))}

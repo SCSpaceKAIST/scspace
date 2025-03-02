@@ -22,9 +22,9 @@ const Notice: React.FC = () => {
     const res = await axios.get("/api/notice/all");
     //return res.data;
 
-    // res.data를 time_post 기준으로 내림차순 정렬
+    // res.data를 timePost 기준으로 내림차순 정렬
     const sortedData = res.data.sort((a: NoticeType, b: NoticeType) => {
-      return new Date(b.time_post).getTime() - new Date(a.time_post).getTime();
+      return new Date(b.timePost).getTime() - new Date(a.timePost).getTime();
     });
 
     return sortedData;
@@ -74,7 +74,7 @@ const Notice: React.FC = () => {
                       <td>{contents.title}</td>
                       <td>
                         {moment(
-                          contents.time_edit ?? contents.time_post
+                          contents.timeEdit ?? contents.timePost
                         ).format("YYYY-MM-DD HH:mm:ss")}
                       </td>
                       <td>{contents.views}</td>

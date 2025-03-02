@@ -24,7 +24,7 @@ export default function SpaceIntroPage() {
         page_name={SpaceTypeNames[SpaceTypesArray[id]]}
         sub_name={"Spaces"}
       />
-      <SpaceView space_id={id} />
+      <SpaceView spaceId={id} />
     </div>
   );
 }

@@ -24,7 +24,7 @@ export default function SpaceIntroPage() {
         page_name={space.name}
         sub_name={"Calendar"}
       />
-      <CalendarView space_id={id} space={space} date={new Date()} />
+      <CalendarView spaceId={id} space={space} date={new Date()} />
     </div>
   );
 }

@@ -37,7 +37,7 @@ const Main: React.FC<MainProps> = (props) => {
   useEffect(() => {
     LoginCheck().then((result: LckResType) => {
       // if (result) {
-      //   studentID = result.user_id;
+      //   studentID = result.userId;
       //   if (result.type === "admin") {
       //     setGprValid(true);
       //     setWsValid(true);

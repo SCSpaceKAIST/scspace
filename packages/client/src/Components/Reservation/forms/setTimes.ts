@@ -10,7 +10,7 @@ export const setTimes = (
   space: SpaceType,
   ckUsertype: (type: UserTypeEnum | null | undefined) => boolean
 ) => {
-  const spaceType = space.space_type;
+  const spaceType = space.spaceType;
   const calculateDate = (date: Date, day: number): Date => {
     return new Date(date.getTime() + (day + 1) * 24 * 60 * 60 * 1000 - 1);
   };

@@ -25,12 +25,12 @@ import MultipleCheckboxInput from "../inputs/MultipleCheckboxInput";
 import MultipleRadioInput from "../inputs/MultipleRadioInput";
 
 interface ReservationFormProps {
-  space_id: number;
+  spaceId: number;
   space: SpaceType;
 }
 
 const ReservationForm: React.FC<ReservationFormProps> = ({
-  space_id,
+  spaceId,
   space,
 }) => {
   const { userInfo, ckUserType } = useLoginCheck();
@@ -47,21 +47,21 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   const [outerNumber, setOuterNumber] = useState<number | undefined>(0);
   const [eventPurpose, setEventPurpose] = useState<string>("");
   const [food, setFood] = useState<string>("");
-  const [worker_need, setWorkerNeed] = useState<string>("unnecessary");
+  const [workerNeed, setWorkerNeed] = useState<string>("unnecessary");
   const [character, setCharacter] = useState<string[]>([]);
   const handleSubmit = () => {
     if (!userInfo) return; // 로그인 안한 경우, 나올 일은 없으나 컴파일 에러 방지
-    if (!isValidWorkerNeed(worker_need)) return; // worker_need가 유효하지 않은 경우
+    if (!isValidWorkerNeed(workerNeed)) return; // workerNeed가 유효하지 않은 경우
     if (!innerNumber) {
       alert("인원 수를 확인해주세요.");
       return;
     }
 
     const reservationInput: ReservationInputType = {
-      space_id,
-      time_from: timeFrom.toISOString(),
-      time_to: timeTo.toISOString(),
-      user_id: userInfo?.user_id,
+      spaceId,
+      timeFrom: timeFrom.toISOString(),
+      timeTo: timeTo.toISOString(),
+      userId: userInfo?.userId,
       content: {
         eventName,
         organizationName,
@@ -74,11 +74,11 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
         character,
       } as MiraeContentType,
       state: "wait",
-      worker_need,
+      workerNeed,
     };
     const inputVal = validateReservationInput(
       reservationInput,
-      space.space_type,
+      space.spaceType,
       agreeCheck
     );
     if (!inputVal.valid) {
@@ -91,7 +91,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   return (
     <div>
       <h3>미래홀 예약 폼</h3>
-      <TimeTooltips spaceType={space.space_type} />
+      <TimeTooltips spaceType={space.spaceType} />
       <hr />
       <DateTimeInput
         dateFrom={timeFrom}
@@ -148,7 +148,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
         contents={Object.keys(workerNeedInputOptions)}
         labels={Object.values(workerNeedInputOptions)}
         header="근로 필요 여부"
-        selected={worker_need}
+        selected={workerNeed}
         setSelected={setWorkerNeed}
       />
       <AgreeCheck checked={agreeCheck} setChecked={setAgreeCheck} />

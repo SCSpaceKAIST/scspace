@@ -37,7 +37,7 @@ const Calendar: React.FC = () => {
                       {spaceArray?.map((space, idx) => {
                         return (
                           <div key={`calendarKey${idx}`}>
-                            <Link href={`/calendar/${space.space_id}`}>
+                            <Link href={`/calendar/${space.spaceId}`}>
                               {space.name}
                             </Link>
                             <br />

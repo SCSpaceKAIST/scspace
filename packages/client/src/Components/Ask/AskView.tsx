@@ -50,12 +50,12 @@ const AskView: React.FC<AskViewProps> = ({ view_id }) => {
                   <ul>
                     <li className="d-flex align-items-center">
                       <i className="bi bi-person"></i>
-                      {content.user_id}
+                      {content.userId}
                     </li>
                     <li className="d-flex align-items-center">
                       <i className="bi bi-clock"></i>{" "}
                       <time>
-                        {moment(content.time_post).format(
+                        {moment(content.timePost).format(
                           "YYYY-MM-DD HH:mm:ss"
                         )}
                       </time>

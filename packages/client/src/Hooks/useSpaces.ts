@@ -6,10 +6,10 @@ export const useSpaces = (id = 0) => {
   const [spaceArray, setSpaceArray] = useState<SpaceType[]>();
   const [loaded, setLoaded] = useState<boolean>(false);
   const [space, setSpace] = useState<SpaceType>({
-    space_id: 0,
+    spaceId: 0,
     name: "",
-    name_eng: "",
-    space_type: "individual",
+    nameEng: "",
+    spaceType: "individual",
   });
 
   useEffect(() => {

@@ -4,8 +4,8 @@ import { SpaceTypeEnum } from "../../enums/space.enum";
 export interface ISpace {
   id: number;
   name: string; // varchar(100)
-  name_eng: string; // varchar(100)
-  space_type: SpaceTypeEnum;
+  nameEng: string; // varchar(100)
+  spaceType: SpaceTypeEnum;
 }
 
 export const SpaceTypesArray = [

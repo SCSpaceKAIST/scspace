@@ -48,7 +48,7 @@ const LoginTest: React.FC = () => {
     await axios.post(url, JSON.stringify({}), config);
   };
   const guardBtn = async (): Promise<void> => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/user/idJwt`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/idJwt`;
     const config = {
       withCredentials: true,
       headers: {

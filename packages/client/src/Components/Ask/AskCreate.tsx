@@ -13,13 +13,13 @@ const AskCreate: React.FC = () => {
   const [content, setContent] = useState<AskInputType>({
     title: "",
     content: "",
-    user_id: "",
+    userId: "",
   } as AskInputType);
 
   useEffect(() => {
     setContent({
       ...content,
-      user_id: userInfo?.user_id ? userInfo?.user_id : "",
+      userId: userInfo?.userId ? userInfo?.userId : "",
     });
   }, [userInfo]);
 

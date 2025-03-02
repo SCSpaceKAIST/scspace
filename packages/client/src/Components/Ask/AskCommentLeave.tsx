@@ -21,7 +21,7 @@ const AskCommentLeave: React.FC<AskCommentLeaveProps> = ({
 
   useEffect(() => {
     if (userInfo)
-      setContent({ ...content, commenter_id: userInfo.user_id } as AskType);
+      setContent({ ...content, commenterId: userInfo.userId } as AskType);
   }, [userInfo]);
 
   const setComment = (newComment: string) => {

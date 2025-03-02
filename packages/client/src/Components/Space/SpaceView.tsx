@@ -9,10 +9,10 @@ import {
 import SpaceIntro from "@Components/Space/SpaceIntro";
 
 interface SpaceViewProps {
-  space_id: number;
+  spaceId: number;
 }
 
-const SpaceView: React.FC<SpaceViewProps> = ({ space_id }) => {
+const SpaceView: React.FC<SpaceViewProps> = ({ spaceId }) => {
   const [spaceInfo, setSpaceInfo] = useState<SpaceIntroductionOutputType>();
   const [menu, setMenu] = useState<0 | 1 | 2>(0);
   const [intro, setIntro] = useState<React.FC>();
@@ -20,7 +20,7 @@ const SpaceView: React.FC<SpaceViewProps> = ({ space_id }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`/api/space/info/${space_id}`);
+        const res = await axios.get(`/api/space/info/${spaceId}`);
         setSpaceInfo(res.data);
         //alert(JSON.stringify(res.data));
       } catch (error) {
@@ -29,7 +29,7 @@ const SpaceView: React.FC<SpaceViewProps> = ({ space_id }) => {
     };
 
     fetchData();
-  }, [space_id]);
+  }, [spaceId]);
 
   const renderIntro = () => {
     if (!spaceInfo) return <div>Loading...</div>;
@@ -53,7 +53,7 @@ const SpaceView: React.FC<SpaceViewProps> = ({ space_id }) => {
       {spaceInfo ? (
         <section>
           <div className="section-header">
-            <h2>{SpaceTypeNames[spaceInfo.space_type]}</h2>
+            <h2>{SpaceTypeNames[spaceInfo.spaceType]}</h2>
             <p>{}</p>
           </div>
           <hr />
@@ -62,7 +62,7 @@ const SpaceView: React.FC<SpaceViewProps> = ({ space_id }) => {
               <div className="col-lg-5">
                 <div className="about-img">
                   <Image
-                    src={`/img/spaces/${spaceInfo.space_type}.jpg`}
+                    src={`/img/spaces/${spaceInfo.spaceType}.jpg`}
                     alt=""
                     height={450}
                     width={400}

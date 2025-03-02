@@ -4,7 +4,7 @@ import { useLoginCheck } from "@/Hooks/useLoginCheck";
 
 // T는 제네릭 타입으로, 컴포넌트마다 다를 수 있는 데이터 타입을 나타냅니다.
 // EX: AskType, FAQType,
-export const useBoardData = <T extends { time_post: string | Date }>({
+export const useBoardData = <T extends { timePost: string | Date }>({
   apiEndpoint,
   initialPageNumber = 1,
   itemsPerPage = 10,
@@ -30,9 +30,9 @@ export const useBoardData = <T extends { time_post: string | Date }>({
       const sortedData = res.data.sort(
         sortDesc
           ? (a: T, b: T) =>
-              new Date(a.time_post).getTime() - new Date(b.time_post).getTime()
+              new Date(a.timePost).getTime() - new Date(b.timePost).getTime()
           : (a: T, b: T) =>
-              new Date(b.time_post).getTime() - new Date(a.time_post).getTime()
+              new Date(b.timePost).getTime() - new Date(a.timePost).getTime()
       );
       setList(sortedData);
       setTotalPageNumber(Math.ceil(sortedData.length / itemsPerPage));

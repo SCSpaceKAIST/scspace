@@ -1,13 +1,13 @@
 import { useBoardData } from "@/Hooks/useBoardData";
 import React, { useState, useEffect } from "react";
-import { PasswordType, PasswordValidationType } from "@depot/types/password";
-import { UserType } from "@depot/types/user";
-import { sendGet } from "@/Hooks/useApi";
-import PasswordBar from "./PasswordBar";
-import { useSpaces } from "@/Hooks/useSpaces";
+import { IPassword, IPasswordValidation } from '@depot/types/password';
+import { IUser } from '@depot/types/user';
+import { sendGet } from '@/Hooks/useApi';
+import PasswordBar from './PasswordBar';
+import { useSpaces } from '@/Hooks/useSpaces';
 
 interface PasswordProps {
-  userInfo: UserType;
+  userInfo: IUser;
   forManage?: boolean;
 }
 
@@ -16,20 +16,20 @@ const PasswordView: React.FC<PasswordProps> = ({
   forManage = false,
 }) => {
   const [validationList, setValidationList] = useState<
-    PasswordValidationType[]
+    IPasswordValidation[]
   >([]);
   const { spaceArray } = useSpaces();
   useEffect(() => {
     if (forManage) {
       setValidationList(
         spaceArray?.map((space) => ({
-          space_id: space.space_id,
+          spaceId: space.spaceId,
           valid: true,
         })) || []
       );
     } else {
-      sendGet<PasswordValidationType[]>("/password/validSpaces", {
-        user_id: userInfo.user_id,
+      sendGet<IPasswordValidation[]>('/password/validSpaces', {
+        userId: userInfo.id,
       }).then((response) => {
         if (response) {
           setValidationList(response);
@@ -38,8 +38,8 @@ const PasswordView: React.FC<PasswordProps> = ({
     }
   }, [userInfo, spaceArray, forManage]);
 
-  const { list } = useBoardData<PasswordType>({
-    apiEndpoint: "/api/password/validAll",
+  const { list } = useBoardData<IPassword>({
+    apiEndpoint: '/api/password/validAll',
   });
 
   return (
@@ -47,9 +47,9 @@ const PasswordView: React.FC<PasswordProps> = ({
       {validationList.map((val, idx) => {
         if (val.valid) {
           return list.map((ptype) => {
-            if (ptype.space_id === val.space_id) {
+            if (ptype.spaceId === val.spaceId) {
               return (
-                <PasswordBar password={ptype} key={`key${ptype.space_id}`} />
+                <PasswordBar password={ptype} key={`key${ptype.spaceId}`} />
               );
             }
             return null; // if 조건이 일치하지 않을 때 아무것도 반환하지 않음

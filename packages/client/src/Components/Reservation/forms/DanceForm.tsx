@@ -18,12 +18,12 @@ import { setTimes } from "./setTimes";
 import TeamInput from "../inputs/TeamInput";
 
 interface ReservationFormProps {
-  space_id: number;
+  spaceId: number;
   space: SpaceType;
 }
 
 const ReservationForm: React.FC<ReservationFormProps> = ({
-  space_id,
+  spaceId,
   space,
 }) => {
   const { userInfo, ckUserType } = useLoginCheck();
@@ -38,21 +38,21 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
     if (!userInfo) return; // 로그인 안한 경우, 나올 일은 없으나 컴파일 에러 방지
 
     const reservationInput: ReservationInputType = {
-      space_id,
-      time_from: timeFrom.toISOString(),
-      time_to: timeTo.toISOString(),
-      user_id: userInfo?.user_id,
+      spaceId,
+      timeFrom: timeFrom.toISOString(),
+      timeTo: timeTo.toISOString(),
+      userId: userInfo?.userId,
       content: {
         eventName,
         contents,
-        teamMember: [userInfo?.user_id],
+        teamMember: [userInfo?.userId],
       } as DanceContentType,
       state: "grant",
-      worker_need: "unnecessary",
+      workerNeed: "unnecessary",
     };
     const inputVal = validateReservationInput(
       reservationInput,
-      space.space_type,
+      space.spaceType,
       agreeCheck
     );
     if (!inputVal.valid) {
@@ -65,7 +65,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   return (
     <div>
       <h3>무예실 예약 폼</h3>
-      <TimeTooltips spaceType={space.space_type} />
+      <TimeTooltips spaceType={space.spaceType} />
       <hr />
       <DateTimeInput
         dateFrom={timeFrom}
