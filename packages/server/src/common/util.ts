@@ -11,7 +11,9 @@ export function takeOne<T>(name?: string): (array: T[]) => T {
   };
 }
 
-export function takeUnique<T>(array: T[]): T[] {
+export function takeUnique<
+  T extends string | number | boolean | symbol | null | undefined | bigint,
+>(array: T[]): T[] {
   // 중복을 제외하고 배열을 반환하는 함수
   // JS 기본 자료형에 대해 잘 작동할듯??
   return [...new Set(array)];
