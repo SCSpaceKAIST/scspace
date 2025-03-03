@@ -3,15 +3,16 @@ import React, { useState, useEffect } from "react";
 
 import axios from "axios";
 
-import { FaqType } from "@depot/types/faq";
+import { IFaq } from "@depot/types/faq";
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
 import ConditionalButton from "../_commons/ConditionalButton";
+import { UserTypeEnum } from "@depot/enums/user.enum";
 
 const FAQ: React.FC = () => {
   const [idList, setIdList] = useState<number[]>([]);
-  const [faqList, setFaqList] = useState<FaqType[]>([]);
+  const [faqList, setFaqList] = useState<IFaq[]>([]);
   const [editIdx, setEditIdx] = useState<number | null>(null);
-  const { login, userInfo } = useLoginCheck();
+  const { login, userInfo, isSCS } = useLoginCheck();
 
   useEffect(() => {
     callApi()
@@ -19,14 +20,14 @@ const FAQ: React.FC = () => {
       .catch((err) => console.log(err));
   }, [login]);
 
-  const callApi = async (): Promise<FaqType[]> => {
+  const callApi = async (): Promise<IFaq[]> => {
     const res = await axios.get("/api/faq/all");
     console.log("res");
     console.log(res.data);
-    let body: FaqType[] = await res.data;
+    let body: IFaq[] = await res.data;
 
     if (login === false) body = body.filter((d) => d.id !== 13);
-    if (userInfo?.type !== "admin") {
+    if (isSCS()) {
       body = body.filter((d) => d.id !== 13);
     }
 
@@ -95,7 +96,7 @@ const FAQ: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     let updatedFaqList = [...faqList];
-    //updatedFaqList[idx][e.target.name as keyof FaqType] = e.target.value;
+    //updatedFaqList[idx][e.target.name as keyof IFaq] = e.target.value;
 
     setFaqList(updatedFaqList);
   };
@@ -109,7 +110,7 @@ const FAQ: React.FC = () => {
   };
 
   const renderAdminButtons = (idx: number) => {
-    if (userInfo?.type === "admin") {
+    if (isSCS()) {
       if (editIdx === idx) {
         return (
           <div className="text-end">
@@ -187,7 +188,7 @@ const FAQ: React.FC = () => {
                 </div>
 
                 <ConditionalButton
-                  condition={login === true && userInfo?.type === "admin"}
+                  condition={login === true && isSCS()}
                   className="modalButton2"
                   onClick={() => addFaq("add")}
                 >

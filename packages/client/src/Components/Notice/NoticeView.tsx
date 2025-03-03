@@ -5,7 +5,7 @@ import Link from "next/link";
 import axios from "axios";
 import moment from "moment";
 import { VscEye } from "react-icons/vsc";
-import { NoticeType } from "@depot/types/notice"; // NoticeType 타입 가져오기
+import { INotice } from "@depot/types/notice"; // INotice 타입 가져오기
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
 import { useLinkPush } from "@/Hooks/useLinkPush";
 import { noticeUrl } from "@depot/urls/notice";
@@ -15,8 +15,8 @@ interface NoticeViewProps {
 }
 
 const NoticeView: React.FC<NoticeViewProps> = ({ view_id }) => {
-  const [content, setContent] = useState<NoticeType | null>(null);
-  const { login, userInfo } = useLoginCheck();
+  const [content, setContent] = useState<INotice | null>(null);
+  const { login, userInfo, isSCS } = useLoginCheck();
   const { linkPush } = useLinkPush();
   useEffect(() => {
     const fetchNotice = async () => {
@@ -82,7 +82,7 @@ const NoticeView: React.FC<NoticeViewProps> = ({ view_id }) => {
         </div>
         <br />
         <div className="container">
-          {login && userInfo?.type === "admin" && (
+          {login && isSCS() && (
             <div className="text-end">
               <button
                 type="button"

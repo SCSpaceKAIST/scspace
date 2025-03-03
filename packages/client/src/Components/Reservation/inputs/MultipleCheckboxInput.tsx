@@ -1,29 +1,30 @@
 import React from "react";
+import { InputAvailableEnum } from "./common/inputAvailableEnum";
 
-interface MultipleCheckboxInputProps {
-  contents: string[]; // 체크박스의 value 값
+interface MultipleCheckboxInputProps<T extends InputAvailableEnum> {
+  contents: T[]; // 체크박스의 value 값
   labels: string[]; // 라벨로 표시될 텍스트
   header: string; // 상단 헤더 텍스트
-  selected: string[]; // 선택된 값들의 배열
-  setSelected: (value: string[]) => void; // 선택 변경 핸들러
+  selected: T[]; // 선택된 값들의 배열
+  setSelected: (value: T[]) => void; // 선택 변경 핸들러
 }
 
-const MultipleCheckboxInput: React.FC<MultipleCheckboxInputProps> = ({
+const MultipleCheckboxInput = <T extends InputAvailableEnum>({
   contents,
   labels,
   header,
   selected,
   setSelected,
-}) => {
+}: MultipleCheckboxInputProps<T>) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
 
     if (checked) {
       // 체크박스가 체크되면 배열에 추가
-      setSelected([...selected, value]);
+      setSelected([...selected, value as unknown as T]);
     } else {
       // 체크 해제되면 배열에서 제거
-      setSelected(selected.filter((item) => item !== value));
+      setSelected(selected.filter((item) => item !== value as unknown as T));
     }
   };
 

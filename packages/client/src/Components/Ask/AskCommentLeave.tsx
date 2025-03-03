@@ -1,15 +1,17 @@
 "use client";
 
 import { useLinkPush } from "@/Hooks/useLinkPush";
-import { AskStateEnum, AskType } from "@depot/types/ask";
+import { IAsk } from "@depot/types/ask";
 import { sendPut } from "@/Hooks/useApi";
 import { useEffect } from "react";
-import { UserType } from "@depot/types/user";
+import { IUser } from "@depot/types/user";
+import { AskStateEnum, askStateStringToEnum } from "@depot/enums/ask.enum";
+import { UserTypeEnum } from "@depot/enums/user.enum";
 
 interface AskCommentLeaveProps {
-  content: AskType | null;
-  setContent: React.Dispatch<React.SetStateAction<AskType | null>>;
-  userInfo: UserType;
+  content: IAsk | null;
+  setContent: React.Dispatch<React.SetStateAction<IAsk | null>>;
+  userInfo: IUser;
 }
 
 const AskCommentLeave: React.FC<AskCommentLeaveProps> = ({
@@ -21,7 +23,7 @@ const AskCommentLeave: React.FC<AskCommentLeaveProps> = ({
 
   useEffect(() => {
     if (userInfo)
-      setContent({ ...content, commenterId: userInfo.userId } as AskType);
+      setContent({ ...content, commenterId: userInfo.id } as IAsk);
   }, [userInfo]);
 
   const setComment = (newComment: string) => {
@@ -43,7 +45,7 @@ const AskCommentLeave: React.FC<AskCommentLeaveProps> = ({
   ) => {
     const { name, value } = e.target;
     if (name === "comment") setComment(value);
-    if (name === "dot") setState(value as AskStateEnum);
+    if (name === "dot") setState(askStateStringToEnum(value));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -52,7 +54,7 @@ const AskCommentLeave: React.FC<AskCommentLeaveProps> = ({
       sendPut("/ask/comment", content)
         .then(() => {
           alert("답변 완료");
-          userInfo.type === "admin" ? linkPush("/manage") : linkPush("/ask");
+          userInfo.type !== UserTypeEnum.USER ? linkPush("/ask"):  linkPush("/manage") ;
         })
         .catch((err) => console.error(err));
     } else {
@@ -81,7 +83,7 @@ const AskCommentLeave: React.FC<AskCommentLeaveProps> = ({
               <textarea
                 name="comment"
                 className="form-control"
-                value={content?.comment}
+                value={content?.comment ?? ""}
                 onChange={handleChange}
                 placeholder="Your Comment"
               ></textarea>

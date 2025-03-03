@@ -23,7 +23,7 @@ const PasswordView: React.FC<PasswordProps> = ({
     if (forManage) {
       setValidationList(
         spaceArray?.map((space) => ({
-          spaceId: space.spaceId,
+          spaceId: space.id,
           valid: true,
         })) || []
       );

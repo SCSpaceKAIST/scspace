@@ -1,22 +1,28 @@
+import { AskStateEnum } from "@depot/enums/ask.enum";
+import { ReservationStateEnum } from "@depot/enums/reservation.enum";
+import { ReservationWorkerNeedEnum } from "@depot/enums/reservation.enum";
 import React, { useEffect } from "react";
+import { InputAvailableEnum } from "./common/inputAvailableEnum";
 
-interface RadioInputProps {
-  contents: string[]; // 라디오 버튼의 value 값
+
+interface RadioInputProps<T> {
+  contents: T[]; // 라디오 버튼의 value 값
   labels: string[]; // 라벨로 표시될 텍스트
   header: string; // 상단 헤더 텍스트
-  selected: string | null; // 선택된 값
-  setSelected: (value: string) => void; // 선택 변경 핸들러
+  selected: T | null; // 선택된 값
+  setSelected: (value: T) => void; // 선택 변경 핸들러
 }
 
-const MultipleRadioInput: React.FC<RadioInputProps> = ({
+const MultipleRadioInput = <T extends InputAvailableEnum>({
   contents,
   labels,
   header,
   selected,
   setSelected,
-}) => {
+} : RadioInputProps<T>) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelected(event.target.value); // 선택된 값을 업데이트
+    console.log(`event.target.value: ${event.target.value}`);
+    setSelected(event.target.value as unknown as T); // 선택된 값을 업데이트
   };
 
   return (

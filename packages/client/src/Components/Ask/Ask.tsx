@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 
-import { AskType, askStateOptions } from "@depot/types/ask";
+import { IAsk, askStateOptions, askStateOptionsEng } from "@depot/types/ask";
 import BoardPageSelector from "@Components/_commons/BoardPageSelector";
 import ConditionalButton from "@/Components/_commons/ConditionalButton";
 import { useLinkPush } from "@Hooks/useLinkPush";
@@ -14,7 +14,7 @@ const Ask: React.FC = () => {
   const { linkPush } = useLinkPush();
 
   const { list, pageNumber, totalPageNumber, setPageNumber, login } =
-    useBoardData<AskType>({
+    useBoardData<IAsk>({
       apiEndpoint: "/api/ask/all",
     });
 
@@ -51,7 +51,7 @@ const Ask: React.FC = () => {
                   >
                     <td>{contents.id}</td>
                     <td>
-                      <div className={contents.state} />
+                      <div className={askStateOptionsEng[contents.state]} />
                       {askStateOptions[contents.state]}
                     </td>
                     <td>{contents.title}</td>

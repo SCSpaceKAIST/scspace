@@ -6,12 +6,13 @@ import ReservationModal, { handleReservationSubmit } from "./ReservationModal";
 import moment from "moment";
 import { useBoardData } from "@/Hooks/useBoardData";
 import {
-  ReservationOutputType,
-  ReservationType,
+  IReservationResponse,
   reservationStateOptions,
   workerNeedOptions,
+  workerNeedOptionsEng,
+  reservationStateOptionsEng,
 } from "@depot/types/reservation";
-import { UserType } from "@depot/types/user";
+import { IUser } from "@depot/types/user";
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
 
 const ReservationList: React.FC = () => {
@@ -22,12 +23,12 @@ const ReservationList: React.FC = () => {
     totalPageNumber,
     setPageNumber,
     boardDataRefreshBtnClick,
-  } = useBoardData<ReservationOutputType>({
-    apiEndpoint: `/api/reservation/user/${userInfo?.userId}`,
+  } = useBoardData<IReservationResponse>({
+    apiEndpoint: `/api/reservation/user/${userInfo?.id}`,
     itemsPerPage: 10,
   });
-  const [reservation, setReservation] = useState<ReservationType | null>(null);
-  const [reserverInfo, setReserverInfo] = useState<UserType | null>(null);
+  const [reservation, setReservation] = useState<IReservationResponse | null>(null);
+  const [reserverInfo, setReserverInfo] = useState<IUser | null>(null);
   const [showModal, setShowModal] = useState(false);
 
   const handleShowModal = () => {
@@ -44,9 +45,9 @@ const ReservationList: React.FC = () => {
     );
   };
 
-  const handleReservationClick = (contents: ReservationOutputType) => {
+  const handleReservationClick = (contents: IReservationResponse) => {
     setReservation(contents);
-    setReserverInfo(contents.userInfo);
+    setReserverInfo(contents.user);
     setShowModal(true);
   };
 
@@ -73,13 +74,13 @@ const ReservationList: React.FC = () => {
           <tbody>
             {list
               .slice((pageNumber - 1) * 10, pageNumber * 10)
-              .map((contents: ReservationOutputType) => (
+              .map((contents: IReservationResponse) => (
                 <tr
-                  key={contents.reservation_id}
+                  key={contents.id}
                   onClick={() => handleReservationClick(contents)}
                 >
-                  <td>{contents.name}</td>
-                  <td>{contents.reservation_id}</td>
+                  <td>{contents.space.name}</td>
+                  <td>{`${contents.id}`}</td>
                   <td>
                     {moment(contents.timeFrom).format("MM월 DD일 HH:mm")}~
                     {moment(contents.timeTo).format("MM월 DD일 HH:mm")}
@@ -88,12 +89,12 @@ const ReservationList: React.FC = () => {
                     {moment(contents.timePost).format("YY년 MM월 DD일 HH:mm")}
                   </td>
                   <td>
-                    <div className={contents.state} />
+                    <div className={reservationStateOptionsEng[contents.state]} />
                     {reservationStateOptions[contents.state]}
                   </td>
 
                   <td>
-                    <div className={contents.workerNeed} />
+                    <div className={workerNeedOptionsEng[contents.workerNeed]} />
                     {workerNeedOptions[contents.workerNeed]}
                   </td>
                 </tr>

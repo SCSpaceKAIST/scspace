@@ -1,36 +1,39 @@
 import {
-  ReservationInputType,
-  ReservationContentTypeEnum,
-  IndividualContentType,
-  PianoContentType,
-  SeminarContentType,
-  DanceContentType,
-  GroupContentType,
-  MiraeContentType,
-  SumiContentType,
-  WorkContentType,
-  OpenContentType,
+
+  IReservationContent,
+  IIndividualContent,
+  IPianoContent,
+  ISeminarContent,
+  IDanceContent,
+  IGroupContent,
+  IMiraeContent,
+  ISumiContent,
+  IWorkContent,
+  IOpenContent,
+  IReservationCreate,
 } from "@depot/types/reservation";
 
+import { SpaceTypeEnum } from "@depot/enums/space.enum";
+
 // 개별 content 검증 함수
-const validateIndividualContent = (content: IndividualContentType) => {
+const validateIndividualContent = (content: IIndividualContent) => {
   if (content.eventName === null || typeof content.eventName === "string") {
     return true;
   }
   return false;
 };
 
-const validatePianoContent = (content: PianoContentType) => {
+const validatePianoContent = (content: IPianoContent) => {
   if (content.eventName === null || typeof content.eventName === "string") {
     return true;
   }
   return false;
 };
 
-const validateSeminarContent = (content: SeminarContentType) => {
-  const { number, contents, eventName, organizationName } = content;
+const validateSeminarContent = (content: ISeminarContent) => {
+  const { participantNumber, contents, eventName, organizationName } = content;
   if (
-    typeof number === "string" &&
+    typeof participantNumber === "number" &&
     typeof contents === "string" &&
     typeof eventName === "string" &&
     typeof organizationName === "string"
@@ -40,40 +43,40 @@ const validateSeminarContent = (content: SeminarContentType) => {
   return false;
 };
 
-const validateDanceContent = (content: DanceContentType) => {
-  const { contents, eventName, teamMember } = content;
+const validateDanceContent = (content: IDanceContent) => {
+  const { contents, eventName, teamMemberUserIds } = content;
   if (
     typeof contents === "string" &&
     typeof eventName === "string" &&
-    Array.isArray(teamMember) &&
-    teamMember.every((m) => typeof m === "string")
+    Array.isArray(teamMemberUserIds) &&
+    teamMemberUserIds.every((m) => typeof m === "number")
   ) {
     return true;
   }
   return false;
 };
 
-const validateGroupContent = (content: GroupContentType) => {
-  const { contents, eventName, teamMember } = content;
+const validateGroupContent = (content: IGroupContent) => {
+  const { contents, eventName, teamMemberUserIds } = content;
   if (
     typeof contents === "string" &&
     typeof eventName === "string" &&
-    Array.isArray(teamMember) &&
-    teamMember.every((m) => typeof m === "string")
+    Array.isArray(teamMemberUserIds) &&
+    teamMemberUserIds.every((m) => typeof m === "number")
   ) {
     return true;
   }
   return false;
 };
 
-const validateMiraeContent = (content: MiraeContentType) => {
+const validateMiraeContent = (content: IMiraeContent) => {
   const {
     food,
     contents,
     equipment,
     eventName,
-    innerNumber,
-    outerNumber,
+    innerParticipantNumber,
+    outerParticipantNumber,
     eventPurpose,
     organizationName,
   } = content;
@@ -83,8 +86,8 @@ const validateMiraeContent = (content: MiraeContentType) => {
     Array.isArray(equipment) &&
     equipment.every((e) => typeof e === "string") &&
     typeof eventName === "string" &&
-    typeof innerNumber === "number" &&
-    typeof outerNumber === "number" &&
+    typeof innerParticipantNumber === "number" &&
+    typeof outerParticipantNumber === "number" &&
     typeof eventPurpose === "string" &&
     typeof organizationName === "string"
   ) {
@@ -93,7 +96,7 @@ const validateMiraeContent = (content: MiraeContentType) => {
   return false;
 };
 
-const validateSumiContent = (content: SumiContentType) => {
+const validateSumiContent = (content: ISumiContent) => {
   const {
     desk,
     chair,
@@ -102,8 +105,8 @@ const validateSumiContent = (content: SumiContentType) => {
     contents,
     equipment,
     eventName,
-    innerNumber,
-    outerNumber,
+    innerParticipantNumber,
+    outerParticipantNumber,
     eventPurpose,
     organizationName,
   } = content;
@@ -116,8 +119,8 @@ const validateSumiContent = (content: SumiContentType) => {
     Array.isArray(equipment) &&
     equipment.every((e) => typeof e === "string") &&
     typeof eventName === "string" &&
-    typeof innerNumber === "number" &&
-    typeof outerNumber === "number" &&
+    typeof innerParticipantNumber === "number" &&
+    typeof outerParticipantNumber === "number" &&
     typeof eventPurpose === "string" &&
     typeof organizationName === "string"
   ) {
@@ -126,7 +129,7 @@ const validateSumiContent = (content: SumiContentType) => {
   return false;
 };
 
-const validateWorkContent = (content: WorkContentType) => {
+const validateWorkContent = (content: IWorkContent) => {
   const { eventName, organizationName } = content;
   if (typeof eventName === "string" && typeof organizationName === "string") {
     return true;
@@ -134,12 +137,12 @@ const validateWorkContent = (content: WorkContentType) => {
   return false;
 };
 
-const validateOpenContent = (content: OpenContentType) => {
+const validateOpenContent = (content: IOpenContent) => {
   const {
     contents,
     eventName,
-    innerNumber,
-    outerNumber,
+    innerParticipantNumber,
+    outerParticipantNumber,
     eventPurpose,
     workComplete,
     organizationName,
@@ -147,8 +150,8 @@ const validateOpenContent = (content: OpenContentType) => {
   if (
     (contents === undefined || typeof contents === "string") &&
     (eventName === undefined || typeof eventName === "string") &&
-    (innerNumber === undefined || typeof innerNumber === "number") &&
-    (outerNumber === undefined || typeof outerNumber === "number") &&
+    (innerParticipantNumber === undefined || typeof innerParticipantNumber === "number") &&
+    (outerParticipantNumber === undefined || typeof outerParticipantNumber === "number") &&
     (eventPurpose === undefined || typeof eventPurpose === "string") &&
     (workComplete === undefined ||
       workComplete === null ||
@@ -162,28 +165,28 @@ const validateOpenContent = (content: OpenContentType) => {
 
 // content 검증 함수
 const validateContent = (
-  content: ReservationContentTypeEnum,
-  spaceType: string
+  content: IReservationContent,
+  spaceType: SpaceTypeEnum
 ): boolean => {
   switch (spaceType) {
-    case "individual":
-      return validateIndividualContent(content as IndividualContentType);
-    case "piano":
-      return validatePianoContent(content as PianoContentType);
-    case "seminar":
-      return validateSeminarContent(content as SeminarContentType);
-    case "dance":
-      return validateDanceContent(content as DanceContentType);
-    case "group":
-      return validateGroupContent(content as GroupContentType);
-    case "mirae":
-      return validateMiraeContent(content as MiraeContentType);
-    case "sumi":
-      return validateSumiContent(content as SumiContentType);
-    case "work":
-      return validateWorkContent(content as WorkContentType);
-    case "open":
-      return validateOpenContent(content as OpenContentType);
+    case SpaceTypeEnum.INDIVIDUAL:
+      return validateIndividualContent(content as IIndividualContent);
+    case SpaceTypeEnum.PIANO:
+      return validatePianoContent(content as IPianoContent);
+    case SpaceTypeEnum.SEMINAR:
+      return validateSeminarContent(content as ISeminarContent);
+    case SpaceTypeEnum.DANCE:
+      return validateDanceContent(content as IDanceContent);
+    case SpaceTypeEnum.GROUP:
+      return validateGroupContent(content as IGroupContent);
+    case SpaceTypeEnum.MIRAE:
+      return validateMiraeContent(content as IMiraeContent);
+    case SpaceTypeEnum.SUMI:
+      return validateSumiContent(content as ISumiContent);
+    case SpaceTypeEnum.WORK:
+      return validateWorkContent(content as IWorkContent);
+    case SpaceTypeEnum.OPEN:
+      return validateOpenContent(content as IOpenContent);
     default:
       return false;
   }
@@ -191,8 +194,8 @@ const validateContent = (
 
 // 전체 유효성 검사 함수
 export const validateReservationInput = (
-  reservationInput: ReservationInputType,
-  spaceType: string,
+  reservationInput: IReservationCreate,
+  spaceType: SpaceTypeEnum,
   agreed: boolean
 ): { valid: boolean; errors: string } => {
   const errors: string[] = [];
@@ -217,11 +220,11 @@ export const validateReservationInput = (
   }
 
   if (isNaN(timeTo.getTime())) {
-    errors.push("timeTo 값이 유효한 날짜 형식이 아닙니다.");
+    errors.push("time_to 값이 유효한 날짜 형식이 아닙니다.");
   }
 
   if (timeFrom.getTime() > timeTo.getTime()) {
-    errors.push("timeFrom은 timeTo보다 이전이어야 합니다.");
+    errors.push("timeFrom은 time_to보다 이전이어야 합니다.");
   }
 
   if (timeFrom.getTime() == timeTo.getTime()) {

@@ -2,7 +2,7 @@ version: "3.8"
 services:
   nginx:
     image: nginx
-    container_name: nginx-container
+    container_name: scspace-nginx-container
     ports:
       - "80:80"
     volumes:
@@ -14,7 +14,7 @@ services:
 
   mysql:
     image: mysql:latest
-    container_name: mysql-container
+    container_name: scspace-mysql-container
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PWD}
       MYSQL_DATABASE: ${DB_NAME}
@@ -22,7 +22,7 @@ services:
       MYSQL_PASSWORD: ${DB_PWD}
       TZ: Asia/Seoul # 시간대 설정
     ports:
-      - "${DB_PORT}:3306"
+      - "3306:3306" # .env 파일과 같은지 체크하기
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci # UTF-8 인코딩 설정
     volumes:
       - mysql-data:/var/lib/mysql

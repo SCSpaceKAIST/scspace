@@ -2,20 +2,20 @@ import {
   reservationMaxDate,
   reservationMaxDayTime,
   reservationMinDate,
-} from "@depot/types/reservation";
-import { SpaceType } from "@depot/types/space";
-import { UserTypeEnum } from "@depot/types/user";
+} from "@depot/consts/reservation.const";
+import { ISpace } from "@depot/types/space";
+import { UserTypeEnum } from "@depot/enums/user.enum";
 
 export const setTimes = (
-  space: SpaceType,
-  ckUsertype: (type: UserTypeEnum | null | undefined) => boolean
+  space: ISpace,
+  isSCS: () => boolean
 ) => {
   const spaceType = space.spaceType;
   const calculateDate = (date: Date, day: number): Date => {
     return new Date(date.getTime() + (day + 1) * 24 * 60 * 60 * 1000 - 1);
   };
   // maxTime 설정 (하루 최대 예약 시간)
-  const maxTime = ckUsertype("admin")
+  const maxTime = isSCS()
     ? 60 * 24 * 7 * 365
     : reservationMaxDayTime[spaceType];
 
@@ -28,13 +28,13 @@ export const setTimes = (
 
   // minDate와 maxDate 설정
   const minDate = new Date(
-    ckUsertype("admin")
+    isSCS()
       ? currentDate.getTime()
       : currentDate.getTime() +
         reservationMinDate[spaceType] * 24 * 60 * 60 * 1000
   ); // 최소 예약 가능 날짜
   const maxDate = new Date(
-    ckUsertype("admin")
+    isSCS()
       ? currentDate.getTime() + (365 + 1) * 24 * 60 * 60 * 1000 - 1
       : currentDate.getTime() +
         (reservationMaxDate[spaceType] + 1) * 24 * 60 * 60 * 1000 -

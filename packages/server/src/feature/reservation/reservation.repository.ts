@@ -42,6 +42,7 @@ export class ReservationRepository {
     id?: number;
     userId?: number;
     spaceId?: number;
+    spaceIds?: number[];
     teamId?: number;
     state?: ReservationStateEnum;
     states?: ReservationStateEnum[];
@@ -60,6 +61,9 @@ export class ReservationRepository {
     }
     if (param.spaceId) {
       whereClause.push(eq(Reservation.spaceId, param.spaceId));
+    }
+    if (param.spaceIds) {
+      whereClause.push(inArray(Reservation.spaceId, param.spaceIds));
     }
     if (param.teamId) {
       whereClause.push(eq(Reservation.teamId, param.teamId));

@@ -1,7 +1,7 @@
-import { AskType } from "@depot/types/ask";
+import { IAsk } from "@depot/types/ask";
 
 interface AskCommentProps {
-  content: AskType;
+  content: IAsk;
 }
 
 const AskComment: React.FC<AskCommentProps> = ({ content }) => {

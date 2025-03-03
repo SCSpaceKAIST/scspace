@@ -6,16 +6,17 @@ import axios from "axios";
 import moment from "moment";
 import { VscEye } from "react-icons/vsc";
 import AskComment from "@Components/Ask/AskComment";
-import { AskType, askStateOptions } from "@depot/types/ask";
+import { IAsk, askStateOptions, askStateOptionsEng } from "@depot/types/ask";
 import AskCommentLeave from "@/Components/Ask/AskCommentLeave";
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
+import { UserTypeEnum } from "@depot/enums/user.enum";
 
 interface AskViewProps {
   view_id: string;
 }
 
 const AskView: React.FC<AskViewProps> = ({ view_id }) => {
-  const [content, setContent] = useState<AskType | null>(null);
+  const [content, setContent] = useState<IAsk | null>(null);
 
   const { login, userInfo } = useLoginCheck();
 
@@ -71,14 +72,14 @@ const AskView: React.FC<AskViewProps> = ({ view_id }) => {
                 </div>
                 <div className="meta-bottom manage">
                   <div className="cats">
-                    <div className={content.state} />
+                    <div className={askStateOptionsEng[content.state]} />
                     {askStateOptions[content.state]}
                   </div>
                 </div>
               </article>
             </div>
           </div>
-          {login && userInfo?.type === "admin" ? (
+          {login && userInfo?.type === UserTypeEnum.ADMIN ? (
             <AskCommentLeave
               content={content}
               setContent={setContent}

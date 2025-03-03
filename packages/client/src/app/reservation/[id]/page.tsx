@@ -14,7 +14,7 @@ import SumiForm from "@/Components/Reservation/forms/SumiForm";
 import WorkForm from "@/Components/Reservation/forms/WorkForm";
 import OpenForm from "@/Components/Reservation/forms/OpenForm";
 import { useState } from "react";
-
+import { SpaceTypeEnum } from "@depot/enums/space.enum";
 export default function SpacePage() {
   const params = useParams();
   const id = parseInt(params.id as string, 10); // URL의 [id] 부분을 숫자로 변환
@@ -29,15 +29,15 @@ export default function SpacePage() {
   }
 
   const spaceComponent = {
-    individual: <IndividualForm space={space} spaceId={id} />,
-    piano: <PianoForm space={space} spaceId={id} />,
-    seminar: <SeminarForm space={space} spaceId={id} />,
-    dance: <DanceForm space={space} spaceId={id} />,
-    group: <GroupForm space={space} spaceId={id} />,
-    mirae: <MiraeForm space={space} spaceId={id} />,
-    sumi: <SumiForm space={space} spaceId={id} />,
-    work: <WorkForm space={space} spaceId={id} />,
-    open: <OpenForm space={space} spaceId={id} />,
+    [SpaceTypeEnum.INDIVIDUAL]: <IndividualForm space={space} spaceId={id} />,
+    [SpaceTypeEnum.PIANO]: <PianoForm space={space} spaceId={id} />,
+    [SpaceTypeEnum.SEMINAR]: <SeminarForm space={space} spaceId={id} />,
+    [SpaceTypeEnum.DANCE]: <DanceForm space={space} spaceId={id} />,
+    [SpaceTypeEnum.GROUP]: <GroupForm space={space} spaceId={id} />,
+    [SpaceTypeEnum.MIRAE]: <MiraeForm space={space} spaceId={id} />,
+    [SpaceTypeEnum.SUMI]: <SumiForm space={space} spaceId={id} />,
+    [SpaceTypeEnum.WORK]: <WorkForm space={space} spaceId={id} />,
+    [SpaceTypeEnum.OPEN]: <OpenForm space={space} spaceId={id} />,
   };
 
   return (

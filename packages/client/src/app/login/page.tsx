@@ -8,19 +8,21 @@ const LoginPage: React.FC = () => {
   const router = useRouter(); // next/router 대신 next/navigation 사용
   const location = process.env.NEXT_PUBLIC_SS_URL
     ? `${process.env.NEXT_PUBLIC_SS_URL}?${new Date().getTime()}&redirect_url=${encodeURI(
-        `${process.env.NEXT_PUBLIC_API_URL_DEV}/auth/login`
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/login`
       )}`
     : "";
 
   const checkSubmit = async (): Promise<boolean> => {
     const res = await LoginCheck();
-    return res === false;
+    return res === null;
   };
 
   const handleSubmit = (): void => {
+    console.log("location", location);
     checkSubmit().then((result) => {
       console.log(result);
       if (result) {
+        console.log("location", location);
         window.location.href = location;
       } else {
         alert("로그인 되었습니다.");

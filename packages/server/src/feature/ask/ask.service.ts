@@ -51,6 +51,8 @@ export class AskService {
   }
 
   async putAskComment(content: IAskCommentCreate) {
+    await this.userPublicService.checkManager(content.commenterId);
+
     const ask = await this.askRepository
       .find({ id: content.id })
       .then(takeOne('ask'));

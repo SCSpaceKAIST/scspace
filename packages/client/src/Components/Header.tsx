@@ -4,9 +4,7 @@ import Link from "next/link";
 
 import { LoginBtn } from "./Auth/LoginBtn";
 import Image from "next/image";
-import { noticeUrl } from "@depot/urls/notice";
-import { askUrl } from "@depot/urls/ask";
-import { SpaceTypeNames, SpaceTypesArray, SpaceType } from "@depot/types/space";
+import { SpaceTypeNames, SpaceTypesArray, ISpace } from "@depot/types/space";
 import { sendGet } from "@/Hooks/useApi";
 import PasswordView from "@Components/Password/PasswordView";
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
@@ -21,23 +19,23 @@ interface MenuItem {
 export const Header: React.FC = () => {
   const { userInfo } = useLoginCheck();
   const [menu, setMenu] = useState<MenuItem[]>([
-    { name: "공지사항", sub_menu: [], menu_link: noticeUrl, sub_menu_link: [] },
+    { name: "공지사항", sub_menu: [], menu_link: "/notice", sub_menu_link: [] },
     {
       name: "소개",
       sub_menu: [],
       menu_link: "/introduction",
       sub_menu_link: [],
     },
-    {
-      name: "공간",
-      sub_menu: SpaceTypesArray.map((value, idx) => {
-        return SpaceTypeNames[value];
-      }),
-      menu_link: "/space",
-      sub_menu_link: SpaceTypesArray.map((value, idx) => {
-        return `/${idx}`;
-      }),
-    },
+    // {
+    //   name: "공간",
+    //   sub_menu: SpaceTypesArray.map((value, idx) => {
+    //     return SpaceTypeNames[value];
+    //   }),
+    //   menu_link: "/space",
+    //   sub_menu_link: SpaceTypesArray.map((value, idx) => {
+    //     return `/${idx}`;
+    //   }),
+    // },
     {
       name: "예약하기",
       sub_menu: SpaceTypesArray.map((value, idx) => {
@@ -62,13 +60,13 @@ export const Header: React.FC = () => {
       name: "문의",
       sub_menu: ["FAQ", "문의사항"],
       menu_link: "",
-      sub_menu_link: ["/faq", askUrl],
+      sub_menu_link: ["/faq", "/ask"],
     },
     { name: "이벤트", sub_menu: [], menu_link: "/event", sub_menu_link: [] },
   ]);
 
   useEffect(() => {
-    sendGet<SpaceType[]>("/space/all").then((res) => {
+    sendGet<ISpace[]>("/space/all").then((res) => {
       if (res) {
         setMenu([
           ...menu.slice(0, 3),
@@ -79,7 +77,7 @@ export const Header: React.FC = () => {
             }),
             menu_link: "/reservation",
             sub_menu_link: res.map((value, idx) => {
-              return `/${value.spaceId}`;
+              return `/${value.id}`;
             }),
           },
           {
@@ -89,7 +87,7 @@ export const Header: React.FC = () => {
             }),
             menu_link: "/calendar",
             sub_menu_link: res.map((value, idx) => {
-              return `/${value.spaceId}`;
+              return `/${value.id}`;
             }),
           },
           menu[5],

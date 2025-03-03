@@ -9,4 +9,9 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+
+  @Get('fillContent')
+  async fillContent(): Promise<boolean> {
+    return this.appService.fillContent();
+  }
 }

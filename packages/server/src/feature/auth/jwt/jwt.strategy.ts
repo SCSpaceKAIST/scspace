@@ -1,21 +1,14 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import {
-  Injectable,
-  Inject,
-  UnauthorizedException,
-  Logger,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
-import { UserRepository } from 'src/feature/user/user.repository';
-import { UserInputType } from '@depot/types/user';
-import { UserType } from '@depot/types/user';
+import { IUserCreate } from '@depot/types/user';
+import { UserPublicService } from 'src/feature/user/user.public.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly userPublicService: UserPublicService,
     private readonly configService: ConfigService,
   ) {
     super({
@@ -28,9 +21,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: UserInputType) {
+  async validate(payload: IUserCreate) {
     try {
-      const user = await this.userRepository.getUser(payload.userId);
+      const user = await this.userPublicService.findUserByKaistUid(
+        payload.kaistUID,
+      );
+
       if (user) {
         return user;
       } else {

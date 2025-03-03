@@ -1,18 +1,19 @@
 import { useState, useEffect } from "react";
 import LoginCheck from "@Hooks/LoginCheck";
-import { UserType, UserTypeEnum } from "@depot/types/user";
+import { IUser } from "@depot/types/user";
 import { useLinkPush } from "./useLinkPush";
+import { UserTypeEnum } from "@depot/enums/user.enum";
 
 export const useLoginCheck = () => {
   const [login, setLogin] = useState<boolean>(false);
-  const [userInfo, setUserInfo] = useState<UserType | null | undefined>(
+  const [userInfo, setUserInfo] = useState<IUser | null | undefined>(
     undefined
   );
   const { linkPush } = useLinkPush();
   useEffect(() => {
     //userInfo 초기화
     LoginCheck().then((result) => {
-      if (result !== false) {
+      if (result) {
         setUserInfo(result);
       } else {
         setUserInfo(null);
@@ -30,7 +31,7 @@ export const useLoginCheck = () => {
   }, [userInfo]);
 
   const withUserInfo = (
-    callback: (user: UserType) => JSX.Element
+    callback: (user: IUser) => JSX.Element
   ): JSX.Element => {
     if (userInfo) {
       return callback(userInfo); // login된 상태에만 콜백 함수를 호출
@@ -49,7 +50,7 @@ export const useLoginCheck = () => {
   const needAdmin = () => {
     if (userInfo === undefined) return;
     needLogin();
-    if (userInfo !== null && userInfo?.type !== "admin") {
+    if (userInfo !== null && userInfo?.type === UserTypeEnum.USER) {
       alert("관리자만 접근 가능한 페이지입니다.");
       linkPush("/");
     }
@@ -68,6 +69,10 @@ export const useLoginCheck = () => {
     }
   };
 
+  const isSCS = () => {
+    return userInfo?.type !== UserTypeEnum.USER;
+  };
+
   return {
     login,
     withUserInfo,
@@ -76,5 +81,6 @@ export const useLoginCheck = () => {
     needAdmin,
     ckLogin,
     ckUserType,
+    isSCS,
   };
 };

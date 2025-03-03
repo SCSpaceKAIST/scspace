@@ -11,6 +11,7 @@ import {
 import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt/jwt-guard';
+import { IUser } from '@depot/types/user';
 
 @Controller('auth')
 export class AuthController {
@@ -26,7 +27,10 @@ export class AuthController {
   }
 
   @Post('verification')
-  verification(@Req() req: Request, @Res() res: Response): void {
+  verification(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<IUser | null> {
     const cookie = req.cookies;
     return this.authService.verification(cookie, res);
   }
@@ -42,6 +46,6 @@ export class AuthController {
     Logger.log(req.user);
 
     return 1;
-    return this.userService.getUserNameWithToken();
+    //return this.userService.getUserNameWithToken();
   }
 }

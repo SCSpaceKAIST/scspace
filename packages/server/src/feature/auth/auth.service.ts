@@ -2,16 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as crypto from 'crypto';
 import { ConfigService } from '@nestjs/config';
-import { UserRepository } from 'src/feature/user/user.repository';
 import { Logger } from '@nestjs/common';
-import { UserInputType } from '@depot/types/user';
-import { UserSSOType2022 } from 'src/feature/user/user.model';
+import { IUser, IUserCreate } from '@depot/types/user';
+import { UserSSOType2022 } from '@depot/types/user/user.sso.type';
 import { UserTypeEnum } from '@depot/enums/user.enum';
+import { Response } from 'express';
+import { UserPublicService } from '../user/user.public.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly userPublicService: UserPublicService,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
@@ -27,14 +28,15 @@ export class AuthService {
 
       const payload = this.ssoToUser(data);
       Logger.log('PAYLOAD');
-      const user = await this.userRepository.getUser(payload.userId);
+      const user = await this.userPublicService.findUserByKaistUid(
+        payload.kaistUID,
+      );
       Logger.log(JSON.stringify(user));
-      if (user === false) {
-        Logger.log('ADD TO DB');
-        await this.userRepository.addUser(payload);
-      }
 
-      const token = this.jwtService.sign(user ? user : payload, {
+      const createdUser = !user
+        ? await this.userPublicService.insertUser(payload)
+        : user;
+      const token = this.jwtService.sign(createdUser ? createdUser : payload, {
         expiresIn: '7d',
         issuer: 'scspace',
         subject: 'userInfo',
@@ -55,12 +57,11 @@ export class AuthService {
     }
   }
 
-  verification(cookies: any, res): void {
+  async verification(cookies: any, res: Response): Promise<IUser | null> {
     // Deprecated
     const cookie = cookies.scspacetoken1;
     if (!cookie) {
-      res.send(false);
-      return;
+      return null;
     }
 
     try {
@@ -68,12 +69,12 @@ export class AuthService {
       const token = cookie;
       const decoded = this.jwtService.verify(token);
       Logger.log(decoded);
-      res.send(decoded);
+      return decoded;
     } catch (err) {
       if (err.name === 'TokenExpiredError') {
         res.clearCookie('scspacetoken1', { path: '/' });
       }
-      res.send(false);
+      return null;
     }
   }
 
@@ -97,15 +98,17 @@ export class AuthService {
     return JSON.parse(decrypted).dataMap.USER_INFO;
   };
 
-  private ssoToUser = (ssoPayload: UserSSOType2022): UserInputType => {
+  private ssoToUser = (ssoPayload: UserSSOType2022): IUserCreate => {
     // 첫 가입시 DB에 넣기 좋게 변경하는 함수
     return {
-      userId: ssoPayload.ku_std_no
-        ? ssoPayload.ku_std_no
-        : (ssoPayload.ku_employee_number ?? '1'),
-      name: ssoPayload.ku_kname ? ssoPayload.ku_kname : ssoPayload.displayname,
+      kaistUID: ssoPayload.kaist_uid,
+      nameKr: ssoPayload.ku_kname,
+      nameEn: ssoPayload.displayname,
       email: ssoPayload.mail,
       type: UserTypeEnum.USER,
+      userNumber: ssoPayload.ku_std_no
+        ? ssoPayload.ku_std_no
+        : (ssoPayload.ku_employee_number ?? '1'),
     };
   };
 }

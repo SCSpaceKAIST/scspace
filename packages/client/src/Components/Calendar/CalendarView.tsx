@@ -8,18 +8,17 @@ import Dropdown from "react-bootstrap/Dropdown";
 import moment from "moment";
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
 import { sendGet } from "@Hooks/useApi";
-import {
-  ReservationOutputType,
-  ReservationType,
-} from "@depot/types/reservation";
-import { SpaceType, SpaceTypeEnum } from "@depot/types/space";
+import { IReservation, IReservationResponse } from "@depot/types/reservation";
+import { ISpace } from "@depot/types/space";
 import { useSpaces } from "@/Hooks/useSpaces";
 import { useLinkPush } from "@/Hooks/useLinkPush";
 import { Tooltip } from "react-tooltip"; // 수정된 import 문
 import ReservationModal, {
   handleReservationSubmit,
 } from "@Components/Reservation/ReservationModal";
-import { UserType } from "@depot/types/user";
+import { IUser } from "@depot/types/user";
+import { ReservationStateEnum } from "@depot/enums/reservation.enum";
+import { UserTypeEnum } from "@depot/enums/user.enum";
 
 interface ResourceData {
   text: string;
@@ -29,7 +28,7 @@ interface ResourceData {
 
 interface CalendarProps {
   spaceId: number;
-  space: SpaceType;
+  space: ISpace;
   date: Date;
 }
 
@@ -39,10 +38,10 @@ const resourcesData: ResourceData[] = [
 
 type ReservationEvent = EventInput & {
   extendedProps: {
-    reservation: ReservationType & {
+    reservation: IReservation & {
       name: string;
-      spaceType: SpaceTypeEnum;
-      userId: string;
+      spaceType: ISpace["spaceType"];
+      userId: number;
     };
   };
 };
@@ -58,12 +57,12 @@ const CalendarView: React.FC<CalendarProps> = ({ spaceId, space }) => {
   const { login, userInfo } = useLoginCheck();
   const { spaceArray, loaded } = useSpaces(spaceId);
   const { linkPush } = useLinkPush();
-  const [reservations, setReservations] = useState<ReservationType[]>();
+  const [reservations, setReservations] = useState<IReservation[]>();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedReservation, setSelectedReservation] =
-    useState<ReservationType | null>(null);
+    useState<IReservationResponse | null>(null);
   const [selectedReserverInfo, setSelectedReserverInfo] =
-    useState<UserType | null>(null);
+    useState<IUser | null>(null);
 
   const handleShowModal = () => {
     setShowModal(!showModal);
@@ -73,7 +72,7 @@ const CalendarView: React.FC<CalendarProps> = ({ spaceId, space }) => {
     const reservation = info.event.extendedProps.reservation;
     setSelectedReservation(reservation);
     setSelectedReserverInfo(
-      userInfo && userInfo?.userId === reservation.userId ? userInfo : null
+      userInfo && userInfo?.id === reservation.userId ? userInfo : null
     );
     setShowModal(true);
   };
@@ -84,7 +83,7 @@ const CalendarView: React.FC<CalendarProps> = ({ spaceId, space }) => {
 
   const callApi = async () => {
     try {
-      const res = await sendGet<ReservationType[] | false>(
+      const res = await sendGet<IReservationResponse[] | false>(
         `/reservation/space/${spaceId}`
       );
       if (res !== false) {
@@ -97,15 +96,15 @@ const CalendarView: React.FC<CalendarProps> = ({ spaceId, space }) => {
     }
   };
 
-  const changeSpace = (data: ReservationType[]): ReservationEvent[] => {
+  const changeSpace = (data: IReservationResponse[]): ReservationEvent[] => {
     if (!spaceArray) return [];
     return data.map((r) => ({
-      id: r.reservation_id.toString(),
+      id: r.id.toString(),
       resourceId:
-        spaceArray.find((space) => space.spaceId === r.spaceId)?.name || "",
+        spaceArray.find((space) => space.id === r.spaceId)?.name || "",
       start: r.timeFrom,
       end: r.timeTo,
-      title: `${r.state === "grant" ? "" : "[미승인] "}${moment(r.timeFrom).format("HH:mm")} - ${moment(
+      title: `${r.state === ReservationStateEnum.GRANT ? "" : "[미승인] "}${moment(r.timeFrom).format("HH:mm")} - ${moment(
         r.timeTo
       ).format("HH:mm")} | ${r.userId}`,
 
@@ -167,8 +166,8 @@ const CalendarView: React.FC<CalendarProps> = ({ spaceId, space }) => {
           <Dropdown.Menu>
             {spaceArray?.map((one_space) => (
               <Dropdown.Item
-                key={one_space.spaceId}
-                onClick={() => linkPush(`/calendar/${one_space.spaceId}`)}
+                key={one_space.id}
+                onClick={() => linkPush(`/calendar/${one_space.id}`)}
               >
                 {one_space.name}
               </Dropdown.Item>
@@ -180,8 +179,8 @@ const CalendarView: React.FC<CalendarProps> = ({ spaceId, space }) => {
           plugins={[dayGridPlugin, interactionPlugin, resourceTimelinePlugin]}
           initialView="dayGridMonth"
           events={data}
-          editable={login && userInfo?.type === "admin"}
-          selectable={login && userInfo?.type === "admin"}
+          editable={login && userInfo?.type === UserTypeEnum.ADMIN}
+          selectable={login && userInfo?.type === UserTypeEnum.ADMIN}
           height={1000}
           headerToolbar={{
             left: "prev,next today",

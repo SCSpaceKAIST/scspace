@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import {
-  SpaceTypeEnum,
   SpaceTypeNames,
   SpaceTypesArray,
 } from "@depot/types/space";
@@ -41,7 +40,7 @@ const Space: React.FC = () => {
                         return (
                           <div key={`spaceReservationKey${spaceType}`}>
                             <Link href={`/space/${idx}`}>
-                              {SpaceTypeNames[spaceType as SpaceTypeEnum]}{" "}
+                              {SpaceTypeNames[spaceType]}{" "}
                             </Link>
                             <br />
                           </div>

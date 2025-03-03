@@ -12,6 +12,7 @@ export class PasswordRepository {
   ) {}
 
   async find(params: { id?: number; changed?: boolean }): Promise<MPassword[]> {
+    // TODO: 제일 최신의 것만 조회하는 로직 추가
     const whereClause: SQL[] = [];
     if (params.id) whereClause.push(eq(Password.id, params.id));
     if (params.changed) whereClause.push(eq(Password.changed, params.changed));

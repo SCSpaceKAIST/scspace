@@ -1,4 +1,3 @@
-import { AskStateEnum } from '@depot/enums/ask.enum';
 import {
   mysqlTable,
   serial,
@@ -17,7 +16,7 @@ export const Ask = mysqlTable('ask', {
   title: varchar('title', { length: 255 }).notNull(),
   content: text('content').notNull(),
   views: int('views').default(0).notNull(),
-  state: int('state').notNull().default(AskStateEnum.WAIT), //['wait', 'receive', 'solve']
+  state: int('state').notNull().default(1), //['wait', 'receive', 'solve']
   comment: text('comment'),
   commenterId: int('commenter_id'),
 });

@@ -6,6 +6,7 @@ import { reservationMaxDayTime } from '@depot/consts/reservation.const';
 import { UserPublicService } from '../user/user.public.service';
 import { SpacePublicService } from '../space/space.public.service';
 import { reservationMaxWeekTime } from '@depot/consts/reservation.const';
+import { MReservation } from './reservation.model';
 
 @Injectable()
 export class ReservationPublicService {
@@ -160,5 +161,13 @@ export class ReservationPublicService {
       (await this.checkTimeAvailability(spaceId, timeFrom, timeTo)) &&
       (await this.checkUserReservationTime(userId, spaceId, timeFrom, timeTo))
     );
+  }
+
+  async find(params: {
+    userId?: number;
+    spaceIds?: number[];
+    timeRange?: { timeFrom: Date; timeTo: Date };
+  }): Promise<MReservation[]> {
+    return this.reservationRepository.find(params);
   }
 }

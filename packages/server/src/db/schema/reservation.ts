@@ -1,8 +1,4 @@
 import {
-  ReservationStateEnum,
-  ReservationWorkerNeedEnum,
-} from '@depot/enums/reservation.enum';
-import {
   mysqlTable,
   varchar,
   int,
@@ -22,10 +18,8 @@ export const Reservation = mysqlTable('reservation', {
   timePost: timestamp('time_post').notNull().defaultNow(),
   timeEdit: timestamp('time_edit').onUpdateNow(),
   comment: varchar('comment', { length: 300 }),
-  state: int('state').notNull().default(ReservationStateEnum.WAIT), // ['grant', 'wait', 'received', 'rejected']
-  workerNeed: int('worker_need')
-    .notNull()
-    .default(ReservationWorkerNeedEnum.UNNECESSARY), // ['unnecessary', 'required', 'completed', 'failed']
+  state: int('state').notNull().default(1), // ['grant', 'wait', 'received', 'rejected']
+  workerNeed: int('worker_need').notNull().default(1), // ['unnecessary', 'required', 'completed', 'failed']
 });
 
 export const ReservationContent = mysqlTable('reservation_content', {

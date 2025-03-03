@@ -3,8 +3,8 @@ import {
   reservationMaxDate,
   reservationMaxDayTime,
   reservationMinDate,
-} from "@depot/types/reservation";
-import { SpaceTypeEnum } from "@depot/types/space";
+} from "@depot/consts/reservation.const";
+import { SpaceTypeEnum } from "@depot/enums/space.enum";
 
 interface TimeTooltipsProps {
   spaceType: SpaceTypeEnum;

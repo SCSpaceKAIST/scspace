@@ -2,17 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { TeamRepository } from './team.repository';
 import { ITeamResponse } from '@depot/types/reservation';
 import { UserPublicService } from '../user/user.public.service';
-import { SemesterRepository } from '../semester/semester.repository';
+import { SemesterPublicService } from '../semester/semester.public.service';
 import { TeamMemberRepository } from './team.member.repository';
 
-@Injectable()
 @Injectable()
 export class TeamService {
   constructor(
     private readonly teamRepository: TeamRepository,
     private readonly teamMemberRepository: TeamMemberRepository,
     private readonly userPublicService: UserPublicService,
-    private readonly semesterRepository: SemesterRepository,
+    private readonly semesterPublicService: SemesterPublicService,
   ) {}
 
   async getTeamsByUserId(userId: number): Promise<ITeamResponse[]> {
@@ -23,7 +22,7 @@ export class TeamService {
     const users = await this.userPublicService.fetchAll(
       teamMembers.map((e) => e.userId),
     );
-    const semesters = await this.semesterRepository.fetchAll(
+    const semesters = await this.semesterPublicService.fetchSemesterAll(
       teams.map((e) => e.semesterId),
     );
 

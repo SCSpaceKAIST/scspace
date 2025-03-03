@@ -28,8 +28,12 @@ export type IAskCreate = Omit<
 
 export type IAskCommentCreate = Pick<
   IAsk,
-  "id" | "comment" | "commenterId" | "state"
->;
+  "id" | "state"
+> & {
+  commenterId: number;
+  comment: string;
+};
+
 
 export type IAskResponse = IAsk & {
   user: IUser;
@@ -40,4 +44,10 @@ export const askStateOptions: { [key in AskStateEnum]: string } = {
   [AskStateEnum.WAIT]: "대기중",
   [AskStateEnum.RECEIVE]: "접수됨",
   [AskStateEnum.SOLVE]: "해결됨",
+};
+
+export const askStateOptionsEng: { [key in AskStateEnum]: string } = {
+  [AskStateEnum.WAIT]: "wait",
+  [AskStateEnum.RECEIVE]: "receive",
+  [AskStateEnum.SOLVE]: "solve",
 };

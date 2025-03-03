@@ -8,6 +8,7 @@ export class PasswordController {
 
   @Get('validAll')
   async validAll(): Promise<IPassword[]> {
+    // valid (changed 된 비밀번호) 모두 조회
     return this.passwordService.validAll();
   }
 

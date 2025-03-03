@@ -1,13 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
-
-import {
-  SpaceTypeEnum,
-  SpaceTypeNames,
-  SpaceTypesArray,
-} from "@depot/types/space";
 import { useSpaces } from "@/Hooks/useSpaces";
 
 const Calendar: React.FC = () => {
@@ -37,7 +31,7 @@ const Calendar: React.FC = () => {
                       {spaceArray?.map((space, idx) => {
                         return (
                           <div key={`calendarKey${idx}`}>
-                            <Link href={`/calendar/${space.spaceId}`}>
+                            <Link href={`/calendar/${space.id}`}>
                               {space.name}
                             </Link>
                             <br />

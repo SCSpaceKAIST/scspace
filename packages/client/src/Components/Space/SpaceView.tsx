@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import axios from "axios";
 import {
-  IntroductionType,
-  SpaceIntroductionOutputType,
+  ISpaceIntroduction,
+  ISpace,
   SpaceTypeNames,
+  IIntroduction,
+  ISpaceIntroductionResponse,
 } from "@depot/types/space";
 import SpaceIntro from "@Components/Space/SpaceIntro";
 
@@ -13,7 +15,7 @@ interface SpaceViewProps {
 }
 
 const SpaceView: React.FC<SpaceViewProps> = ({ spaceId }) => {
-  const [spaceInfo, setSpaceInfo] = useState<SpaceIntroductionOutputType>();
+  const [spaceInfo, setSpaceInfo] = useState<ISpaceIntroductionResponse>();
   const [menu, setMenu] = useState<0 | 1 | 2>(0);
   const [intro, setIntro] = useState<React.FC>();
 
@@ -36,11 +38,11 @@ const SpaceView: React.FC<SpaceViewProps> = ({ spaceId }) => {
 
     switch (menu) {
       case 0:
-        return <SpaceIntro data={spaceInfo.introduction as IntroductionType} />;
+        return <SpaceIntro data={spaceInfo.introduction} />;
       case 1:
-        return <SpaceIntro data={spaceInfo.usage as IntroductionType} />;
+        return <SpaceIntro data={spaceInfo.usage} />;
       case 2:
-        return <SpaceIntro data={spaceInfo.caution as IntroductionType} />;
+        return <SpaceIntro data={spaceInfo.caution} />;
       default:
         return <div>Select a menu</div>;
     }

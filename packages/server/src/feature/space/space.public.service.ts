@@ -18,4 +18,8 @@ export class SpacePublicService {
   async fetchSpaceAllBySpaceType(spaceType: SpaceTypeEnum): Promise<MSpace[]> {
     return await this.spaceRepository.fetchAll(spaceType);
   }
+
+  async findAll(): Promise<MSpace[]> {
+    return await this.spaceRepository.find({});
+  }
 }

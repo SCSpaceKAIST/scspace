@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 
-import { IntroductionType } from "@depot/types/space";
+import { IIntroduction } from "@depot/types/space";
 
 interface SpaceIntroductionProps {
-  data: IntroductionType;
+  data: IIntroduction;
 }
 
 const SpaceIntro: React.FC<SpaceIntroductionProps> = ({ data }) => {

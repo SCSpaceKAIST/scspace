@@ -15,7 +15,7 @@ const LoginTest: React.FC = () => {
 
   const checkSubmit = async (): Promise<boolean> => {
     const res = await LoginCheck();
-    return res === false;
+    return res === null;
   };
 
   const handleSubmit = async (): Promise<void> => {

@@ -13,10 +13,14 @@ import { ReservationModule } from './feature/reservation/reservation.module';
 import { TeamModule } from './feature/team/team.module';
 import { PasswordModule } from './feature/password/password.module';
 import { SemesterModule } from './feature/semester/semester.module';
+import { join } from 'path';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: [join(__dirname, '../../.env')],
+    }),
     UserModule,
     DBModule,
     AuthModule,

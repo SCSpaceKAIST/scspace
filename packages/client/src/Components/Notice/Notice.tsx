@@ -3,27 +3,29 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
-import { NoticeType } from "@depot/types/notice";
+import { INotice } from "@depot/types/notice";
 import BoardPageSelector from "@Components/_commons/BoardPageSelector";
 import ConditionalButton from "@Components/_commons/ConditionalButton";
 import { useLinkPush } from "@Hooks/useLinkPush";
 import { useBoardData } from "@/Hooks/useBoardData";
+import { useLoginCheck } from "@/Hooks/useLoginCheck";
 
 const Notice: React.FC = () => {
   const { linkPush } = useLinkPush();
 
   const ROW_PER_PAGE = 10;
+  const { isSCS } = useLoginCheck();
   const { list, pageNumber, totalPageNumber, setPageNumber, login, userInfo } =
-    useBoardData<NoticeType>({
+    useBoardData<INotice>({
       apiEndpoint: "/api/notice/all",
     });
 
-  const callApi = async (): Promise<NoticeType[]> => {
+  const callApi = async (): Promise<INotice[]> => {
     const res = await axios.get("/api/notice/all");
     //return res.data;
 
     // res.data를 timePost 기준으로 내림차순 정렬
-    const sortedData = res.data.sort((a: NoticeType, b: NoticeType) => {
+    const sortedData = res.data.sort((a: INotice, b: INotice) => {
       return new Date(b.timePost).getTime() - new Date(a.timePost).getTime();
     });
 
@@ -34,7 +36,7 @@ const Notice: React.FC = () => {
     <div id="main">
       <section>
         <ConditionalButton
-          condition={login === true && userInfo?.type === "admin"}
+          condition={login === true && isSCS()}
           btnLink="/notice/create"
         >
           작성하기

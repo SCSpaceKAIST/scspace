@@ -1,20 +1,21 @@
-import { SpaceType } from "@depot/types/space";
+import { ISpace } from "@depot/types/space";
 import { useEffect, useState } from "react";
 import { sendGet } from "./useApi";
+import { SpaceTypeEnum } from "@depot/enums/space.enum";
 
 export const useSpaces = (id = 0) => {
-  const [spaceArray, setSpaceArray] = useState<SpaceType[]>();
+  const [spaceArray, setSpaceArray] = useState<ISpace[]>();
   const [loaded, setLoaded] = useState<boolean>(false);
-  const [space, setSpace] = useState<SpaceType>({
-    spaceId: 0,
+  const [space, setSpace] = useState<ISpace>({
+    id: 0,
     name: "",
     nameEng: "",
-    spaceType: "individual",
+    spaceType: SpaceTypeEnum.INDIVIDUAL,
   });
 
   useEffect(() => {
     const getSpaces = async () => {
-      const response = await sendGet<SpaceType[]>(`/space/all`);
+      const response = await sendGet<ISpace[]>(`/space/all`);
       setSpaceArray(response);
     };
     getSpaces();

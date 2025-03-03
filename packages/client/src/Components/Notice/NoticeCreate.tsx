@@ -3,24 +3,24 @@
 import { useEffect, useState } from "react";
 import { useLoginCheck } from "@Hooks/useLoginCheck";
 import { useLinkPush } from "@/Hooks/useLinkPush";
-import { NoticeInputType } from "@depot/types/notice";
+import { INoticeCreate } from "@depot/types/notice";
 import { sendPost } from "@/Hooks/useApi";
 import { noticeUrl } from "@depot/urls/notice";
 
 const NoticeCreate: React.FC = () => {
   const { userInfo } = useLoginCheck();
   const { linkPush } = useLinkPush();
-  const [content, setContent] = useState<NoticeInputType>({
+  const [content, setContent] = useState<INoticeCreate>({
     title: "",
     content: "",
-    important: 0,
-    userId: userInfo?.userId ? userInfo?.userId : "",
+    important: false,
+    userId: userInfo?.id ? userInfo?.id : 0,
   });
 
   useEffect(() => {
     setContent({
       ...content,
-      userId: userInfo?.userId ? userInfo?.userId : "",
+      userId: userInfo?.id ? userInfo?.id : 0,
     });
   }, [userInfo]);
 
@@ -47,7 +47,7 @@ const NoticeCreate: React.FC = () => {
   const onChangeValue = () => {
     setContent((prevState) => ({
       ...prevState,
-      important: prevState.important ? 0 : 1,
+      important: !prevState.important,
     }));
   };
 

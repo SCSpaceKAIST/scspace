@@ -55,11 +55,27 @@ export const reservationStateOptions: {
   [ReservationStateEnum.RECEIVED]: "접수",
 };
 
+export const reservationStateOptionsEng: {
+  [key in ReservationStateEnum]: string;
+} = {
+  [ReservationStateEnum.GRANT]: "grant",
+  [ReservationStateEnum.WAIT]: "wait",
+  [ReservationStateEnum.REJECTED]: "reject",
+  [ReservationStateEnum.RECEIVED]: "received",
+};
+
 export const workerNeedOptions: { [key in ReservationWorkerNeedEnum]: string } = {
   [ReservationWorkerNeedEnum.UNNECESSARY]: "근로 필요 없음",
   [ReservationWorkerNeedEnum.REQUIRED]: "근로 필요",
   [ReservationWorkerNeedEnum.COMPLETED]: "근로 배치 완료",
   [ReservationWorkerNeedEnum.FAILED]: "근로 배치 실패",
+};
+
+export const workerNeedOptionsEng: { [key in ReservationWorkerNeedEnum]: string } = {
+  [ReservationWorkerNeedEnum.UNNECESSARY]: "unnecessary",
+  [ReservationWorkerNeedEnum.REQUIRED]: "required",
+  [ReservationWorkerNeedEnum.COMPLETED]: "completed",
+  [ReservationWorkerNeedEnum.FAILED]: "failed",
 };
 
 export const workerNeedUserOptions = {

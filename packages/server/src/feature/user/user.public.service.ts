@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { MUser } from './user.model';
 import { UserTypeEnum } from '@depot/enums/user.enum';
+import { IUserCreate } from '@depot/types/user';
 
 @Injectable()
 export class UserPublicService {
@@ -31,5 +32,15 @@ export class UserPublicService {
       user.type === UserTypeEnum.ADMIN ||
       user.type === UserTypeEnum.CHIEF
     );
+  }
+
+  async checkManager(userId: number): Promise<void> {
+    const flag = await this.isManager(userId);
+    if (!flag)
+      throw new BadRequestException(`User ID ${userId} is not a manager.`);
+  }
+
+  async insertUser(user: IUserCreate): Promise<MUser> {
+    return await this.userRepository.insert(user);
   }
 }

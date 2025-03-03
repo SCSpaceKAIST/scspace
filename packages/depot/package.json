@@ -1,12 +1,21 @@
 {
   "version": "1.0.0",
   "description": "Shared types and API URLs for the monorepo",
-  "main": "",
-  "types": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
+    "dist",
     "types/",
     "urls/"
   ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json", // TypeScript 빌드
+    "dev": "tsc -p tsconfig.json -w" 
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js"
+  },
   "private": true,
   "dependencies": {},
   "devDependencies": {}

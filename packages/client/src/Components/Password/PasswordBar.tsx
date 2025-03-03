@@ -1,12 +1,12 @@
 import { useSpaces } from "@/Hooks/useSpaces";
-import { PasswordType } from "@depot/types/password";
+import { IPassword } from "@depot/types/password";
 import React from "react";
 
 interface PasswordBarProps {
-  password: PasswordType;
+  password: IPassword;
 }
 
-const hPasswordView: React.FC<PasswordBarProps> = ({ password }) => {
+const PasswordBar: React.FC<PasswordBarProps> = ({ password }) => {
   const { space } = useSpaces(password.spaceId);
 
   return (
@@ -18,4 +18,4 @@ const hPasswordView: React.FC<PasswordBarProps> = ({ password }) => {
   );
 };
 
-export default PasswordView;
+export default PasswordBar;

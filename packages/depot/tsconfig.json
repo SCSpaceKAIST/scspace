@@ -1,5 +1,10 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./dist"
-  }
+    "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true,      // 타입 선언 파일(dist/*.d.ts) 생성
+    "composite": true         // build 시 프로젝트 참조 가능하게
+  },
+  "include": ["src"]
 }

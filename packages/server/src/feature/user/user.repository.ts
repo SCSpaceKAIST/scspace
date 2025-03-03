@@ -5,6 +5,7 @@ import { schema, User } from 'src/db/schema';
 import { and, eq, inArray, SQL } from 'drizzle-orm';
 import { IUserCreate } from '@depot/types/user';
 import { MUser } from './user.model';
+import { takeOne } from 'src/common/util';
 
 @Injectable()
 export class UserRepository {
@@ -84,14 +85,17 @@ export class UserRepository {
     return users.map((user) => MUser.fromDB(user));
   }
 
-  async insert(user: IUserCreate) {
-    const result = await this.db.insert(User).values(user);
+  async insert(user: IUserCreate): Promise<MUser> {
+    const result = await this.db.insert(User).values(user).$returningId();
     Logger.log('ADD USER ' + JSON.stringify(user));
 
-    if ((await this.find(result[0].insertId)) === null) {
-      return false;
+    if (!result) {
+      throw new NotFoundException('User not found');
     }
 
-    return true;
+    const userCreated = await this.find({ id: result[0].id }).then(
+      takeOne('user'),
+    );
+    return userCreated;
   }
 }

@@ -9,13 +9,14 @@ import HelpTooltip from "@/Components/_commons/HelpTooltip";
 import TextInput from "../inputs/TextInput";
 import MultipleCheckboxInput from "../inputs/MultipleCheckboxInput";
 import MultipleRadioInput from "../inputs/MultipleRadioInput";
-import { SpaceType } from "@depot/types/space";
+import { ISpace } from "@depot/types/space";
 import CheckboxInput from "../inputs/CheckboxInput";
 import { useReservationSend } from "@/Hooks/useReservationSend";
+import { AskStateEnum } from "@depot/enums/ask.enum";
 
 interface ReservationFormProps {
   spaceId: number;
-  space: SpaceType;
+  space: ISpace;
 }
 
 const ReservationForm: React.FC<ReservationFormProps> = ({
@@ -26,9 +27,9 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   const [timeTo, setTimeTo] = useState<Date>(new Date());
   const [agreeCheck, setAgreeCheck] = useState<boolean>(false);
   const [eventName, setEventName] = useState<string>("");
-  const [contents, setContents] = useState<string[]>(["1", "2", "3"]);
-  const [selected1, setSelected1] = useState<string[]>([]);
-  const [selected2, setSelected2] = useState<string | null>(null);
+  const [contents, setContents] = useState<AskStateEnum[]>([AskStateEnum.WAIT, AskStateEnum.RECEIVE]);
+  const [selected1, setSelected1] = useState<AskStateEnum[]>([]);
+  const [selected2, setSelected2] = useState<AskStateEnum | null>(null);
   const [labels, setLabels] = useState<string[]>(["l1", "l2", "l3"]);
 
   const handleSubmit = () => {

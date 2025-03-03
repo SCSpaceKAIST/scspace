@@ -4,30 +4,32 @@
 import React, { useState } from "react";
 import DateTimeInput from "../inputs/DateTimeInput";
 import {
-  DanceContentType,
-  ReservationInputType,
+  IDanceContent,
+  IReservationCreate,
 } from "@depot/types/reservation";
 import AgreeCheck from "../inputs/AgreeCheck";
 import TextInput from "../inputs/TextInput";
-import { SpaceType } from "@depot/types/space";
+import { ISpace } from "@depot/types/space";
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
 import { useReservationSend } from "@/Hooks/useReservationSend";
 import TimeTooltips from "../utils/TimeTooltips";
 import { validateReservationInput } from "./validateReservationInput";
 import { setTimes } from "./setTimes";
 import TeamInput from "../inputs/TeamInput";
+import { ReservationWorkerNeedEnum } from "@depot/enums/reservation.enum";
+import { ReservationStateEnum } from "@depot/enums/reservation.enum";
 
 interface ReservationFormProps {
   spaceId: number;
-  space: SpaceType;
+  space: ISpace;
 }
 
 const ReservationForm: React.FC<ReservationFormProps> = ({
   spaceId,
   space,
 }) => {
-  const { userInfo, ckUserType } = useLoginCheck();
-  const { maxTime, minDate, maxDate } = setTimes(space, ckUserType);
+  const { userInfo, isSCS } = useLoginCheck();
+  const { maxTime, minDate, maxDate } = setTimes(space, isSCS);
   const [timeFrom, setTimeFrom] = useState<Date>(minDate);
   const [timeTo, setTimeTo] = useState<Date>(minDate);
   const [agreeCheck, setAgreeCheck] = useState<boolean>(false);
@@ -37,18 +39,18 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   const handleSubmit = () => {
     if (!userInfo) return; // 로그인 안한 경우, 나올 일은 없으나 컴파일 에러 방지
 
-    const reservationInput: ReservationInputType = {
+    const reservationInput: IReservationCreate = {
       spaceId,
-      timeFrom: timeFrom.toISOString(),
-      timeTo: timeTo.toISOString(),
-      userId: userInfo?.userId,
+      timeFrom: timeFrom,
+      timeTo: timeTo,
+      userId: userInfo?.id,
       content: {
         eventName,
         contents,
-        teamMember: [userInfo?.userId],
-      } as DanceContentType,
-      state: "grant",
-      workerNeed: "unnecessary",
+        teamMemberUserIds: [userInfo?.id],
+      } as IDanceContent,
+      state: ReservationStateEnum.GRANT,
+      workerNeed: ReservationWorkerNeedEnum.UNNECESSARY,
     };
     const inputVal = validateReservationInput(
       reservationInput,
@@ -59,7 +61,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
       alert(inputVal.errors);
       return;
     }
-    handleReservationSend(reservationInput, space, ckUserType);
+    handleReservationSend(reservationInput, space, isSCS);
   };
 
   return (
@@ -75,7 +77,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
         maxTime={maxTime}
         minDate={minDate}
         maxDate={maxDate}
-        ignoreMidnight={ckUserType("admin")}
+        ignoreMidnight={isSCS()}
       />
       <TextInput label="이벤트명" text={eventName} setText={setEventName} />
       <TextInput label="내용" text={contents} setText={setContents} />

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useLoginCheck } from "@Hooks/useLoginCheck";
-import { AskInputType } from "@depot/types/ask";
+import { IAskCreate } from "@depot/types/ask";
 import { useLinkPush } from "@/Hooks/useLinkPush";
 import { sendPost } from "@/Hooks/useApi";
 import { askUrl } from "@depot/urls/ask";
@@ -10,27 +10,31 @@ import { askUrl } from "@depot/urls/ask";
 const AskCreate: React.FC = () => {
   const { userInfo } = useLoginCheck();
   const { linkPush } = useLinkPush();
-  const [content, setContent] = useState<AskInputType>({
+  const [content, setContent] = useState<IAskCreate>({
     title: "",
     content: "",
-    userId: "",
-  } as AskInputType);
+    userId: userInfo?.id ?? 0,
+  } as IAskCreate);
 
   useEffect(() => {
     setContent({
       ...content,
-      userId: userInfo?.userId ? userInfo?.userId : "",
+      userId: userInfo?.id ?? 0,
     });
-  }, [userInfo]);
+  }, [userInfo, content]);
 
+  // 제출 가능한 상태인지 확인
   const checkSubmit = () => {
-    return userInfo ? true : false;
+    return !userInfo
+      ? false
+      : content.title.length === 0 || content.content.length === 0
+        ? false
+        : true;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (checkSubmit()) {
-      //alert(JSON.stringify(content));
       sendPost<boolean>(askUrl, content)
         .then((res) => {
           console.log(res);

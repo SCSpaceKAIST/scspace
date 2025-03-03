@@ -4,14 +4,14 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import moment from "moment";
 import { useBoardData } from "@/Hooks/useBoardData";
-import { AskType, askStateOptions } from "@depot/types/ask";
+import { IAsk, askStateOptions, askStateOptionsEng } from "@depot/types/ask";
 import { useLinkPush } from "@/Hooks/useLinkPush";
 
 const AskLatestList: React.FC = () => {
   const { linkPush } = useLinkPush();
 
   const { list, pageNumber, totalPageNumber, setPageNumber, login } =
-    useBoardData<AskType>({
+    useBoardData<IAsk>({
       apiEndpoint: "/api/ask/latest",
       itemsPerPage: 5,
       sortDesc: true,
@@ -58,7 +58,7 @@ const AskLatestList: React.FC = () => {
                   onClick={() => onClickHandler(`/ask/view/${contents.id}`)}
                 >
                   <td>
-                    <div className={contents.state} />
+                    <div className={askStateOptionsEng[contents.state]} />
                     {askStateOptions[contents.state]}
                   </td>
                   <td>{contents.title}</td>

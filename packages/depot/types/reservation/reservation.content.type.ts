@@ -50,8 +50,8 @@ export interface IMiraeContent {
   organizationName: string;
   contents: string;
   equipment: ReservationHallEquipEnum[];
-  innerNumber: number;
-  outerNumber: number;
+  innerParticipantNumber: number;
+  outerParticipantNumber: number;
   eventPurpose: string;
   food: string;
   character: ReservationCharacterEnum[];
@@ -139,7 +139,12 @@ export function isValidReservationContent(
     return isValidReservationContentProperty(content, "eventName") &&
       isValidReservationContentProperty(content, "organizationName") &&
       isValidReservationContentProperty(content, "contents") &&
-      isValidReservationContentProperty(content, "equipment");
+      isValidReservationContentProperty(content, "equipment") &&
+      isValidReservationContentProperty(content, "innerParticipantNumber") &&
+      isValidReservationContentProperty(content, "outerParticipantNumber") &&
+      isValidReservationContentProperty(content, "eventPurpose") &&
+      isValidReservationContentProperty(content, "food") &&
+      isValidReservationContentProperty(content, "character");
   }
   if (type === SpaceTypeEnum.SUMI) {
     return isValidReservationContentProperty(content, "eventName") &&

@@ -12,12 +12,12 @@ async function bootstrap() {
     origin: [
       'https://localhost',
       'https://iam2.kaist.ac.kr',
-      'https://scspace.kaist.ac.kr',
+      'https://scspace.kws.sparcs.net',
     ],
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   };
-
+  app.setGlobalPrefix('/api');
   app.enableCors();
   // 쿠키 파서 설정
   app.use(cookieParser());

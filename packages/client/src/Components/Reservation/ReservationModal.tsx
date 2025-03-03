@@ -2,27 +2,30 @@ import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import moment from "moment";
 import {
-  ReservationStateEnum,
-  ReservationType,
-  TeamMemberOuptutType,
-  TeamType,
-  WorkerNeedEnum,
+  IReservation,
+  ITeamMember,
+  ITeam,
   isTeamContent,
   reservationCharacterOptions,
   reservationStateOptions,
   workerNeedOptions,
+  ITeamMemberResponse,
+  IReservationResponse,
 } from "@depot/types/reservation";
-import { UserType } from "@depot/types/user";
+import { IUser } from "@depot/types/user";
 import { useLoginCheck } from "@/Hooks/useLoginCheck";
 import { sendGet, sendPut } from "@/Hooks/useApi";
 import { useSpaces } from "@/Hooks/useSpaces";
 import MultipleRadioInput from "./inputs/MultipleRadioInput";
 import TextInput from "./inputs/TextInput";
+import { ReservationStateEnum, ReservationWorkerNeedEnum } from "@depot/enums/reservation.enum";
+import { UserTypeEnum } from "@depot/enums/user.enum";
+import { enumToArray } from "@depot/utils";
 
 interface ReservModalProps {
-  reservationInfo: ReservationType | null;
-  setReservationInfo: (reservationInfo: ReservationType) => void;
-  reserverInfo: UserType | null;
+  reservationInfo: IReservationResponse | null;
+  setReservationInfo: (reservationInfo: IReservationResponse) => void;
+  reserverInfo: IUser | null;
   showHide: boolean;
   setShowHide: (showHide: boolean) => void;
   handleSubmit: () => void;
@@ -36,9 +39,9 @@ const ReservModal: React.FC<ReservModalProps> = ({
   setShowHide,
   handleSubmit,
 }) => {
-  const { userInfo, ckUserType } = useLoginCheck();
-  const [teamData, setTeamData] = useState<TeamType>();
-  const [teamMembers, setTeamMembers] = useState<TeamMemberOuptutType[]>([]);
+  const { userInfo, isSCS } = useLoginCheck();
+  const [teamData, setTeamData] = useState<ITeam>();
+  const [teamMembers, setTeamMembers] = useState<ITeamMemberResponse[]>([]);
   const { space } = useSpaces(reservationInfo ? reservationInfo.spaceId : 0);
 
   useEffect(() => {
@@ -50,11 +53,11 @@ const ReservModal: React.FC<ReservModalProps> = ({
   const callApiTeam = async () => {
     if (!reservationInfo) return;
     try {
-      const res = await sendGet<TeamType>("team", {
+      const res = await sendGet<ITeam>("team", {
         teamId: reservationInfo.teamId,
       });
       setTeamData(res);
-      const members = await sendGet<TeamMemberOuptutType[]>("team/members", {
+      const members = await sendGet<ITeamMemberResponse[]>("team/members", {
         teamId: reservationInfo.teamId,
       });
       setTeamMembers(members);
@@ -67,23 +70,23 @@ const ReservModal: React.FC<ReservModalProps> = ({
     setShowHide(false);
   };
 
-  const setState = (state: string) => {
-    if (!userInfo || !ckUserType("admin") || !reservationInfo) return;
+  const setState = (state: ReservationStateEnum) => {
+    if (!userInfo || !isSCS() || !reservationInfo) return;
     setReservationInfo({
       ...reservationInfo,
-      state: state as ReservationStateEnum,
+      state: state,
     });
   };
-  const setWorkerNeed = (workerNeed: string) => {
-    if (!userInfo || !ckUserType("admin") || !reservationInfo) return;
+  const setWorkerNeed = (workerNeed: ReservationWorkerNeedEnum) => {
+    if (!userInfo || !isSCS() || !reservationInfo) return;
     setReservationInfo({
       ...reservationInfo,
-      workerNeed: workerNeed as WorkerNeedEnum,
+      workerNeed: workerNeed,
     });
   };
 
   const setComment = (comment: string) => {
-    if (!userInfo || !ckUserType("admin") || !reservationInfo) return;
+    if (!userInfo || !isSCS() || !reservationInfo) return;
     setReservationInfo({
       ...reservationInfo,
       comment,
@@ -99,7 +102,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
       reservation &&
       reservation.teamId &&
       teamData &&
-      teamData.teamId === reservation.teamId &&
+      teamData.id === reservation.teamId &&
       reservation.content &&
       isTeamContent(reservation.content)
     ) {
@@ -113,12 +116,12 @@ const ReservModal: React.FC<ReservModalProps> = ({
         <div className="wrap" key="team-members">
           <p className="modal-first">멤버</p>
           <p className="modal-second">
-            {teamMembers.map((member: any) =>
+            {teamMembers.map((member) =>
               reservation.content &&
               isTeamContent(reservation.content) &&
-              reservation.content.teamMember.includes(String(member.id)) ? (
+              reservation.content.teamMemberUserIds.includes(member.id) ? (
                 <div key={member.id}>
-                  학번: {member.student_id} &nbsp; 이름: {member.name}
+                  학번: {member.user.userNumber} &nbsp; 이름: {member.user.nameKr}
                 </div>
               ) : null
             )}
@@ -148,21 +151,21 @@ const ReservModal: React.FC<ReservModalProps> = ({
         );
       }
 
-      if ("number" in content) {
+      if ("participantNumber" in content) {
         returnResult.push(
-          <div className="wrap" key="number">
+          <div className="wrap" key="participantNumber">
             <p className="modal-first">예상 참여 인원</p>
-            <p className="modal-second">{content.number}</p>
+            <p className="modal-second">{content.participantNumber}</p>
           </div>
         );
       }
 
-      if ("innerNumber" in content && "outerNumber" in content) {
+      if ("innerParticipantNumber" in content && "outerParticipantNumber" in content) {
         returnResult.push(
           <div className="wrap" key="innerNumber">
             <p className="modal-first">예상 참여 인원</p>
             <p className="modal-second">
-              학내구성원: {content.innerNumber} 외부인: {content.outerNumber}
+              학내구성원: {content.innerParticipantNumber} 외부인: {content.outerParticipantNumber}
             </p>
           </div>
         );
@@ -280,13 +283,13 @@ const ReservModal: React.FC<ReservModalProps> = ({
             <div className="wrap">
               <p className="modal-first">예약자 학번</p>
               <p className="modal-second">
-                {reserverInfo ? reserverInfo.userId : ""}
+                {reserverInfo ? reserverInfo.userNumber : ""}
               </p>
             </div>
             <div className="wrap">
               <p className="modal-first">예약자 이름</p>
               <p className="modal-second">
-                {reserverInfo ? reserverInfo.name : ""}
+                {reserverInfo ? reserverInfo.nameKr : ""}
               </p>
             </div>
             <div className="wrap">
@@ -311,8 +314,8 @@ const ReservModal: React.FC<ReservModalProps> = ({
             <div>
               {/* 예약 처리 부분 */}
               <MultipleRadioInput
-                contents={Object.keys(reservationStateOptions)} // 예약 처리의 key들
-                labels={Object.values(reservationStateOptions)} // 예약 처리에 대한 라벨들
+                contents={enumToArray(ReservationStateEnum)} // 예약 처리의 key들
+                labels={enumToArray(reservationStateOptions)} // 예약 처리에 대한 라벨들
                 header="예약 처리" // 라벨로 표시될 헤더
                 selected={reservationInfo.state} // 선택된 값
                 setSelected={setState} // 선택값 변경 핸들러
@@ -320,8 +323,8 @@ const ReservModal: React.FC<ReservModalProps> = ({
 
               {/* 근로 배정 부분 */}
               <MultipleRadioInput
-                contents={Object.keys(workerNeedOptions)} // 근로 배정의 key들
-                labels={Object.values(workerNeedOptions)}
+                contents={enumToArray(ReservationWorkerNeedEnum)} // 근로 배정의 key들
+                labels={enumToArray(workerNeedOptions)}
                 header="근로 배정" // 헤더
                 selected={reservationInfo.workerNeed} // 선택된 근로 배정 상태
                 setSelected={setWorkerNeed} // 근로 배정 선택 핸들러
@@ -338,7 +341,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
         ) : null}
       </Modal.Body>
       <Modal.Footer>
-        {userInfo && ckUserType("admin") ? (
+        {userInfo && isSCS() ? (
           <button className="modalButton2" onClick={handleSubmit}>
             처리
           </button>
@@ -355,12 +358,12 @@ export default ReservModal;
 
 export const handleReservationSubmit = async (
   // 제출 버튼 클릭 시 실행되도록 템플릿 잡아주기. import해서 사용되도록.
-  reservation: ReservationType,
-  userInfo: UserType,
+  reservation: IReservation,
+  userInfo: IUser,
   setShowModal: (showModal: boolean) => void,
   refresh: () => void
 ): Promise<void> => {
-  if (userInfo.type !== "admin") return;
+  if (userInfo.type === UserTypeEnum.USER) return;
   await sendPut("/reservation", reservation);
   alert("예약 처리가 완료되었습니다.");
   setShowModal(false);
