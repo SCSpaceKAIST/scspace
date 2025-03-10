@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "dotenv -e .env -- pnpm -r run dev",
     "build": "pnpm -r run build",
-    "dockerup": "docker-compose up -d",
+    "dockerup": "docker-compose up -d --build",
     "migrate": "drizzle-kit migrate --config packages/server/src/db/drizzle.config.ts",
     "generate": "drizzle-kit generate --config packages/server/src/db/drizzle.config.ts"
   },
