@@ -5,8 +5,10 @@ services:
     container_name: scspace-nginx-container
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     environment:
       - BASIC_URL=${BASIC_URL}
     extra_hosts:

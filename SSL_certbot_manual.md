@@ -38,3 +38,44 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
 # 3. 인증서 발급
 
+```bash
+sudo certbot --nginx -d scspace.kws.sparcs.net
+```
+```
+scspace@scspace-prod:~/scspace$ sudo certbot --nginx -d scspace.kws.sparcs.net
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Enter email address (used for urgent renewal and security notices)
+ (Enter 'c' to cancel): scspace.kaist@gmail.com
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Please read the Terms of Service at
+https://letsencrypt.org/documents/LE-SA-v1.5-February-24-2025.pdf. You must
+agree in order to register with the ACME server. Do you agree?
+```
+
+•	--nginx: Nginx 설정을 자동으로 수정해 주는 플러그인 사용
+	•	-d scspace.kws.sparcs.net: 인증서를 발급받을 도메인(또는 서브도메인) 지정
+	•	여러 도메인(예: -d scspace.kws.sparcs.net -d www.scspace.kws.sparcs.net)도 가능
+
+Certbot이 다음 과정을 진행합니다:
+	1.	HTTP-01 챌린지: Nginx 설정에 임시 location을 추가하여 Let’s Encrypt가 http://scspace.kws.sparcs.net/.well-known/acme-challenge/...로 접근해 서버 소유권을 검증
+	2.	검증 성공 시 인증서 발급
+	3.	인증서와 키 파일을 /etc/letsencrypt/live/scspace.kws.sparcs.net/ 아래에 저장
+	4.	Nginx SSL 설정 자동 업데이트 (질문에 따라 “HTTP->HTTPS 리다이렉트” 적용할지 물어볼 수도 있음)
+
+마지막에 성공 메시지가 뜨면, “Nginx가 443 포트”로 SSL이 적용된 상태가 됩니다.
+
+# 4. 인증서 자동 갱신 확인
+
+Let’s Encrypt 인증서는 유효기간 90일입니다. 보통 자동 갱신을 위해 /etc/cron.d/certbot 또는 systemd timer가 설정됩니다.
+
+확인:
+
+```bash
+sudo certbot renew --dry-run
+```
+	•	만약 --dry-run 테스트가 성공하면, 실제 만료 시점에 자동으로 갱신이 됩니다.
+	•	sudo certbot renew를 수동 실행해도 되고, cron이나 systemd 서비스가 일정 주기로 갱신 시도합니다.
+# 5. 인증서 적용 확인
+
+
