@@ -6,5 +6,4 @@ export const Semester = mysqlTable('semester', {
   dateTo: timestamp('date_to').notNull(),
   year: int('year').notNull(),
   season: int('season').notNull(), // SemesterSeasonEnum
-  type: int('type').notNull(), // SemesterTypeEnum
 });

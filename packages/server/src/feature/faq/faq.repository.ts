@@ -2,15 +2,36 @@ import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { Faq, schema } from '@schema';
-import { eq } from 'drizzle-orm';
+import { and, eq, inArray, SQL } from 'drizzle-orm';
 import { MFaq } from './faq.model';
 import { IFaq } from '@scspace-depot/types/faq';
+
+type IFaqQuery = {
+  id?: number;
+  ids?: number[];
+};
 
 @Injectable()
 export class FaqRepository {
   constructor(
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
   ) {}
+
+  async find(params: IFaqQuery): Promise<MFaq[]> {
+    const whereConditions: SQL[] = [];
+    if (params.id) {
+      whereConditions.push(eq(Faq.id, params.id));
+    }
+    if (params.ids) {
+      whereConditions.push(inArray(Faq.id, params.ids));
+    }
+
+    const faqs = await this.db
+      .select()
+      .from(Faq)
+      .where(and(...whereConditions));
+    return faqs.map((faq) => MFaq.fromDB(faq));
+  }
 
   async fetchAll(): Promise<MFaq[]> {
     const result = await this.db.select().from(Faq);

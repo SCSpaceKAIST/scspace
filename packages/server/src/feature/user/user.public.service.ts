@@ -43,4 +43,8 @@ export class UserPublicService {
   async insertUser(user: IUserCreate): Promise<MUser> {
     return await this.userRepository.insert(user);
   }
+
+  async getUserCount(): Promise<number> {
+    return (await this.userRepository.find({})).length;
+  }
 }

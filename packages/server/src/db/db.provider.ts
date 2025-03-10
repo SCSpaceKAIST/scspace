@@ -3,7 +3,6 @@ import { drizzle } from 'drizzle-orm/mysql2';
 import * as mysql from 'mysql2/promise';
 export const DBAsyncProvider = 'dbProvider';
 import { config } from 'dotenv';
-import { Logger } from '@nestjs/common';
 
 export const DBProvider = [
   {
@@ -20,6 +19,8 @@ export const DBProvider = [
         password: DB_PWD,
         database: DB_NAME,
         timezone: 'Z', // UTC 시간대로 설정
+        waitForConnections: true,
+        connectionLimit: 10,
       });
       const db = drizzle(connection, { schema, mode: 'default' });
       return db;

@@ -13,4 +13,8 @@ export class SemesterPublicService {
   async fetchSemesterAll(ids: number[]): Promise<MSemester[]> {
     return await this.semesterRepository.fetchAll(ids);
   }
+
+  async getSemesterCount(): Promise<number> {
+    return (await this.semesterRepository.find({})).length;
+  }
 }

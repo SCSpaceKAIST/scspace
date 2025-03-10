@@ -22,4 +22,8 @@ export class SpacePublicService {
   async findAll(): Promise<MSpace[]> {
     return await this.spaceRepository.find({});
   }
+
+  async getSpaceCount(): Promise<number> {
+    return (await this.spaceRepository.find({})).length;
+  }
 }

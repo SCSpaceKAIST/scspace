@@ -10,4 +10,8 @@ export class NoticePublicService {
     notice.views++;
     return await this.noticeRepository.update(notice);
   }
+
+  async getNoticeCount(): Promise<number> {
+    return (await this.noticeRepository.find({})).length;
+  }
 }
