@@ -1,13 +1,13 @@
 "use client";
 
-import PageHeader from "@/Components/_commons/PageHeader";
+import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 import { useParams } from "next/navigation";
 import {
   SpaceTypeEnum,
   SpaceTypeNames,
   SpaceTypesArray,
-} from "@depot/types/space";
-import SpaceView from "@/Components/Space/SpaceView";
+} from "@scspace-depot/types/space";
+import SpaceView from "@scspace-client/Components/Space/SpaceView";
 
 export default function SpaceIntroPage() {
   const params = useParams();

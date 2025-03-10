@@ -1,4 +1,4 @@
-import { IPassword } from '@depot/types/password';
+import { IPassword } from '@scspace-depot/types/password';
 import { Password } from '@schema';
 import { InferSelectModel } from 'drizzle-orm';
 

@@ -1,4 +1,4 @@
-import { ISpace } from '@depot/types/space';
+import { ISpace } from '@scspace-depot/types/space';
 import { Space } from '@schema';
 import { InferSelectModel } from 'drizzle-orm';
 

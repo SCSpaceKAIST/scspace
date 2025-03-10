@@ -1,22 +1,33 @@
 {
+  "name": "@scspace-depot",
   "version": "1.0.0",
-  "description": "Shared types and API URLs for the monorepo",
+  "license": "MIT",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "src/index.ts",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "tsc-alias": "^1.8.7",
+    "zod": "^3.21.4"
+  },
   "files": [
     "dist",
-    "types/",
-    "urls/"
+    "src"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json", // TypeScript 빌드
-    "dev": "tsc -p tsconfig.json -w" 
+    "prepare": "pnpm build",
+    "dev": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
+    "mock:front": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
+    "mock:back": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
+    "typecheck": "tsc",
+    "build": "tsc && tsc-alias",
+    "clean": "rm -rf dist"
   },
   "exports": {
     ".": "./dist/index.js",
     "./*": "./dist/*.js"
   },
-  "private": true,
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^7.3.0",
+    "axios": "^1.6.7"
+  }
 }

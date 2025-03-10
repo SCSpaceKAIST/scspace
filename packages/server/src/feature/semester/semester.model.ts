@@ -1,4 +1,4 @@
-import { ISemester } from '@depot/types/semester';
+import { ISemester } from '@scspace-depot/types/semester';
 import { Semester } from '@schema';
 import { InferSelectModel } from 'drizzle-orm';
 

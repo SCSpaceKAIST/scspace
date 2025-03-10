@@ -7,8 +7,8 @@ import {
   SpaceTypeNames,
   IIntroduction,
   ISpaceIntroductionResponse,
-} from "@depot/types/space";
-import SpaceIntro from "@Components/Space/SpaceIntro";
+} from "@scspace-depot/types/space";
+import SpaceIntro from "@scspace-client/Components/Space/SpaceIntro";
 
 interface SpaceViewProps {
   spaceId: number;

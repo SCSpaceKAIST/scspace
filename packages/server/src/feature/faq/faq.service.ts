@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FaqRepository } from './faq.repository';
-import { IFaq } from '@depot/types/faq';
+import { IFaq } from '@scspace-depot/types/faq';
 
 @Injectable()
 export class FaqService {

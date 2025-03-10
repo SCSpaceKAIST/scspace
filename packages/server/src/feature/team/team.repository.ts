@@ -3,7 +3,7 @@ import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema, Team, TeamMember } from '@schema';
 import { and, eq, inArray, SQL } from 'drizzle-orm';
-import { ITeam } from '@depot/types/reservation';
+import { ITeam } from '@scspace-depot/types/reservation';
 import { MTeam } from './team.model';
 
 @Injectable()

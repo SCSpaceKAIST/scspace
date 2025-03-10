@@ -11,9 +11,9 @@ import {
   IWorkContent,
   IOpenContent,
   IReservationCreate,
-} from "@depot/types/reservation";
+} from "@scspace-depot/types/reservation";
 
-import { SpaceTypeEnum } from "@depot/enums/space.enum";
+import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 
 // 개별 content 검증 함수
 const validateIndividualContent = (content: IIndividualContent) => {

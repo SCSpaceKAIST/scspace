@@ -5,10 +5,10 @@ import Link from "next/link";
 import axios from "axios";
 import moment from "moment";
 import { VscEye } from "react-icons/vsc";
-import { INotice } from "@depot/types/notice"; // INotice 타입 가져오기
-import { useLoginCheck } from "@/Hooks/useLoginCheck";
-import { useLinkPush } from "@/Hooks/useLinkPush";
-import { noticeUrl } from "@depot/urls/notice";
+import { INotice } from "@scspace-depot/types/notice"; // INotice 타입 가져오기
+import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
+import { noticeUrl } from "@scspace-depot/urls/notice";
 
 interface NoticeViewProps {
   view_id: string;

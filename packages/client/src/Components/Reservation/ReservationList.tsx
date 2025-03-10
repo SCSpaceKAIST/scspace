@@ -4,16 +4,16 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import ReservationModal, { handleReservationSubmit } from "./ReservationModal";
 import moment from "moment";
-import { useBoardData } from "@/Hooks/useBoardData";
+import { useBoardData } from "@scspace-client/Hooks/useBoardData";
 import {
   IReservationResponse,
   reservationStateOptions,
   workerNeedOptions,
   workerNeedOptionsEng,
   reservationStateOptionsEng,
-} from "@depot/types/reservation";
-import { IUser } from "@depot/types/user";
-import { useLoginCheck } from "@/Hooks/useLoginCheck";
+} from "@scspace-depot/types/reservation";
+import { IUser } from "@scspace-depot/types/user";
+import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
 
 const ReservationList: React.FC = () => {
   const { userInfo } = useLoginCheck();

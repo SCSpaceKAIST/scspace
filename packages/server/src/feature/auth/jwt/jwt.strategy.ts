@@ -2,7 +2,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { IUserCreate } from '@depot/types/user';
+import { IUserCreate } from '@scspace-depot/types/user';
 import { UserPublicService } from 'src/feature/user/user.public.service';
 
 @Injectable()

@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Post, Body } from '@nestjs/common';
 
 import { NoticeService } from './notice.service';
-import { INotice, INoticeCreate } from '@depot/types/notice';
-import { noticeUrl } from '@depot/urls/notice';
+import { INotice, INoticeCreate } from '@scspace-depot/types/notice';
+import { noticeUrl } from '@scspace-depot/urls/notice';
 
 @Controller(noticeUrl)
 export class NoticeController {

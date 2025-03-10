@@ -1,5 +1,5 @@
-import Space from "@/Components/Space/Space";
-import PageHeader from "@/Components/_commons/PageHeader";
+import Space from "@scspace-client/Components/Space/Space";
+import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 
 export default function SpacePage() {
   return (

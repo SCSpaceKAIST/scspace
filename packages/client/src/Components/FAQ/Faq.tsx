@@ -3,10 +3,10 @@ import React, { useState, useEffect } from "react";
 
 import axios from "axios";
 
-import { IFaq } from "@depot/types/faq";
-import { useLoginCheck } from "@/Hooks/useLoginCheck";
+import { IFaq } from "@scspace-depot/types/faq";
+import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
 import ConditionalButton from "../_commons/ConditionalButton";
-import { UserTypeEnum } from "@depot/enums/user.enum";
+import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 const FAQ: React.FC = () => {
   const [idList, setIdList] = useState<number[]>([]);

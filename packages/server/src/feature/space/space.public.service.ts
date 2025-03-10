@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SpaceRepository } from './space.repository';
 import { MSpace } from './space.model';
-import { SpaceTypeEnum } from '@depot/enums/space.enum';
+import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 
 @Injectable()
 export class SpacePublicService {

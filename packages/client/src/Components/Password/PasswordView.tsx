@@ -1,10 +1,10 @@
-import { useBoardData } from "@/Hooks/useBoardData";
+import { useBoardData } from "@scspace-client/Hooks/useBoardData";
 import React, { useState, useEffect } from "react";
-import { IPassword, IPasswordValidation } from '@depot/types/password';
-import { IUser } from '@depot/types/user';
-import { sendGet } from '@/Hooks/useApi';
+import { IPassword, IPasswordValidation } from '@scspace-depot/types/password';
+import { IUser } from '@scspace-depot/types/user';
+import { sendGet } from '@scspace-client/Hooks/useApi';
 import PasswordBar from './PasswordBar';
-import { useSpaces } from '@/Hooks/useSpaces';
+import { useSpaces } from '@scspace-client/Hooks/useSpaces';
 
 interface PasswordProps {
   userInfo: IUser;

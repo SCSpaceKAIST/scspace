@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { SpaceService } from './space.service';
-import { ISpace } from '@depot/types/space';
+import { ISpace } from '@scspace-depot/types/space';
 
 @Controller('space')
 export class SpaceController {

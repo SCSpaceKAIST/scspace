@@ -6,19 +6,19 @@ import interactionPlugin from "@fullcalendar/interaction";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import Dropdown from "react-bootstrap/Dropdown";
 import moment from "moment";
-import { useLoginCheck } from "@/Hooks/useLoginCheck";
-import { sendGet } from "@Hooks/useApi";
-import { IReservation, IReservationResponse } from "@depot/types/reservation";
-import { ISpace } from "@depot/types/space";
-import { useSpaces } from "@/Hooks/useSpaces";
-import { useLinkPush } from "@/Hooks/useLinkPush";
+import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { sendGet } from "@scspace-client/Hooks/useApi";
+import { IReservation, IReservationResponse } from "@scspace-depot/types/reservation";
+import { ISpace } from "@scspace-depot/types/space";
+import { useSpaces } from "@scspace-client/Hooks/useSpaces";
+import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
 import { Tooltip } from "react-tooltip"; // 수정된 import 문
 import ReservationModal, {
   handleReservationSubmit,
-} from "@Components/Reservation/ReservationModal";
-import { IUser } from "@depot/types/user";
-import { ReservationStateEnum } from "@depot/enums/reservation.enum";
-import { UserTypeEnum } from "@depot/enums/user.enum";
+} from "@scspace-client/Components/Reservation/ReservationModal";
+import { IUser } from "@scspace-depot/types/user";
+import { ReservationStateEnum } from "@scspace-depot/enums/reservation.enum";
+import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 interface ResourceData {
   text: string;

@@ -1,20 +1,20 @@
 "use client";
-import PageHeader from "@/Components/_commons/PageHeader";
-import CalendarView from "@/Components/Calendar/CalendarView";
-import { useLoginCheck } from "@/Hooks/useLoginCheck";
-import { useSpaces } from "@/Hooks/useSpaces";
+import PageHeader from "@scspace-client/Components/_commons/PageHeader";
+import CalendarView from "@scspace-client/Components/Calendar/CalendarView";
+import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useSpaces } from "@scspace-client/Hooks/useSpaces";
 import { useParams } from "next/navigation";
-import IndividualForm from "@/Components/Reservation/forms/IndividualForm";
-import PianoForm from "@/Components/Reservation/forms/PianoForm";
-import SeminarForm from "@/Components/Reservation/forms/SeminarForm";
-import DanceForm from "@/Components/Reservation/forms/DanceForm";
-import GroupForm from "@/Components/Reservation/forms/GroupForm";
-import MiraeForm from "@/Components/Reservation/forms/MiraeForm";
-import SumiForm from "@/Components/Reservation/forms/SumiForm";
-import WorkForm from "@/Components/Reservation/forms/WorkForm";
-import OpenForm from "@/Components/Reservation/forms/OpenForm";
+import IndividualForm from "@scspace-client/Components/Reservation/forms/IndividualForm";
+import PianoForm from "@scspace-client/Components/Reservation/forms/PianoForm";
+import SeminarForm from "@scspace-client/Components/Reservation/forms/SeminarForm";
+import DanceForm from "@scspace-client/Components/Reservation/forms/DanceForm";
+import GroupForm from "@scspace-client/Components/Reservation/forms/GroupForm";
+import MiraeForm from "@scspace-client/Components/Reservation/forms/MiraeForm";
+import SumiForm from "@scspace-client/Components/Reservation/forms/SumiForm";
+import WorkForm from "@scspace-client/Components/Reservation/forms/WorkForm";
+import OpenForm from "@scspace-client/Components/Reservation/forms/OpenForm";
 import { useState } from "react";
-import { SpaceTypeEnum } from "@depot/enums/space.enum";
+import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 export default function SpacePage() {
   const params = useParams();
   const id = parseInt(params.id as string, 10); // URL의 [id] 부분을 숫자로 변환

@@ -4,7 +4,7 @@ import { MySql2Database } from 'drizzle-orm/mysql2';
 import { Faq, schema } from '@schema';
 import { eq } from 'drizzle-orm';
 import { MFaq } from './faq.model';
-import { IFaq } from '@depot/types/faq';
+import { IFaq } from '@scspace-depot/types/faq';
 
 @Injectable()
 export class FaqRepository {

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useSpaces } from "@/Hooks/useSpaces";
+import { useSpaces } from "@scspace-client/Hooks/useSpaces";
 
 const Reservation: React.FC = () => {
   const { spaceArray } = useSpaces();

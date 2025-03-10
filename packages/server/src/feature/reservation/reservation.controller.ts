@@ -16,7 +16,7 @@ import {
   IReservationResponse,
   ISpaceTimeCheckRequest,
   IUserTimeCheckRequest,
-} from '@depot/types/reservation';
+} from '@scspace-depot/types/reservation';
 
 @Controller('reservation')
 export class ReservationController {

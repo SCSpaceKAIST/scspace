@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Dropdown from "react-bootstrap/Dropdown";
-import { useLoginCheck } from "@/Hooks/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
 
 export const LoginBtn: React.FC = () => {
   const { login, userInfo } = useLoginCheck();

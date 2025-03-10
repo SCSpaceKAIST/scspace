@@ -1,11 +1,29 @@
 {
   "compilerOptions": {
-    "baseUrl": ".", // 프로젝트의 루트를 기준으로 설정
+    "module": "CommonJS",        // NodeNext → CommonJS
+    "moduleResolution": "node",  // NodeNext → node
+    "lib": ["ESNext", "DOM"],
+    "target": "ESNext",
+    "sourceMap": true,
+    "strict": true,
+    "allowJs": false,
+    "declaration": false,
+    "declarationMap": false,
+    "noEmitOnError": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "removeComments": true,
+    "noEmit": false,
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["./*"], // 모든 경로에 대해 '@/'를 사용 가능하게 설정
-      "@server/*": ["packages/server/*"], // '@server/'로 'packages/server/' 디렉토리 참조
-      "@db/*": ["packages/server/src/db/*"], // '@db/'로 'packages/server/src/db/' 디렉토리 참조
-      "@depot/*": ["packages/depot/*"] // '@depot/'로 'packages/depot/' 디렉토리 참조
+      "@scspace-depot/*": ["packages/depot/src/*"],
+      "@scspace-server/*": ["packages/server/src/*"],
+      "@scspace-client/*": ["packages/client/src/*"],
     }
-  }
+  },
+  "exclude": ["node_modules", "dist"]
+
 }

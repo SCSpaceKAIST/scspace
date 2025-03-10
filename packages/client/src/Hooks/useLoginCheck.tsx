@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import LoginCheck from "@Hooks/LoginCheck";
-import { IUser } from "@depot/types/user";
+import LoginCheck from "@scspace-client/Hooks/LoginCheck";
+import { IUser } from "@scspace-depot/types/user";
 import { useLinkPush } from "./useLinkPush";
-import { UserTypeEnum } from "@depot/enums/user.enum";
+import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 export const useLoginCheck = () => {
   const [login, setLogin] = useState<boolean>(false);

@@ -1,9 +1,9 @@
 {
-  "name": "client",
-  "version": "0.1.0",
+  "name": "@scspace-client",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "PORT=3000 next dev",
+    "dev": "next dev -p $CLIENT_PORT",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

@@ -1,4 +1,4 @@
-import { IAsk } from "@depot/types/ask";
+import { IAsk } from "@scspace-depot/types/ask";
 
 interface AskCommentProps {
   content: IAsk;

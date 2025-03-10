@@ -1,5 +1,5 @@
-import PageHeader from "@/Components/_commons/PageHeader";
-import Calendar from "@/Components/Calendar/Calendar";
+import PageHeader from "@scspace-client/Components/_commons/PageHeader";
+import Calendar from "@scspace-client/Components/Calendar/Calendar";
 
 export default function SpacePage() {
   return (

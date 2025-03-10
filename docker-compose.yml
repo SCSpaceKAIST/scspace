@@ -7,6 +7,8 @@ services:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    environment:
+      - BASIC_URL=${BASIC_URL}
     extra_hosts:
       - "host.docker.internal:host-gateway" # Linux에서 Docker 호스트 IP를 매핑
     networks:
@@ -22,7 +24,7 @@ services:
       MYSQL_PASSWORD: ${DB_PWD}
       TZ: Asia/Seoul # 시간대 설정
     ports:
-      - "3306:3306" # .env 파일과 같은지 체크하기
+      - "${DB_PORT}:3306" # .env 파일과 같은지 체크하기
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci # UTF-8 인코딩 설정
     volumes:
       - mysql-data:/var/lib/mysql

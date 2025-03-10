@@ -4,17 +4,17 @@ import {
   IUserTimeCheckRequest,
   IReservationCreate,
   IReservationUpdate,
-} from '@depot/types/reservation';
+} from '@scspace-depot/types/reservation';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ReservationRepository } from './reservation.repository';
 import { checkContainAllId, takeAll, takeOne } from 'src/common/util';
 import { UserPublicService } from '../user/user.public.service';
 import { SpacePublicService } from '../space/space.public.service';
-import { ReservationStateEnum } from '@depot/enums/reservation.enum';
+import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
 import { MUser } from '../user/user.model';
 import { ReservationPublicService } from './reservation.public.service';
-import { IUser } from '@depot/types/user';
-import { ISpace } from '@depot/types/space';
+import { IUser } from '@scspace-depot/types/user';
+import { ISpace } from '@scspace-depot/types/space';
 @Injectable()
 export class ReservationService {
   constructor(
@@ -113,7 +113,12 @@ export class ReservationService {
       }
     }
 
-    return await this.reservationRepository.updateReservation(reservationInput);
+    const newReservation = {
+      ...reservation,
+      ...reservationInput,
+    };
+
+    return await this.reservationRepository.updateReservation(newReservation);
   }
 
   async getManageReservation(): Promise<IReservationResponse[]> {

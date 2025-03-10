@@ -3,10 +3,10 @@ import {
   IAskCreate,
   IAskResponse,
   IAskCommentCreate,
-} from '@depot/types/ask';
+} from '@scspace-depot/types/ask';
 import { Injectable } from '@nestjs/common';
 import { AskRepository } from './ask.repository';
-import { AskStateEnum } from '@depot/enums/ask.enum';
+import { AskStateEnum } from '@scspace-depot/enums/ask.enum';
 import { takeOne } from 'src/common/util';
 import { AskPublicService } from './ask.public.service';
 import { UserPublicService } from '../user/user.public.service';

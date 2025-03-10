@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import Banner from "@Components/Main/Banner";
-import Faq from "@Components/FAQ/Faq";
-import FastNotice from "@/Components/Main/FastNotice";
+import Banner from "@scspace-client/Components/Main/Banner";
+import Faq from "@scspace-client/Components/FAQ/Faq";
+import FastNotice from "@scspace-client/Components/Main/FastNotice";
 
 interface MainProps {
   // Next.js에서는 history가 기본으로 제공되지 않으므로,

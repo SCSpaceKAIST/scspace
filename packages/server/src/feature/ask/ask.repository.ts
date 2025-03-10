@@ -3,8 +3,8 @@ import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { Ask, schema } from '@schema';
 import { and, eq, inArray, SQL } from 'drizzle-orm';
-import { IAsk, IAskCreate } from '@depot/types/ask';
-import { AskStateEnum } from '@depot/enums/ask.enum';
+import { IAsk, IAskCreate } from '@scspace-depot/types/ask';
+import { AskStateEnum } from '@scspace-depot/enums/ask.enum';
 import { MAsk } from './ask.model';
 
 @Injectable()

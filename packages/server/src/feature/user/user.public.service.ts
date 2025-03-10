@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { MUser } from './user.model';
-import { UserTypeEnum } from '@depot/enums/user.enum';
-import { IUserCreate } from '@depot/types/user';
+import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
+import { IUserCreate } from '@scspace-depot/types/user';
 
 @Injectable()
 export class UserPublicService {

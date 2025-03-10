@@ -1,4 +1,4 @@
-import { IFaq } from '@depot/types/faq';
+import { IFaq } from '@scspace-depot/types/faq';
 import { Faq } from '@schema';
 import { InferSelectModel } from 'drizzle-orm';
 

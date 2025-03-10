@@ -1,4 +1,4 @@
-import { IUser } from '@depot/types/user';
+import { IUser } from '@scspace-depot/types/user';
 import { User } from '@schema';
 import { InferSelectModel } from 'drizzle-orm';
 

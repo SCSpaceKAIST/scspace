@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLoginCheck } from "@Hooks/useLoginCheck";
-import { useLinkPush } from "@/Hooks/useLinkPush";
-import { INoticeCreate } from "@depot/types/notice";
-import { sendPost } from "@/Hooks/useApi";
-import { noticeUrl } from "@depot/urls/notice";
+import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
+import { INoticeCreate } from "@scspace-depot/types/notice";
+import { sendPost } from "@scspace-client/Hooks/useApi";
+import { noticeUrl } from "@scspace-depot/urls/notice";
 
 const NoticeCreate: React.FC = () => {
   const { userInfo } = useLoginCheck();

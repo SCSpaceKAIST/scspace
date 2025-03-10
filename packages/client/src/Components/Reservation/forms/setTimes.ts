@@ -2,9 +2,9 @@ import {
   reservationMaxDate,
   reservationMaxDayTime,
   reservationMinDate,
-} from "@depot/consts/reservation.const";
-import { ISpace } from "@depot/types/space";
-import { UserTypeEnum } from "@depot/enums/user.enum";
+} from "@scspace-depot/consts/reservation.const";
+import { ISpace } from "@scspace-depot/types/space";
+import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 export const setTimes = (
   space: ISpace,

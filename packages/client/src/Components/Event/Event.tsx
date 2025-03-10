@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 //import AOS from "aos";
 //import "aos/dist/aos.css";
-import LoginCheck from "@/Hooks/LoginCheck";
+import LoginCheck from "@scspace-client/Hooks/LoginCheck";
 
 const Event: React.FC = () => {
   const [login, setLogin] = useState(false);

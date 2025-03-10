@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { AskService } from './feature/ask/ask.service';
+import { AskPublicService } from './feature/ask/ask.public.service';
 @Injectable()
 export class AppService {
-  constructor(private readonly askService: AskService) {}
+  constructor(private readonly askPublicService: AskPublicService) {}
 
   getHello(): string {
     return 'Hello World!';
   }
 
   async fillContent(): Promise<boolean> {
-    const ask = await this.askService.findAll();
+    const askCount = await this.askPublicService.getAskCount();
 
-    if (ask.length !== 0) {
+    if (askCount !== 0) {
       return false;
     }
 

@@ -3,12 +3,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
-import { INotice } from "@depot/types/notice";
-import BoardPageSelector from "@Components/_commons/BoardPageSelector";
-import ConditionalButton from "@Components/_commons/ConditionalButton";
-import { useLinkPush } from "@Hooks/useLinkPush";
-import { useBoardData } from "@/Hooks/useBoardData";
-import { useLoginCheck } from "@/Hooks/useLoginCheck";
+import { INotice } from "@scspace-depot/types/notice";
+import BoardPageSelector from "@scspace-client/Components/_commons/BoardPageSelector";
+import ConditionalButton from "@scspace-client/Components/_commons/ConditionalButton";
+import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
+import { useBoardData } from "@scspace-client/Hooks/useBoardData";
+import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
 
 const Notice: React.FC = () => {
   const { linkPush } = useLinkPush();

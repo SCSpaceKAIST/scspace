@@ -1,12 +1,11 @@
-import { Logger } from '@nestjs/common';
-import { ReservationStateEnum } from '@depot/enums/reservation.enum';
+import { Logger, Injectable } from '@nestjs/common';
+import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
 import { ReservationRepository } from './reservation.repository';
-import { Injectable } from '@nestjs/common';
-import { reservationMaxDayTime } from '@depot/consts/reservation.const';
-import { UserPublicService } from '../user/user.public.service';
-import { SpacePublicService } from '../space/space.public.service';
-import { reservationMaxWeekTime } from '@depot/consts/reservation.const';
-import { MReservation } from './reservation.model';
+import { reservationMaxDayTime } from '@scspace-depot/consts/reservation.const';
+import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
+import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
+import { reservationMaxWeekTime } from '@scspace-depot/consts/reservation.const';
+import { MReservation } from '@scspace-server/feature/reservation/reservation.model';
 
 @Injectable()
 export class ReservationPublicService {

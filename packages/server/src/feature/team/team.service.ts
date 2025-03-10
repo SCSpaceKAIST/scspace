@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { TeamRepository } from './team.repository';
-import { ITeamResponse } from '@depot/types/reservation';
+import { ITeamResponse } from '@scspace-depot/types/reservation';
 import { UserPublicService } from '../user/user.public.service';
 import { SemesterPublicService } from '../semester/semester.public.service';
 import { TeamMemberRepository } from './team.member.repository';

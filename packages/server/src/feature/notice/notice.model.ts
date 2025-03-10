@@ -1,4 +1,4 @@
-import { INotice } from '@depot/types/notice';
+import { INotice } from '@scspace-depot/types/notice';
 import { Notice } from '@schema';
 import { InferSelectModel } from 'drizzle-orm';
 

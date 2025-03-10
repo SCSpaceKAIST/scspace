@@ -1,5 +1,5 @@
-import Faq from "@Components/FAQ/Faq";
-import PageHeader from "@/Components/_commons/PageHeader";
+import Faq from "@scspace-client/Components/FAQ/Faq";
+import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 export default function FaqPage() {
   return (
     <div>

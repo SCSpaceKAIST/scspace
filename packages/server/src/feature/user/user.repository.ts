@@ -3,7 +3,7 @@ import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema, User } from 'src/db/schema';
 import { and, eq, inArray, SQL } from 'drizzle-orm';
-import { IUserCreate } from '@depot/types/user';
+import { IUserCreate } from '@scspace-depot/types/user';
 import { MUser } from './user.model';
 import { takeOne } from 'src/common/util';
 

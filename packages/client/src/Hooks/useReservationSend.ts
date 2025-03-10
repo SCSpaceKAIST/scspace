@@ -4,11 +4,11 @@ import {
   IReservationCreate,
   ISpaceTimeCheckRequest,
   IUserTimeCheckRequest,
-} from "@depot/types/reservation";
+} from "@scspace-depot/types/reservation";
 import { sendGet, sendPost } from "./useApi";
-import { ISpace } from "@depot/types/space";
+import { ISpace } from "@scspace-depot/types/space";
 import { useLinkPush } from "./useLinkPush";
-import { UserTypeEnum } from "@depot/enums/user.enum";
+import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 export const useReservationSend = () => {
   const { linkPush } = useLinkPush();

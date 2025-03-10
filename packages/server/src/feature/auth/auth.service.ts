@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, TokenExpiredError } from '@nestjs/jwt';
 import * as crypto from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
-import { IUser, IUserCreate } from '@depot/types/user';
-import { UserSSOType2022 } from '@depot/types/user/user.sso.type';
-import { UserTypeEnum } from '@depot/enums/user.enum';
+import { IUser, IUserCreate } from '@scspace-depot/types/user';
+import { UserSSOType2022 } from '@scspace-depot/types/user/user.sso.type';
+import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { Response } from 'express';
 import { UserPublicService } from '../user/user.public.service';
 
@@ -71,7 +71,7 @@ export class AuthService {
       Logger.log(decoded);
       return decoded;
     } catch (err) {
-      if (err.name === 'TokenExpiredError') {
+      if (err instanceof TokenExpiredError) {
         res.clearCookie('scspacetoken1', { path: '/' });
       }
       return null;

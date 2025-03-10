@@ -11,16 +11,16 @@ import {
   workerNeedOptions,
   ITeamMemberResponse,
   IReservationResponse,
-} from "@depot/types/reservation";
-import { IUser } from "@depot/types/user";
-import { useLoginCheck } from "@/Hooks/useLoginCheck";
-import { sendGet, sendPut } from "@/Hooks/useApi";
-import { useSpaces } from "@/Hooks/useSpaces";
+} from "@scspace-depot/types/reservation";
+import { IUser } from "@scspace-depot/types/user";
+import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { sendGet, sendPut } from "@scspace-client/Hooks/useApi";
+import { useSpaces } from "@scspace-client/Hooks/useSpaces";
 import MultipleRadioInput from "./inputs/MultipleRadioInput";
 import TextInput from "./inputs/TextInput";
-import { ReservationStateEnum, ReservationWorkerNeedEnum } from "@depot/enums/reservation.enum";
-import { UserTypeEnum } from "@depot/enums/user.enum";
-import { enumToArray } from "@depot/utils";
+import { ReservationStateEnum, ReservationWorkerNeedEnum } from "@scspace-depot/enums/reservation.enum";
+import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
+import { enumToArray } from "@scspace-depot/utils";
 
 interface ReservModalProps {
   reservationInfo: IReservationResponse | null;

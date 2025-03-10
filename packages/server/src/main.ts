@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import { config } from 'dotenv';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -24,7 +25,8 @@ async function bootstrap() {
 
   // URL-encoded 형식의 요청 본문을 파싱 (NestJS에서는 기본적으로 지원됨)
   //app.use(express.urlencoded({ extended: true })); // 추가적인 설정이 필요하면 사용
-
-  await app.listen(3001);
+  const configService = app.get(ConfigService);
+  const port = configService.get<number>('SERVER_PORT') || 3001;
+  await app.listen(port);
 }
 bootstrap();

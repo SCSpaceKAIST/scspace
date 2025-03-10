@@ -1,5 +1,5 @@
-import Ask from "@Components/Ask/Ask";
-import PageHeader from "@/Components/_commons/PageHeader";
+import Ask from "@scspace-client/Components/Ask/Ask";
+import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 
 export default function AskPage() {
   return (

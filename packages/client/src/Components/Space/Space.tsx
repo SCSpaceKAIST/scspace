@@ -5,7 +5,7 @@ import Link from "next/link";
 import {
   SpaceTypeNames,
   SpaceTypesArray,
-} from "@depot/types/space";
+} from "@scspace-depot/types/space";
 
 const Space: React.FC = () => {
   return (

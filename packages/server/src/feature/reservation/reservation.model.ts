@@ -1,5 +1,5 @@
-import { ReservationContentArrayElementTypeEnum } from '@depot/enums/reservation.enum';
-import { IReservation } from '@depot/types/reservation';
+import { ReservationContentArrayElementTypeEnum } from '@scspace-depot/enums/reservation.enum';
+import { IReservation } from '@scspace-depot/types/reservation/index';
 import {
   Reservation,
   ReservationContent,

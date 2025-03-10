@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "@scspace-server",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -12,7 +12,7 @@
     "start:dev": "nest start --watch dist/server/src/main.js",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "dev": "nest start --watch ./dist/server/src/main.d.ts",
+    "dev": "nest start --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -29,8 +29,7 @@
     "mysql2": "^3.11.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.1",
-    "@depot": "workspace:*"     
+    "rxjs": "^7.8.1"     
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

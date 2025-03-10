@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { useSpaces } from "@/Hooks/useSpaces";
+import { useSpaces } from "@scspace-client/Hooks/useSpaces";
 
 const Calendar: React.FC = () => {
   const { spaceArray } = useSpaces();

@@ -5,8 +5,8 @@ import {
   IAskCommentCreate,
   IAskCreate,
   IAskResponse,
-} from '@depot/types/ask';
-import { commentUrl } from '@depot/urls/ask';
+} from '@scspace-depot/types/ask';
+import { commentUrl } from '@scspace-depot/urls/ask';
 
 @Controller('ask')
 export class AskController {

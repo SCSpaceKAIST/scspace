@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { NoticeRepository } from './notice.repository';
-import { INoticeCreate, INotice } from '@depot/types/notice';
+import { INoticeCreate, INotice } from '@scspace-depot/types/notice';
 import { MNotice } from './notice.model';
 import { NoticePublicService } from './notice.public.service';
 

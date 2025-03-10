@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { IIntroduction } from "@depot/types/space";
+import { IIntroduction } from "@scspace-depot/src/types/space";
 
 interface SpaceIntroductionProps {
   data: IIntroduction;

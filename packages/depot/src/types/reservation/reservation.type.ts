@@ -8,7 +8,7 @@ import { ITeam } from "./team.type";
 export interface IReservation {
   id: number;
   userId: number; // char(8)
-  teamId?: number | null;
+  teamId: number | null;
   spaceId: number;
   timeFrom: Date;
   timeTo: Date;

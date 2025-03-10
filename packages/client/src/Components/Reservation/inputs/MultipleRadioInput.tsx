@@ -1,6 +1,6 @@
-import { AskStateEnum } from "@depot/enums/ask.enum";
-import { ReservationStateEnum } from "@depot/enums/reservation.enum";
-import { ReservationWorkerNeedEnum } from "@depot/enums/reservation.enum";
+import { AskStateEnum } from "@scspace-depot/enums/ask.enum";
+import { ReservationStateEnum } from "@scspace-depot/enums/reservation.enum";
+import { ReservationWorkerNeedEnum } from "@scspace-depot/enums/reservation.enum";
 import React, { useEffect } from "react";
 import { InputAvailableEnum } from "./common/inputAvailableEnum";
 

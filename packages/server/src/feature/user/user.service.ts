@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from './user.repository';
-import { IUser } from '@depot/types/user';
+import { IUser } from '@scspace-depot/types/user';
 
 @Injectable()
 export class UserService {

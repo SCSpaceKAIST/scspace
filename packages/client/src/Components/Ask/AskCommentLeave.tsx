@@ -1,12 +1,12 @@
 "use client";
 
-import { useLinkPush } from "@/Hooks/useLinkPush";
-import { IAsk } from "@depot/types/ask";
-import { sendPut } from "@/Hooks/useApi";
+import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
+import { IAsk } from "@scspace-depot/types/ask";
+import { sendPut } from "@scspace-client/Hooks/useApi";
 import { useEffect } from "react";
-import { IUser } from "@depot/types/user";
-import { AskStateEnum, askStateStringToEnum } from "@depot/enums/ask.enum";
-import { UserTypeEnum } from "@depot/enums/user.enum";
+import { IUser } from "@scspace-depot/types/user";
+import { AskStateEnum, askStateStringToEnum } from "@scspace-depot/enums/ask.enum";
+import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 interface AskCommentLeaveProps {
   content: IAsk | null;

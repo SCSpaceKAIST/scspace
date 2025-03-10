@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SpaceRepository } from './space.repository';
-import { ISpace } from '@depot/types/space';
+import { ISpace } from '@scspace-depot/types/space';
 
 @Injectable()
 export class SpaceService {

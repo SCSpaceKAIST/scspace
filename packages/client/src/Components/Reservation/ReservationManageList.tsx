@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import ReservationModal, { handleReservationSubmit } from "./ReservationModal";
 import moment from "moment";
-import { useBoardData } from "@/Hooks/useBoardData";
+import { useBoardData } from "@scspace-client/Hooks/useBoardData";
 import {
   IReservationResponse,
   reservationStateOptions,
   workerNeedOptions,
   reservationStateOptionsEng,
   workerNeedOptionsEng,
-} from "@depot/types/reservation";
-import { IUser } from "@depot/types/user";
+} from "@scspace-depot/types/reservation";
+import { IUser } from "@scspace-depot/types/user";
 
 const ReservationManageList: React.FC = () => {
   const {

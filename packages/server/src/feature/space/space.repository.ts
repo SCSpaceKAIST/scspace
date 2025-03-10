@@ -4,7 +4,7 @@ import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema, Space } from '@schema';
 import { and, eq, inArray, SQL } from 'drizzle-orm';
 import { MSpace } from './space.model';
-import { SpaceTypeEnum } from '@depot/enums/space.enum';
+import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 
 @Injectable()
 export class SpaceRepository {

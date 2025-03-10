@@ -3,16 +3,16 @@
 // components/ReservationForm.tsx
 import React, { use, useState } from "react";
 import DateTimeInput from "../inputs/DateTimeInput";
-import { reservationStateOptions } from "@depot/types/reservation";
+import { reservationStateOptions } from "@scspace-depot/types/reservation";
 import AgreeCheck from "../inputs/AgreeCheck";
-import HelpTooltip from "@/Components/_commons/HelpTooltip";
+import HelpTooltip from "@scspace-client/Components/_commons/HelpTooltip";
 import TextInput from "../inputs/TextInput";
 import MultipleCheckboxInput from "../inputs/MultipleCheckboxInput";
 import MultipleRadioInput from "../inputs/MultipleRadioInput";
-import { ISpace } from "@depot/types/space";
+import { ISpace } from "@scspace-depot/types/space";
 import CheckboxInput from "../inputs/CheckboxInput";
-import { useReservationSend } from "@/Hooks/useReservationSend";
-import { AskStateEnum } from "@depot/enums/ask.enum";
+import { useReservationSend } from "@scspace-client/Hooks/useReservationSend";
+import { AskStateEnum } from "@scspace-depot/enums/ask.enum";
 
 interface ReservationFormProps {
   spaceId: number;

@@ -1,10 +1,10 @@
-import HelpTooltip from "@/Components/_commons/HelpTooltip";
+import HelpTooltip from "@scspace-client/Components/_commons/HelpTooltip";
 import {
   reservationMaxDate,
   reservationMaxDayTime,
   reservationMinDate,
-} from "@depot/consts/reservation.const";
-import { SpaceTypeEnum } from "@depot/enums/space.enum";
+} from "@scspace-depot/consts/reservation.const";
+import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 
 interface TimeTooltipsProps {
   spaceType: SpaceTypeEnum;

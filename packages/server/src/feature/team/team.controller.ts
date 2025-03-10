@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { TeamService } from './team.service';
-import { ITeamResponse } from '@depot/types/reservation';
+import { ITeamResponse } from '@scspace-depot/types/reservation';
 
 @Controller('team')
 export class TeamController {

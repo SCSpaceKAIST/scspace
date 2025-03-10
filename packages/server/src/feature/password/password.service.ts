@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PasswordRepository } from './password.repository';
-import { IPassword, IPasswordValidation } from '@depot/types/password';
+import { IPassword, IPasswordValidation } from '@scspace-depot/types/password';
 import { SpacePublicService } from '../space/space.public.service';
 import { ReservationPublicService } from '../reservation/reservation.public.service';
 

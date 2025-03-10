@@ -1,5 +1,5 @@
-import Notice from "@Components/Notice/Notice";
-import PageHeader from "@/Components/_commons/PageHeader";
+import Notice from "@scspace-client/Components/Notice/Notice";
+import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 
 export default function NoticePage() {
   return (

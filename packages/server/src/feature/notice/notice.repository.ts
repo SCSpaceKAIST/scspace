@@ -3,7 +3,7 @@ import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { Notice, schema } from '@schema';
 import { eq } from 'drizzle-orm';
-import { INotice, INoticeCreate } from '@depot/types/notice';
+import { INotice, INoticeCreate } from '@scspace-depot/types/notice';
 import { MNotice } from './notice.model';
 
 @Injectable()

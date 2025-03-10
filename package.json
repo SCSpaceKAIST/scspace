@@ -1,19 +1,18 @@
 {
-  "name": "scspace",
+  "name": "scspace-monorepo",
+  "private": true,
   "version": "1.0.0",
+  "repository": "",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "dotenv -- pnpm -r run dev",
-    "build": "dotenv -- pnpm -r run build",
+    "dev": "dotenv -e .env -- pnpm -r run dev",
+    "build": "pnpm -r run build",
     "dockerup": "docker-compose up -d",
     "migrate": "drizzle-kit migrate --config packages/server/src/db/drizzle.config.ts",
     "generate": "drizzle-kit generate --config packages/server/src/db/drizzle.config.ts"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -23,6 +22,7 @@
     "@types/react-pdf": "^7.0.0",
     "dotenv-cli": "^7.4.2",
     "drizzle-kit": "^0.24.0",
+    "typescript": "^5.8.2",
     "zod": "^3.24.1"
   },
   "dependencies": {

@@ -3,12 +3,12 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 
-import { IAsk, askStateOptions, askStateOptionsEng } from "@depot/types/ask";
-import BoardPageSelector from "@Components/_commons/BoardPageSelector";
-import ConditionalButton from "@/Components/_commons/ConditionalButton";
-import { useLinkPush } from "@Hooks/useLinkPush";
-import { useBoardData } from "@/Hooks/useBoardData";
-import AlertBtn from "@Components/_commons/AlertBtn";
+import { IAsk, askStateOptions, askStateOptionsEng } from "@scspace-depot/types/ask";
+import BoardPageSelector from "@scspace-client/Components/_commons/BoardPageSelector";
+import ConditionalButton from "@scspace-client/Components/_commons/ConditionalButton";
+import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
+import { useBoardData } from "@scspace-client/Hooks/useBoardData";
+import AlertBtn from "@scspace-client/Components/_commons/AlertBtn";
 
 const Ask: React.FC = () => {
   const { linkPush } = useLinkPush();

@@ -1,5 +1,5 @@
-import PageHeader from "@/Components/_commons/PageHeader";
-import Reservation from "@/Components/Reservation/Reservation";
+import PageHeader from "@scspace-client/Components/_commons/PageHeader";
+import Reservation from "@scspace-client/Components/Reservation/Reservation";
 
 export default function SpacePage() {
   return (

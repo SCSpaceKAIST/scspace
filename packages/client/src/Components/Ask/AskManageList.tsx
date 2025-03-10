@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import moment from "moment";
-import { useBoardData } from "@/Hooks/useBoardData";
-import { IAsk, askStateOptions, askStateOptionsEng } from "@depot/types/ask";
-import { useLinkPush } from "@/Hooks/useLinkPush";
+import { useBoardData } from "@scspace-client/Hooks/useBoardData";
+import { IAsk, askStateOptions, askStateOptionsEng } from "@scspace-depot/types/ask";
+import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
 
 const AskLatestList: React.FC = () => {
   const { linkPush } = useLinkPush();

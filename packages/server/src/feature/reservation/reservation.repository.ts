@@ -22,15 +22,15 @@ import {
   IReservationCreate,
   isTeamContent,
   isHallContent,
-  IReservationUpdate,
-} from '@depot/types/reservation';
-import { SpaceTypeEnum } from '@depot/enums/space.enum';
+  IReservation,
+} from '@scspace-depot/types/reservation';
+import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 import {
   ReservationStateEnum,
   ReservationWorkerNeedEnum,
   ReservationContentArrayElementTypeEnum,
-} from '@depot/enums/reservation.enum';
-import { MReservation } from './reservation.model';
+} from '@scspace-depot/enums/reservation.enum';
+import { MReservation } from '@scspace-server/feature/reservation/reservation.model';
 
 @Injectable()
 export class ReservationRepository {
@@ -138,7 +138,7 @@ export class ReservationRepository {
     reservationInput: IReservationCreate,
     spaceType: SpaceTypeEnum,
   ): Promise<boolean> {
-    const reservation: InferInsertModel<typeof Reservation> = {
+    const reservation = {
       userId: reservationInput.userId,
       teamId: reservationInput.teamId,
       spaceId: reservationInput.spaceId,
@@ -214,7 +214,7 @@ export class ReservationRepository {
     });
   }
 
-  async updateReservation(data: IReservationUpdate): Promise<boolean> {
+  async updateReservation(data: IReservation): Promise<boolean> {
     const [result] = await this.db
       .update(Reservation)
       .set(data)

@@ -1,4 +1,4 @@
-import { ITeamMember } from '@depot/types/reservation';
+import { ITeamMember } from '@scspace-depot/types/reservation';
 import { TeamMember } from '@schema';
 import { InferSelectModel } from 'drizzle-orm';
 

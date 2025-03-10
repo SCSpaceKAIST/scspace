@@ -1,7 +1,7 @@
 "use client"; // 클라이언트 컴포넌트로 지정
 
-import AskView from "@Components/Ask/AskView";
-import PageHeader from "@/Components/_commons/PageHeader";
+import AskView from "@scspace-client/Components/Ask/AskView";
+import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 import { useParams } from "next/navigation"; // useParams를 사용하여 동적 라우팅 파라미터를 가져옴
 
 export default function AskPage() {

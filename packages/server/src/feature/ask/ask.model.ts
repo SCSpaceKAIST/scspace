@@ -1,4 +1,4 @@
-import { IAsk } from '@depot/types/ask';
+import { IAsk } from '@scspace-depot/types/ask';
 import { InferSelectModel } from 'drizzle-orm';
 import { Ask } from '@schema';
 

@@ -1,10 +1,14 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src",
-    "declaration": true,      // 타입 선언 파일(dist/*.d.ts) 생성
-    "composite": true         // build 시 프로젝트 참조 가능하게
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@scspace-depot/*": ["./src/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["./src"],
+  "exclude": ["node_modules", "dist"]
 }

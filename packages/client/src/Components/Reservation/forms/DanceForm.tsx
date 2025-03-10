@@ -6,18 +6,18 @@ import DateTimeInput from "../inputs/DateTimeInput";
 import {
   IDanceContent,
   IReservationCreate,
-} from "@depot/types/reservation";
+} from "@scspace-depot/types/reservation";
 import AgreeCheck from "../inputs/AgreeCheck";
 import TextInput from "../inputs/TextInput";
-import { ISpace } from "@depot/types/space";
-import { useLoginCheck } from "@/Hooks/useLoginCheck";
-import { useReservationSend } from "@/Hooks/useReservationSend";
+import { ISpace } from "@scspace-depot/types/space";
+import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useReservationSend } from "@scspace-client/Hooks/useReservationSend";
 import TimeTooltips from "../utils/TimeTooltips";
 import { validateReservationInput } from "./validateReservationInput";
 import { setTimes } from "./setTimes";
 import TeamInput from "../inputs/TeamInput";
-import { ReservationWorkerNeedEnum } from "@depot/enums/reservation.enum";
-import { ReservationStateEnum } from "@depot/enums/reservation.enum";
+import { ReservationWorkerNeedEnum } from "@scspace-depot/enums/reservation.enum";
+import { ReservationStateEnum } from "@scspace-depot/enums/reservation.enum";
 
 interface ReservationFormProps {
   spaceId: number;

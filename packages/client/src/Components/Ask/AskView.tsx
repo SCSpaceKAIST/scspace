@@ -5,11 +5,11 @@ import Link from "next/link";
 import axios from "axios";
 import moment from "moment";
 import { VscEye } from "react-icons/vsc";
-import AskComment from "@Components/Ask/AskComment";
-import { IAsk, askStateOptions, askStateOptionsEng } from "@depot/types/ask";
-import AskCommentLeave from "@/Components/Ask/AskCommentLeave";
-import { useLoginCheck } from "@/Hooks/useLoginCheck";
-import { UserTypeEnum } from "@depot/enums/user.enum";
+import AskComment from "@scspace-client/Components/Ask/AskComment";
+import { IAsk, askStateOptions, askStateOptionsEng } from "@scspace-depot/types/ask";
+import AskCommentLeave from "@scspace-client/Components/Ask/AskCommentLeave";
+import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 interface AskViewProps {
   view_id: string;

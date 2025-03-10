@@ -11,7 +11,7 @@ import {
 import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt/jwt-guard';
-import { IUser } from '@depot/types/user';
+import { IUser } from '@scspace-depot/types/user';
 
 @Controller('auth')
 export class AuthController {

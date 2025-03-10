@@ -11,4 +11,8 @@ export class AskPublicService {
     ask.views++;
     return await this.askRepository.update(ask);
   }
+
+  async getAskCount(): Promise<number> {
+    return (await this.askRepository.find({})).length;
+  }
 }

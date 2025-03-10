@@ -4,10 +4,10 @@ import Link from "next/link";
 
 import { LoginBtn } from "./Auth/LoginBtn";
 import Image from "next/image";
-import { SpaceTypeNames, SpaceTypesArray, ISpace } from "@depot/types/space";
-import { sendGet } from "@/Hooks/useApi";
-import PasswordView from "@Components/Password/PasswordView";
-import { useLoginCheck } from "@/Hooks/useLoginCheck";
+import { SpaceTypeNames, SpaceTypesArray, ISpace } from "@scspace-depot/types/space";
+import { sendGet } from "@scspace-client/Hooks/useApi";
+import PasswordView from "@scspace-client/Components//Password/PasswordView";
+import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
 
 interface MenuItem {
   name: string;

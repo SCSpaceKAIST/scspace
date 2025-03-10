@@ -1,37 +1,26 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "src",
     "baseUrl": "./",
-
-    "paths": {
-      "@depot/*": ["../depot/*"], // depot 디렉토리의 경로를 설정
-
-      "@schema": ["./src/db/schema"]
-    },
-
     "incremental": true,
-    "skipLibCheck": true,
-    "strictNullChecks": true,
+    "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@scspace-server/*": ["./src/*"],
+      "@schema": ["./src/db/schema"],
+      "@scspace-depot/*": ["../depot/src/*"],
+    },
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"],
-  "references": [
-    {
-      "path": "../depot/tsconfig.json"
-    }
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

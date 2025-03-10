@@ -1,6 +1,6 @@
-import ReservationList from "@/Components/Reservation/ReservationList";
-import Space from "@/Components/Space/Space";
-import PageHeader from "@/Components/_commons/PageHeader";
+import ReservationList from "@scspace-client/Components/Reservation/ReservationList";
+import Space from "@scspace-client/Components/Space/Space";
+import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 
 export default function SpacePage() {
   return (

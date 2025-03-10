@@ -1,5 +1,5 @@
-import { useSpaces } from "@/Hooks/useSpaces";
-import { IPassword } from "@depot/types/password";
+import { useSpaces } from "@scspace-client/Hooks/useSpaces";
+import { IPassword } from "@scspace-depot/types/password";
 import React from "react";
 
 interface PasswordBarProps {

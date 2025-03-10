@@ -1,4 +1,4 @@
-import { IUser } from "@depot/types/user";
+import { IUser } from "@scspace-depot/types/user";
 import axios, { AxiosResponse } from "axios";
 import { sendPost } from "./useApi";
 

@@ -1,5 +1,5 @@
-import Event from "@/Components/Event/Event";
-import PageHeader from "@/Components/_commons/PageHeader";
+import Event from "@scspace-client/src/Components";
+import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 export default function EventPage() {
   return (
     <div>

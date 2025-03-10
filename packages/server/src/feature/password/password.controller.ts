@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { PasswordService } from './password.service';
-import { IPassword, IPasswordValidation } from '@depot/types/password';
+import { IPassword, IPasswordValidation } from '@scspace-depot/types/password';
 
 @Controller('password')
 export class PasswordController {
