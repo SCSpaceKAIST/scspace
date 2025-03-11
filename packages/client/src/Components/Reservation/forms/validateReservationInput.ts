@@ -201,8 +201,8 @@ export const validateReservationInput = (
   const errors: string[] = [];
 
   // 기본 필드 검증 (userId, spaceId 등)
-  if (typeof reservationInput.userId !== "string") {
-    errors.push("userId는 8자 문자열이어야 합니다.");
+  if (typeof reservationInput.userId !== "number") {
+    errors.push("userId는 숫자여야 합니다.");
   }
 
   if (

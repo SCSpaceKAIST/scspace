@@ -13,6 +13,7 @@ import { ReservationService } from './reservation.service';
 import {
   IReservation,
   IReservationCreate,
+  IReservationCreateBody,
   IReservationResponse,
   ISpaceTimeCheckRequest,
   IUserTimeCheckRequest,
@@ -97,10 +98,14 @@ export class ReservationController {
   // 예약을 등록하는 POST 요청
   @Post()
   async postReservation(
-    @Body() reservationInput: IReservationCreate,
+    @Body() reservationInput: IReservationCreateBody,
   ): Promise<boolean> {
     console.log('postReservation', reservationInput);
-    const res = await this.reservationService.postReservation(reservationInput);
+    const res = await this.reservationService.postReservation({
+      ...reservationInput,
+      timeFrom: new Date(reservationInput.timeFrom),
+      timeTo: new Date(reservationInput.timeTo),
+    });
     console.log('postReservation res', res);
     return res;
   }

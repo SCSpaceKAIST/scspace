@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "4eacc109-ad84-4e6b-baa4-853842cd5647",
+  "id": "0a1aedb7-5596-4401-b013-a4ee56e89634",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "ask": {
@@ -586,13 +586,6 @@
         },
         "season": {
           "name": "season",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "type": {
-          "name": "type",
           "type": "int",
           "primaryKey": false,
           "notNull": true,

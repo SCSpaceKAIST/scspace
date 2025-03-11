@@ -30,6 +30,11 @@ export type IReservationCreate = Omit<
   "id" | "timePost" | "comment" 
 > ;
 
+export type IReservationCreateBody = IReservationCreate & {
+  timeFrom: string;
+  timeTo: string;
+};
+
 export type IReservationUpdate = Omit<
   IReservation,
   "userId" | "timePost" | "spaceId" | "timeFrom" | "timeTo" | "content"

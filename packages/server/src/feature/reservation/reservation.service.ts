@@ -5,7 +5,7 @@ import {
   IReservationCreate,
   IReservationUpdate,
 } from '@scspace-depot/types/reservation';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ReservationRepository } from './reservation.repository';
 import { checkContainAllId, takeAll, takeOne } from 'src/common/util';
 import { UserPublicService } from '../user/user.public.service';
@@ -69,15 +69,16 @@ export class ReservationService {
       reservationInput.spaceId,
     );
 
-    if (
-      // 예약 가능한 시간인지 확인하기
+    // 예약 가능한 시간인지 확인하기
+    const isAvailable =
       await this.reservationPublicService.checkReservationAvailability(
         reservationInput.userId,
         reservationInput.spaceId,
         reservationInput.timeFrom,
         reservationInput.timeTo,
-      )
-    ) {
+      );
+    Logger.log('isAvailable', isAvailable);
+    if (isAvailable) {
       return await this.reservationRepository.insert(
         reservationInput,
         space.spaceType,

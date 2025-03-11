@@ -1,4 +1,9 @@
-import { Injectable, Inject, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  BadRequestException,
+  Logger,
+} from '@nestjs/common';
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import {
@@ -140,14 +145,17 @@ export class ReservationRepository {
   ): Promise<boolean> {
     const reservation = {
       userId: reservationInput.userId,
-      teamId: reservationInput.teamId,
+      teamId: reservationInput.teamId ?? undefined,
       spaceId: reservationInput.spaceId,
       timeFrom: new Date(reservationInput.timeFrom),
       timeTo: new Date(reservationInput.timeTo),
+      state: ReservationStateEnum.WAIT,
+      workerNeed: ReservationWorkerNeedEnum.UNNECESSARY,
     };
-
+    const content = reservationInput.content;
     return this.db.transaction(async (tx) => {
       // 데이터 삽입
+      Logger.log('reservation repository insert reservation', reservation);
       const [insertedReservation] = await tx
         .insert(Reservation)
         .values(reservation);
@@ -190,24 +198,33 @@ export class ReservationRepository {
           })),
         );
       }
+
+      Logger.log('reservationContent', reservationContent);
+      Logger.log('reservationInput.content', reservationContentArrayElements);
       // 예약 내용 삽입
-      const [
-        insertedReservationContentId,
-        insertedReservationContentArrayElementsIds,
-      ] = await Promise.all([
-        tx.insert(ReservationContent).values(reservationContent).$returningId(),
-        tx
+      const insertedReservationContentId = await tx
+        .insert(ReservationContent)
+        .values(reservationContent)
+        .$returningId();
+
+      if (!insertedReservationContentId) {
+        throw new BadRequestException('Reservation content insertion failed');
+      }
+
+      if (reservationContentArrayElements.length > 0) {
+        const insertedReservationContentArrayElementsIds = await tx
           .insert(ReservationContentArrayElement)
           .values(reservationContentArrayElements)
-          .$returningId(),
-      ]);
+          .$returningId();
 
-      if (
-        !insertedReservationContentId ||
-        insertedReservationContentArrayElementsIds.length !==
+        if (
+          insertedReservationContentArrayElementsIds.length !==
           reservationContentArrayElements.length
-      ) {
-        throw new BadRequestException('Reservation content insertion failed');
+        ) {
+          throw new BadRequestException(
+            'Reservation content array element insertion failed',
+          );
+        }
       }
 
       return true;

@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1740992321776,
-      "tag": "0000_hesitant_vulture",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1741586370379,
-      "tag": "0001_lonely_doctor_octopus",
+      "when": 1741663796792,
+      "tag": "0000_wise_yellow_claw",
       "breakpoints": true
     }
   ]

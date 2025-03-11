@@ -92,7 +92,6 @@ CREATE TABLE `semester` (
 	`date_to` timestamp NOT NULL,
 	`year` int NOT NULL,
 	`season` int NOT NULL,
-	`type` int NOT NULL,
 	CONSTRAINT `semester_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint

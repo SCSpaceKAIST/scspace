@@ -1,1 +1,0 @@
-ALTER TABLE `semester` DROP COLUMN `type`;
