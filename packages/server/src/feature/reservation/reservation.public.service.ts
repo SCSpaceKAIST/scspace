@@ -67,7 +67,7 @@ export class ReservationPublicService {
         this.getDifferenceInMinutes(reservation.timeFrom, reservation.timeTo)
       );
     }, 0);
-
+    Logger.log('Daily totalReservedTime', totalReservedTime);
     // 예약된 시간이 없을 경우 0을 반환
     return totalReservedTime / (60 * 1000); // 밀리초를 분으로 변환
   }
@@ -103,7 +103,7 @@ export class ReservationPublicService {
         this.getDifferenceInMinutes(reservation.timeFrom, reservation.timeTo)
       );
     }, 0);
-
+    Logger.log('Weekly totalReservedTime', totalReservedTime);
     return totalReservedTime; // 밀리초를 분으로 변환
   }
 

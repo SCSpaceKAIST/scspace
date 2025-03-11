@@ -15,6 +15,7 @@ import { MUser } from '../user/user.model';
 import { ReservationPublicService } from './reservation.public.service';
 import { IUser } from '@scspace-depot/types/user';
 import { ISpace } from '@scspace-depot/types/space';
+import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 @Injectable()
 export class ReservationService {
   constructor(
@@ -78,9 +79,13 @@ export class ReservationService {
         reservationInput.timeTo,
       );
     Logger.log('isAvailable', isAvailable);
+
     if (isAvailable) {
       return await this.reservationRepository.insert(
-        reservationInput,
+        {
+          ...reservationInput,
+          state: this.getDefaultStatus(space.spaceType),
+        },
         space.spaceType,
       );
     }
@@ -166,5 +171,23 @@ export class ReservationService {
       user: users.find((user) => user.id === reservation.userId) as IUser,
       space: spaces.find((space) => space.id === reservation.spaceId) as ISpace,
     }));
+  }
+
+  private getDefaultStatus(spaceType: SpaceTypeEnum): ReservationStateEnum {
+    switch (spaceType) {
+      // 기본적으로 GRANT 상태로 예약
+      case SpaceTypeEnum.INDIVIDUAL:
+      case SpaceTypeEnum.PIANO:
+      case SpaceTypeEnum.SEMINAR:
+      case SpaceTypeEnum.DANCE:
+      case SpaceTypeEnum.GROUP:
+      case SpaceTypeEnum.OPEN:
+      case SpaceTypeEnum.WORK:
+        return ReservationStateEnum.GRANT;
+      // WAIT 상태로 예약
+      case SpaceTypeEnum.MIRAE:
+      case SpaceTypeEnum.SUMI:
+        return ReservationStateEnum.WAIT;
+    }
   }
 }

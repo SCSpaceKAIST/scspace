@@ -22,6 +22,7 @@ import {
   not,
   inArray,
   InferInsertModel,
+  between,
 } from 'drizzle-orm';
 import {
   IReservationCreate,
@@ -87,19 +88,20 @@ export class ReservationRepository {
       const timeFrom = param.timeRange.timeFrom;
       const timeTo = param.timeRange.timeTo;
 
-      if (!timeFrom || !timeTo) {
-        const timeWhereClause: SQL[] = [];
+      const timeWhereClause: SQL[] = [];
 
-        if (timeFrom) {
-          timeWhereClause.push(gte(Reservation.timeTo, timeFrom));
-        }
-        if (timeTo) {
-          timeWhereClause.push(lte(Reservation.timeFrom, timeTo));
-        }
-        const clause = not(or(...timeWhereClause) as SQL); // TODO: 자꾸 undefined 일 수 있다고 에러 떠서 as 써놨는데, 나중에 수정 필요
+      timeWhereClause.push(between(Reservation.timeFrom, timeFrom, timeTo));
+      timeWhereClause.push(between(Reservation.timeTo, timeFrom, timeTo));
+      timeWhereClause.push(
+        and(
+          lte(Reservation.timeFrom, timeFrom),
+          gte(Reservation.timeTo, timeTo),
+        ),
+      );
 
-        whereClause.push(clause);
-      }
+      const clause = or(...timeWhereClause); // TODO: 자꾸 undefined 일 수 있다고 에러 떠서 as 써놨는데, 나중에 수정 필요
+
+      whereClause.push(clause);
     }
 
     const reservations = await this.db
@@ -152,7 +154,6 @@ export class ReservationRepository {
       state: ReservationStateEnum.WAIT,
       workerNeed: ReservationWorkerNeedEnum.UNNECESSARY,
     };
-    const content = reservationInput.content;
     return this.db.transaction(async (tx) => {
       // 데이터 삽입
       Logger.log('reservation repository insert reservation', reservation);
