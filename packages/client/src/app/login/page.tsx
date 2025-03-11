@@ -11,7 +11,7 @@ const LoginPage: React.FC = () => {
         `${process.env.NEXT_PUBLIC_API_URL}/auth/login`
       )}`
     : "";
-
+  console.log("location", location);
   const checkSubmit = async (): Promise<boolean> => {
     const res = await LoginCheck();
     return res === null;

@@ -44,6 +44,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
       timeFrom: timeFrom,
       timeTo: timeTo,
       userId: userInfo?.id,
+      teamId: null,
       content: {
         eventName,
         contents,

@@ -62,14 +62,14 @@ export const Header: React.FC = () => {
       menu_link: "",
       sub_menu_link: ["/faq", "/ask"],
     },
-    { name: "이벤트", sub_menu: [], menu_link: "/event", sub_menu_link: [] },
+    //{ name: "이벤트", sub_menu: [], menu_link: "/event", sub_menu_link: [] },
   ]);
 
   useEffect(() => {
     sendGet<ISpace[]>("/space/all").then((res) => {
       if (res) {
         setMenu([
-          ...menu.slice(0, 3),
+          ...menu.slice(0, 2), // TODO: space intro 추가시 0,3 으로 변경
           {
             name: "예약하기",
             sub_menu: res.map((value, idx) => {
@@ -90,8 +90,8 @@ export const Header: React.FC = () => {
               return `/${value.id}`;
             }),
           },
-          menu[5],
-          menu[6],
+          menu[4], // todo: intro 추가시 5번으로 변경
+          // menu[6], : 이벤트 
         ]);
       }
     });

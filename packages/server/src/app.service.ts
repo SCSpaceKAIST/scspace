@@ -294,11 +294,11 @@ export class AppService {
 
     const users: IUserCreate[] = [
       {
-        kaistUID: 'khw3090',
-        nameKr: '권혁원',
-        nameEn: 'Kwon Hyukwon',
-        userNumber: '20210044',
-        email: 'gerbera3090@kaist.ac.kr',
+        kaistUID: process.env.ADMIN_ID,
+        nameKr: process.env.ADMIN_NAME_KR,
+        nameEn: process.env.ADMIN_NAME_EN,
+        userNumber: process.env.ADMIN_USER_NUMBER,
+        email: process.env.ADMIN_EMAIL,
         type: UserTypeEnum.ADMIN,
       },
     ];

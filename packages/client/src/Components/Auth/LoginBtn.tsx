@@ -3,7 +3,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
 
 export const LoginBtn: React.FC = () => {
-  const { login, userInfo } = useLoginCheck();
+  const { login, userInfo,  isSCS  } = useLoginCheck();
 
   return (
     <>
@@ -13,14 +13,14 @@ export const LoginBtn: React.FC = () => {
             className="btn-getstarted scrollto"
             id="dropdown-basic"
           >
-            {userInfo?.name}님
+            {userInfo?.nameKr}님
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
             <Dropdown.Item as={Link} href="/mypage">
               Mypage
             </Dropdown.Item>
-            {userInfo?.type === "admin" ? (
+            {isSCS() ? (
               <Dropdown.Item as={Link} href="/manage">
                 Manage
               </Dropdown.Item>

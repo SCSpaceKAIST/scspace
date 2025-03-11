@@ -6,7 +6,8 @@
     "dev": "next dev -p $CLIENT_PORT",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:only": "dotenv -e ../../.env -- next build"
   },
   "dependencies": {
     "react": "^18",

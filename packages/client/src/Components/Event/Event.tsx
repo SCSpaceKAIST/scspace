@@ -5,26 +5,15 @@ import Link from "next/link";
 //import AOS from "aos";
 //import "aos/dist/aos.css";
 import LoginCheck from "@scspace-client/Hooks/LoginCheck";
+import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
 
 const Event: React.FC = () => {
-  const [login, setLogin] = useState(false);
-  const [userInfo, setUserInfo] = useState<{ type: string } | null>(null);
-
-  useEffect(() => {
-    // 로그인 상태 체크 (LoginCheck 함수는 필요한 경우에 맞게 수정 필요)
-    LoginCheck().then((result) => {
-      if (result !== false) {
-        setLogin(true);
-        setUserInfo(result);
-      }
-    });
-    //AOS.init();
-  }, []);
+  const { login, userInfo, isSCS } = useLoginCheck();
 
   return (
     <div id="main">
       <div className="container">
-        {login && userInfo?.type === "admin" ? (
+        {login && isSCS() ? (
           <div className="text-end">
             <Link href="/event/createevent">
               <button type="button" className="modalButton1">

@@ -1,4 +1,4 @@
-import Event from "@scspace-client/src/Components";
+import Event from "@scspace-client/Components/Event/Event";
 import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 export default function EventPage() {
   return (

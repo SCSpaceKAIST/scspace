@@ -3,7 +3,6 @@
 import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 import { useParams } from "next/navigation";
 import {
-  SpaceTypeEnum,
   SpaceTypeNames,
   SpaceTypesArray,
 } from "@scspace-depot/types/space";
