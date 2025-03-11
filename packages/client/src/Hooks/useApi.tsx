@@ -54,6 +54,7 @@ export const sendPost = async <T extends unknown>(
   content: Object
 ): Promise<T> => {
   try {
+    console.log('sendPost', { endpoint, content });
     const response = await fetch(`/api${endpoint}`, {
       method: "POST",
       headers: {
@@ -65,6 +66,7 @@ export const sendPost = async <T extends unknown>(
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
+    console.log('sendPost response', response);
 
     return response.json(); // JSON 파싱을 하지 않고 response 객체 반환
   } catch (error) {

@@ -8,14 +8,19 @@ export class PasswordController {
 
   @Get('validAll')
   async validAll(): Promise<IPassword[]> {
-    // valid (changed 된 비밀번호) 모두 조회
-    return this.passwordService.validAll();
+    console.log('validAll');
+    const res = await this.passwordService.validAll();
+    console.log('validAll res', res);
+    return res;
   }
 
   @Get('validSpaces')
   async validSpaces(
     @Query('userId') userId: string,
   ): Promise<IPasswordValidation[]> {
-    return this.passwordService.validSpaces(parseInt(userId));
+    console.log('validSpaces', userId);
+    const res = await this.passwordService.validSpaces(parseInt(userId));
+    console.log('validSpaces res', res);
+    return res;
   }
 }

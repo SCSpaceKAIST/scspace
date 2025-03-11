@@ -19,9 +19,13 @@ export class MUser implements IUser {
 
   static fromDB(user: UserDBResult): MUser {
     return new MUser({
-      ...user,
+      id: user.id,
+      kaistUID: user.kaistUID,
       nameKr: user.nameKr ?? 'SSO 이름 오류',
       nameEn: user.nameEn ?? 'SSO Name Error',
+      userNumber: user.userNumber,
+      email: user.email,
+      type: user.type,
     });
   }
 }

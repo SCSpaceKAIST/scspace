@@ -6,12 +6,18 @@ export class FaqController {
   constructor(private readonly faqService: FaqService) {}
 
   @Get('all')
-  getFaqAll() {
-    return this.faqService.getFaqAll();
+  async getFaqAll() {
+    console.log('getFaqAll');
+    const res = await this.faqService.getFaqAll();
+    console.log('getFaqAll res', res);
+    return res;
   }
 
   @Get(':id')
-  getFaqWithID(@Param('id') id: string) {
-    return this.faqService.getFaq(parseInt(id));
+  async getFaqWithID(@Param('id') id: string) {
+    console.log('getFaqWithID', id);
+    const res = await this.faqService.getFaq(parseInt(id));
+    console.log('getFaqWithID res', res);
+    return res;
   }
 }

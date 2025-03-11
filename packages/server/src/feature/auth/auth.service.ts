@@ -8,6 +8,7 @@ import { UserSSOType2022 } from '@scspace-depot/types/user/user.sso.type';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { Response } from 'express';
 import { UserPublicService } from '../user/user.public.service';
+import { MUser } from '../user/user.model';
 
 @Injectable()
 export class AuthService {
@@ -28,19 +29,25 @@ export class AuthService {
 
       const payload = this.ssoToUser(data);
       Logger.log('PAYLOAD');
+      Logger.log(JSON.stringify(payload));
       const user = await this.userPublicService.findUserByKaistUid(
         payload.kaistUID,
       );
+      Logger.log('USER');
       Logger.log(JSON.stringify(user));
 
-      const createdUser = !user
-        ? await this.userPublicService.insertUser(payload)
-        : user;
-      const token = this.jwtService.sign(createdUser ? createdUser : payload, {
+      const createdUser = this.muserToUser(
+        !user ? await this.userPublicService.insertUser(payload) : user,
+      );
+      Logger.log('CREATED USER');
+      Logger.log(JSON.stringify(createdUser));
+      const token = this.jwtService.sign(createdUser, {
         expiresIn: '7d',
         issuer: 'scspace',
         subject: 'userInfo',
       });
+      Logger.log('TOKEN');
+      Logger.log(token);
 
       res.cookie('scspacetoken1', token, {
         maxAge: 60 * 60 * 1000 * 24 * 7,
@@ -109,6 +116,22 @@ export class AuthService {
       userNumber: ssoPayload.ku_std_no
         ? ssoPayload.ku_std_no
         : (ssoPayload.ku_employee_number ?? '1'),
+    };
+  };
+
+  private muserToUser = (muser: MUser): IUser => {
+    // JS class 는 plain object 가 아님.
+    // token 에 넣기 위해선 js plain object 로 변환해야 함.
+    // 이를 해결하기 위해서 변환해주는 함수
+    // userPublic 에 넣어야 할수도?
+    return {
+      id: muser.id,
+      kaistUID: muser.kaistUID,
+      nameKr: muser.nameKr,
+      nameEn: muser.nameEn,
+      userNumber: muser.userNumber,
+      email: muser.email,
+      type: muser.type,
     };
   };
 }

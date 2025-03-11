@@ -7,6 +7,7 @@ import { IFaq } from "@scspace-depot/types/faq";
 import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
 import ConditionalButton from "../_commons/ConditionalButton";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
+import { sendGet } from "@scspace-client/Hooks/useApi";
 
 const FAQ: React.FC = () => {
   const [idList, setIdList] = useState<number[]>([]);
@@ -21,12 +22,11 @@ const FAQ: React.FC = () => {
   }, [login]);
 
   const callApi = async (): Promise<IFaq[]> => {
-    const res = await axios.get("/api/faq/all");
+    const res = await sendGet<IFaq[]>('/faq/all');
     console.log("res");
-    console.log(res.data);
-    let body: IFaq[] = await res.data;
+    console.log(res);
+    let body: IFaq[] = res;
 
-    if (login === false) body = body.filter((d) => d.id !== 13);
     if (isSCS()) {
       body = body.filter((d) => d.id !== 13);
     }

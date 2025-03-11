@@ -19,7 +19,7 @@ const AskCreate: React.FC = () => {
   useEffect(() => {
     setContent({
       ...content,
-      userId: userInfo?.id ?? 0,
+      userId: userInfo?.id ?? 1,
     });
   }, [userInfo, content]);
 
@@ -34,16 +34,16 @@ const AskCreate: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (checkSubmit()) {
+    //if (checkSubmit()) {
       sendPost<boolean>(askUrl, content)
         .then((res) => {
           console.log(res);
           linkPush(askUrl);
         })
         .catch((err) => console.error(err));
-    } else {
-      alert("Error occurred. Please check the form.");
-    }
+    // } else {
+    //   alert("Error occurred. Please check the form.");
+    // }
   };
 
   const handleValueChange = (

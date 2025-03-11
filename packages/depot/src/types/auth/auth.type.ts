@@ -1,3 +1,5 @@
+import { IUser } from '../user/user.type';
+
 export interface ILoginRequest {
   client_id: string;
   redirect_uri: string;
@@ -31,3 +33,8 @@ export interface ILoginInfoError {
 }
 
 export type ILoginInfoResponse = ILoginInfoSuccess | ILoginInfoError;
+
+export interface IVerificationResponse {
+  isLogined: boolean;
+  userInfo: IUser | null;
+}

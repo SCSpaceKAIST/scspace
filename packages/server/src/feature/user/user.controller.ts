@@ -6,7 +6,10 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('profile/:id')
-  findUserWithID(@Param('id') id: string) {
-    return this.userService.getUser(parseInt(id));
+  async findUserWithID(@Param('id') id: string) {
+    console.log('findUserWithID', id);
+    const res = await this.userService.getUser(parseInt(id));
+    console.log('findUserWithID res', res);
+    return res;
   }
 }

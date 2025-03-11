@@ -7,13 +7,19 @@ export class SpaceController {
   constructor(private readonly spaceService: SpaceService) {}
 
   @Get('all')
-  findAllSpace(): Promise<ISpace[]> {
-    return this.spaceService.getSpaceAll();
+  async findAllSpace(): Promise<ISpace[]> {
+    console.log('findAllSpace');
+    const res = await this.spaceService.getSpaceAll();
+    console.log('findAllSpace res', res);
+    return res;
   }
 
   @Get(':id')
-  findSpaceByID(@Param('id') id: string): Promise<ISpace> {
-    return this.spaceService.getSpaceByID(parseInt(id));
+  async findSpaceByID(@Param('id') id: string): Promise<ISpace> {
+    console.log('findSpaceByID', id);
+    const res = await this.spaceService.getSpaceByID(parseInt(id));
+    console.log('findSpaceByID res', res);
+    return res;
   }
 
   // @Get('info/:id')

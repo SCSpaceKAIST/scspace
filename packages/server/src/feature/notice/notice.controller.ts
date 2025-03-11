@@ -9,16 +9,26 @@ export class NoticeController {
   constructor(private readonly noticeService: NoticeService) {}
 
   @Get('all')
-  getNoticeAll() {
-    return this.noticeService.getNoticeAll();
+  async getNoticeAll() {
+    console.log('getNoticeAll');
+    const res = await this.noticeService.getNoticeAll();
+    console.log('getNoticeAll res', res);
+    return res;
   }
+
   @Get(':id')
-  getNoticeByID(@Param('id') id: string): Promise<INotice> {
-    return this.noticeService.getNoticeByID(parseInt(id));
+  async getNoticeByID(@Param('id') id: string): Promise<INotice> {
+    console.log('getNoticeByID', id);
+    const res = await this.noticeService.getNoticeByID(parseInt(id));
+    console.log('getNoticeByID res', res);
+    return res;
   }
 
   @Post('')
-  postNotice(@Body() noticeContent: INoticeCreate) {
-    return this.noticeService.postNotice(noticeContent);
+  async postNotice(@Body() noticeContent: INoticeCreate) {
+    console.log('postNotice', noticeContent);
+    const res = await this.noticeService.postNotice(noticeContent);
+    console.log('postNotice res', res);
+    return res;
   }
 }

@@ -10,6 +10,9 @@ export class TeamController {
   async getTeamsByUserId(
     @Query('userId') userId: string,
   ): Promise<ITeamResponse[]> {
-    return this.teamService.getTeamsByUserId(parseInt(userId));
+    console.log('getTeamsByUserId', userId);
+    const res = await this.teamService.getTeamsByUserId(parseInt(userId));
+    console.log('getTeamsByUserId res', res);
+    return res;
   }
 }
