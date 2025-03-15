@@ -1,6 +1,6 @@
 import { IUser } from "@scspace-depot/types/user";
 // import axios, { AxiosResponse } from "axios";
-import { sendGet, sendPost } from "./useApi";
+import { sendGet } from "./useApi";
 import { IVerificationResponse } from "@scspace-depot/types/auth/auth.type";
 // async function sendPost(): Promise<AxiosResponse<IUser | null>> {
   

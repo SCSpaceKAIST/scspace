@@ -21,6 +21,9 @@ export const DBProvider = [
         timezone: 'Z', // UTC 시간대로 설정
         waitForConnections: true,
         connectionLimit: 10,
+        queueLimit: 0,
+        keepAliveInitialDelay: 10000,
+        enableKeepAlive: true,
       });
       const db = drizzle(connection, { schema, mode: 'default' });
       return db;
