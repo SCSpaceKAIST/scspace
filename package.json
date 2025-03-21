@@ -8,7 +8,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "dotenv -e .env -- pnpm -r --stream --parallel dev",
-    "build": "pnpm -r run build",
+    "build": "dotenv -e .env -- pnpm -r --stream --parallel run build",
     "local:docker-up": "docker-compose -f docker-compose.local.yml up -d",
     "local:docker-down": "docker-compose -f docker-compose.local.yml down",
     "local:docker-clear": "docker-compose -f docker-compose.local.yml down -v",
