@@ -1,29 +1,21 @@
 "use client";
 
 import axios, { AxiosResponse } from "axios";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation"; // next/router 대신 next/navigation 사용
+import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
+import { useMutationApi } from "@scspace-client/Hooks/useApi";
 const LogOutPage: React.FC = () => {
-  const router = useRouter(); // next/router 대신 next/navigation 사용
-  const location = `${process.env.NEXT_PUBLIC_API_URL_DEV}/auth/logout`;
+  const { linkPush } = useLinkPush();
+  const { mutateAsync: sendLogout } = useMutationApi("/auth/logout", "POST");
 
-  const logoutBtn = async (): Promise<void> => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`;
-    const config = {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-      },
+  useEffect(() => {
+    const handleSubmit = async (): Promise<void> => {
+      await sendLogout({});
+      linkPush("/");
     };
-    await axios.post(url, JSON.stringify({}), config);
-  };
-
-  const handleSubmit = async (): Promise<void> => {
-    await logoutBtn();
-    window.location.href = "/";
-  };
-
-  handleSubmit();
+    handleSubmit();
+  }, []);
 
   return <div id="main"></div>;
 };

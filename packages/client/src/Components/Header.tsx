@@ -173,7 +173,7 @@ export const Header: React.FC = () => {
           onClick={onClickEvent}
         ></i>
 
-        <LoginBtn></LoginBtn>
+        <LoginBtn/>
       </div>
       {userInfo ? <PasswordView userInfo={userInfo} /> : <div />}
     </header>

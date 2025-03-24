@@ -17,22 +17,27 @@ export const LoginBtn: React.FC = () => {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            <Dropdown.Item as={Link} href="/mypage">
+            <Dropdown.Item as={Link} href="/mypage" passHref legacyBehavior>
               Mypage
             </Dropdown.Item>
             {isSCS() ? (
-              <Dropdown.Item as={Link} href="/manage">
+              <Dropdown.Item as={Link} href="/manage" passHref legacyBehavior>
                 Manage
               </Dropdown.Item>
             ) : null}
             <Dropdown.Divider />
-            <Dropdown.Item as={Link} href="/logout">
+            <Dropdown.Item as={Link} href="/logout" passHref legacyBehavior>
               Logout
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       ) : (
-        <Link className="btn-getstarted scrollto" href="/login">
+        <Link
+          className="btn-getstarted scrollto"
+          href="/login"
+          passHref
+          legacyBehavior
+        >
           Login
         </Link>
       )}

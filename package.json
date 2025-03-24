@@ -7,6 +7,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "dotenv -e .env -- pnpm -r --stream --parallel run start",
     "dev": "dotenv -e .env -- pnpm -r --stream --parallel dev",
     "build": "dotenv -e .env -- pnpm -r --stream --parallel run build",
     "local:docker-up": "docker-compose -f docker-compose.local.yml up -d",

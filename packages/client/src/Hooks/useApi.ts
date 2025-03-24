@@ -4,6 +4,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost/api";
 
+const valueToString = (val: unknown) => {
+  if (val instanceof Date) return val.toISOString();
+  if (typeof val === "object") return JSON.stringify(val);
+  return String(val);
+};
+
 export const useQueryApi = <ResponseType>(
   endpoint: string,
   params?: object,
@@ -18,7 +24,7 @@ export const useQueryApi = <ResponseType>(
           new URLSearchParams(
             Object.entries(params).map(([key, val]) => [
               key,
-              typeof val === "object" ? JSON.stringify(val) : String(val),
+              valueToString(val),
             ]),
           ).toString()
         : "";
@@ -47,7 +53,7 @@ export const useMutationApi = <ResponseType, RequestParamType extends object>(
                 new URLSearchParams(
                   Object.entries(content).map(([key, val]) => [
                     key,
-                    typeof val === "object" ? JSON.stringify(val) : String(val),
+                    valueToString(val),
                   ]),
                 ).toString()
               : "";
