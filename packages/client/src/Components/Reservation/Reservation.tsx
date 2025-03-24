@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useSpaces } from "@scspace-client/Hooks/useSpaces";
+import { useSpaces } from "@scspace-client/Apis/space/useSpaces";
 
 const Reservation: React.FC = () => {
   const { spaceArray } = useSpaces();
@@ -28,7 +28,7 @@ const Reservation: React.FC = () => {
                         <b>아래 공간들의 예약을 진행하실 수 있습니다</b>
                       </p>
                       <hr />
-                      {spaceArray?.map((space) => {
+                      {spaceArray?.map(space => {
                         return (
                           <div key={`spaceReservationKey${space.id}`}>
                             <Link href={`/reservation/${space.id}`}>

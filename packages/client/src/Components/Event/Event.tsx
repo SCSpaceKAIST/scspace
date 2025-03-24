@@ -1,19 +1,19 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 //import AOS from "aos";
 //import "aos/dist/aos.css";
-import LoginCheck from "@scspace-client/Hooks/LoginCheck";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import Image from "next/image";
 
 const Event: React.FC = () => {
-  const { login, userInfo, isSCS } = useLoginCheck();
+  const { isSCS } = useLoginCheck();
 
   return (
     <div id="main">
       <div className="container">
-        {login && isSCS() ? (
+        {isSCS() ? (
           <div className="text-end">
             <Link href="/event/createevent">
               <button type="button" className="modalButton1">

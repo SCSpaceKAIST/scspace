@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import { EventInput } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -6,19 +6,19 @@ import interactionPlugin from "@fullcalendar/interaction";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import Dropdown from "react-bootstrap/Dropdown";
 import moment from "moment";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
-import { sendGet } from "@scspace-client/Hooks/useApi";
-import { IReservation, IReservationResponse } from "@scspace-depot/types/reservation";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import { useQueryApi } from "@scspace-client/Hooks/useApi";
+import {
+  IReservation,
+  IReservationResponse,
+} from "@scspace-depot/types/reservation";
 import { ISpace } from "@scspace-depot/types/space";
-import { useSpaces } from "@scspace-client/Hooks/useSpaces";
+import { useSpaces } from "@scspace-client/Apis/space/useSpaces";
 import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
 import { Tooltip } from "react-tooltip"; // 수정된 import 문
-import ReservationModal, {
-  handleReservationSubmit,
-} from "@scspace-client/Components/Reservation/ReservationModal";
+import ReservationModal from "@scspace-client/Components/Reservation/ReservationModal";
 import { IUser } from "@scspace-depot/types/user";
 import { ReservationStateEnum } from "@scspace-depot/enums/reservation.enum";
-import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 interface ResourceData {
   text: string;
@@ -47,22 +47,54 @@ type ReservationEvent = EventInput & {
 };
 
 const spaceDict: { [key: string]: string } = {};
-resourcesData.forEach((resource) => {
+resourcesData.forEach(resource => {
   spaceDict[resource.id] = resource.text;
 });
 
 const CalendarView: React.FC<CalendarProps> = ({ spaceId, space }) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [data, setData] = useState<ReservationEvent[]>([]);
-  const { login, userInfo } = useLoginCheck();
-  const { spaceArray, loaded } = useSpaces(spaceId);
+  const { userInfo, isSCS } = useLoginCheck();
+  const { spaceArray } = useSpaces(spaceId);
   const { linkPush } = useLinkPush();
-  const [reservations, setReservations] = useState<IReservation[]>();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedReservation, setSelectedReservation] =
     useState<IReservationResponse | null>(null);
   const [selectedReserverInfo, setSelectedReserverInfo] =
     useState<IUser | null>(null);
+  const { data: reservations, isLoading } = useQueryApi<IReservationResponse[]>(
+    `/reservation/space/${spaceId}`,
+  );
+
+  useEffect(() => {
+    const adaptReservationToCalendar = (
+      data: IReservationResponse[],
+    ): ReservationEvent[] => {
+      return data.map(r => ({
+        id: r.id.toString(),
+        resourceId: r.space.name || "",
+        start: r.timeFrom,
+        end: r.timeTo,
+        title: `${r.state === ReservationStateEnum.GRANT ? "" : "[미승인] "}${moment(r.timeFrom).format("HH:mm")} - ${moment(
+          r.timeTo,
+        ).format("HH:mm")} | ${r.userId}`,
+
+        extendedProps: {
+          userId: r.userId,
+          reservation: {
+            ...r,
+            name: r.space.name,
+            spaceType: r.space.spaceType,
+            userId: r.userId,
+          },
+        },
+      }));
+    };
+
+    if (reservations) {
+      setData(adaptReservationToCalendar(reservations));
+    }
+  }, [reservations, setData]);
 
   const handleShowModal = () => {
     setShowModal(!showModal);
@@ -72,63 +104,9 @@ const CalendarView: React.FC<CalendarProps> = ({ spaceId, space }) => {
     const reservation = info.event.extendedProps.reservation;
     setSelectedReservation(reservation);
     setSelectedReserverInfo(
-      userInfo && userInfo?.id === reservation.userId ? userInfo : null
+      userInfo && userInfo?.id === reservation.userId ? userInfo : null,
     );
     setShowModal(true);
-  };
-
-  useEffect(() => {
-    callApi();
-  }, [spaceArray]);
-
-  const callApi = async () => {
-    try {
-      const res = await sendGet<IReservationResponse[] | false>(
-        `/reservation/space/${spaceId}`
-      );
-      if (res !== false) {
-        setReservations(res);
-        const newData = changeSpace(res);
-        setData(newData);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const changeSpace = (data: IReservationResponse[]): ReservationEvent[] => {
-    if (!spaceArray) return [];
-    return data.map((r) => ({
-      id: r.id.toString(),
-      resourceId:
-        spaceArray.find((space) => space.id === r.spaceId)?.name || "",
-      start: r.timeFrom,
-      end: r.timeTo,
-      title: `${r.state === ReservationStateEnum.GRANT ? "" : "[미승인] "}${moment(r.timeFrom).format("HH:mm")} - ${moment(
-        r.timeTo
-      ).format("HH:mm")} | ${r.userId}`,
-
-      extendedProps: {
-        userId: r.userId,
-        reservation: {
-          ...r,
-          name: space.name,
-          spaceType: space.spaceType,
-          userId: r.userId,
-        },
-      },
-    }));
-  };
-
-  const handleEventClick = (info: any) => {
-    const event = info.event;
-
-    // moment를 사용하여 날짜 형식을 MM:DD HH:MM으로 변환
-    const formattedStart = moment(event.start).format("MM월 DD일 HH:mm");
-    const formattedEnd = moment(event.end).format("MM월 DD일 HH:mm");
-    alert(
-      `Reservation ID: ${event.id}\nUser ID: ${event.extendedProps.userId}\nFrom: ${formattedStart}\nTo: ${formattedEnd}`
-    );
   };
 
   const handleEventMouseEnter = (info: any) => {
@@ -164,7 +142,7 @@ const CalendarView: React.FC<CalendarProps> = ({ spaceId, space }) => {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            {spaceArray?.map((one_space) => (
+            {spaceArray?.map(one_space => (
               <Dropdown.Item
                 key={one_space.id}
                 onClick={() => linkPush(`/calendar/${one_space.id}`)}
@@ -179,8 +157,8 @@ const CalendarView: React.FC<CalendarProps> = ({ spaceId, space }) => {
           plugins={[dayGridPlugin, interactionPlugin, resourceTimelinePlugin]}
           initialView="dayGridMonth"
           events={data}
-          editable={login && userInfo?.type === UserTypeEnum.ADMIN}
-          selectable={login && userInfo?.type === UserTypeEnum.ADMIN}
+          editable={isSCS()}
+          selectable={isSCS()}
           height={1000}
           headerToolbar={{
             left: "prev,next today",
@@ -188,7 +166,6 @@ const CalendarView: React.FC<CalendarProps> = ({ spaceId, space }) => {
             right: "dayGridMonth,timeGridWeek,timeGridDay",
           }}
           eventClick={handleReservationClick}
-          //eventClick={handleEventClick}
           eventMouseEnter={handleEventMouseEnter}
           eventContent={eventContent}
         />
@@ -199,7 +176,7 @@ const CalendarView: React.FC<CalendarProps> = ({ spaceId, space }) => {
         reservationInfo={selectedReservation}
         reserverInfo={selectedReserverInfo}
         setReservationInfo={setSelectedReservation}
-        handleSubmit={() => {}}
+        refresh={() => {}}
       />
     </div>
   );

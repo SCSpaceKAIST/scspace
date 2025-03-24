@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
 
 // T는 제네릭 타입으로, 컴포넌트마다 다를 수 있는 데이터 타입을 나타냅니다.
 // EX: AskType, FAQType,
@@ -15,7 +15,7 @@ export const useBoardData = <T extends { timePost: string | Date }>({
   itemsPerPage?: number;
   sortDesc?: boolean;
 }) => {
-  const { login, userInfo } = useLoginCheck();
+  const { isLogined, userInfo } = useLoginCheck();
 
   const [list, setList] = useState<T[]>([]);
   const [pageNumber, setPageNumber] = useState(initialPageNumber);
@@ -32,13 +32,13 @@ export const useBoardData = <T extends { timePost: string | Date }>({
           ? (a: T, b: T) =>
               new Date(a.timePost).getTime() - new Date(b.timePost).getTime()
           : (a: T, b: T) =>
-              new Date(b.timePost).getTime() - new Date(a.timePost).getTime()
+              new Date(b.timePost).getTime() - new Date(a.timePost).getTime(),
       );
       setList(sortedData);
       setTotalPageNumber(Math.ceil(sortedData.length / itemsPerPage));
     };
     fetchData();
-  }, [apiEndpoint, login, boardDataRefreshBtn]);
+  }, [apiEndpoint, isLogined, boardDataRefreshBtn]);
 
   const boardDataRefreshBtnClick = () => {
     setBoardDataRefreshBtn(!boardDataRefreshBtn);
@@ -49,7 +49,7 @@ export const useBoardData = <T extends { timePost: string | Date }>({
     pageNumber,
     totalPageNumber,
     setPageNumber,
-    login,
+    isLogined,
     userInfo,
     boardDataRefreshBtnClick,
   };

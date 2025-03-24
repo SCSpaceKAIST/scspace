@@ -13,14 +13,16 @@ import {
   IReservationResponse,
 } from "@scspace-depot/types/reservation";
 import { IUser } from "@scspace-depot/types/user";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
-import { sendGet, sendPut } from "@scspace-client/Hooks/useApi";
-import { useSpaces } from "@scspace-client/Hooks/useSpaces";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import { useSpaces } from "@scspace-client/Apis/space/useSpaces";
 import MultipleRadioInput from "./inputs/MultipleRadioInput";
 import TextInput from "./inputs/TextInput";
-import { ReservationStateEnum, ReservationWorkerNeedEnum } from "@scspace-depot/enums/reservation.enum";
-import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
+import {
+  ReservationStateEnum,
+  ReservationWorkerNeedEnum,
+} from "@scspace-depot/enums/reservation.enum";
 import { enumToArray } from "@scspace-depot/utils";
+import { useMutationApi } from "@scspace-client/Hooks/useApi";
 
 interface ReservModalProps {
   reservationInfo: IReservationResponse | null;
@@ -28,7 +30,7 @@ interface ReservModalProps {
   reserverInfo: IUser | null;
   showHide: boolean;
   setShowHide: (showHide: boolean) => void;
-  handleSubmit: () => void;
+  refresh: () => void;
 }
 
 const ReservModal: React.FC<ReservModalProps> = ({
@@ -37,12 +39,18 @@ const ReservModal: React.FC<ReservModalProps> = ({
   setReservationInfo,
   reserverInfo,
   setShowHide,
-  handleSubmit,
+  refresh,
 }) => {
   const { userInfo, isSCS } = useLoginCheck();
+
   const [teamData, setTeamData] = useState<ITeam>();
   const [teamMembers, setTeamMembers] = useState<ITeamMemberResponse[]>([]);
   const { space } = useSpaces(reservationInfo ? reservationInfo.spaceId : 0);
+
+  const { mutateAsync: sendReservationPut } = useMutationApi(
+    "/api/reservation",
+    "PUT",
+  );
 
   useEffect(() => {
     if (reservationInfo && reservationInfo.teamId && teamData === undefined) {
@@ -51,19 +59,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
   }, [reservationInfo, teamData]);
 
   const callApiTeam = async () => {
-    if (!reservationInfo) return;
-    try {
-      const res = await sendGet<ITeam>("team", {
-        teamId: reservationInfo.teamId,
-      });
-      setTeamData(res);
-      const members = await sendGet<ITeamMemberResponse[]>("team/members", {
-        teamId: reservationInfo.teamId,
-      });
-      setTeamMembers(members);
-    } catch (err) {
-      console.error(err);
-    }
+    // TODO: 팀 조회 API 호출
   };
 
   const onClickHide = () => {
@@ -93,6 +89,18 @@ const ReservModal: React.FC<ReservModalProps> = ({
     });
   };
 
+  const handleReservationSubmit = async (
+    // 제출 버튼 클릭 시 실행되도록 템플릿 잡아주기. import해서 사용되도록.
+    reservation: IReservation,
+    refresh: () => void,
+  ): Promise<void> => {
+    if (!isSCS() && userInfo?.type !== reservation.userId) return;
+    await sendReservationPut(reservation);
+    alert("예약 처리가 완료되었습니다.");
+    setShowHide(false);
+    refresh();
+  };
+
   const reservationContent = () => {
     // first second 컴포넌트화 시킬 수 있을 것으로 보임.
     let returnResult: JSX.Element[] = [];
@@ -110,23 +118,24 @@ const ReservModal: React.FC<ReservModalProps> = ({
         <div className="wrap" key="team-name">
           <p className="modal-first">팀 이름</p>
           <p className="modal-second">{teamData.name}</p>
-        </div>
+        </div>,
       );
       returnResult.push(
         <div className="wrap" key="team-members">
           <p className="modal-first">멤버</p>
           <p className="modal-second">
-            {teamMembers.map((member) =>
+            {teamMembers.map(member =>
               reservation.content &&
               isTeamContent(reservation.content) &&
               reservation.content.teamMemberUserIds.includes(member.id) ? (
                 <div key={member.id}>
-                  학번: {member.user.userNumber} &nbsp; 이름: {member.user.nameKr}
+                  학번: {member.user.userNumber} &nbsp; 이름:{" "}
+                  {member.user.nameKr}
                 </div>
-              ) : null
+              ) : null,
             )}
           </p>
-        </div>
+        </div>,
       );
     } // 아래 조건 블록이랑 합쳐도 될 것 같은데? 일단 시간이 없음.
 
@@ -138,7 +147,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
           <div className="wrap" key="organizationName">
             <p className="modal-first">단체 이름</p>
             <p className="modal-second">{content.organizationName}</p>
-          </div>
+          </div>,
         );
       }
 
@@ -147,7 +156,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
           <div className="wrap" key="eventName">
             <p className="modal-first">행사 이름</p>
             <p className="modal-second">{content.eventName}</p>
-          </div>
+          </div>,
         );
       }
 
@@ -156,18 +165,22 @@ const ReservModal: React.FC<ReservModalProps> = ({
           <div className="wrap" key="participantNumber">
             <p className="modal-first">예상 참여 인원</p>
             <p className="modal-second">{content.participantNumber}</p>
-          </div>
+          </div>,
         );
       }
 
-      if ("innerParticipantNumber" in content && "outerParticipantNumber" in content) {
+      if (
+        "innerParticipantNumber" in content &&
+        "outerParticipantNumber" in content
+      ) {
         returnResult.push(
           <div className="wrap" key="innerNumber">
             <p className="modal-first">예상 참여 인원</p>
             <p className="modal-second">
-              학내구성원: {content.innerParticipantNumber} 외부인: {content.outerParticipantNumber}
+              학내구성원: {content.innerParticipantNumber} 외부인:{" "}
+              {content.outerParticipantNumber}
             </p>
-          </div>
+          </div>,
         );
       }
 
@@ -176,7 +189,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
           <div className="wrap" key="eventPurpose">
             <p className="modal-first">행사 목적</p>
             <p className="modal-second">{content.eventPurpose}</p>
-          </div>
+          </div>,
         );
       }
 
@@ -185,7 +198,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
           <div className="wrap" key="contents">
             <p className="modal-first">행사 내용</p>
             <p className="modal-second">{content.contents}</p>
-          </div>
+          </div>,
         );
       }
 
@@ -194,7 +207,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
           <div className="wrap" key="character">
             <p className="modal-first">행사 성격</p>
             <p className="modal-second">
-              {content.character.map((character) => {
+              {content.character.map(character => {
                 if (character in reservationCharacterOptions) {
                   // character가 reservationCharacterOptions의 key 중 하나일 때만 반환
                   return (
@@ -206,7 +219,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
                 return "";
               })}
             </p>
-          </div>
+          </div>,
         );
       }
 
@@ -215,9 +228,9 @@ const ReservModal: React.FC<ReservModalProps> = ({
           <div className="wrap" key="equipment">
             <p className="modal-first">장비 사용</p>
             <p className="modal-second">
-              {content.equipment.map((equipment) => [equipment] + " ")}
+              {content.equipment.map(equipment => [equipment] + " ")}
             </p>
-          </div>
+          </div>,
         );
       }
 
@@ -228,7 +241,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
             <p className="modal-second">
               책상: {content.desk} 의자: {content.chair}
             </p>
-          </div>
+          </div>,
         );
       }
 
@@ -237,7 +250,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
           <div className="wrap" key="food">
             <p className="modal-first">음식</p>
             <p className="modal-second">{content.food}</p>
-          </div>
+          </div>,
         );
       }
 
@@ -246,7 +259,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
           <div className="wrap" key="lobby">
             <p className="modal-first">로비</p>
             <p className="modal-second">울림홀 1층 로비를 사용합니다.</p>
-          </div>
+          </div>,
         );
       }
     }
@@ -341,8 +354,11 @@ const ReservModal: React.FC<ReservModalProps> = ({
         ) : null}
       </Modal.Body>
       <Modal.Footer>
-        {userInfo && isSCS() ? (
-          <button className="modalButton2" onClick={handleSubmit}>
+        {isSCS() ? (
+          <button
+            className="modalButton2"
+            onClick={() => handleReservationSubmit(reservationInfo, refresh)}
+          >
             처리
           </button>
         ) : null}
@@ -355,82 +371,3 @@ const ReservModal: React.FC<ReservModalProps> = ({
 };
 
 export default ReservModal;
-
-export const handleReservationSubmit = async (
-  // 제출 버튼 클릭 시 실행되도록 템플릿 잡아주기. import해서 사용되도록.
-  reservation: IReservation,
-  userInfo: IUser,
-  setShowModal: (showModal: boolean) => void,
-  refresh: () => void
-): Promise<void> => {
-  if (userInfo.type === UserTypeEnum.USER) return;
-  await sendPut("/reservation", reservation);
-  alert("예약 처리가 완료되었습니다.");
-  setShowModal(false);
-  refresh();
-};
-
-{
-  /* <div>
-          <h5 className="modal-ttl">예약 처리</h5>
-          <hr />
-          <div className="wrap">
-            <p className="modal-first">예약 처리</p>
-            {Object.keys(modal.handle).map((key) => (
-              <div className="form-check form-check-inline" key={key}>
-                <input
-                  className="modal-chk"
-                  type="radio"
-                  name="state"
-                  value={key}
-                  onChange={onChangeHandler2}
-                  required
-                />
-                <label className="modal-second">{modal.handle[key]}</label>
-              </div>
-            ))}
-          </div>
-          <h5 className="modal-ttl">근로 배정</h5>
-          <hr />
-          <div className="wrap">
-            <p className="modal-first">근로 배정</p>
-            <div className="form-check form-check-inline">
-              <input
-                className="modal-chk"
-                type="radio"
-                name="workComplete"
-                value="notassigned"
-                onChange={onChangeHandler3}
-                required
-              />
-              <label className="modal-second">
-                {modal.workHandle.notassigned}
-              </label>
-            </div>
-            <div className="form-check form-check-inline">
-              <input
-                className="modal-chk"
-                type="radio"
-                name="workComplete"
-                value="assigned"
-                onChange={onChangeHandler3}
-                required
-              />
-              <label className="modal-second">
-                {modal.workHandle.assigned}
-              </label>
-            </div>
-          </div>
-          <div className="wrap">
-            <p className="modal-first">Comment</p>
-            <input
-              type="text"
-              name="comment"
-              className="modal-comment"
-              value={modal.reservation ? modal.reservation.comment : ""}
-              onChange={onChangeHandler2}
-              required
-            />
-          </div>
-        </div> */
-}

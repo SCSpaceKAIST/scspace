@@ -8,14 +8,14 @@ import BoardPageSelector from "@scspace-client/Components/_commons/BoardPageSele
 import ConditionalButton from "@scspace-client/Components/_commons/ConditionalButton";
 import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
 import { useBoardData } from "@scspace-client/Hooks/useBoardData";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
 
 const Notice: React.FC = () => {
   const { linkPush } = useLinkPush();
 
   const ROW_PER_PAGE = 10;
   const { isSCS } = useLoginCheck();
-  const { list, pageNumber, totalPageNumber, setPageNumber, login, userInfo } =
+  const { list, pageNumber, totalPageNumber, setPageNumber } =
     useBoardData<INotice>({
       apiEndpoint: "/api/notice/all",
     });
@@ -35,10 +35,7 @@ const Notice: React.FC = () => {
   return (
     <div id="main">
       <section>
-        <ConditionalButton
-          condition={login === true && isSCS()}
-          btnLink="/notice/create"
-        >
+        <ConditionalButton condition={isSCS()} btnLink="/notice/create">
           작성하기
         </ConditionalButton>
         <br />
@@ -56,7 +53,7 @@ const Notice: React.FC = () => {
               {list
                 .slice(
                   (pageNumber - 1) * ROW_PER_PAGE,
-                  pageNumber * ROW_PER_PAGE
+                  pageNumber * ROW_PER_PAGE,
                 )
                 .map((contents, idx) => {
                   return (
@@ -75,9 +72,9 @@ const Notice: React.FC = () => {
                       </td>
                       <td>{contents.title}</td>
                       <td>
-                        {moment(
-                          contents.timeEdit ?? contents.timePost
-                        ).format("YYYY-MM-DD HH:mm:ss")}
+                        {moment(contents.timeEdit ?? contents.timePost).format(
+                          "YYYY-MM-DD HH:mm:ss",
+                        )}
                       </td>
                       <td>{contents.views}</td>
                     </tr>

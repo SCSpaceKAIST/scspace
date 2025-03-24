@@ -4,10 +4,10 @@ import Link from "next/link";
 
 import { LoginBtn } from "./Auth/LoginBtn";
 import Image from "next/image";
-import { SpaceTypeNames, SpaceTypesArray, ISpace } from "@scspace-depot/types/space";
-import { sendGet } from "@scspace-client/Hooks/useApi";
-import PasswordView from "@scspace-client/Components//Password/PasswordView";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { SpaceTypeNames, SpaceTypesArray } from "@scspace-depot/types/space";
+import PasswordView from "@scspace-client/Components/Password/PasswordView";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import { useSpaces } from "@scspace-client/Apis/space/useSpaces";
 
 interface MenuItem {
   name: string;
@@ -18,6 +18,7 @@ interface MenuItem {
 
 export const Header: React.FC = () => {
   const { userInfo } = useLoginCheck();
+  const { spaceArray } = useSpaces();
   const [menu, setMenu] = useState<MenuItem[]>([
     { name: "공지사항", sub_menu: [], menu_link: "/notice", sub_menu_link: [] },
     {
@@ -66,36 +67,34 @@ export const Header: React.FC = () => {
   ]);
 
   useEffect(() => {
-    sendGet<ISpace[]>("/space/all").then((res) => {
-      if (res) {
-        setMenu([
-          ...menu.slice(0, 2), // TODO: space intro 추가시 0,3 으로 변경
-          {
-            name: "예약하기",
-            sub_menu: res.map((value, idx) => {
-              return value.name;
-            }),
-            menu_link: "/reservation",
-            sub_menu_link: res.map((value, idx) => {
-              return `/${value.id}`;
-            }),
-          },
-          {
-            name: "예약 현황",
-            sub_menu: res.map((value, idx) => {
-              return value.name;
-            }),
-            menu_link: "/calendar",
-            sub_menu_link: res.map((value, idx) => {
-              return `/${value.id}`;
-            }),
-          },
-          menu[4], // todo: intro 추가시 5번으로 변경
-          // menu[6], : 이벤트 
-        ]);
-      }
-    });
-  }, []);
+    if (spaceArray) {
+      setMenu([
+        ...menu.slice(0, 2), // TODO: space intro 추가시 0,3 으로 변경
+        {
+          name: "예약하기",
+          sub_menu: spaceArray.map((value, idx) => {
+            return value.name;
+          }),
+          menu_link: "/reservation",
+          sub_menu_link: spaceArray.map((value, idx) => {
+            return `/${value.id}`;
+          }),
+        },
+        {
+          name: "예약 현황",
+          sub_menu: spaceArray.map((value, idx) => {
+            return value.name;
+          }),
+          menu_link: "/calendar",
+          sub_menu_link: spaceArray.map((value, idx) => {
+            return `/${value.id}`;
+          }),
+        },
+        menu[4], // todo: intro 추가시 5번으로 변경
+        // menu[6], : 이벤트
+      ]);
+    }
+  }, [spaceArray, menu]);
 
   const onClickEvent = () => {
     // 모바일 화면에서 탭 나오게 하는 부분
@@ -120,7 +119,7 @@ export const Header: React.FC = () => {
           href="/"
           className="logo d-flex align-items-center scrollto me-auto me-lg-0"
         >
-          <Image src="/img/logo.svg" width={40} height={40} alt="LOGO" />
+          <img src="/img/logo.svg" width={40} height={40} alt="LOGO" />
           <h1>{}</h1>
         </Link>
 

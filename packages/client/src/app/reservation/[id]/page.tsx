@@ -1,8 +1,8 @@
 "use client";
 import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 import CalendarView from "@scspace-client/Components/Calendar/CalendarView";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
-import { useSpaces } from "@scspace-client/Hooks/useSpaces";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import { useSpaces } from "@scspace-client/Apis/space/useSpaces";
 import { useParams } from "next/navigation";
 import IndividualForm from "@scspace-client/Components/Reservation/forms/IndividualForm";
 import PianoForm from "@scspace-client/Components/Reservation/forms/PianoForm";
@@ -18,7 +18,7 @@ import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 export default function SpacePage() {
   const params = useParams();
   const id = parseInt(params.id as string, 10); // URL의 [id] 부분을 숫자로 변환
-  const { login, userInfo, needLogin } = useLoginCheck();
+  const { needLogin } = useLoginCheck();
   const [showCalendar, setShowCalendar] = useState(false);
   const { space } = useSpaces(id);
   needLogin();

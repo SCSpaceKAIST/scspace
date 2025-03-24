@@ -3,7 +3,11 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 
-import { IAsk, askStateOptions, askStateOptionsEng } from "@scspace-depot/types/ask";
+import {
+  IAsk,
+  askStateOptions,
+  askStateOptionsEng,
+} from "@scspace-depot/types/ask";
 import BoardPageSelector from "@scspace-client/Components/_commons/BoardPageSelector";
 import ConditionalButton from "@scspace-client/Components/_commons/ConditionalButton";
 import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
@@ -13,7 +17,7 @@ import AlertBtn from "@scspace-client/Components/_commons/AlertBtn";
 const Ask: React.FC = () => {
   const { linkPush } = useLinkPush();
 
-  const { list, pageNumber, totalPageNumber, setPageNumber, login } =
+  const { list, pageNumber, totalPageNumber, setPageNumber, isLogined } =
     useBoardData<IAsk>({
       apiEndpoint: "/api/ask/all",
     });
@@ -22,7 +26,7 @@ const Ask: React.FC = () => {
     <div id="main">
       <section>
         <div className="container">
-          <ConditionalButton condition={login} btnLink="/ask/create">
+          <ConditionalButton condition={isLogined} btnLink="/ask/create">
             작성하기
           </ConditionalButton>
         </div>

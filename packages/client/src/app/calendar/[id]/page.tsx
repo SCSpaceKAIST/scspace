@@ -2,9 +2,8 @@
 
 import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 import { useParams } from "next/navigation";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
 import CalendarView from "@scspace-client/Components/Calendar/CalendarView";
-import { useSpaces } from "@scspace-client/Hooks/useSpaces";
+import { useSpaces } from "@scspace-client/Apis/space/useSpaces";
 
 export default function SpaceIntroPage() {
   const params = useParams();

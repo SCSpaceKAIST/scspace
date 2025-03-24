@@ -1,33 +1,38 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
 import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
 import { INoticeCreate } from "@scspace-depot/types/notice";
-import { sendPost } from "@scspace-client/Hooks/useApi";
+import { useMutationApi } from "@scspace-client/Hooks/useApi";
 import { noticeUrl } from "@scspace-depot/urls/notice";
 
 const NoticeCreate: React.FC = () => {
   const { userInfo } = useLoginCheck();
   const { linkPush } = useLinkPush();
+  const { mutateAsync: sendNoticeCreate } = useMutationApi(
+    "/api/notice/create",
+    "POST",
+  );
+
   const [content, setContent] = useState<INoticeCreate>({
     title: "",
     content: "",
     important: false,
-    userId: userInfo?.id ? userInfo?.id : 0,
+    userId: userInfo?.id ?? 0,
   });
 
   useEffect(() => {
     setContent({
       ...content,
-      userId: userInfo?.id ? userInfo?.id : 0,
+      userId: userInfo?.id ?? 0,
     });
-  }, [userInfo]);
+  }, [userInfo, content]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (content) {
-      sendPost(noticeUrl, content).then(() => {
+      sendNoticeCreate(content).then(() => {
         linkPush(noticeUrl);
       });
     } else {
@@ -36,16 +41,16 @@ const NoticeCreate: React.FC = () => {
   };
 
   const handleValueChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setContent((prevState) => ({
+    setContent(prevState => ({
       ...prevState,
       [event.target.name]: event.target.value,
     }));
   };
 
   const onChangeValue = () => {
-    setContent((prevState) => ({
+    setContent(prevState => ({
       ...prevState,
       important: !prevState.important,
     }));

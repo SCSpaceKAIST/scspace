@@ -2,7 +2,7 @@
 
 import Manage from "@scspace-client/Components/Manage/Manage";
 import PageHeader from "@scspace-client/Components/_commons/PageHeader";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
 
 export default function SpacePage() {
   const { needAdmin } = useLoginCheck();

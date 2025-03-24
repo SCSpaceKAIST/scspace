@@ -2,10 +2,13 @@
 
 import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
 import { IAsk } from "@scspace-depot/types/ask";
-import { sendPut } from "@scspace-client/Hooks/useApi";
+import { useMutationApi } from "@scspace-client/Hooks/useApi";
 import { useEffect } from "react";
 import { IUser } from "@scspace-depot/types/user";
-import { AskStateEnum, askStateStringToEnum } from "@scspace-depot/enums/ask.enum";
+import {
+  AskStateEnum,
+  askStateStringToEnum,
+} from "@scspace-depot/enums/ask.enum";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 interface AskCommentLeaveProps {
@@ -20,28 +23,31 @@ const AskCommentLeave: React.FC<AskCommentLeaveProps> = ({
   userInfo,
 }) => {
   const { linkPush } = useLinkPush();
+  const { mutateAsync: sendAskPut } = useMutationApi<boolean, IAsk>(
+    "/ask/comment",
+    "PUT",
+  );
 
   useEffect(() => {
-    if (userInfo)
-      setContent({ ...content, commenterId: userInfo.id } as IAsk);
-  }, [userInfo]);
+    if (userInfo) setContent({ ...content, commenterId: userInfo.id } as IAsk);
+  }, [userInfo, content, setContent]);
 
   const setComment = (newComment: string) => {
-    setContent((prevContent) => {
+    setContent(prevContent => {
       if (prevContent === null) return null; // 현재 content가 없는 경우 null 반환
       return { ...prevContent, comment: newComment }; // 기존 content를 복사하고, comment만 새로운 값으로 업데이트
     });
   };
 
   const setState = (newState: AskStateEnum) => {
-    setContent((prevContent) => {
+    setContent(prevContent => {
       if (prevContent === null) return null; // 현재 state 없는 경우 null 반환
       return { ...prevContent, state: newState }; // 기존 content를 복사하고, state만 새로운 값으로 업데이트
     });
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     if (name === "comment") setComment(value);
@@ -51,14 +57,14 @@ const AskCommentLeave: React.FC<AskCommentLeaveProps> = ({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (content) {
-      sendPut("/ask/comment", content)
+      sendAskPut(content)
         .then(() => {
           alert("답변 완료");
-          userInfo.type !== UserTypeEnum.USER ? linkPush("/ask"):  linkPush("/manage") ;
+          userInfo.type !== UserTypeEnum.USER
+            ? linkPush("/ask")
+            : linkPush("/manage");
         })
-        .catch((err) => console.error(err));
-    } else {
-      alert("Submission failed."); // Add error message as needed
+        .catch(err => console.error(err));
     }
   };
 

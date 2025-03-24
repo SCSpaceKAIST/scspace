@@ -1,13 +1,13 @@
 import Link from "next/link";
 import Dropdown from "react-bootstrap/Dropdown";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
 
 export const LoginBtn: React.FC = () => {
-  const { login, userInfo,  isSCS  } = useLoginCheck();
+  const { isLogined, userInfo, isSCS } = useLoginCheck();
 
   return (
     <>
-      {login ? (
+      {isLogined ? (
         <Dropdown>
           <Dropdown.Toggle
             className="btn-getstarted scrollto"

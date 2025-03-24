@@ -14,8 +14,8 @@ import {
 import AgreeCheck from "../inputs/AgreeCheck";
 import TextInput from "../inputs/TextInput";
 import { ISpace } from "@scspace-depot/types/space";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
-import { useReservationSend } from "@scspace-client/Hooks/useReservationSend";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import { useReservationSend } from "@scspace-client/Apis/reservation/useReservationSend";
 
 import TimeTooltips from "../utils/TimeTooltips";
 import { validateReservationInput } from "./validateReservationInput";
@@ -23,7 +23,12 @@ import { setTimes } from "./setTimes";
 import NumberInput from "../inputs/NumberInput";
 import MultipleCheckboxInput from "../inputs/MultipleCheckboxInput";
 import MultipleRadioInput from "../inputs/MultipleRadioInput";
-import { ReservationCharacterEnum, ReservationHallEquipEnum, ReservationStateEnum, ReservationWorkerNeedEnum } from "@scspace-depot/enums/reservation.enum";
+import {
+  ReservationCharacterEnum,
+  ReservationHallEquipEnum,
+  ReservationStateEnum,
+  ReservationWorkerNeedEnum,
+} from "@scspace-depot/enums/reservation.enum";
 import { enumToArray } from "@scspace-depot/utils";
 
 interface ReservationFormProps {
@@ -45,12 +50,16 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   const [organizationName, setOrganizationName] = useState<string>("");
   const [contents, setContents] = useState<string>("");
   const [equipment, setEquipment] = useState<ReservationHallEquipEnum[]>([]);
-  const [innerParticipantNumber, setInnerParticipantNumber] = useState<number | undefined>(0);
-  const [outerParticipantNumber, setOuterParticipantNumber] = useState<number | undefined>(0);
+  const [innerParticipantNumber, setInnerParticipantNumber] = useState<
+    number | undefined
+  >(0);
+  const [outerParticipantNumber, setOuterParticipantNumber] = useState<
+    number | undefined
+  >(0);
   const [eventPurpose, setEventPurpose] = useState<string>("");
   const [food, setFood] = useState<string>("");
   const [workerNeed, setWorkerNeed] = useState<ReservationWorkerNeedEnum>(
-    ReservationWorkerNeedEnum.UNNECESSARY
+    ReservationWorkerNeedEnum.UNNECESSARY,
   );
   const [character, setCharacter] = useState<ReservationCharacterEnum[]>([]);
   const handleSubmit = () => {
@@ -84,7 +93,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
     const inputVal = validateReservationInput(
       reservationInput,
       space.spaceType,
-      agreeCheck
+      agreeCheck,
     );
     if (!inputVal.valid) {
       alert(inputVal.errors);

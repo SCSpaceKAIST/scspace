@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import ReservationModal, { handleReservationSubmit } from "./ReservationModal";
+import ReservationModal from "./ReservationModal";
 import moment from "moment";
 import { useBoardData } from "@scspace-client/Hooks/useBoardData";
 import {
@@ -13,7 +13,8 @@ import {
   reservationStateOptionsEng,
 } from "@scspace-depot/types/reservation";
 import { IUser } from "@scspace-depot/types/user";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import { useMutationApi } from "@scspace-client/Hooks/useApi";
 
 const ReservationList: React.FC = () => {
   const { userInfo } = useLoginCheck();
@@ -27,22 +28,17 @@ const ReservationList: React.FC = () => {
     apiEndpoint: `/api/reservation/user/${userInfo?.id}`,
     itemsPerPage: 10,
   });
-  const [reservation, setReservation] = useState<IReservationResponse | null>(null);
+  const [reservation, setReservation] = useState<IReservationResponse | null>(
+    null,
+  );
   const [reserverInfo, setReserverInfo] = useState<IUser | null>(null);
   const [showModal, setShowModal] = useState(false);
-
+  const { mutateAsync: sendPut } = useMutationApi(
+    "/api/reservation/update",
+    "PUT",
+  );
   const handleShowModal = () => {
     setShowModal(!showModal);
-  };
-
-  const handleSubmit = () => {
-    if (!reservation || !userInfo) return;
-    handleReservationSubmit(
-      reservation,
-      userInfo,
-      setShowModal,
-      boardDataRefreshBtnClick
-    );
   };
 
   const handleReservationClick = (contents: IReservationResponse) => {
@@ -89,12 +85,16 @@ const ReservationList: React.FC = () => {
                     {moment(contents.timePost).format("YY년 MM월 DD일 HH:mm")}
                   </td>
                   <td>
-                    <div className={reservationStateOptionsEng[contents.state]} />
+                    <div
+                      className={reservationStateOptionsEng[contents.state]}
+                    />
                     {reservationStateOptions[contents.state]}
                   </td>
 
                   <td>
-                    <div className={workerNeedOptionsEng[contents.workerNeed]} />
+                    <div
+                      className={workerNeedOptionsEng[contents.workerNeed]}
+                    />
                     {workerNeedOptions[contents.workerNeed]}
                   </td>
                 </tr>
@@ -107,7 +107,7 @@ const ReservationList: React.FC = () => {
         <div className="blog-pagination">
           <ul className="justify-content-center">
             {Array.from({ length: totalPageNumber }, (_, i) => i + 1).map(
-              (pageNum) => (
+              pageNum => (
                 <li
                   key={pageNum}
                   className={pageNumber === pageNum ? "active" : ""}
@@ -115,7 +115,7 @@ const ReservationList: React.FC = () => {
                 >
                   <Link href="#">{pageNum}</Link>
                 </li>
-              )
+              ),
             )}
           </ul>
         </div>
@@ -127,7 +127,7 @@ const ReservationList: React.FC = () => {
         reservationInfo={reservation}
         reserverInfo={reserverInfo}
         setReservationInfo={setReservation}
-        handleSubmit={handleSubmit}
+        refresh={boardDataRefreshBtnClick}
       />
     </main>
   );

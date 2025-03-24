@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import ReservationModal, { handleReservationSubmit } from "./ReservationModal";
+import ReservationModal from "./ReservationModal";
 import moment from "moment";
 import { useBoardData } from "@scspace-client/Hooks/useBoardData";
 import {
@@ -18,14 +18,15 @@ const ReservationManageList: React.FC = () => {
     pageNumber,
     totalPageNumber,
     setPageNumber,
-    userInfo,
     boardDataRefreshBtnClick,
   } = useBoardData<IReservationResponse>({
     apiEndpoint: "/api/reservation/manage",
     itemsPerPage: 5,
     sortDesc: true,
   });
-  const [reservation, setReservation] = useState<IReservationResponse | null>(null);
+  const [reservation, setReservation] = useState<IReservationResponse | null>(
+    null,
+  );
   const [reserverInfo, setReserverInfo] = useState<IUser | null>(null);
   const [wait, setWait] = useState(0);
   const [showModal, setShowModal] = useState(false);
@@ -35,16 +36,6 @@ const ReservationManageList: React.FC = () => {
 
   const handleShowModal = () => {
     setShowModal(!showModal);
-  };
-
-  const handleSubmit = () => {
-    if (!reservation || !userInfo) return;
-    handleReservationSubmit(
-      reservation,
-      userInfo,
-      setShowModal,
-      boardDataRefreshBtnClick
-    );
   };
 
   const handleReservationClick = (contents: IReservationResponse) => {
@@ -98,12 +89,16 @@ const ReservationManageList: React.FC = () => {
                     {moment(contents.timePost).format("YY년 MM월 DD일 HH:mm")}
                   </td>
                   <td>
-                    <div className={reservationStateOptionsEng[contents.state]} />
+                    <div
+                      className={reservationStateOptionsEng[contents.state]}
+                    />
                     {reservationStateOptions[contents.state]}
                   </td>
 
                   <td>
-                    <div className={workerNeedOptionsEng[contents.workerNeed]} />
+                    <div
+                      className={workerNeedOptionsEng[contents.workerNeed]}
+                    />
                     {workerNeedOptions[contents.workerNeed]}
                   </td>
                 </tr>
@@ -116,7 +111,7 @@ const ReservationManageList: React.FC = () => {
         <div className="blog-pagination">
           <ul className="justify-content-center">
             {Array.from({ length: totalPageNumber }, (_, i) => i + 1).map(
-              (pageNum) => (
+              pageNum => (
                 <li
                   key={pageNum}
                   className={pageNumber === pageNum ? "active" : ""}
@@ -124,7 +119,7 @@ const ReservationManageList: React.FC = () => {
                 >
                   <Link href="#">{pageNum}</Link>
                 </li>
-              )
+              ),
             )}
           </ul>
         </div>
@@ -136,7 +131,7 @@ const ReservationManageList: React.FC = () => {
         reservationInfo={reservation}
         reserverInfo={reserverInfo}
         setReservationInfo={setReservation}
-        handleSubmit={handleSubmit}
+        refresh={boardDataRefreshBtnClick}
       />
     </main>
   );

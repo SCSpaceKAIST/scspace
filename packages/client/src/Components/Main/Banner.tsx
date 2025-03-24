@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link"; // react-router-dom 대신 next/link 사용
+import Image from "next/image";
 
 const Banner: React.FC = () => {
   const t = (text: string): string => text;

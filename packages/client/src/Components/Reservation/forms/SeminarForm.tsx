@@ -10,8 +10,8 @@ import {
 import AgreeCheck from "../inputs/AgreeCheck";
 import TextInput from "../inputs/TextInput";
 import { ISpace } from "@scspace-depot/types/space";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
-import { useReservationSend } from "@scspace-client/Hooks/useReservationSend";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import { useReservationSend } from "@scspace-client/Apis/reservation/useReservationSend";
 
 import TimeTooltips from "../utils/TimeTooltips";
 import { validateReservationInput } from "./validateReservationInput";
@@ -63,7 +63,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
     const inputVal = validateReservationInput(
       reservationInput,
       space.spaceType,
-      agreeCheck
+      agreeCheck,
     );
     if (!inputVal.valid) {
       alert(inputVal.errors);

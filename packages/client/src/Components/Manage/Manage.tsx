@@ -2,7 +2,7 @@ import React from "react";
 import AskManageList from "@scspace-client/Components/Ask/AskManageList";
 import ReservationManageList from "@scspace-client/Components/Reservation/ReservationManageList";
 import PasswordView from "../Password/PasswordView";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
 
 const Manage = () => {
   const { userInfo } = useLoginCheck();

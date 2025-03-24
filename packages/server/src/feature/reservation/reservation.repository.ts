@@ -19,7 +19,6 @@ import {
   gte,
   or,
   SQL,
-  not,
   inArray,
   InferInsertModel,
   between,

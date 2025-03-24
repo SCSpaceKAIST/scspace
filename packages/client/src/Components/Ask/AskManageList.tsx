@@ -4,13 +4,17 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import moment from "moment";
 import { useBoardData } from "@scspace-client/Hooks/useBoardData";
-import { IAsk, askStateOptions, askStateOptionsEng } from "@scspace-depot/types/ask";
+import {
+  IAsk,
+  askStateOptions,
+  askStateOptionsEng,
+} from "@scspace-depot/types/ask";
 import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
 
 const AskLatestList: React.FC = () => {
   const { linkPush } = useLinkPush();
 
-  const { list, pageNumber, totalPageNumber, setPageNumber, login } =
+  const { list, pageNumber, totalPageNumber, setPageNumber } =
     useBoardData<IAsk>({
       apiEndpoint: "/api/ask/latest",
       itemsPerPage: 5,
@@ -76,7 +80,7 @@ const AskLatestList: React.FC = () => {
         <div className="blog-pagination">
           <ul className="justify-content-center">
             {Array.from({ length: totalPageNumber }, (_, i) => i + 1).map(
-              (pageNum) => (
+              pageNum => (
                 <li
                   key={pageNum}
                   className={pageNumber === pageNum ? "active" : ""}
@@ -84,7 +88,7 @@ const AskLatestList: React.FC = () => {
                 >
                   <Link href="#">{pageNum}</Link>
                 </li>
-              )
+              ),
             )}
           </ul>
         </div>

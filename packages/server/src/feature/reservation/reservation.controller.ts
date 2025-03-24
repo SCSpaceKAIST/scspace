@@ -12,7 +12,6 @@ import {
 import { ReservationService } from './reservation.service';
 import {
   IReservation,
-  IReservationCreate,
   IReservationCreateBody,
   IReservationResponse,
   ISpaceTimeCheckRequest,

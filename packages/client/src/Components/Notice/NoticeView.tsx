@@ -6,7 +6,7 @@ import axios from "axios";
 import moment from "moment";
 import { VscEye } from "react-icons/vsc";
 import { INotice } from "@scspace-depot/types/notice"; // INotice 타입 가져오기
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
 import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
 import { noticeUrl } from "@scspace-depot/urls/notice";
 
@@ -16,7 +16,7 @@ interface NoticeViewProps {
 
 const NoticeView: React.FC<NoticeViewProps> = ({ view_id }) => {
   const [content, setContent] = useState<INotice | null>(null);
-  const { login, userInfo, isSCS } = useLoginCheck();
+  const { isSCS } = useLoginCheck();
   const { linkPush } = useLinkPush();
   useEffect(() => {
     const fetchNotice = async () => {
@@ -55,7 +55,7 @@ const NoticeView: React.FC<NoticeViewProps> = ({ view_id }) => {
                       <i className="bi bi-clock"></i>{" "}
                       <time>
                         {moment(content.timeEdit || content.timePost).format(
-                          "YYYY-MM-DD HH:mm:ss"
+                          "YYYY-MM-DD HH:mm:ss",
                         )}
                       </time>
                     </li>
@@ -82,7 +82,7 @@ const NoticeView: React.FC<NoticeViewProps> = ({ view_id }) => {
         </div>
         <br />
         <div className="container">
-          {login && isSCS() && (
+          {isSCS() && (
             <div className="text-end">
               <button
                 type="button"

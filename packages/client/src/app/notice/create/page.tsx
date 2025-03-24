@@ -2,7 +2,7 @@
 
 import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 import NoticeCreate from "@scspace-client/Components/Notice/NoticeCreate";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
 
 export default function NoticeCreatePage() {
   const { needAdmin } = useLoginCheck();
@@ -10,10 +10,10 @@ export default function NoticeCreatePage() {
   return (
     <div>
       <PageHeader
-        link_to_prop={'/notice'}
-        page_name={'공지사항 작성'}
-        sub_name={'Notice'}
-        parent_name={'공지사항'}
+        link_to_prop={"/notice"}
+        page_name={"공지사항 작성"}
+        sub_name={"Notice"}
+        parent_name={"공지사항"}
       />
       <NoticeCreate />
     </div>

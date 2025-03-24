@@ -63,7 +63,7 @@ const SpaceView: React.FC<SpaceViewProps> = ({ spaceId }) => {
             <div className="row g-4 g-lg-5">
               <div className="col-lg-5">
                 <div className="about-img">
-                  <Image
+                  <img
                     src={`/img/spaces/${spaceInfo.spaceType}.jpg`}
                     alt=""
                     height={450}

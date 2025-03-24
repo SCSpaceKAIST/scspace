@@ -11,7 +11,7 @@ import MultipleCheckboxInput from "../inputs/MultipleCheckboxInput";
 import MultipleRadioInput from "../inputs/MultipleRadioInput";
 import { ISpace } from "@scspace-depot/types/space";
 import CheckboxInput from "../inputs/CheckboxInput";
-import { useReservationSend } from "@scspace-client/Hooks/useReservationSend";
+import { useReservationSend } from "@scspace-client/Apis/reservation/useReservationSend";
 import { AskStateEnum } from "@scspace-depot/enums/ask.enum";
 
 interface ReservationFormProps {
@@ -27,7 +27,10 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   const [timeTo, setTimeTo] = useState<Date>(new Date());
   const [agreeCheck, setAgreeCheck] = useState<boolean>(false);
   const [eventName, setEventName] = useState<string>("");
-  const [contents, setContents] = useState<AskStateEnum[]>([AskStateEnum.WAIT, AskStateEnum.RECEIVE]);
+  const [contents, setContents] = useState<AskStateEnum[]>([
+    AskStateEnum.WAIT,
+    AskStateEnum.RECEIVE,
+  ]);
   const [selected1, setSelected1] = useState<AskStateEnum[]>([]);
   const [selected2, setSelected2] = useState<AskStateEnum | null>(null);
   const [labels, setLabels] = useState<string[]>(["l1", "l2", "l3"]);
@@ -41,7 +44,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
         eventName,
         selected1,
         selected2,
-      })
+      }),
     );
     if (!agreeCheck) {
       alert("약관에 동의해주세요.");

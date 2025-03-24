@@ -1,15 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
 import { IAskCreate } from "@scspace-depot/types/ask";
 import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
-import { sendPost } from "@scspace-client/Hooks/useApi";
+import { useMutationApi } from "@scspace-client/Hooks/useApi";
 import { askUrl } from "@scspace-depot/urls/ask";
 
 const AskCreate: React.FC = () => {
-  const { userInfo } = useLoginCheck();
+  const { userInfo, isLogined } = useLoginCheck();
   const { linkPush } = useLinkPush();
+  const { mutateAsync: sendAskPost } = useMutationApi<boolean, IAskCreate>(
+    "/ask",
+    "POST",
+  );
   const [content, setContent] = useState<IAskCreate>({
     title: "",
     content: "",
@@ -25,7 +29,7 @@ const AskCreate: React.FC = () => {
 
   // 제출 가능한 상태인지 확인
   const checkSubmit = () => {
-    return !userInfo
+    return !isLogined
       ? false
       : content.title.length === 0 || content.content.length === 0
         ? false
@@ -34,20 +38,20 @@ const AskCreate: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    //if (checkSubmit()) {
-      sendPost<boolean>(askUrl, content)
-        .then((res) => {
-          console.log(res);
-          linkPush(askUrl);
-        })
-        .catch((err) => console.error(err));
-    // } else {
-    //   alert("Error occurred. Please check the form.");
-    // }
+    if (!checkSubmit()) {
+      alert("제목과 내용을 입력해주세요.");
+      return;
+    }
+    sendAskPost(content)
+      .then(res => {
+        console.log(res);
+        linkPush(askUrl);
+      })
+      .catch(err => console.error(err));
   };
 
   const handleValueChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setContent({
       ...content,
@@ -57,7 +61,6 @@ const AskCreate: React.FC = () => {
 
   return (
     <div id="main">
-      <hr />
       <section id="contact" className="contact">
         <div className="container">
           <div className="row gy-5 gx-lg-5">

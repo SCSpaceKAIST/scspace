@@ -2,7 +2,7 @@
 
 import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 import AskCreate from "@scspace-client/Components/Ask/AskCreate";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
 
 export default function NoticeCreatePage() {
   const { needLogin } = useLoginCheck();

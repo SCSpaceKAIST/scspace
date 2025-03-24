@@ -14,8 +14,8 @@ import {
 import AgreeCheck from "../inputs/AgreeCheck";
 import TextInput from "../inputs/TextInput";
 import { ISpace } from "@scspace-depot/types/space";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
-import { useReservationSend } from "@scspace-client/Hooks/useReservationSend";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import { useReservationSend } from "@scspace-client/Apis/reservation/useReservationSend";
 
 import TimeTooltips from "../utils/TimeTooltips";
 import { validateReservationInput } from "./validateReservationInput";
@@ -24,7 +24,11 @@ import NumberInput from "../inputs/NumberInput";
 import MultipleCheckboxInput from "../inputs/MultipleCheckboxInput";
 import MultipleRadioInput from "../inputs/MultipleRadioInput";
 import CheckboxInput from "../inputs/CheckboxInput";
-import { ReservationCharacterEnum, ReservationHallEquipEnum, ReservationStateEnum } from "@scspace-depot/enums/reservation.enum";
+import {
+  ReservationCharacterEnum,
+  ReservationHallEquipEnum,
+  ReservationStateEnum,
+} from "@scspace-depot/enums/reservation.enum";
 import { ReservationWorkerNeedEnum } from "@scspace-depot/enums/reservation.enum";
 import { enumToArray } from "@scspace-depot/utils";
 
@@ -47,14 +51,20 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   const [organizationName, setOrganizationName] = useState<string>("");
   const [contents, setContents] = useState<string>("");
   const [equipment, setEquipment] = useState<ReservationHallEquipEnum[]>([]);
-  const [innerParticipantNumber, setInnerParticipantNumber] = useState<number | undefined>(0);
-  const [outerParticipantNumber, setOuterParticipantNumber] = useState<number | undefined>(0);
+  const [innerParticipantNumber, setInnerParticipantNumber] = useState<
+    number | undefined
+  >(0);
+  const [outerParticipantNumber, setOuterParticipantNumber] = useState<
+    number | undefined
+  >(0);
   const [eventPurpose, setEventPurpose] = useState<string>("");
   const [food, setFood] = useState<string>("");
   const [desk, setDesk] = useState<number | undefined>(0);
   const [chair, setChair] = useState<number | undefined>(0);
   const [lobby, setLobby] = useState<boolean>(false);
-  const [workerNeed, setWorkerNeed] = useState<ReservationWorkerNeedEnum>(ReservationWorkerNeedEnum.UNNECESSARY);
+  const [workerNeed, setWorkerNeed] = useState<ReservationWorkerNeedEnum>(
+    ReservationWorkerNeedEnum.UNNECESSARY,
+  );
   const [character, setCharacter] = useState<ReservationCharacterEnum[]>([]);
   const handleSubmit = () => {
     if (!userInfo) return; // 로그인 안한 경우, 나올 일은 없으나 컴파일 에러 방지
@@ -90,7 +100,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
     const inputVal = validateReservationInput(
       reservationInput,
       space.spaceType,
-      agreeCheck
+      agreeCheck,
     );
     if (!inputVal.valid) {
       alert(inputVal.errors);

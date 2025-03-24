@@ -6,9 +6,13 @@ import axios from "axios";
 import moment from "moment";
 import { VscEye } from "react-icons/vsc";
 import AskComment from "@scspace-client/Components/Ask/AskComment";
-import { IAsk, askStateOptions, askStateOptionsEng } from "@scspace-depot/types/ask";
+import {
+  IAsk,
+  askStateOptions,
+  askStateOptionsEng,
+} from "@scspace-depot/types/ask";
 import AskCommentLeave from "@scspace-client/Components/Ask/AskCommentLeave";
-import { useLoginCheck } from "@scspace-client/Hooks/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 interface AskViewProps {
@@ -18,13 +22,13 @@ interface AskViewProps {
 const AskView: React.FC<AskViewProps> = ({ view_id }) => {
   const [content, setContent] = useState<IAsk | null>(null);
 
-  const { login, userInfo } = useLoginCheck();
+  const { isLogined, userInfo } = useLoginCheck();
 
   useEffect(() => {
     if (view_id) {
       callApi(view_id)
-        .then((res) => setContent(res))
-        .catch((err) => console.log(err));
+        .then(res => setContent(res))
+        .catch(err => console.log(err));
     }
   }, [view_id]);
 
@@ -56,9 +60,7 @@ const AskView: React.FC<AskViewProps> = ({ view_id }) => {
                     <li className="d-flex align-items-center">
                       <i className="bi bi-clock"></i>{" "}
                       <time>
-                        {moment(content.timePost).format(
-                          "YYYY-MM-DD HH:mm:ss"
-                        )}
+                        {moment(content.timePost).format("YYYY-MM-DD HH:mm:ss")}
                       </time>
                     </li>
                     <li className="d-flex align-items-center">
@@ -79,7 +81,7 @@ const AskView: React.FC<AskViewProps> = ({ view_id }) => {
               </article>
             </div>
           </div>
-          {login && userInfo?.type === UserTypeEnum.ADMIN ? (
+          {isLogined && userInfo?.type === UserTypeEnum.ADMIN ? (
             <AskCommentLeave
               content={content}
               setContent={setContent}
