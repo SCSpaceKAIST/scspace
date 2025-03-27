@@ -85,11 +85,6 @@ export class AuthService {
     }
   }
 
-  logout(res): void {
-    res.clearCookie('scspacetoken1', { path: '/' });
-    res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
-  }
-
   private decrypt = (
     encrypted: string,
     keySpec: Buffer,

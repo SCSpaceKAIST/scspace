@@ -9,13 +9,13 @@ interface SpaceIntroductionProps {
 const SpaceIntro: React.FC<SpaceIntroductionProps> = ({ data }) => {
   return (
     <div className="space">
-      <p className="fst-italic">{data.intro}</p>
+      <div className="fst-italic">{data.intro}</div>
       {data.content.map((content, idx) => (
         <div key={idx}>
           <h4>{content.title}</h4>
           {content.body.map((body, idxHead) => (
             <div key={idxHead}>
-              <p>{body.head}</p>
+              <div>{body.head}</div>
               <ul>
                 {body.list.map((item, listIdx) => (
                   <li key={listIdx}>{item}</li>

@@ -136,15 +136,17 @@ const Rule: React.FC = () => {
           <div className="col-lg-4">
             <div className="info">
               <h3>회칙</h3>
-              <p>
+              <div>
                 학생문화공간위원회의 모든 사업은 아래
                 <br />
                 회칙/세칙을 중심으로 진행됩니다.
-              </p>
+              </div>
               {info.map((contents, idx) => (
                 <div className="info-item d-flex" key={idx}>
                   <div>
-                    <p onClick={() => onClickEvent(idx)}>{contents.which}</p>
+                    <div onClick={() => onClickEvent(idx)}>
+                      {contents.which}
+                    </div>
                   </div>
                 </div>
               ))}

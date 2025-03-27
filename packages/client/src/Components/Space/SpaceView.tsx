@@ -56,7 +56,7 @@ const SpaceView: React.FC<SpaceViewProps> = ({ spaceId }) => {
         <section>
           <div className="section-header">
             <h2>{SpaceTypeNames[spaceInfo.spaceType]}</h2>
-            <p>{}</p>
+            <div>{}</div>
           </div>
           <hr />
           <div className="container">

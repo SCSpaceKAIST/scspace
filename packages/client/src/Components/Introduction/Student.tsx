@@ -8,7 +8,7 @@ const Student: React.FC = () => {
       <div className="row gy-4">
         <div className="col-lg-8 order-2 order-lg-1">
           <h3>학생활동 지원</h3>
-          <p>
+          <div>
             <b>
               학생들이 문화활동을 할 수 있도록 지원하는 것도 공간위의
               사업입니다. 모든 공간에 대하여 축제나 행사 때 공간을 차질없이
@@ -17,30 +17,30 @@ const Student: React.FC = () => {
               어려움이 없도록 하고 있습니다. 그 뿐만 아니라 이색강좌와 리더십
               수업을 위한 공간제공, 정기 예약등을 진행했습니다.
             </b>
-          </p>
+          </div>
           <ul>
             <li>
               <i className="bi bi-check-circle-fill"></i>
               <b>상시 업무</b>
               <br />
-              <p className="in">예약처리와 조율, 전시 보조도구 대여</p>
+              <div className="in">예약처리와 조율, 전시 보조도구 대여</div>
             </li>
             <li>
               <i className="bi bi-check-circle-fill"></i>
               <b>정기 업무</b>
               <br />
-              <p className="in">
+              <div className="in">
                 창작공방 사물함 관리, 이색강좌와 리더십 수업 협의, 정기 예약
                 협의
-              </p>
+              </div>
             </li>
             <li>
               <i className="bi bi-check-circle-fill"></i>
               <b>비정기 업무</b>
               <br />
-              <p className="in">
+              <div className="in">
                 공간 사용규칙 제/개정, 게시물 부착규정 제/개정
-              </p>
+              </div>
             </li>
           </ul>
         </div>

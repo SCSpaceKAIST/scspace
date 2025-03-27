@@ -116,14 +116,14 @@ const ReservModal: React.FC<ReservModalProps> = ({
     ) {
       returnResult.push(
         <div className="wrap" key="team-name">
-          <p className="modal-first">팀 이름</p>
-          <p className="modal-second">{teamData.name}</p>
+          <div className="modal-first">팀 이름</div>
+          <div className="modal-second">{teamData.name}</div>
         </div>,
       );
       returnResult.push(
         <div className="wrap" key="team-members">
-          <p className="modal-first">멤버</p>
-          <p className="modal-second">
+          <div className="modal-first">멤버</div>
+          <div className="modal-second">
             {teamMembers.map(member =>
               reservation.content &&
               isTeamContent(reservation.content) &&
@@ -134,7 +134,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
                 </div>
               ) : null,
             )}
-          </p>
+          </div>
         </div>,
       );
     } // 아래 조건 블록이랑 합쳐도 될 것 같은데? 일단 시간이 없음.
@@ -145,8 +145,8 @@ const ReservModal: React.FC<ReservModalProps> = ({
       if ("organizationName" in content) {
         returnResult.push(
           <div className="wrap" key="organizationName">
-            <p className="modal-first">단체 이름</p>
-            <p className="modal-second">{content.organizationName}</p>
+            <div className="modal-first">단체 이름</div>
+            <div className="modal-second">{content.organizationName}</div>
           </div>,
         );
       }
@@ -154,8 +154,8 @@ const ReservModal: React.FC<ReservModalProps> = ({
       if (content.eventName) {
         returnResult.push(
           <div className="wrap" key="eventName">
-            <p className="modal-first">행사 이름</p>
-            <p className="modal-second">{content.eventName}</p>
+            <div className="modal-first">행사 이름</div>
+            <div className="modal-second">{content.eventName}</div>
           </div>,
         );
       }
@@ -163,8 +163,8 @@ const ReservModal: React.FC<ReservModalProps> = ({
       if ("participantNumber" in content) {
         returnResult.push(
           <div className="wrap" key="participantNumber">
-            <p className="modal-first">예상 참여 인원</p>
-            <p className="modal-second">{content.participantNumber}</p>
+            <div className="modal-first">예상 참여 인원</div>
+            <div className="modal-second">{content.participantNumber}</div>
           </div>,
         );
       }
@@ -175,11 +175,11 @@ const ReservModal: React.FC<ReservModalProps> = ({
       ) {
         returnResult.push(
           <div className="wrap" key="innerNumber">
-            <p className="modal-first">예상 참여 인원</p>
-            <p className="modal-second">
+            <div className="modal-first">예상 참여 인원</div>
+            <div className="modal-second">
               학내구성원: {content.innerParticipantNumber} 외부인:{" "}
               {content.outerParticipantNumber}
-            </p>
+            </div>
           </div>,
         );
       }
@@ -187,8 +187,8 @@ const ReservModal: React.FC<ReservModalProps> = ({
       if ("eventPurpose" in content) {
         returnResult.push(
           <div className="wrap" key="eventPurpose">
-            <p className="modal-first">행사 목적</p>
-            <p className="modal-second">{content.eventPurpose}</p>
+            <div className="modal-first">행사 목적</div>
+            <div className="modal-second">{content.eventPurpose}</div>
           </div>,
         );
       }
@@ -196,8 +196,8 @@ const ReservModal: React.FC<ReservModalProps> = ({
       if ("contents" in content) {
         returnResult.push(
           <div className="wrap" key="contents">
-            <p className="modal-first">행사 내용</p>
-            <p className="modal-second">{content.contents}</p>
+            <div className="modal-first">행사 내용</div>
+            <div className="modal-second">{content.contents}</div>
           </div>,
         );
       }
@@ -205,8 +205,8 @@ const ReservModal: React.FC<ReservModalProps> = ({
       if ("character" in content && content.character) {
         returnResult.push(
           <div className="wrap" key="character">
-            <p className="modal-first">행사 성격</p>
-            <p className="modal-second">
+            <div className="modal-first">행사 성격</div>
+            <div className="modal-second">
               {content.character.map(character => {
                 if (character in reservationCharacterOptions) {
                   // character가 reservationCharacterOptions의 key 중 하나일 때만 반환
@@ -218,7 +218,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
                 }
                 return "";
               })}
-            </p>
+            </div>
           </div>,
         );
       }
@@ -226,10 +226,10 @@ const ReservModal: React.FC<ReservModalProps> = ({
       if ("equipment" in content && content.equipment) {
         returnResult.push(
           <div className="wrap" key="equipment">
-            <p className="modal-first">장비 사용</p>
-            <p className="modal-second">
+            <div className="modal-first">장비 사용</div>
+            <div className="modal-second">
               {content.equipment.map(equipment => [equipment] + " ")}
-            </p>
+            </div>
           </div>,
         );
       }
@@ -237,10 +237,10 @@ const ReservModal: React.FC<ReservModalProps> = ({
       if ("desk" in content && "chair" in content) {
         returnResult.push(
           <div className="wrap" key="desk-chair">
-            <p className="modal-first">책상과 의자</p>
-            <p className="modal-second">
+            <div className="modal-first">책상과 의자</div>
+            <div className="modal-second">
               책상: {content.desk} 의자: {content.chair}
-            </p>
+            </div>
           </div>,
         );
       }
@@ -248,8 +248,8 @@ const ReservModal: React.FC<ReservModalProps> = ({
       if ("food" in content) {
         returnResult.push(
           <div className="wrap" key="food">
-            <p className="modal-first">음식</p>
-            <p className="modal-second">{content.food}</p>
+            <div className="modal-first">음식</div>
+            <div className="modal-second">{content.food}</div>
           </div>,
         );
       }
@@ -257,8 +257,8 @@ const ReservModal: React.FC<ReservModalProps> = ({
       if ("lobby" in content && content.lobby) {
         returnResult.push(
           <div className="wrap" key="lobby">
-            <p className="modal-first">로비</p>
-            <p className="modal-second">울림홀 1층 로비를 사용합니다.</p>
+            <div className="modal-first">로비</div>
+            <div className="modal-second">울림홀 1층 로비를 사용합니다.</div>
           </div>,
         );
       }
@@ -278,14 +278,14 @@ const ReservModal: React.FC<ReservModalProps> = ({
           <h5 className="modal-ttl">시간</h5>
           <hr />
           <div className="wrap">
-            <p className="modal-first">예약 시간</p>
-            <p className="modal-second">
+            <div className="modal-first">예약 시간</div>
+            <div className="modal-second">
               {reservationInfo
                 ? moment(reservationInfo.timeFrom).format("MM월 DD일 HH:mm") +
                   "~" +
                   moment(reservationInfo.timeTo).format("MM월 DD일 HH:mm")
                 : ""}
-            </p>
+            </div>
           </div>
         </div>
         <br />
@@ -294,22 +294,22 @@ const ReservModal: React.FC<ReservModalProps> = ({
             <h5 className="modal-ttl">예약자</h5>
             <hr />
             <div className="wrap">
-              <p className="modal-first">예약자 학번</p>
-              <p className="modal-second">
+              <div className="modal-first">예약자 학번</div>
+              <div className="modal-second">
                 {reserverInfo ? reserverInfo.userNumber : ""}
-              </p>
+              </div>
             </div>
             <div className="wrap">
-              <p className="modal-first">예약자 이름</p>
-              <p className="modal-second">
+              <div className="modal-first">예약자 이름</div>
+              <div className="modal-second">
                 {reserverInfo ? reserverInfo.nameKr : ""}
-              </p>
+              </div>
             </div>
             <div className="wrap">
-              <p className="modal-first">예약자 이메일</p>
-              <p className="modal-second">
+              <div className="modal-first">예약자 이메일</div>
+              <div className="modal-second">
                 {reserverInfo ? reserverInfo.email : ""}
-              </p>
+              </div>
             </div>
           </div>
         ) : null}

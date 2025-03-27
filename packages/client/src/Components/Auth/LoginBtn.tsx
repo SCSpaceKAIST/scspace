@@ -1,6 +1,7 @@
 import Link from "next/link";
-import Dropdown from "react-bootstrap/Dropdown";
 import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import { ChevronDownIcon } from "@chakra-ui/icons"; // 아이콘 임포트
+import { Button, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react"; // 필요한 Chakra UI 컴포넌트 임포트
 
 export const LoginBtn: React.FC = () => {
   const { isLogined, userInfo, isSCS } = useLoginCheck();
@@ -8,37 +9,27 @@ export const LoginBtn: React.FC = () => {
   return (
     <>
       {isLogined ? (
-        <Dropdown>
-          <Dropdown.Toggle
-            className="btn-getstarted scrollto"
-            id="dropdown-basic"
-          >
+        <Menu>
+          <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
             {userInfo?.nameKr}님
-          </Dropdown.Toggle>
-
-          <Dropdown.Menu>
-            <Dropdown.Item as={Link} href="/mypage" passHref legacyBehavior>
+          </MenuButton>
+          <MenuList>
+            <MenuItem as={Link} href="/mypage" passHref>
               Mypage
-            </Dropdown.Item>
+            </MenuItem>
             {isSCS() ? (
-              <Dropdown.Item as={Link} href="/manage" passHref legacyBehavior>
+              <MenuItem as={Link} href="/manage" passHref>
                 Manage
-              </Dropdown.Item>
+              </MenuItem>
             ) : null}
-            <Dropdown.Divider />
-            <Dropdown.Item as={Link} href="/logout" passHref legacyBehavior>
+            <MenuItem as={Link} href="/logout" passHref>
               Logout
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+            </MenuItem>
+          </MenuList>
+        </Menu>
       ) : (
-        <Link
-          className="btn-getstarted scrollto"
-          href="/login"
-          passHref
-          legacyBehavior
-        >
-          Login
+        <Link href="/login" passHref>
+          <Button className="btn-getstarted scrollto">Login</Button>
         </Link>
       )}
     </>

@@ -1,25 +1,41 @@
 "use client";
-import { useEffect, useState } from "react";
-import Link from "next/link";
 
-import { LoginBtn } from "./Auth/LoginBtn";
-import Image from "next/image";
-import { SpaceTypeNames, SpaceTypesArray } from "@scspace-depot/types/space";
-import PasswordView from "@scspace-client/Components/Password/PasswordView";
+import {
+  Box,
+  Flex,
+  Spacer,
+  Link,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
+  Image,
+  useDisclosure,
+  Stack,
+  Collapse,
+} from "@chakra-ui/react";
+import NextLink from "next/link";
+import { HamburgerIcon, ChevronDownIcon, CloseIcon } from "@chakra-ui/icons";
 import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import { LoginBtn } from "./Auth/LoginBtn";
+import { useEffect, useState } from "react";
 import { useSpaces } from "@scspace-client/Apis/space/useSpaces";
+import PasswordView from "@scspace-client/Components/Password/PasswordView";
 
-interface MenuItem {
+interface MenuItemType {
   name: string;
   sub_menu: string[];
   menu_link: string;
   sub_menu_link: string[];
 }
 
-export const Header: React.FC = () => {
+export const Header = () => {
+  const { isOpen, onToggle } = useDisclosure();
   const { userInfo } = useLoginCheck();
   const { spaceArray } = useSpaces();
-  const [menu, setMenu] = useState<MenuItem[]>([
+
+  const [menu, setMenu] = useState<MenuItemType[]>([
     { name: "공지사항", sub_menu: [], menu_link: "/notice", sub_menu_link: [] },
     {
       name: "소개",
@@ -27,35 +43,17 @@ export const Header: React.FC = () => {
       menu_link: "/introduction",
       sub_menu_link: [],
     },
-    // {
-    //   name: "공간",
-    //   sub_menu: SpaceTypesArray.map((value, idx) => {
-    //     return SpaceTypeNames[value];
-    //   }),
-    //   menu_link: "/space",
-    //   sub_menu_link: SpaceTypesArray.map((value, idx) => {
-    //     return `/${idx}`;
-    //   }),
-    // },
     {
       name: "예약하기",
-      sub_menu: SpaceTypesArray.map((value, idx) => {
-        return SpaceTypeNames[value];
-      }),
+      sub_menu: [],
       menu_link: "/reservation",
-      sub_menu_link: SpaceTypesArray.map((value, idx) => {
-        return `/${idx}`;
-      }),
+      sub_menu_link: [],
     },
     {
       name: "예약 현황",
-      sub_menu: SpaceTypesArray.map((value, idx) => {
-        return SpaceTypeNames[value];
-      }),
+      sub_menu: [],
       menu_link: "/calendar",
-      sub_menu_link: SpaceTypesArray.map((value, idx) => {
-        return `/${idx}`;
-      }),
+      sub_menu_link: [],
     },
     {
       name: "문의",
@@ -63,119 +61,111 @@ export const Header: React.FC = () => {
       menu_link: "",
       sub_menu_link: ["/faq", "/ask"],
     },
-    //{ name: "이벤트", sub_menu: [], menu_link: "/event", sub_menu_link: [] },
   ]);
 
   useEffect(() => {
     if (spaceArray) {
       setMenu([
-        ...menu.slice(0, 2), // TODO: space intro 추가시 0,3 으로 변경
+        menu[0],
+        menu[1],
         {
           name: "예약하기",
-          sub_menu: spaceArray.map((value, idx) => {
-            return value.name;
-          }),
+          sub_menu: spaceArray.map(value => value.name),
           menu_link: "/reservation",
-          sub_menu_link: spaceArray.map((value, idx) => {
-            return `/${value.id}`;
-          }),
+          sub_menu_link: spaceArray.map(value => `/${value.id}`),
         },
         {
           name: "예약 현황",
-          sub_menu: spaceArray.map((value, idx) => {
-            return value.name;
-          }),
+          sub_menu: spaceArray.map(value => value.name),
           menu_link: "/calendar",
-          sub_menu_link: spaceArray.map((value, idx) => {
-            return `/${value.id}`;
-          }),
+          sub_menu_link: spaceArray.map(value => `/${value.id}`),
         },
-        menu[4], // todo: intro 추가시 5번으로 변경
-        // menu[6], : 이벤트
+        menu[4],
       ]);
     }
-  }, [spaceArray, menu]);
-
-  const onClickEvent = () => {
-    // 모바일 화면에서 탭 나오게 하는 부분
-    document.querySelector("body")?.classList.toggle("mobile-nav-active");
-    document.querySelector("#nav_menu")?.classList.toggle("bi-list");
-    document.querySelector("#nav_menu")?.classList.toggle("bi-x");
-  };
-
-  const onClickEvent2 = (idx: number) => {
-    // 모바일 화면에서 공간 예약 등 세부 링크나오게
-    document.querySelector("#button" + idx)?.classList.toggle("bi-chevron-up");
-    document
-      .querySelector("#button" + idx)
-      ?.classList.toggle("bi-chevron-down");
-    document.querySelector("#ul" + idx)?.classList.toggle("dropdown-active");
-  };
+  }, [spaceArray]);
 
   return (
-    <header id="header" className="header fixed-top" data-scrollto-offset="0">
-      <div className="container-fluid d-flex align-items-center justify-content-between">
-        <Link
-          href="/"
-          className="logo d-flex align-items-center scrollto me-auto me-lg-0"
-        >
-          <img src="/img/logo.svg" width={40} height={40} alt="LOGO" />
-          <h1>{}</h1>
+    <Box
+      position="fixed"
+      top={0}
+      w="100%"
+      bg="white"
+      boxShadow="sm"
+      zIndex={100}
+    >
+      <Flex py={3} px={4} align="center">
+        <Link as={NextLink} href="/">
+          <Image src="/img/logo.svg" alt="LOGO" width={10} height={10} />
         </Link>
+        <Spacer />
 
-        <nav id="navbar" className="navbar">
-          <ul>
-            {menu.map((menuItem, idx) => {
-              return menuItem.sub_menu.length === 0 ? (
-                <li key={idx}>
-                  <Link className="nav-link scrollto" href={menuItem.menu_link}>
+        <Flex display={{ base: "none", md: "flex" }} gap={4}>
+          {menu.map((menuItem, idx) => (
+            <Menu key={idx}>
+              {menuItem.sub_menu.length > 0 ? (
+                <>
+                  <MenuButton as={Link}>
                     {menuItem.name}
-                  </Link>
-                </li>
+                    <ChevronDownIcon />
+                  </MenuButton>
+                  <MenuList>
+                    {menuItem.sub_menu.map((sub, subIdx) => (
+                      <MenuItem
+                        as={NextLink}
+                        href={`${menuItem.menu_link}${menuItem.sub_menu_link[subIdx]}`}
+                        key={subIdx}
+                      >
+                        {sub}
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </>
               ) : (
-                <li
-                  key={idx}
-                  className="dropdown megamenu"
-                  onClick={() => onClickEvent2(idx)}
-                >
-                  <Link href={menuItem.menu_link}>
-                    <span>{menuItem.name}</span>{" "}
-                    <i
-                      id={"button" + idx}
-                      className="bi bi-chevron-down dropdown-indicator"
-                    ></i>
+                <Link as={NextLink} href={menuItem.menu_link}>
+                  {menuItem.name}
+                </Link>
+              )}
+            </Menu>
+          ))}
+        </Flex>
+
+        <Box ml={4}>
+          <LoginBtn />
+        </Box>
+
+        <IconButton
+          icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+          aria-label="menu"
+          display={{ base: "flex", md: "none" }}
+          ml={2}
+          onClick={onToggle}
+        />
+      </Flex>
+
+      <Collapse in={isOpen} animateOpacity>
+        <Stack bg="gray.50" px={4} py={4} spacing={3} display={{ md: "none" }}>
+          {menu.map((menuItem, idx) => (
+            <Box key={idx}>
+              <Link as={NextLink} href={menuItem.menu_link}>
+                {menuItem.name}
+              </Link>
+              <Stack pl={4}>
+                {menuItem.sub_menu.map((sub, subIdx) => (
+                  <Link
+                    key={subIdx}
+                    as={NextLink}
+                    href={`${menuItem.menu_link}${menuItem.sub_menu_link[subIdx]}`}
+                  >
+                    {sub}
                   </Link>
-                  <ul id={"ul" + idx} className="">
-                    <li>
-                      {menuItem.sub_menu.map((sub_name, idx2) => {
-                        return (
-                          <Link
-                            key={idx2}
-                            href={
-                              menuItem.menu_link + menuItem.sub_menu_link[idx2]
-                            }
-                          >
-                            {sub_name}
-                          </Link>
-                        );
-                      })}
-                    </li>
-                  </ul>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        <i
-          id="nav_menu"
-          className="bi bi-list mobile-nav-toggle d-none"
-          onClick={onClickEvent}
-        ></i>
-
-        <LoginBtn/>
-      </div>
-      {userInfo ? <PasswordView userInfo={userInfo} /> : <div />}
-    </header>
+                ))}
+              </Stack>
+            </Box>
+          ))}
+        </Stack>
+      </Collapse>
+      {userInfo && <PasswordView userInfo={userInfo} />}
+    </Box>
   );
 };

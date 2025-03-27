@@ -47,7 +47,7 @@ export const useMutationApi = <ResponseType, RequestParamType extends object>(
   return useMutation<ResponseType, Error, RequestParamType>({
     mutationFn:
       method === "GET"
-        ? async (content: RequestParamType) => {
+        ? async (content?: RequestParamType) => {
             const queryString = content
               ? "?" +
                 new URLSearchParams(
@@ -63,12 +63,12 @@ export const useMutationApi = <ResponseType, RequestParamType extends object>(
             if (!res.ok) throw new Error(res.statusText);
             return res.json();
           }
-        : async (content: RequestParamType) => {
+        : async (content?: RequestParamType) => {
             const res = await fetch(`${baseUrl}${endpoint}`, {
               method,
               headers: { "Content-Type": "application/json" },
               credentials: "include",
-              body: JSON.stringify(content),
+              body: JSON.stringify(content ?? {}),
             });
             if (!res.ok) throw new Error(res.statusText);
             return res.json();

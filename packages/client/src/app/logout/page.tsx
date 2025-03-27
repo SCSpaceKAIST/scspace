@@ -1,20 +1,39 @@
 "use client";
 
-import axios, { AxiosResponse } from "axios";
 import React, { useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation"; // next/router 대신 next/navigation 사용
 import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
 import { useMutationApi } from "@scspace-client/Hooks/useApi";
 const LogOutPage: React.FC = () => {
   const { linkPush } = useLinkPush();
-  const { mutateAsync: sendLogout } = useMutationApi("/auth/logout", "POST");
+  const { mutateAsync: sendLogout } = useMutationApi<Response, {}>(
+    "/auth/logout",
+    "POST",
+  );
 
   useEffect(() => {
-    const handleSubmit = async (): Promise<void> => {
-      await sendLogout({});
-      linkPush("/");
+    const logout = async () => {
+      try {
+        const response = await sendLogout({});
+        console.log("response", response);
+        if (response.status === 302) {
+          // 리다이렉션 URL을 가져와서 linkPush로 이동
+          const redirectUrl = response.headers.get("Location"); // 리다이렉션 URL
+          if (redirectUrl) {
+            linkPush(redirectUrl);
+          } else {
+            linkPush("/"); // 기본 리다이렉션
+          }
+        } else {
+          linkPush("/"); // 기본 리다이렉션
+        }
+      } catch (error) {
+        console.error("Logout error:", error);
+        // 뭔가 여기에 걸리긴 하는데 아무튼 해결???
+        // Technical Debt
+        linkPush("/");
+      }
     };
-    handleSubmit();
+    logout();
   }, []);
 
   return <div id="main"></div>;

@@ -24,9 +24,9 @@ const Reservation: React.FC = () => {
                     <div>
                       <h3>공간위 예약</h3>
                       <hr />
-                      <p>
+                      <div>
                         <b>아래 공간들의 예약을 진행하실 수 있습니다</b>
-                      </p>
+                      </div>
                       <hr />
                       {spaceArray?.map(space => {
                         return (

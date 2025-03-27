@@ -18,7 +18,7 @@ const LineHeader: React.FC<PageHeaderProps> = ({
     <section>
       <div className="section-header">
         <h2>{page_name}</h2>
-        <p>{sub_name}</p>
+        <div>{sub_name}</div>
       </div>
       <hr></hr>
     </section>

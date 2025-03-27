@@ -14,10 +14,10 @@ const FastNotice: React.FC = () => {
               <h4>
                 <Link href="#">학생문화공간위원회 홈페이지 개편</Link>
               </h4>
-              <p className="newline">
+              <div className="newline">
                 홈페이지 사용과 관련 문의사항이 있다면 이메일 혹은 문의하기를
                 통해 연락해주세요.
-              </p>
+              </div>
             </div>
           </div>
           <div className="col-xl-3 col-md-6 d-flex">
@@ -33,10 +33,10 @@ const FastNotice: React.FC = () => {
                   소음 양해서 양식
                 </Link>
               </h4>
-              <p className="newline">
+              <div className="newline">
                 오픈스페이스 사용 시 신학관 단체들에게 승인을 구해야 합니다.
                 클릭하면 양식을 다운받을 수 있습니다.
-              </p>
+              </div>
             </div>
           </div>
           <div className="col-xl-3 col-md-6 d-flex">
@@ -52,10 +52,10 @@ const FastNotice: React.FC = () => {
                   물품 대여 공지
                 </Link>
               </h4>
-              <p className="newline">
+              <div className="newline">
                 물품 대여 확인서 작성 후 물품 대여가 가능합니다. 클릭하면 양식을
                 다운받을 수 있습니다.
-              </p>
+              </div>
             </div>
           </div>
           <div className="col-xl-3 col-md-6 d-flex">
@@ -66,10 +66,10 @@ const FastNotice: React.FC = () => {
               <h4>
                 <Link href="#">홈페이지 버그 관련</Link>
               </h4>
-              <p className="newline">
+              <div className="newline">
                 현재 홈페이지는 베타 버전입니다. 버그가 있다면 메일로
                 제보해주시면 감사하겠습니다.
-              </p>
+              </div>
             </div>
           </div>
         </div>

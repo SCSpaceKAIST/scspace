@@ -66,7 +66,7 @@ const NoticeView: React.FC<NoticeViewProps> = ({ view_id }) => {
                   </ul>
                 </div>
                 <div className="content newline">
-                  <p>{content.content}</p>
+                  <div>{content.content}</div>
                 </div>
                 <div className="meta-bottom">
                   <i className="bi bi-folder"></i>

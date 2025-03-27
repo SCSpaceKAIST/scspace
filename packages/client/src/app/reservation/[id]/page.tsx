@@ -25,7 +25,7 @@ export default function SpacePage() {
   if (isNaN(id) || id <= 0 || id >= 18) {
     // 18 is the number of spaces
     // id가 유효한 숫자가 아닌 경우 처리
-    return <p>Invalid ID provided.</p>;
+    return <div>Invalid ID provided.</div>;
   }
 
   const spaceComponent = {

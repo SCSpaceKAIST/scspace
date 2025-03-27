@@ -38,7 +38,7 @@ const Introduction: React.FC = () => {
             </div>
           </div>
 
-          <p>{info.find((contents) => contents.clicked)?.text}</p>
+          {info.find(contents => contents.clicked)?.text}
         </div>
       </section>
     </main>

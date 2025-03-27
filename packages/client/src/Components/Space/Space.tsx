@@ -2,10 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import {
-  SpaceTypeNames,
-  SpaceTypesArray,
-} from "@scspace-depot/types/space";
+import { SpaceTypeNames, SpaceTypesArray } from "@scspace-depot/types/space";
 
 const Space: React.FC = () => {
   return (
@@ -26,15 +23,15 @@ const Space: React.FC = () => {
                     <div>
                       <h3>공간위 관리 공간</h3>
                       <hr />
-                      <p>
+                      <div>
                         <b>공간위에서는 아래의 공간들을 관리합니다!</b>
-                      </p>
-                      <p>
+                      </div>
+                      <div>
                         <b>
                           공간들의 유지보수, 예약, 근로 교육 등을 진행하고
                           있습니다.
                         </b>
-                      </p>
+                      </div>
                       <hr />
                       {SpaceTypesArray.map((spaceType, idx) => {
                         return (

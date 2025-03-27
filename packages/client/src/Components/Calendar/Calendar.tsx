@@ -24,9 +24,9 @@ const Calendar: React.FC = () => {
                     <div>
                       <h3>공간위 예약 확인</h3>
                       <hr />
-                      <p>
-                        <b>아래 공간들의 예약을 확인하실 수 있습니다</b>
-                      </p>
+
+                      <b>아래 공간들의 예약을 확인하실 수 있습니다</b>
+
                       <hr />
                       {spaceArray?.map((space, idx) => {
                         return (

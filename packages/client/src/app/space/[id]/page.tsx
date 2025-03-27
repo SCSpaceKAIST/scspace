@@ -2,10 +2,7 @@
 
 import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 import { useParams } from "next/navigation";
-import {
-  SpaceTypeNames,
-  SpaceTypesArray,
-} from "@scspace-depot/types/space";
+import { SpaceTypeNames, SpaceTypesArray } from "@scspace-depot/types/space";
 import SpaceView from "@scspace-client/Components/Space/SpaceView";
 
 export default function SpaceIntroPage() {
@@ -14,7 +11,7 @@ export default function SpaceIntroPage() {
 
   if (isNaN(id) || id < 0 || id >= SpaceTypesArray.length) {
     // id가 유효한 숫자가 아닌 경우 처리
-    return <p>Invalid ID provided.</p>;
+    return <div>Invalid ID provided.</div>;
   }
   return (
     <div>

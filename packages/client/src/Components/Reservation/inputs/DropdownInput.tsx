@@ -40,7 +40,7 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
           <Link href="/item/create" className="btn-getstarted scrollto">
             등록하기
           </Link>
-        </p>
+        </div>
       </div>
       <hr />
       <br />

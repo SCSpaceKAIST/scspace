@@ -11,9 +11,9 @@ export default function AskViewPage() {
   return (
     <div>
       <PageHeader
-        link_to_prop={'/notice'}
-        page_name={'공지사항'}
-        sub_name={'Notice'}
+        link_to_prop={"/notice"}
+        page_name={"공지사항"}
+        sub_name={"Notice"}
       />
       <NoticeView view_id={id} />
     </div>

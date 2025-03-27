@@ -131,7 +131,7 @@ const FAQ: React.FC = () => {
                   <h3>
                     Frequently Asked <strong>Questions</strong>
                   </h3>
-                  <p>많이 주신 질문들에 대한 답변입니다.</p>
+                  <div>많이 주신 질문들에 대한 답변입니다.</div>
                 </div>
 
                 <ConditionalButton

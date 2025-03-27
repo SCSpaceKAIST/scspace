@@ -10,7 +10,7 @@ const Banner: React.FC = () => {
       <div className="container d-flex flex-column justify-content-center align-items-center text-center position-relative">
         <img src="/img/logo.svg" alt="" className="img-fluid main-photo" />
         <br />
-        <p>{t("학생문화공간위원회 홈페이지에 오신 것을 환영합니다.")}</p>
+        <div>{t("학생문화공간위원회 홈페이지에 오신 것을 환영합니다.")}</div>
         <div className="d-flex">
           <Link href="/reservation" passHref>
             <div className="btn-get-started scrollto">{t("예약하기")}</div>

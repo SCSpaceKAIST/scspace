@@ -8,7 +8,7 @@ const Culture: React.FC = () => {
       <div className="row gy-4">
         <div className="col-lg-8 order-2 order-lg-1">
           <h3>문화사업 기획</h3>
-          <p>
+          <div>
             <b>
               학생들이 기획하는 행사 이외에도 공간위가 스스로 기획하는
               문화사업도 많이 있습니다. 2015년에는 야잠 컨테스트, 계단에 뽁뽁이
@@ -16,7 +16,7 @@ const Culture: React.FC = () => {
               사업을 진행하였습니다. 또한 2016년에는 그림자 만들기, 밤샘책읽기
               행사, 영화제 등 규모가 큰 행사도 진행하였습니다.
             </b>
-          </p>
+          </div>
         </div>
         <div className="col-lg-4 order-1 order-lg-2 text-center">
           <img
