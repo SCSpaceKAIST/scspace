@@ -69,26 +69,28 @@ export class AuthService {
 
     const clientId = process.env.CLIENT_ID;
     const clientSecret = process.env.CLIENT_SECRET;
-    const redirectUri = process.env.REDIRECT;
-    const serverApiUrl = process.env.USER_INFO_DEV;
+    // const redirectUri = process.env.REDIRECT_URI;
+    const redirectUri = "https://scspace.kaist.ac.kr/api/auth/login";
+    const serverApiUrl = process.env.USER_INFO;
 
     const getUrlParams = (key: string): string | null => {
       return new URLSearchParams(window.location.search).get(key);
     };
+    const body = new URLSearchParams({
+    client_id: clientId,
+    client_secret: clientSecret,
+    code: code,
+    redirect_uri: redirectUri,
+    });
+    console.log(body);
 
     const fetchUserData = async () => {
-      const body = new URLSearchParams({
-        client_id: clientId,
-        client_secret: clientSecret,
-        code: code,
-        redirect_uri: redirectUri,
-      });
 
       try {
         const response = await fetch(serverApiUrl, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/x-www-formurlencoded;charset=utf-8',
+            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
           },
           body: body.toString(),
         });
@@ -96,6 +98,8 @@ export class AuthService {
         if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
         const result = await response.json();
+	return result;
+	console.log(result);
 
         // if (result.errorCode) {
         //   // setErrorCode(result.errorCode);
@@ -106,6 +110,7 @@ export class AuthService {
         // }
 
         const userInfo = result?.userInfo;
+
         const resNonce = result?.nonce; // CSRF check 2
 
         // ===== a parts of original code
@@ -147,8 +152,9 @@ export class AuthService {
         );
       } catch (error) {
         console.error('API 통신 오류:', error);
-      }
+      };
     };
+    return await fetchUserData();
   }
 
   async verification(cookies: any, res: Response): Promise<IUser | null> {

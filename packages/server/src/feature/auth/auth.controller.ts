@@ -22,12 +22,12 @@ export class AuthController {
 
   @Post('login')
   async login(
-    @Body('result') result: string,
     @Body('state') state: string,
+    @Body('code') code: string,
     @Res() res: Response,
   ): Promise<void> {
-    console.log('login', { result, state });
-    const loginRes = await this.authService.login(result, state, res);
+    console.log('login', { state, code });
+    const loginRes = await this.authService.login(state, code, res);
     console.log('login res', loginRes);
     return loginRes;
   }
