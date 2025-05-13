@@ -1,0 +1,29 @@
+"use client";
+
+import PageHeader from "@scspace-client/Components/_commons/PageHeader";
+import { useParams } from "next/navigation";
+import CalendarView from "@scspace-client/Components/Calendar/CalendarView";
+import { useSpaces } from "@scspace-client/Apis/space/useSpaces";
+
+export default function SpaceIntroPage() {
+  const params = useParams();
+  const id = parseInt(params.id as string, 10); // URL의 [id] 부분을 숫자로 변환
+  const { space } = useSpaces(id);
+
+  if (isNaN(id) || id <= 0 || id >= 18) {
+    // 18 is the number of spaces
+
+    // id가 유효한 숫자가 아닌 경우 처리
+    return <div>Invalid ID provided.</div>;
+  }
+  return (
+    <div>
+      <PageHeader
+        link_to_prop={"/calendar"}
+        page_name={space.name}
+        sub_name={"Calendar"}
+      />
+      <CalendarView spaceId={id} space={space} date={new Date()} />
+    </div>
+  );
+}

@@ -1,0 +1,58 @@
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import { SpaceTypeNames, SpaceTypesArray } from "@scspace-depot/types/space";
+
+const Space: React.FC = () => {
+  return (
+    <main id="main">
+      <section>
+        <div className="container">
+          <div id="portfolio" className="portfolio">
+            <div className="container-fluid">
+              <ul className="portfolio-flters"></ul>
+            </div>
+          </div>
+
+          <div>
+            <section id="features" className="features scspace">
+              <div className="container">
+                <div className="tab-pane active show">
+                  <div className="row gy-4">
+                    <div>
+                      <h3>공간위 관리 공간</h3>
+                      <hr />
+                      <div>
+                        <b>공간위에서는 아래의 공간들을 관리합니다!</b>
+                      </div>
+                      <div>
+                        <b>
+                          공간들의 유지보수, 예약, 근로 교육 등을 진행하고
+                          있습니다.
+                        </b>
+                      </div>
+                      <hr />
+                      {SpaceTypesArray.map((spaceType, idx) => {
+                        return (
+                          <div key={`spaceReservationKey${spaceType}`}>
+                            <Link href={`/space/${idx}`}>
+                              {SpaceTypeNames[spaceType]}{" "}
+                            </Link>
+                            <br />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+};
+
+export default Space;

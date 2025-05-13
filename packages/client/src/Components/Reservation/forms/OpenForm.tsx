@@ -1,0 +1,128 @@
+"use client";
+
+// components/ReservationForm.tsx
+import React, { useState } from "react";
+import DateTimeInput from "../inputs/DateTimeInput";
+import {
+  IOpenContent,
+  IReservationCreate,
+  ISeminarContent,
+} from "@scspace-depot/types/reservation";
+import AgreeCheck from "../inputs/AgreeCheck";
+import TextInput from "../inputs/TextInput";
+import { ISpace } from "@scspace-depot/types/space";
+import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import { useReservationSend } from "@scspace-client/Apis/reservation/useReservationSend";
+
+import TimeTooltips from "../utils/TimeTooltips";
+import { validateReservationInput } from "./validateReservationInput";
+import { setTimes } from "./setTimes";
+import NumberInput from "../inputs/NumberInput";
+import { ReservationWorkerNeedEnum } from "@scspace-depot/enums/reservation.enum";
+import { ReservationStateEnum } from "@scspace-depot/enums/reservation.enum";
+
+interface ReservationFormProps {
+  spaceId: number;
+  space: ISpace;
+}
+
+const ReservationForm: React.FC<ReservationFormProps> = ({
+  spaceId,
+  space,
+}) => {
+  const { userInfo, isSCS } = useLoginCheck();
+  const { handleReservationSend } = useReservationSend();
+  const { maxTime, minDate, maxDate } = setTimes(space, isSCS);
+  const [timeFrom, setTimeFrom] = useState<Date>(minDate);
+  const [timeTo, setTimeTo] = useState<Date>(minDate);
+  const [agreeCheck, setAgreeCheck] = useState<boolean>(false);
+  const [eventName, setEventName] = useState<string>("");
+  const [organizationName, setOrganizationName] = useState<string>("");
+  const [contents, setContents] = useState<string>("");
+  const [innerNumber, setInnerNumber] = useState<number | undefined>(1);
+  const [outerNumber, setOuterNumber] = useState<number | undefined>(1);
+  const [eventPurpose, setEventPurpose] = useState<string>("");
+  const handleSubmit = () => {
+    if (!userInfo) return; // 로그인 안한 경우, 나올 일은 없으나 컴파일 에러 방지
+    if (!innerNumber || !outerNumber) {
+      alert("인원 수를 확인해주세요.");
+      return;
+    }
+    const reservationInput: IReservationCreate = {
+      spaceId,
+      timeFrom: timeFrom,
+      timeTo: timeTo,
+      userId: userInfo?.id,
+      teamId: null,
+      content: {
+        eventName,
+        organizationName,
+        contents,
+        innerParticipantNumber: innerNumber,
+        outerParticipantNumber: outerNumber,
+        eventPurpose,
+        workComplete: null,
+      } as IOpenContent,
+
+      state: ReservationStateEnum.GRANT,
+      workerNeed: ReservationWorkerNeedEnum.UNNECESSARY,
+    };
+    const inputVal = validateReservationInput(
+      reservationInput,
+      space.spaceType,
+      agreeCheck,
+    );
+    if (!inputVal.valid) {
+      alert(inputVal.errors);
+      return;
+    }
+    handleReservationSend(reservationInput, space, isSCS);
+  };
+
+  return (
+    <div>
+      <h3>오픈 스페이스 예약 폼</h3>
+      <TimeTooltips spaceType={space.spaceType} />
+      <hr />
+      <DateTimeInput
+        dateFrom={timeFrom}
+        setDateFrom={setTimeFrom}
+        dateTo={timeTo}
+        setDateTo={setTimeTo}
+        maxTime={maxTime}
+        minDate={minDate}
+        maxDate={maxDate}
+        ignoreMidnight={true}
+      />
+      <TextInput label="이벤트명" text={eventName} setText={setEventName} />
+      <TextInput
+        label="단체명"
+        text={organizationName}
+        setText={setOrganizationName}
+      />
+      <TextInput label="행사 내용" text={contents} setText={setContents} />
+      <NumberInput
+        label="내부 인원"
+        num={innerNumber}
+        setNum={setInnerNumber}
+      />
+      <NumberInput
+        label="외부 인원"
+        num={outerNumber}
+        setNum={setOuterNumber}
+      />
+      <TextInput
+        label="행사 목적"
+        text={eventPurpose}
+        setText={setEventPurpose}
+      />
+
+      <AgreeCheck checked={agreeCheck} setChecked={setAgreeCheck} />
+      <button className="modalButton2" onClick={handleSubmit}>
+        예약하기
+      </button>
+    </div>
+  );
+};
+
+export default ReservationForm;

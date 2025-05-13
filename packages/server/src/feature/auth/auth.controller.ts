@@ -1,0 +1,81 @@
+import {
+  Controller,
+  Get,
+  Body,
+  Post,
+  Res,
+  Req,
+  Logger,
+  UseGuards,
+} from '@nestjs/common';
+import { Response, Request } from 'express';
+import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './jwt/jwt-guard';
+import { IVerificationResponse } from '@scspace-depot/types/auth/auth.type';
+import { ConfigService } from '@nestjs/config';
+@Controller('auth')
+export class AuthController {
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  @Post('login')
+  async login(
+    @Body('state') state: string,
+    @Body('code') code: string,
+    @Res() res: Response,
+  ): Promise<void> {
+    // Logger.log('login', { state, code });
+    const loginRes = await this.authService.login(state, code, res);
+    // Logger.log('login res:', loginRes);
+    return res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
+    // return loginRes;
+  }
+
+  @Get('login')
+  async loginGet(
+    @Res() res: Response,
+  ): Promise<void> {
+    Logger.log('login page');
+    Logger.log(
+      this.configService.get<string>('NEXT_PUBLIC_APP_URL') + '/',
+    );
+    res.redirect(
+      this.configService.get<string>('NEXT_PUBLIC_APP_URL') + '/',
+    );
+  }
+
+  @Get('verification')
+  async verification(@Req() req: Request, @Res() res: Response): Promise<void> {
+    console.log('verification', req.cookies);
+    const verifyRes = await this.authService.verification(req.cookies, res);
+    const response: IVerificationResponse = {
+      isLogined: verifyRes !== null,
+      userInfo: verifyRes,
+    };
+    console.log('verification res', verifyRes);
+    console.log('verification return value', response);
+    res
+      .status(200)
+      .header('Content-Type', 'application/json') // 🔥 명시적으로 설정
+      .json({ isLogined: !!verifyRes, userInfo: verifyRes });
+  }
+
+  @Post('logout')
+  async logout(@Res() res: Response): Promise<void> {
+    console.log('logout');
+    res.clearCookie('scspacetoken1', { path: '/' });
+
+    return res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('idJwt')
+  getUserIdWithJWT(@Req() req) {
+    Logger.log(req.user);
+
+    return 1;
+    //return this.userService.getUserNameWithToken();
+  }
+}
