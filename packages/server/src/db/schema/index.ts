@@ -1,6 +1,3 @@
-import { Ask } from './ask';
-import { Faq } from './faq';
-import { Notice } from './notice';
 import { Password } from './password';
 import {
   Reservation,
@@ -12,9 +9,6 @@ import { Space, SpaceIntroduction } from './space';
 import { Team, TeamMember } from './team';
 import { User } from './user';
 
-export { Ask } from './ask';
-export { Faq } from './faq';
-export { Notice } from './notice';
 export { Password } from './password';
 export {
   Reservation,
@@ -29,9 +23,6 @@ export { User } from './user';
 
 // 스키마에 정의된 모든 테이블을 모아 내보냅니다.
 export const schema = {
-  Ask,
-  Faq,
-  Notice,
   Password,
   Reservation,
   ReservationContent,
