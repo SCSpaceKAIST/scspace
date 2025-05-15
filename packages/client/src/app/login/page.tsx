@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
 import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
 import { randomBytes, createHash } from "crypto";
+import axios from "axios";
 
 const LoginPage: React.FC = () => {
   const { linkPush } = useLinkPush();
@@ -28,6 +29,24 @@ const LoginPage: React.FC = () => {
     const state = randomString();
     const nonce = randomString();
     
+    const data = {
+      client_id: client_id,
+      redirect_uri: redirect_uri,
+      state: state,
+      nonce: nonce,
+    };
+
+    const params = new URLSearchParams(data).toString();
+
+    axios.post(server_url, params, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    }).then((res) => {
+      alert(res);
+    }).catch((err) => {
+      alert("ERROR: " + String(err));
+    });
 
     const form = document.createElement('form');
     form.method = 'POST';

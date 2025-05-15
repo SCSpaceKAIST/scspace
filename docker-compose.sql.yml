@@ -1,26 +1,8 @@
 # version: "3.8"
 services:
-  nginx:
-    image: nginx
-    container_name: scspace-nginx-container
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.prod.conf:/etc/nginx/nginx.conf:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-    environment:
-      - BASIC_URL=${BASIC_URL}
-    extra_hosts:
-      - "host.docker.internal:host-gateway" # Linux에서 Docker 호스트 IP를 매핑
-    networks:
-      - scspace_network
-
   mysql:
     image: mysql:latest
     container_name: scspace-mysql-container
-    restart: always
     env_file:
       - .env
     environment:
@@ -45,3 +27,4 @@ networks:
 volumes:
   mysql-data:
     driver: local
+

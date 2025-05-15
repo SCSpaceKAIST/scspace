@@ -9,7 +9,7 @@ import "../../static/css/main.css";
 import { Header } from "@scspace-client/Components/Header";
 import { ReactNode } from "react";
 import Footer from "@scspace-client/Components/Footer";
-import "react-datepicker/dist/react-datepicker.css";
+// import "../react-datepicker/dist/react-datepicker.css";
 import Providers from "./providers";
 export const metadata = {
   title: "학생문화공간위원회",
@@ -48,11 +48,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body>
         <Providers>
-          <Header></Header>
+          <Header/>
           <div style={{ padding: "20px", margin: "100px" }}>
             {children} {/* children이 여기에 렌더링됩니다 */}
           </div>
-          <Footer></Footer>
+          <Footer/>
         </Providers>
       </body>
     </html>

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
-import { ChevronDownIcon } from "@chakra-ui/icons"; // 아이콘 임포트
-import { Button, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react"; // 필요한 Chakra UI 컴포넌트 임포트
+import { Button, Menu, Portal } from "@chakra-ui/react"; 
 
 export const LoginBtn: React.FC = () => {
   const { isLogined, userInfo, isSCS } = useLoginCheck();
@@ -9,27 +8,27 @@ export const LoginBtn: React.FC = () => {
   return (
     <>
       {isLogined ? (
-        <Menu>
-          <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-            {userInfo?.nameKr}님
-          </MenuButton>
-          <MenuList>
-            <MenuItem as={Link} href="/mypage" passHref>
-              Mypage
-            </MenuItem>
-            {isSCS() ? (
-              <MenuItem as={Link} href="/manage" passHref>
-                Manage
-              </MenuItem>
-            ) : null}
-            <MenuItem as={Link} href="/logout" passHref>
-              Logout
-            </MenuItem>
-          </MenuList>
-        </Menu>
+        <Menu.Root>
+          <Menu.Trigger>
+            <Button>
+              {userInfo?.nameKr}님
+            </Button>
+          </Menu.Trigger>
+          <Portal>
+            <Menu.Positioner>
+              <Menu.Content>
+                <Menu.Item value={"test"}>
+                  ??
+                </Menu.Item>
+              </Menu.Content>
+            </Menu.Positioner>
+          </Portal>
+        </Menu.Root>
       ) : (
         <Link href="/login" passHref>
-          <Button className="btn-getstarted scrollto">Login</Button>
+          <Button variant="outline" rounded="md">
+            Login
+          </Button>
         </Link>
       )}
     </>

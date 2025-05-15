@@ -8,36 +8,36 @@ import {
   Link,
   VStack,
   HStack,
-  Divider,
   IconButton,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 
-export const Footer: React.FC = () => (
-  <Box bg="gray.50" color="gray.700" py={8}>
+export const Footer: React.FC = () => {
+  return <Box bg="gray.50" color="gray.700" py={8}>
     <Container maxW="container.xl">
+      <VStack align={{ base: "center", md: "start" }}>
+        <Text fontSize="lg" fontWeight="bold">
+          학생문화공간위원회
+        </Text>
+        <Text textAlign={{ base: "center", md: "left" }} fontSize="sm">
+          대전광역시 유성구 대학로 291
+          <br />
+          한국과학기술원 N13-1 장영신학생회관 309호
+          <br />
+          월,화,수 상근 19~21시 | 목요일 상근 21~23시
+          <br />
+          Tel: +82 042-350-0386
+          <br />
+          Email: scspace@kaist.ac.kr
+        </Text>
+      </VStack>
+      {/*
       <Stack
         direction={{ base: "column", md: "row" }}
-        spacing={8}
         justify="space-between"
       >
-        <VStack align={{ base: "center", md: "start" }} spacing={4}>
-          <Text fontSize="lg" fontWeight="bold">
-            학생문화공간위원회
-          </Text>
-          <Text textAlign={{ base: "center", md: "left" }} fontSize="sm">
-            대전광역시 유성구 대학로 291
-            <br />
-            한국과학기술원 N13-1 장영신학생회관 309호
-            <br />
-            월,화,수 상근 19~21시 | 목요일 상근 21~23시
-            <br />
-            Tel: +82 042-350-0386
-            <br />
-            Email: scspace@kaist.ac.kr
-          </Text>
-        </VStack>
+
 
         <HStack spacing={12} justify={{ base: "center", md: "start" }}>
           <VStack align="start">
@@ -87,9 +87,11 @@ export const Footer: React.FC = () => (
             </Link>
           </VStack>
         </HStack>
+
       </Stack>
 
-      <Divider my={6} />
+        */}
+
 
       <Stack
         direction={{ base: "column", md: "row" }}
@@ -97,27 +99,23 @@ export const Footer: React.FC = () => (
         justify="space-between"
       >
         <Text fontSize="sm">
-          &copy; 2025 학생문화공간위원회. 원본 Herobiz (BootstrapMade 디자인
-          변형)
+          &copy; 2025 학생문화공간위원회. (Chakra UI)
         </Text>
 
-        <HStack spacing={2}>
-          <IconButton
-            as="a"
-            href="https://facebook.com/scspace.kaist"
-            aria-label="Facebook"
-            icon={<FaFacebook />}
-          />
-          <IconButton
-            as="a"
-            href="https://www.instagram.com/scspace_kaist/"
-            aria-label="Instagram"
-            icon={<FaInstagram />}
-          />
+        <HStack>
+          <Link href="https://www.instagram.com/scspace_kaist/">
+            <IconButton
+              aria-label="Instagram"
+              variant="outline"
+              rounded="md"
+            >
+              <FaInstagram />
+            </IconButton>
+          </Link>
         </HStack>
       </Stack>
     </Container>
   </Box>
-);
+};
 
 export default Footer;

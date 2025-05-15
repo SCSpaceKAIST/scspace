@@ -1,6 +1,5 @@
 -- 데이터베이스 및 사용자 권한 설정
 
-CREATE USER "scspace"@"%" IDENTIFIED BY "ScspacePass";
 GRANT ALL PRIVILEGES ON scspace.* TO 'scspace'@'%';
 GRANT PROCESS, RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO 'scspace'@'%';
 

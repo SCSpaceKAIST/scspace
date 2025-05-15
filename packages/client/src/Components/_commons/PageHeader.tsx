@@ -33,11 +33,6 @@ const PageHeader: React.FC<PageHeaderProps> = ({
 }) => {
   return (
     <div>
-      <LineHeader
-        page_name={page_name}
-        sub_name={sub_name}
-        link_to_prop=""
-      ></LineHeader>
       <div className="breadcrumbs">
         <div className="container">
           <div className="d-flex justify-content-between align-items-center">
