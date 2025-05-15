@@ -6,41 +6,40 @@ import {
   timestamp,
   boolean,
 } from 'drizzle-orm/mysql-core';
+import { relations } from 'drizzle-orm';
+
+import { User } from './user';
+import { Organization } from './organization';
+import { Space } from './space';
 
 // Reservations Table
 export const Reservation = mysqlTable('reservation', {
   id: serial('id').primaryKey(),
-  userId: int('user_id').notNull(), // .references(() => users.userId),
-  teamId: int('team_id'), //.references(() => users.userId),
-  spaceId: int('space_id').notNull(), //.references(() => spaces.space_id),
+  userId: int('user_id')
+    .notNull()
+    .references(() => User.id),
+  organizationId: int('organization_id')
+    .notNull()
+    .references(() => Organization.id),
+  spaceId: int('space_id')
+    .notNull()
+    .references(() => Space.id),
+  title: varchar('title', { length: 255 }).notNull(),
   timeFrom: timestamp('time_from').notNull(),
   timeTo: timestamp('time_to').notNull(),
   timePost: timestamp('time_post').notNull().defaultNow(),
   timeEdit: timestamp('time_edit').onUpdateNow(),
-  comment: varchar('comment', { length: 300 }),
   state: int('state').notNull().default(1), // ['grant', 'wait', 'received', 'rejected']
-  workerNeed: int('worker_need').notNull().default(1), // ['unnecessary', 'required', 'completed', 'failed']
 });
 
 export const ReservationContent = mysqlTable('reservation_content', {
-  id: serial('id').primaryKey(),
-  reservationId: int('reservation_id').notNull(),
-  spaceType: int('space_type').notNull(),
+  id: serial('id')
+    .primaryKey()
+    .references(() => Reservation.id, { onDelete: 'cascade' }),
+  description: varchar('description', { length: 1024 }),
 
-  eventName: varchar('event_name', { length: 255 }).notNull(),
-  // Optional organizationName (exists in several types)
-  organizationName: varchar('organization_name', { length: 255 }),
-
-  // General contents
-  contents: varchar('contents', { length: 255 }),
-
-  // Participant numbers
-  participantNumber: int('participant_number'),
   innerParticipantNumber: int('inner_participant_number'),
   outerParticipantNumber: int('outer_participant_number'),
-
-  // Event purpose (for Open & Mirae & Sumi)
-  eventPurpose: varchar('event_purpose', { length: 255 }),
 
   // Food options (for Mirae & Sumi)
   food: varchar('food', { length: 255 }),
@@ -50,16 +49,12 @@ export const ReservationContent = mysqlTable('reservation_content', {
   chair: int('chair'),
   lobby: boolean('lobby'),
 
-  // Work Complete (for Open)
-  workComplete: boolean('work_complete'),
+  workerNeed: int('worker_need').notNull().default(1), // ['unnecessary', 'required', 'completed', 'failed']
 });
 
-export const ReservationContentArrayElement = mysqlTable(
-  'reservation_content_array_element',
-  {
-    id: serial('id').primaryKey(),
-    reservationId: int('reservation_id').notNull(),
-    element: int('element').notNull(),
-    elementType: int('element_type').notNull(), // ReservationContentArrayElementTypeEnum
-  },
-);
+export const ReservationRelations = relations(Reservation, ({ one }) => ({
+  content: one(ReservationContent, {
+    fields: [Reservation.id],
+    references: [ReservationContent.id],
+  }),
+}));

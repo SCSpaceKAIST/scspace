@@ -2,10 +2,9 @@ import { UserTypeEnum } from "../../enums/user.enum";
 
 export interface IUser {
   id: number;
-  kaistUID: string;
+  studentNumber: number;
   nameKr: string;
   nameEn: string;
-  userNumber: string | null;
   email: string | null;
   type: UserTypeEnum;
 }

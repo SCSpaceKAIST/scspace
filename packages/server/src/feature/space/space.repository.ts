@@ -12,7 +12,21 @@ export class SpaceRepository {
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
   ) {}
 
-  async find(params: { id?: number }): Promise<MSpace[]> {
+  async findSpace(params: { id?: number }): Promise<MSpace[]> {
+    const whereConditions: SQL[] = [];
+    if (params.id) whereConditions.push(eq(Space.id, params.id));
+
+    const space =
+      whereConditions.length > 0
+        ? await this.db
+            .select()
+            .from(Space)
+            .where(and(...whereConditions))
+        : await this.db.select().from(Space);
+
+    return space.map((space) => MSpace.fromDB(space));
+  }
+  async findSpaceIntro(params: { id?: number }): Promise<MSpace[]> {
     const whereConditions: SQL[] = [];
     if (params.id) whereConditions.push(eq(Space.id, params.id));
 
@@ -28,7 +42,7 @@ export class SpaceRepository {
   }
 
   async fetch(id: number): Promise<MSpace> {
-    const space = await this.find({ id });
+    const space = await this.findSpace({ id });
     if (!space) {
       throw new NotFoundException('Space not found');
     }

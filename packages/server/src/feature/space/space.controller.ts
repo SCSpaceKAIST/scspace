@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { SpaceService } from './space.service';
-import { ISpace } from '@scspace-depot/types/space';
+import { ISpace, ISpaceIntroduction } from '@scspace-depot/types/space';
 
 @Controller('space')
 export class SpaceController {
@@ -22,8 +22,8 @@ export class SpaceController {
     return res;
   }
 
-  // @Get('info/:id')
-  // findSpaceInfoByID(@Param('id') id: number) {
-  //   return this.spaceService.getSpaceInfoByID(id);
-  // }
+  @Get('intro/:id')
+  findSpaceIntroByID(@Param('id') id: string): Promise<ISpaceIntroduction> {
+    return this.spaceService.getSpaceIntroByID(parseInt(id));
+  }
 }

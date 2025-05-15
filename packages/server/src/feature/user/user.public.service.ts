@@ -12,8 +12,8 @@ export class UserPublicService {
     return await this.userRepository.fetch(id);
   }
 
-  async findUserByKaistUid(kaistUid: string): Promise<MUser | null> {
-    return await this.userRepository.find(kaistUid);
+  async findUserByStudentNumber(studentNumber: number): Promise<MUser | null> {
+    return await this.userRepository.find(studentNumber);
   }
 
   async fetchAll(ids: number[]): Promise<MUser[]> {

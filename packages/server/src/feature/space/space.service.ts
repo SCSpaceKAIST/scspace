@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SpaceRepository } from './space.repository';
-import { ISpace } from '@scspace-depot/types/space';
+import { ISpace, ISpaceIntroduction } from '@scspace-depot/types/space';
 
 @Injectable()
 export class SpaceService {
@@ -10,9 +10,14 @@ export class SpaceService {
     return await this.spaceRepository.fetch(spaceId);
   }
 
+  async getSpaceIntroByID(spaceId: number): Promise<ISpaceIntroduction> {
+    return await this.spaceRepository.fetch(spaceId);
+  }
+
   async getSpaceAll(): Promise<ISpace[]> {
     return await this.spaceRepository.fetchAll();
   }
+
 
   // 공간 소개 페이지를 만드는 부분
   // 나중에 잘 만들어주세요 개발팀 화이팅!

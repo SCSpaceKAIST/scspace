@@ -75,8 +75,8 @@ export class AuthService {
         const payload = this.ssoToUser(data);
         Logger.log('PAYLOAD');
         Logger.log(JSON.stringify(payload));
-        const user = await this.userPublicService.findUserByKaistUid(
-          payload.kaistUID,
+        const user = await this.userPublicService.findUserByStudentNumber(
+          payload.studentNumber,
         );
         Logger.log('USER');
         Logger.log(JSON.stringify(user));
@@ -154,14 +154,13 @@ export class AuthService {
   private ssoToUser = (ssoPayload: UserSSOType2025): IUserCreate => {
     // 첫 가입시 DB에 넣기 좋게 변경하는 함수
     return {
-      kaistUID: ssoPayload.kaist_uid,
       nameKr: ssoPayload.user_nm,
       nameEn: ssoPayload.user_eng_nm,
       email: ssoPayload.email,
       type: UserTypeEnum.USER,
-      userNumber: ssoPayload.std_no
-        ? ssoPayload.std_no
-        : (ssoPayload.emp_no ?? '1'),
+      studentNumber: parseInt(ssoPayload.std_no)
+        ? parseInt(ssoPayload.std_no)
+        : (parseInt(ssoPayload.emp_no) ?? 1),
     };
   };
 
@@ -172,10 +171,9 @@ export class AuthService {
     // userPublic 에 넣어야 할수도?
     return {
       id: muser.id,
-      kaistUID: muser.kaistUID,
       nameKr: muser.nameKr,
       nameEn: muser.nameEn,
-      userNumber: muser.userNumber,
+      studentNumber: muser.studentNumber,
       email: muser.email,
       type: muser.type,
     };

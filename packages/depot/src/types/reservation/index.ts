@@ -1,4 +1,4 @@
 export * from './reservation.type';
-export * from './team.member.type';
-export * from './team.type';
+export * from './organization.member.type';
+export * from './organization.type';
 export * from './reservation.content.type';

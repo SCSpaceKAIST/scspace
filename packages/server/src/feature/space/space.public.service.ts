@@ -20,10 +20,10 @@ export class SpacePublicService {
   }
 
   async findAll(): Promise<MSpace[]> {
-    return await this.spaceRepository.find({});
+    return await this.spaceRepository.findSpace({});
   }
 
   async getSpaceCount(): Promise<number> {
-    return (await this.spaceRepository.find({})).length;
+    return (await this.spaceRepository.findSpace({})).length;
   }
 }

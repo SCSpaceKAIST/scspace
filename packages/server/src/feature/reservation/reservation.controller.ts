@@ -12,10 +12,10 @@ import {
 import { ReservationService } from './reservation.service';
 import {
   IReservation,
-  IReservationCreateBody,
   IReservationResponse,
+  IReservationCreateBody,
   ISpaceTimeCheckRequest,
-  IUserTimeCheckRequest,
+  IUserTimeCheckRequest
 } from '@scspace-depot/types/reservation';
 
 @Controller('reservation')
@@ -66,8 +66,8 @@ export class ReservationController {
     const query: IUserTimeCheckRequest = {
       spaceId: parseInt(spaceId),
       userId: parseInt(userId),
-      timeFrom: new Date(timeFrom),
-      timeTo: new Date(timeTo),
+      timeFrom: timeFrom,
+      timeTo: timeTo,
     };
     const res = await this.reservationService.checkUserReservationTime(query);
     console.log('checkUserReservationTime res', res);
@@ -102,8 +102,8 @@ export class ReservationController {
     console.log('postReservation', reservationInput);
     const res = await this.reservationService.postReservation({
       ...reservationInput,
-      timeFrom: new Date(reservationInput.timeFrom),
-      timeTo: new Date(reservationInput.timeTo),
+      timeFrom: reservationInput.timeFrom,
+      timeTo: reservationInput.timeTo,
     });
     console.log('postReservation res', res);
     return res;

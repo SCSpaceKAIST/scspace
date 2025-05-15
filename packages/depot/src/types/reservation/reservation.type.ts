@@ -1,34 +1,34 @@
 import { IUser } from "../user";
 import { IReservationContent } from "./reservation.content.type";
-import { ReservationCharacterEnum, ReservationHallEquipEnum, ReservationStateEnum, ReservationWorkerNeedEnum } from "../../enums/reservation.enum";
+import { ReservationStateEnum, ReservationWorkerNeedEnum } from "../../enums/reservation.enum";
 import { ISpace } from "../space";
-import { ITeam } from "./team.type";
+import { IOrganization } from "./organization.type";
 
 // Table: reservations
 export interface IReservation {
   id: number;
-  userId: number; // char(8)
-  teamId: number | null;
+  userId: number;
+  organizationId: number;
   spaceId: number;
-  timeFrom: Date;
-  timeTo: Date;
-  timePost: Date;
-  content: IReservationContent ; // 
-  comment: string | null; // varchar(300)
+  title: string;
+  content: IReservationContent;
+  timeFrom: string;
+  timeTo: string;
+  timePost: string;
+  timeEdit: string;
   state: ReservationStateEnum;
-  workerNeed: ReservationWorkerNeedEnum;
 }
 
 export type IReservationResponse = IReservation & {
   space: ISpace;
   user: IUser;
-  team?: ITeam;
+  organization: IOrganization;
 };
 
 export type IReservationCreate = Omit<
   IReservation,
-  "id" | "timePost" | "comment" 
-> ;
+  "id" | "timePost" | "timeEdit"
+>;
 
 export type IReservationCreateBody = IReservationCreate & {
   timeFrom: string;
@@ -37,13 +37,13 @@ export type IReservationCreateBody = IReservationCreate & {
 
 export type IReservationUpdate = Omit<
   IReservation,
-  "userId" | "timePost" | "spaceId" | "timeFrom" | "timeTo" | "content"
+  "userId" | "timePost" | "spaceId" | "organizationId" | "timeEdit" | "state"
 >;
 
 // 공간 예약 시간 체크 요청
 export type ISpaceTimeCheckRequest = Pick<
   IReservationCreate,
-  "spaceId" | "timeFrom" | "timeTo"
+  "spaceId" | "organizationId" | "timeFrom" | "timeTo"
 >;
 
 // 사용자 예약 시간 체크 요청
@@ -60,7 +60,7 @@ export const reservationStateOptions: {
   [ReservationStateEnum.RECEIVED]: "접수",
 };
 
-export const reservationStateOptionsEng: {
+export const reservationStateOptionsEn: {
   [key in ReservationStateEnum]: string;
 } = {
   [ReservationStateEnum.GRANT]: "grant",
@@ -76,7 +76,7 @@ export const workerNeedOptions: { [key in ReservationWorkerNeedEnum]: string } =
   [ReservationWorkerNeedEnum.FAILED]: "근로 배치 실패",
 };
 
-export const workerNeedOptionsEng: { [key in ReservationWorkerNeedEnum]: string } = {
+export const workerNeedOptionsEn: { [key in ReservationWorkerNeedEnum]: string } = {
   [ReservationWorkerNeedEnum.UNNECESSARY]: "unnecessary",
   [ReservationWorkerNeedEnum.REQUIRED]: "required",
   [ReservationWorkerNeedEnum.COMPLETED]: "completed",
@@ -86,18 +86,6 @@ export const workerNeedOptionsEng: { [key in ReservationWorkerNeedEnum]: string 
 export const workerNeedUserOptions = {
   [ReservationWorkerNeedEnum.UNNECESSARY]: "근로 필요 없음",
   [ReservationWorkerNeedEnum.REQUIRED]: "근로 필요",
-};
-
-export const hallEquipsOptions = {
-  [ReservationHallEquipEnum.LIGHT]: "조명",
-  [ReservationHallEquipEnum.SOUND]: "음향",
-  [ReservationHallEquipEnum.PROJECTOR]: "프로젝터",
-};
-
-export const reservationCharacterOptions = {
-  [ReservationCharacterEnum.RELIGION]: "종교적",
-  [ReservationCharacterEnum.RENTABILITY]: "영리성",
-  [ReservationCharacterEnum.POLITIC]: "정치적",
 };
 
 export function isValidWorkerNeed(input: ReservationWorkerNeedEnum): boolean {

@@ -6,10 +6,9 @@ type UserDBResult = InferSelectModel<typeof User>;
 
 export class MUser implements IUser {
   id: IUser['id'];
-  kaistUID: IUser['kaistUID'];
   nameKr: IUser['nameKr'];
   nameEn: IUser['nameEn'];
-  userNumber: IUser['userNumber'];
+  studentNumber: IUser['studentNumber'];
   email: IUser['email'];
   type: IUser['type'];
 
@@ -20,10 +19,9 @@ export class MUser implements IUser {
   static fromDB(user: UserDBResult): MUser {
     return new MUser({
       id: user.id,
-      kaistUID: user.kaistUID,
       nameKr: user.nameKr ?? 'SSO 이름 오류',
       nameEn: user.nameEn ?? 'SSO Name Error',
-      userNumber: user.userNumber,
+      studentNumber: user.studentNumber,
       email: user.email,
       type: user.type,
     });
