@@ -99,7 +99,7 @@ export const Header = () => {
 
   return (
     <Box
-      position="fixed"
+      position="sticky"
       top={0}
       w="100%"
       bg="white"
@@ -116,6 +116,8 @@ export const Header = () => {
         <Drawer.Root
           placement="start"
           size="sm"
+          initialFocusEl={() => null}
+
         >
           <Drawer.Trigger asChild>
             <IconButton
@@ -160,7 +162,7 @@ export const Header = () => {
                       </Link>
                     </List.Item>
                   </List.Root>
-                  <Separator />
+                  {/* <Separator /> */}
                   <VStack align="start">
                     <Text fontWeight="semibold">공간위 공간들</Text>
                     <Link as={Link} href="/space/individual-practice-room">
@@ -245,7 +247,10 @@ export const Header = () => {
             </Drawer.Positioner>
           </Portal>
         </Drawer.Root>
-        <Breadcrumb.Root variant="plain">
+        <Breadcrumb.Root
+          variant="plain"
+          display={{ base: "none", md: "block" }}
+        >
           <Breadcrumb.List margin={0} padding={0}>
             <Breadcrumb.Item>
               <Breadcrumb.Link

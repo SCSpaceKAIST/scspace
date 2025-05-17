@@ -11,6 +11,7 @@ import { ReactNode } from "react";
 import Footer from "@scspace-client/Components/Footer";
 // import "../react-datepicker/dist/react-datepicker.css";
 import Providers from "./providers";
+import { Box } from "@chakra-ui/react";
 export const metadata = {
   title: "학생문화공간위원회",
   description: "학생문화공간위원회 웹사이트",
@@ -49,10 +50,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <Providers>
           <Header/>
-          <div style={{ padding: "20px", margin: "100px" }}>
+          <Box
+            padding={8}
+          >
             {children} {/* children이 여기에 렌더링됩니다 */}
-          </div>
-          <Footer/>
+          </Box>
+          {/* <Footer/> */}
         </Providers>
       </body>
     </html>
