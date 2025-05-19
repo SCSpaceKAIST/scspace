@@ -47,8 +47,8 @@ export class ReservationController {
     const query: ISpaceTimeCheckRequest = {
       spaceId: spaceId,
       organizationId: 0, // TODO: Get from context
-      timeFrom: timeFrom,
-      timeTo: timeTo,
+      timeFrom: new Date(timeFrom).toISOString(),
+      timeTo: new Date(timeTo).toISOString(),
     };
     return await this.reservationService.checkTimeAvailability(query);
   }
@@ -65,8 +65,8 @@ export class ReservationController {
       spaceId: spaceId,
       userId: userId,
       organizationId: 0, // TODO: Get from context
-      timeFrom: timeFrom,
-      timeTo: timeTo,
+      timeFrom: new Date(timeFrom).toISOString(),
+      timeTo: new Date(timeTo).toISOString(),
     };
     return await this.reservationService.checkUserReservationTime(query);
   }
