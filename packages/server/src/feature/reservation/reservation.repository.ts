@@ -125,6 +125,8 @@ export class ReservationRepository {
           title: reservationInput.title,
           timeFrom: timeFrom,
           timeTo: timeTo,
+          timePost: new Date().toISOString(),
+          timeUpdate: new Date().toISOString(),
           state: ReservationStateEnum.WAIT,
         } as InferInsertModel<typeof Reservation>);
 
@@ -177,6 +179,7 @@ export class ReservationRepository {
       title: data.title,
       timeFrom: data.timeFrom,
       timeTo: data.timeTo,
+      timeUpdate: new Date().toISOString(),
       state: data.state,
     } as Partial<InferInsertModel<typeof Reservation>>;
 
