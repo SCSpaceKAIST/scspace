@@ -11,8 +11,12 @@ export class MOrganization implements IOrganization {
   timeRegister: IOrganization['timeRegister'];
   timeUpdate: IOrganization['timeUpdate'];
 
-  constructor(private readonly organization: IOrganization) {
-    Object.assign(this, organization);
+  constructor(organization: IOrganization) {
+    this.id = organization.id;
+    this.name = organization.name;
+    this.delegatorId = organization.delegatorId;
+    this.timeRegister = organization.timeRegister;
+    this.timeUpdate = organization.timeUpdate;
   }
 
   static fromDB(organization: OrganizationDBResult): MOrganization {

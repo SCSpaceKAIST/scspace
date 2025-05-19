@@ -8,7 +8,7 @@ import {
 import { IOrganization } from '@scspace-depot/types/organization';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ReservationRepository } from './reservation.repository';
-import { checkContainAllId, takeAll, takeOne } from 'src/common/util';
+import { checkContainAllId, takeAll, takeOne, timeRangeCheck } from 'src/common/util';
 import { UserPublicService } from '../user/user.public.service';
 import { SpacePublicService } from '../space/space.public.service';
 import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
@@ -46,55 +46,21 @@ export class ReservationService {
     return Math.floor((to.getTime() - from.getTime()) / (1000 * 60));
   }
 
-  private async validateTimeConstraints(
-    userId: number,
+  async getReservationBySpaceIDBetweenTime(
     spaceId: number,
-    timeFrom: string,
-    timeTo: string,
-    excludeReservationId?: number,
-  ): Promise<void> {
-    // 1. Get space type
-    const space = await this.spacePublicService.fetchById(spaceId);
-    
-    // 2. Check daily time limit
-    const duration = this.calculateDurationInMinutes(new Date(timeFrom), new Date(timeTo));
-    const maxDayTime = reservationMaxDayTime[space.spaceType];
-    
-    if (duration > maxDayTime) {
-      throw new BadRequestException(
-        `Reservation duration exceeds daily limit of ${maxDayTime} minutes for ${space.spaceType}`,
-      );
-    }
+    timeFrom?: string,
+    timeTo?: string,
+  ): Promise<IReservationResponse[]> {
 
-    // 3. Check weekly time limit
-    const weekRange = this.getWeekRange(new Date(timeFrom));
-    const weekReservations = await this.reservationRepository.find({
-      userId,
-      spaceId,
-      timeRange: {
-        timeFrom: weekRange.start.toISOString(),
-        timeTo: weekRange.end.toISOString(),
-      },
+    if (timeFrom && timeTo && !timeRangeCheck(timeFrom, timeTo)) {
+      throw new BadRequestException('timeFrom must be before timeTo');
+    }
+    // If either timeFrom or timeTo is missing, fetch all reservations for the space
+    const reservations = await this.reservationRepository.find({ 
+      spaceId, 
+      ...(timeFrom && timeTo ? { timeRange: { timeFrom, timeTo } } : {})
     });
 
-    const totalWeekMinutes = weekReservations.reduce(
-      (total, reservation) =>
-        total + this.calculateDurationInMinutes(new Date(reservation.timeFrom), new Date(reservation.timeTo)),
-      duration, // Include the current reservation duration
-    );
-
-    const maxWeekTime = reservationMaxWeekTime[space.spaceType];
-    if (totalWeekMinutes > maxWeekTime) {
-      throw new BadRequestException(
-        `Total weekly reservation time would exceed limit of ${maxWeekTime} minutes for ${space.spaceType}`,
-      );
-    }
-  }
-
-  async getReservationBySpaceID(
-    spaceId: number,
-  ): Promise<IReservationResponse[]> {
-    const reservations = await this.reservationRepository.find({ spaceId });
     const userIds = reservations.map((reservation) => reservation.userId);
     const organizationIds = reservations.map((reservation) => reservation.organizationId);
 
@@ -116,6 +82,9 @@ export class ReservationService {
   }
 
   async checkTimeAvailability(query: ISpaceTimeCheckRequest): Promise<boolean> {
+    if (query.timeFrom && query.timeTo && !timeRangeCheck(query.timeFrom, query.timeTo)) {
+      throw new BadRequestException('timeFrom must be before timeTo');
+    }
     return await this.reservationPublicService.checkTimeAvailability(
       query.spaceId,
       query.timeFrom,
@@ -126,6 +95,9 @@ export class ReservationService {
   async checkUserReservationTime(
     query: IUserTimeCheckRequest,
   ): Promise<boolean> {
+    if (query.timeFrom && query.timeTo && !timeRangeCheck(query.timeFrom, query.timeTo)) {
+      throw new BadRequestException('timeFrom must be before timeTo');
+    }
     return await this.reservationPublicService.checkUserReservationTime(
       query.userId,
       query.spaceId,
@@ -137,19 +109,48 @@ export class ReservationService {
   async postReservation(
     reservationInput: IReservationCreate,
   ): Promise<MReservation> {
-    // Validate time constraints before creating reservation
-    await this.validateTimeConstraints(
+    // 1. Validate all referenced entities exist
+    const [user, organizations, space] = await Promise.all([
+      this.userPublicService.fetchUser(reservationInput.userId),
+      this.organizationPublicService.fetchByOrganizationIds([reservationInput.organizationId]),
+      this.spacePublicService.fetchById(reservationInput.spaceId),
+    ]);
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    if (!organizations || organizations.length === 0) {
+      throw new BadRequestException('Organization not found');
+    }
+
+    if (!space) {
+      throw new BadRequestException('Space not found');
+    }
+
+    // 2. Check if user belongs to the organization
+    const userOrganization = await this.organizationPublicService.fetchByUserId(reservationInput.userId);
+    if (!userOrganization || userOrganization.id !== reservationInput.organizationId) {
+      throw new BadRequestException('User does not belong to the specified organization');
+    }
+
+    if (reservationInput.timeFrom && reservationInput.timeTo && !timeRangeCheck(reservationInput.timeFrom, reservationInput.timeTo)) {
+      throw new BadRequestException('timeFrom must be before timeTo');
+    }
+
+    // 3. Validate time constraints
+    await this.reservationPublicService.validateTimeConstraints(
       reservationInput.userId,
       reservationInput.spaceId,
       reservationInput.timeFrom,
       reservationInput.timeTo,
+      { 
+        throwError: true,
+      }
     );
 
-    const space = await this.spacePublicService.fetchById(reservationInput.spaceId);
-
-    // Check if the time is available
-    const isAvailable = await this.reservationPublicService.checkReservationAvailability(
-      reservationInput.userId,
+    // 4. Check if the time is available
+    const isAvailable = await this.reservationPublicService.checkTimeAvailability(
       reservationInput.spaceId,
       reservationInput.timeFrom,
       reservationInput.timeTo,
@@ -159,10 +160,8 @@ export class ReservationService {
       throw new BadRequestException('Time is not available');
     }
 
-    const reservation = await this.reservationRepository.insert({
-      ...reservationInput,
-      state: this.getDefaultStatus(space.spaceType),
-    });
+    // 5. Create the reservation
+    const reservation = await this.reservationRepository.insert(reservationInput);
 
     return reservation;
   }
@@ -177,35 +176,17 @@ export class ReservationService {
       .then(takeOne('reservation'));
 
     // If updating time or state to GRANT, validate time constraints
-    if (
-      (reservationInput.timeFrom && reservationInput.timeTo) ||
-      (reservation.state !== ReservationStateEnum.GRANT &&
-        reservationInput.state === ReservationStateEnum.GRANT)
-    ) {
-      await this.validateTimeConstraints(
+    if (reservationInput.timeFrom && reservationInput.timeTo) {
+      await this.reservationPublicService.validateTimeConstraints(
         reservation.userId,
         reservation.spaceId,
-        reservationInput.timeFrom || reservation.timeFrom,
-        reservationInput.timeTo || reservation.timeTo,
-        reservation.id,
+        reservationInput.timeFrom,
+        reservationInput.timeTo,
+        { 
+          throwError: true,
+          excludeReservationId: reservation.id 
+        }
       );
-    }
-
-    // Check availability if changing to GRANT state
-    if (
-      reservation.state !== ReservationStateEnum.GRANT &&
-      reservationInput.state === ReservationStateEnum.GRANT
-    ) {
-      const isAvailable = await this.reservationPublicService.checkReservationAvailability(
-        reservation.userId,
-        reservation.spaceId,
-        reservation.timeFrom,
-        reservation.timeTo,
-      );
-
-      if (!isAvailable) {
-        throw new BadRequestException('Time is not available');
-      }
     }
 
     const newReservation = {

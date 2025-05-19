@@ -1,4 +1,4 @@
-import { Logger, Injectable } from '@nestjs/common';
+import { Logger, Injectable, BadRequestException } from '@nestjs/common';
 import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
 import { ReservationRepository } from './reservation.repository';
 import { reservationMaxDayTime } from '@scspace-depot/consts/reservation.const';
@@ -20,8 +20,8 @@ export class ReservationPublicService {
     return date.toISOString().slice(0, 19).replace('T', ' ');
   }
 
-  getDifferenceInMinutes(timeFrom: string, timeTo: string): number {
-    return Math.floor((new Date(timeTo).getTime() - new Date(timeFrom).getTime()) / (60 * 1000));
+  private getDifferenceInMinutes(timeFrom: string, timeTo: string): number {
+    return (new Date(timeTo).getTime() - new Date(timeFrom).getTime()) / (60 * 1000);
   }
 
   async checkTimeAvailability(
@@ -113,47 +113,66 @@ export class ReservationPublicService {
     return totalReservedTime; // 밀리초를 분으로 변환
   }
 
-  async checkUserReservationTime(
+  async validateTimeConstraints(
     userId: number,
     spaceId: number,
     timeFrom: string,
     timeTo: string,
+    options: {
+      throwError?: boolean;
+      excludeReservationId?: number;
+    } = {}
   ): Promise<boolean> {
     // 공간위원이면 최대 시간 제한 없음
     if (await this.userPublicService.isManager(userId)) {
       return true;
     }
 
-    const daily = await this.getDailyReservationTime(userId, spaceId, timeFrom);
-    const weekly = await this.getWeeklyReservationTime(
-      userId,
-      spaceId,
-      timeFrom,
-    );
-    const newReservationTime = this.getDifferenceInMinutes(timeFrom, timeTo);
     const space = await this.spacePublicService.fetchById(spaceId);
     if (!space) {
+      if (options.throwError) {
+        throw new BadRequestException('Space not found');
+      }
       return false;
     }
 
-    const spaceType = space.spaceType;
-    Logger.log(
-      JSON.stringify({
-        daily,
-        weekly,
-        newReservationTime,
-        maxD: reservationMaxDayTime[spaceType],
-        maxW: reservationMaxWeekTime[spaceType],
-      }),
-    );
-    Logger.log(daily + newReservationTime <= reservationMaxDayTime[spaceType]);
-    Logger.log(
-      weekly + newReservationTime <= reservationMaxWeekTime[spaceType],
-    );
-    return (
-      daily + newReservationTime <= reservationMaxDayTime[spaceType] &&
-      weekly + newReservationTime <= reservationMaxWeekTime[spaceType]
-    );
+    const newReservationTime = this.getDifferenceInMinutes(timeFrom, timeTo);
+    const maxDayTime = reservationMaxDayTime[space.spaceType];
+    const maxWeekTime = reservationMaxWeekTime[space.spaceType];
+
+    // Check if the new reservation itself exceeds daily limit
+    if (newReservationTime > maxDayTime) {
+      if (options.throwError) {
+        throw new BadRequestException(
+          `Reservation duration exceeds daily limit of ${maxDayTime} minutes for ${space.spaceType}`
+        );
+      }
+      return false;
+    }
+
+    const daily = await this.getDailyReservationTime(userId, spaceId, timeFrom);
+    const weekly = await this.getWeeklyReservationTime(userId, spaceId, timeFrom);
+
+    const isWithinLimits = 
+      daily + newReservationTime <= maxDayTime &&
+      weekly + newReservationTime <= maxWeekTime;
+
+    if (!isWithinLimits && options.throwError) {
+      throw new BadRequestException(
+        `Total reservation time would exceed limits (daily: ${maxDayTime}, weekly: ${maxWeekTime}) for ${space.spaceType}`
+      );
+    }
+
+    return isWithinLimits;
+  }
+
+  async checkUserReservationTime(
+    userId: number,
+    spaceId: number,
+    timeFrom: string,
+    timeTo: string,
+  ): Promise<boolean> {
+    return this.validateTimeConstraints(userId, spaceId, timeFrom, timeTo);
   }
 
   async checkReservationAvailability(

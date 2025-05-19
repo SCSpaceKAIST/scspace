@@ -14,3 +14,13 @@ export type IOrganizationResponse = IOrganization & {
   delegator: IUser;
   members: IOrganizationMemberResponse[];
 };
+
+export type IOrganizationCreate = Omit<
+  IOrganization,
+  "id" | "timeRegister" | "timeUpdate"
+>;
+
+export type IOrganizationUpdate = Omit<
+  IOrganization,
+  "id" | "timeRegister" | "timeUpdate"
+>;

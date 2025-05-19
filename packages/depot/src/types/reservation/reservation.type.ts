@@ -15,7 +15,7 @@ export interface IReservation {
   timeFrom: string;
   timeTo: string;
   timePost: string;
-  timeEdit: string;
+  timeUpdate: string;
   state: ReservationStateEnum;
 }
 
@@ -27,17 +27,12 @@ export type IReservationResponse = IReservation & {
 
 export type IReservationCreate = Omit<
   IReservation,
-  "id" | "timePost" | "timeEdit"
+  "id" | "timePost" | "timeEdit" | "timeUpdate" | "state"
 >;
-
-export type IReservationCreateBody = IReservationCreate & {
-  timeFrom: string;
-  timeTo: string;
-};
 
 export type IReservationUpdate = Omit<
   IReservation,
-  "userId" | "timePost" | "spaceId" | "organizationId"
+  "userId" | "timePost" | "spaceId" | "organizationId" | "timeUpdate" | "state"
 >;
 
 // 공간 예약 시간 체크 요청

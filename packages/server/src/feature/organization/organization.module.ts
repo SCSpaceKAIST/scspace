@@ -5,15 +5,17 @@ import { OrganizationRepository } from './organization.repository';
 import { OrganizationMemberRepository } from './organization.member.repository';
 import { OrganizationPublicService } from './organization.public.service';
 import { DBModule } from '@scspace-server/db/db.module';
-
+import { UserModule } from '../user/user.module';
+import { UserRepository } from '../user/user.repository';
 @Module({
-  imports: [DBModule],
+  imports: [DBModule, UserModule],
   controllers: [OrganizationController],
   providers: [
     OrganizationService,
     OrganizationRepository,
     OrganizationMemberRepository,
     OrganizationPublicService,
+    UserRepository,
   ],
   exports: [OrganizationService, OrganizationPublicService],
 })

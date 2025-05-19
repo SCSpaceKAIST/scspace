@@ -41,6 +41,7 @@ export class UserRepository {
 
   async findOne(id: number): Promise<MUser | null> {
     const users = await this.find({ id });
+    console.log(users);
     return users.length > 0 ? users[0] : null;
   }
 

@@ -13,13 +13,11 @@ import {
 import {
   eq,
   and,
-  lte,
-  gte,
-  or,
   SQL,
   inArray,
   InferInsertModel,
-  between,
+  gt,
+  lt,
 } from 'drizzle-orm';
 import {
   IReservationCreate,
@@ -29,11 +27,12 @@ import {
   ReservationStateEnum,
 } from '@scspace-depot/enums/reservation.enum';
 import { MReservation } from '@scspace-server/feature/reservation/reservation.model';
+import { formatDateToSQL } from '@scspace-server/common/util';
 
 @Injectable()
 export class ReservationRepository {
   constructor(
-    @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
+    @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>
   ) {}
 
   async find(param: {
@@ -77,16 +76,12 @@ export class ReservationRepository {
       const timeTo = param.timeRange.timeTo;
 
       if (timeFrom && timeTo) {
-        const timeWhereClause: SQL[] = [];
-        timeWhereClause.push(between(Reservation.timeFrom, timeFrom, timeTo));
-        timeWhereClause.push(between(Reservation.timeTo, timeFrom, timeTo));
-        timeWhereClause.push(
+        whereClause.push(
           and(
-            lte(Reservation.timeFrom, timeFrom),
-            gte(Reservation.timeTo, timeTo),
-          ),
+            gt(Reservation.timeTo, timeFrom),
+            lt(Reservation.timeFrom, timeTo)
+          )
         );
-        whereClause.push(or(...timeWhereClause));
       }
     }
 
@@ -111,13 +106,15 @@ export class ReservationRepository {
       (result) => result.reservationContent !== null
     );
 
-    return validReservations.map((result) => MReservation.fromDB(result));
+    return validReservations.map((result) => MReservation.fromDB(result.reservation, result.reservationContent));
   }
 
   async insert(
     reservationInput: IReservationCreate,
   ): Promise<MReservation> {
     return await this.db.transaction(async (tx) => {
+      const timeFrom = formatDateToSQL(new Date(reservationInput.timeFrom));
+      const timeTo = formatDateToSQL(new Date(reservationInput.timeTo));
       // Insert reservation
       const [insertedReservation] = await tx
         .insert(Reservation)
@@ -126,8 +123,8 @@ export class ReservationRepository {
           organizationId: reservationInput.organizationId,
           spaceId: reservationInput.spaceId,
           title: reservationInput.title,
-          timeFrom: reservationInput.timeFrom,
-          timeTo: reservationInput.timeTo,
+          timeFrom: timeFrom,
+          timeTo: timeTo,
           state: ReservationStateEnum.WAIT,
         } as InferInsertModel<typeof Reservation>);
 
@@ -168,7 +165,7 @@ export class ReservationRepository {
         throw new BadRequestException('Failed to fetch created reservation');
       }
 
-      return MReservation.fromDB(result);
+      return MReservation.fromDB(result.reservation, result.reservationContent);
     });
   }
 

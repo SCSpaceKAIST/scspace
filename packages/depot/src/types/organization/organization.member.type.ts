@@ -9,8 +9,6 @@ export interface IOrganizationMember {
   timeRegister: string;
 }
 
-
 export type IOrganizationMemberResponse = IOrganizationMember & {
   user: IUser;
-  organization: IOrganization;
-};
+}

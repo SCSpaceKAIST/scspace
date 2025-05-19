@@ -12,8 +12,13 @@ export class MUser implements IUser {
   email: IUser['email'];
   type: IUser['type'];
 
-  constructor(private readonly user: IUser) {
-    Object.assign(this, user);
+  constructor(user: IUser) {
+    this.id = user.id;
+    this.nameKr = user.nameKr;
+    this.nameEn = user.nameEn;
+    this.studentNumber = user.studentNumber;
+    this.email = user.email;
+    this.type = user.type;
   }
 
   static fromDB(user: UserDBResult): MUser {

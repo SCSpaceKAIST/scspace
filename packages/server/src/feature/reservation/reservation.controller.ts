@@ -14,7 +14,7 @@ import { ReservationService } from './reservation.service';
 import {
   IReservation,
   IReservationResponse,
-  IReservationCreateBody,
+  IReservationCreate,
   ISpaceTimeCheckRequest,
   IUserTimeCheckRequest
 } from '@scspace-depot/types/reservation';
@@ -23,94 +23,71 @@ import {
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
 
-  @Get('/space/:spaceId')
-  async getReservationBySpaceID(@Param('spaceId') spaceId: number) {
-    console.log('getReservationBySpaceID', spaceId);
-    const res = await this.reservationService.getReservationBySpaceID(
+  @Get('space')
+  async getReservationBySpaceID(
+    @Query('spaceId', ParseIntPipe) spaceId: number,
+    @Query('timeFrom') timeFrom?: string,
+    @Query('timeTo') timeTo?: string
+  ): Promise<IReservationResponse[]> {
+    return await this.reservationService.getReservationBySpaceIDBetweenTime(
       spaceId,
+      timeFrom,
+      timeTo,
     );
-    console.log('getReservationBySpaceID res', res);
-    return res;
   }
 
   // 예약 시간대가 비었는지 확인하는 GET 요청
   @Get('timeCheck')
   async checkTimeAvailability(
-    @Query('spaceId') spaceId: string,
-    @Query('timeFrom') timeFrom: string, // ISO 8601 문자열로 받음
-    @Query('timeTo') timeTo: string, // ISO 8601 문자열로 받음
+    @Query('spaceId', ParseIntPipe) spaceId: number,
+    @Query('timeFrom') timeFrom: string,
+    @Query('timeTo') timeTo: string,
   ): Promise<boolean> {
-    console.log('checkTimeAvailability', { spaceId, timeFrom, timeTo });
     const query: ISpaceTimeCheckRequest = {
-      spaceId: parseInt(spaceId),
+      spaceId: spaceId,
       organizationId: 0, // TODO: Get from context
       timeFrom: timeFrom,
       timeTo: timeTo,
     };
-    const res = await this.reservationService.checkTimeAvailability(query);
-    console.log('checkTimeAvailability res', res);
-    return res;
+    return await this.reservationService.checkTimeAvailability(query);
   }
 
   // 사용자의 주간 예약 시간 확인하는 GET 요청
   @Get('userCheck')
   async checkUserReservationTime(
-    @Query('spaceId') spaceId: string,
-    @Query('userId') userId: string,
+    @Query('spaceId', ParseIntPipe) spaceId: number,
+    @Query('userId', ParseIntPipe) userId: number,
     @Query('timeFrom') timeFrom: string,
     @Query('timeTo') timeTo: string,
   ): Promise<boolean> {
-    console.log('checkUserReservationTime', {
-      spaceId,
-      userId,
-      timeFrom,
-      timeTo,
-    });
     const query: IUserTimeCheckRequest = {
-      spaceId: parseInt(spaceId),
-      userId: parseInt(userId),
+      spaceId: spaceId,
+      userId: userId,
       organizationId: 0, // TODO: Get from context
       timeFrom: timeFrom,
       timeTo: timeTo,
     };
-    const res = await this.reservationService.checkUserReservationTime(query);
-    console.log('checkUserReservationTime res', res);
-    return res;
+    return await this.reservationService.checkUserReservationTime(query);
   }
 
   @Get('manage')
   async getManageReservation(): Promise<IReservationResponse[]> {
-    console.log('getManageReservation');
-    const res = await this.reservationService.getManageReservation();
-    console.log('getManageReservation res', res);
-    return res;
+    return await this.reservationService.getManageReservation();
   }
 
   @Get('user/:id')
   async getReservationListByUserId(
     @Param('id') userId: number,
   ): Promise<IReservationResponse[]> {
-    console.log('getReservationListByUserId', userId);
-    const res = await this.reservationService.getReservationListByUserId(
-      userId,
-    );
-    console.log('getReservationListByUserId res', res);
-    return res;
+    return await this.reservationService.getReservationListByUserId(userId);
   }
 
   // 예약을 등록하는 POST 요청
   @Post()
   async postReservation(
-    @Body() reservationInput: IReservationCreateBody,
+    @Body() reservationInput: IReservationCreate,
   ): Promise<IReservation> {
-    console.log('postReservation', reservationInput);
-    const res = await this.reservationService.postReservation({
-      ...reservationInput,
-      timeFrom: reservationInput.timeFrom,
-      timeTo: reservationInput.timeTo,
-    });
-    console.log('postReservation res', res);
-    return res;
+    return await this.reservationService.postReservation(reservationInput);
   }
 
   @Put()

@@ -11,11 +11,11 @@ import { OrganizationModule } from 'src/feature/organization/organization.module
 @Module({
   imports: [DBModule, SpaceModule, UserModule, OrganizationModule],
   providers: [
-    ReservationService,
     ReservationRepository,
     ReservationPublicService,
+    ReservationService,
   ],
   controllers: [ReservationController],
-  exports: [ReservationPublicService],
+  exports: [ReservationPublicService, ReservationService],
 })
 export class ReservationModule {}

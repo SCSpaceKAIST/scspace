@@ -1,5 +1,15 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
+export function timeRangeCheck(timeFrom: string, timeTo: string): boolean {
+  const timeFromDate = new Date(timeFrom);
+  const timeToDate = new Date(timeTo);
+  return timeFromDate < timeToDate;
+}
+
+export function formatDateToSQL(date: Date): string {
+  return date.toISOString().slice(0, 19).replace('T', ' ');
+} 
+
 export function takeOne<T>(name?: string): (array: T[]) => T {
   return (array: T[]) => {
     // 배열의 요소가 하나만 나왔는 지를 검증하는 함수

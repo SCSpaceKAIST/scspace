@@ -175,7 +175,7 @@ export class AuthService {
       //const token = Buffer.from(cookie, 'base64').toString('utf8');
       const token = cookie;
       const decoded = this.jwtService.verify(token);
-      Logger.log(decoded);
+      // Logger.log(decoded);
       return decoded;
     } catch (err) {
       if (err instanceof TokenExpiredError) {

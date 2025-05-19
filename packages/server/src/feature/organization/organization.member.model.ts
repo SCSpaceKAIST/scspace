@@ -10,8 +10,11 @@ export class MOrganizationMember implements IOrganizationMember {
   userId: IOrganizationMember['userId'];
   timeRegister: IOrganizationMember['timeRegister'];
 
-  constructor(private readonly organizationMember: IOrganizationMember) {
-    Object.assign(this, organizationMember);
+  constructor(organizationMember: IOrganizationMember) {
+    this.id = organizationMember.id;
+    this.organizationId = organizationMember.organizationId;
+    this.userId = organizationMember.userId;
+    this.timeRegister = organizationMember.timeRegister;
   }
 
   static fromDB(organizationMember: OrganizationMemberDBResult): MOrganizationMember {

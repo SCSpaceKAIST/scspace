@@ -8,6 +8,6 @@ import { DBModule } from 'src/db/db.module';
   imports: [DBModule],
   controllers: [SpaceController],
   providers: [SpaceRepository, SpacePublicService],
-  exports: [SpacePublicService],
+  exports: [SpacePublicService, SpaceRepository],
 })
 export class SpaceModule {}

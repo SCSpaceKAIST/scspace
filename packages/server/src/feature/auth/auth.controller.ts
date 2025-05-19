@@ -43,14 +43,14 @@ export class AuthController {
 
   @Get('verification')
   async verification(@Req() req: Request, @Res() res: Response): Promise<void> {
-    console.log('verification', req.cookies);
+    // console.log('verification', req.cookies);
     const verifyRes = await this.authService.verification(req.cookies, res);
     const response: IVerificationResponse = {
       isLogined: verifyRes !== null,
       userInfo: verifyRes,
     };
-    console.log('verification res', verifyRes);
-    console.log('verification return value', response);
+    // console.log('verification res', verifyRes);
+    // console.log('verification return value', response);
     res
       .status(200)
       .header('Content-Type', 'application/json') // 🔥 명시적으로 설정

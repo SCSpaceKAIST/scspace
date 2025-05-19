@@ -10,7 +10,6 @@ export const reservationMaxDayTime: { [key in SpaceTypeEnum]: number } = {
   [SpaceTypeEnum.SUMI]: 1440, // 조수미홀, 제한 없음 (하루 24시간 가능)
   [SpaceTypeEnum.OPEN]: 1440, // 오픈스페이스, 제한 없음 (하루 24시간 가능)
   [SpaceTypeEnum.WORK]: 360, // 창작공방, 하루 최대 6시간
-  [SpaceTypeEnum.BUSKING]: 1440, // 버스킹, 제한 없음 (하루 24시간 가능)
 };
 
 export const reservationMaxWeekTime: { [key in SpaceTypeEnum]: number } = {
@@ -23,7 +22,6 @@ export const reservationMaxWeekTime: { [key in SpaceTypeEnum]: number } = {
   [SpaceTypeEnum.SUMI]: 1440 * 2, // 조수미홀, 최대 48시간
   [SpaceTypeEnum.OPEN]: 1440 * 7, // 오픈스페이스, 제한 없음
   [SpaceTypeEnum.WORK]: 360 * 7, // 창작공방, 하루 최대 6시간
-  [SpaceTypeEnum.BUSKING]: 1440 * 7, // 버스킹, 제한 없음
 };
 
 export const reservationMinDate: { [key in SpaceTypeEnum]: number } = {
@@ -36,7 +34,6 @@ export const reservationMinDate: { [key in SpaceTypeEnum]: number } = {
   [SpaceTypeEnum.SUMI]: 10, // 조수미홀, 10일 전까지 예약 필수
   [SpaceTypeEnum.OPEN]: 5, // 오픈스페이스, 5일 전까지 예약 필수
   [SpaceTypeEnum.WORK]: 1, // 창작공방, 1일 전부터 예약 가능
-  [SpaceTypeEnum.BUSKING]: 5, // 버스킹, 5일 전부터 예약 가능
 };
 
 export const reservationMaxDate: { [key in SpaceTypeEnum]: number } = {
@@ -49,5 +46,4 @@ export const reservationMaxDate: { [key in SpaceTypeEnum]: number } = {
   [SpaceTypeEnum.SUMI]: 45, // 조수미홀, 전체 학내 구성원은 45일 전부터 예약 가능
   [SpaceTypeEnum.OPEN]: 45, // 오픈스페이스, 사용일 45일 전부터 예약 가능
   [SpaceTypeEnum.WORK]: 14, // 창작공방, 사용일 14일 전부터 예약 가능
-  [SpaceTypeEnum.BUSKING]: 45, // 버스킹, 사용일 45일 전부터 예약 가능
 };

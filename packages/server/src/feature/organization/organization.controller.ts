@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Delete, Param, ParseIntPipe, Body } from '@nestjs/common';
 import { OrganizationService } from './organization.service';
-import { IOrganization } from '@scspace-depot/types/organization';
+import { IOrganization, IOrganizationCreate, IOrganizationResponse } from '@scspace-depot/types/organization';
 import { MOrganizationMember } from './organization.member.model';
 
 @Controller('organization')
@@ -8,12 +8,12 @@ export class OrganizationController {
   constructor(private readonly organizationService: OrganizationService) {}
   @Post()
   async createOrganization(
-    @Body() organization: IOrganization,
+    @Body() organization: IOrganizationCreate,
   ): Promise<IOrganization> {
     return await this.organizationService.createOrganization(organization);
   }
 
-  @Get('organizations')
+  @Get()
   async getOrganizations(): Promise<IOrganization[]> {
     return await this.organizationService.getOrganizations();
   }
@@ -23,14 +23,14 @@ export class OrganizationController {
     return await this.organizationService.getOrganizationsByUserId(userId);
   }
 
-  @Get(':id/members')
-  async getOrganizationMembers(
+  @Get(':id')
+  async getOrganization(
     @Param('id', ParseIntPipe) organizationId: number,
-  ): Promise<MOrganizationMember[]> {
-    return await this.organizationService.getOrganizationMembers(organizationId);
+  ): Promise<IOrganizationResponse> {
+    return await this.organizationService.getOrganizationById(organizationId);
   }
 
-  @Post(':id/add-member/:userId')
+  @Get(':id/add-member/:userId')
   async addMember(
     @Param('id', ParseIntPipe) organizationId: number,
     @Param('userId', ParseIntPipe) userId: number,

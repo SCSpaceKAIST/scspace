@@ -1,6 +1,6 @@
 import { IReservation, IReservationContent } from '@scspace-depot/types/reservation';
 import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
-import { schema } from '@schema';
+import { Reservation, ReservationContent, schema } from '@schema';
 import { InferSelectModel } from 'drizzle-orm';
 
 type ReservationDBResult = {
@@ -9,15 +9,16 @@ type ReservationDBResult = {
 };
 
 export class MReservationContent implements IReservationContent {
-  id: number;
-  description: string;
-  innerParticipantNumber: number;
-  outerParticipantNumber: number;
-  food: string;
-  desk: number;
-  chair: number;
-  lobby: boolean;
-  workerNeed: number;
+  id: IReservationContent['id'];
+  description: IReservationContent['description'];
+  innerParticipantNumber: IReservationContent['innerParticipantNumber'];
+  outerParticipantNumber: IReservationContent['outerParticipantNumber'];
+  food: IReservationContent['food'];
+  desk: IReservationContent['desk'];
+  chair: IReservationContent['chair'];
+  lobby: IReservationContent['lobby'];
+  busking: IReservationContent['busking'];
+  workerNeed: IReservationContent['workerNeed'];
 
   constructor(data: IReservationContent) {
     this.id = data.id;
@@ -28,11 +29,23 @@ export class MReservationContent implements IReservationContent {
     this.desk = data.desk ?? 0;
     this.chair = data.chair ?? 0;
     this.lobby = data.lobby ?? false;
+    this.busking = data.busking ?? false;
     this.workerNeed = data.workerNeed ?? 1;
   }
 
-  static fromDB(result: InferSelectModel<typeof schema.ReservationContent>): MReservationContent {
-    return new MReservationContent(result);
+  static fromDB(reservationContent: typeof ReservationContent.$inferSelect): MReservationContent {
+    return new MReservationContent({
+      id: reservationContent.id,
+      description: reservationContent.description,
+      innerParticipantNumber: reservationContent.innerParticipantNumber,
+      outerParticipantNumber: reservationContent.outerParticipantNumber,
+      food: reservationContent.food,
+      desk: reservationContent.desk,
+      chair: reservationContent.chair,
+      lobby: reservationContent.lobby,
+      busking: reservationContent.busking,
+      workerNeed: reservationContent.workerNeed,
+    });
   }
 }
 
@@ -45,7 +58,7 @@ export class MReservation implements IReservation {
   timeFrom: IReservation['timeFrom'];
   timeTo: IReservation['timeTo'];
   timePost: IReservation['timePost'];
-  timeEdit: IReservation['timeEdit'];
+  timeUpdate: IReservation['timeUpdate'];
   state: IReservation['state'];
   content: MReservationContent;
 
@@ -58,7 +71,7 @@ export class MReservation implements IReservation {
     this.timeFrom = data.timeFrom;
     this.timeTo = data.timeTo;
     this.timePost = data.timePost;
-    this.timeEdit = data.timeEdit;
+    this.timeUpdate = data.timeUpdate;
     this.state = data.state;
     this.content = data.content ? new MReservationContent(data.content) : new MReservationContent({
       id: data.id,
@@ -69,24 +82,25 @@ export class MReservation implements IReservation {
       desk: 0,
       chair: 0,
       lobby: false,
+      busking: false,
       workerNeed: 1,
     });
   }
 
-  static fromDB(result: ReservationDBResult): MReservation {
+  static fromDB(reservation: typeof Reservation.$inferSelect, reservationContent: typeof ReservationContent.$inferSelect): MReservation {
     return new MReservation({
-      id: result.reservation.id,
-      userId: result.reservation.userId,
-      organizationId: result.reservation.organizationId,
-      spaceId: result.reservation.spaceId,
-      title: result.reservation.title,
-      timeFrom: result.reservation.timeFrom,
-      timeTo: result.reservation.timeTo,
-      timePost: result.reservation.timePost,
-      timeEdit: result.reservation.timeEdit,
-      state: result.reservation.state,
-      content: result.reservationContent ? MReservationContent.fromDB(result.reservationContent) : new MReservationContent({
-        id: result.reservation.id,
+      id: reservation.id,
+      userId: reservation.userId,
+      organizationId: reservation.organizationId,
+      spaceId: reservation.spaceId,
+      title: reservation.title,
+      timeFrom: reservation.timeFrom,
+      timeTo: reservation.timeTo,
+      timePost: reservation.timePost,
+      timeUpdate: reservation.timeUpdate,
+      state: reservation.state,
+      content: reservationContent ? MReservationContent.fromDB(reservationContent) : new MReservationContent({
+        id: reservation.id,
         description: '',
         innerParticipantNumber: 0,
         outerParticipantNumber: 0,
@@ -94,6 +108,7 @@ export class MReservation implements IReservation {
         desk: 0,
         chair: 0,
         lobby: false,
+        busking: false,
         workerNeed: 1,
       }),
     });

@@ -28,7 +28,7 @@ export const Reservation = mysqlTable('reservation', {
   timeFrom: timestamp('time_from', { mode: 'string' }).notNull(),
   timeTo: timestamp('time_to', { mode: 'string' }).notNull(),
   timePost: timestamp('time_post', { mode: 'string' }).notNull().defaultNow(),
-  timeEdit: timestamp('time_edit', { mode: 'string' }).onUpdateNow(),
+  timeUpdate: timestamp('time_update', { mode: 'string' }).onUpdateNow(),
   state: int('state').notNull().default(1), // ['grant', 'wait', 'received', 'rejected']
 });
 
@@ -43,6 +43,7 @@ export const ReservationContent = mysqlTable('reservation_content', {
   desk: int('desk').notNull().default(0), // For Sumi
   chair: int('chair').notNull().default(0), // For Sumi
   lobby: boolean('lobby').notNull().default(false), // For Sumi
+  busking: boolean('busking').notNull().default(false), // For Mirae & Sumi
   workerNeed: int('worker_need').notNull().default(1), // ['unnecessary', 'required', 'completed', 'failed']
 });
 

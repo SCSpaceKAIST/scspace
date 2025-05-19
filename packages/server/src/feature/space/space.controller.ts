@@ -6,7 +6,7 @@ import { ISpace } from '@scspace-depot/types/space';
 export class SpaceController {
   constructor(private readonly spaceService: SpacePublicService) {}
 
-  @Get('all')
+  @Get()
   async findAllSpace(): Promise<ISpace[]> {
     console.log('findAllSpace');
     const res = await this.spaceService.fetchAll();

@@ -3,7 +3,7 @@ import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema, Organization, OrganizationMember } from '@schema';
 import { and, eq, inArray, SQL, InferInsertModel } from 'drizzle-orm';
-import { IOrganization } from '@scspace-depot/types/organization';
+import { IOrganization, IOrganizationCreate } from '@scspace-depot/types/organization';
 import { MOrganization } from './organization.model';
 
 @Injectable()
@@ -47,7 +47,15 @@ export class OrganizationRepository {
     return result.map((e) => MOrganization.fromDB(e));
   }
 
-  async insert(organization: IOrganization): Promise<IOrganization> {
+  async fetchById(organizationId: number): Promise<IOrganization> {
+    const result = await this.db
+      .select()
+      .from(Organization)
+      .where(eq(Organization.id, organizationId));
+
+    return MOrganization.fromDB(result[0]);
+  }
+  async insert(organization: IOrganizationCreate): Promise<IOrganization> {
     return await this.db.transaction(async (tx) => {
       const insertData = {
         name: organization.name,
