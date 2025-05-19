@@ -6,14 +6,14 @@ import interactionPlugin from "@fullcalendar/interaction";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import Dropdown from "react-bootstrap/Dropdown";
 import moment from "moment";
-import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/APIs/auth/useLoginCheck";
 import { useQueryApi } from "@scspace-client/Hooks/useApi";
 import {
   IReservation,
   IReservationResponse,
 } from "@scspace-depot/types/reservation";
 import { ISpace } from "@scspace-depot/types/space";
-import { useSpaces } from "@scspace-client/Apis/space/useSpaces";
+import { useSpaces } from "@scspace-client/APIs/space/useSpaces";
 import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
 import { Tooltip } from "react-tooltip"; // 수정된 import 문
 import ReservationModal from "@scspace-client/Components/Reservation/ReservationModal";

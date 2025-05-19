@@ -6,16 +6,14 @@ import "../../static/vendor/glightbox/css/glightbox.min.css";
 import "../../static/vendor/swiper/swiper-bundle.min.css";
 import "../../static/css/variables.css";
 import "../../static/css/main.css";
-import { Header } from "@scspace-client/Components/Header";
+import Header from "@scspace-client/Components/Header";
 import { ReactNode } from "react";
-import Footer from "@scspace-client/Components/Footer";
-// import "../react-datepicker/dist/react-datepicker.css";
 import Providers from "./providers";
-import { Box } from "@chakra-ui/react";
+import { Box, Flex, } from "@chakra-ui/react";
 export const metadata = {
   title: "학생문화공간위원회",
   description: "학생문화공간위원회 웹사이트",
-  generateViewport: {
+  viewport: {
     width: "device-width",
     initialScale: 1.0,
     maximumScale: 1.0,
@@ -49,13 +47,22 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body>
         <Providers>
-          <Header/>
-          <Box
-            padding={8}
+          <Flex
+            width="100vw"
+            height="100vh"
+            direction="column"
           >
-            {children} {/* children이 여기에 렌더링됩니다 */}
-          </Box>
-          {/* <Footer/> */}
+            <Header />
+            <Box
+              flexGrow={1}
+              padding={8}
+              scrollbar="hidden"
+              overflowY="auto"
+              scrollBehavior="smooth"
+            >
+              {children}
+            </Box>
+          </Flex>
         </Providers>
       </body>
     </html>

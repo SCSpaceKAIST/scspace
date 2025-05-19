@@ -13,7 +13,7 @@ import {
   reservationStateOptionsEng,
 } from "@scspace-depot/types/reservation";
 import { IUser } from "@scspace-depot/types/user";
-import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/APIs/auth/useLoginCheck";
 import { useMutationApi } from "@scspace-client/Hooks/useApi";
 
 const ReservationList: React.FC = () => {

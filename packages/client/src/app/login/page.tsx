@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/APIs/auth/useLoginCheck";
 import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
 import { randomBytes, createHash } from "crypto";
 import axios from "axios";

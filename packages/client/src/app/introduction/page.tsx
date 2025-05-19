@@ -1,15 +1,13 @@
 import Introduction from "@scspace-client/Components/Introduction/Introduction";
-import PageHeader from "@scspace-client/Components/_commons/PageHeader";
+import PageTemplete from "@scspace-client/Components/_commons/PageTemplete";
 
 export default function IntroPage() {
   return (
-    <div>
-      <PageHeader
-        link_to_prop="/introduction"
-        page_name="소개"
-        sub_name="Introduction"
-      />
+    <PageTemplete
+      title="학생문화공간위원회에 대해"
+      subtitle="About SCSpace"
+    >
       <Introduction />
-    </div>
+    </PageTemplete>
   );
 }

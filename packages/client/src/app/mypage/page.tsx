@@ -1,16 +1,13 @@
-import ReservationList from "@scspace-client/Components/Reservation/ReservationList";
-import Space from "@scspace-client/Components/Space/Space";
-import PageHeader from "@scspace-client/Components/_commons/PageHeader";
+import Mypage from "@scspace-client/Components/Mypage/Mypage";
+import PageTemplete from "@scspace-client/Components/_commons/PageTemplete";
 
 export default function SpacePage() {
   return (
-    <div>
-      <PageHeader
-        link_to_prop={"/mypage"}
-        page_name={"마이페이지"}
-        sub_name="Mypage"
-      />
-      <ReservationList />
-    </div>
+    <PageTemplete
+      title="마이페이지"
+      subtitle="Mypage"
+    >
+      <Mypage />
+    </PageTemplete>
   );
 }

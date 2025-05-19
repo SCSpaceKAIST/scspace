@@ -1,58 +1,73 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { SpaceTypeNames, SpaceTypesArray } from "@scspace-depot/types/space";
+import PageSelector, { IPage, } from "../PageSelector/PageSelector";
 
-const Space: React.FC = () => {
+export default function Space() {
+  const _spaces = [
+    {
+      href: "/space/individual-practice-room",
+      helperText: "Individual Practice Room",
+      label: "개인연습실"
+    }, {
+      href: "/space/piano-room",
+      helperText: "Piano Room",
+      label: "피아노실"
+    },
+    {
+      href: "/space/ullim-hall",
+      helperText: "Josumi Hall",
+      label: "조수미홀",
+    },
+    {
+      href: "/space/mirae-hall",
+      helperText: "Mirae Hall",
+      label: "미래홀"
+    },
+    {
+      href: "/space/seminar-room",
+      helperText: "Seminar Room",
+      label: "세미나실"
+    },
+    {
+      href: "/space/open-space",
+      helperText: "Open Space",
+      label: "오픈 스페이스"
+    },
+    {
+      href: "/space/group-practice-room",
+      helperText: "Ensemble Room",
+      label: "합주실"
+    },
+    {
+      href: "/space/dance-studio",
+      helperText: "Dance Studio",
+      label: "무예실"
+    },
+    {
+      href: "/space/workshop",
+      helperText: "Workshop",
+      label: "창작공방",
+    },
+    {
+      href: "/",
+      helperText: "Busking Zone",
+      label: "버스킹 존"
+    }
+  ];
+
+  const spaces: IPage[] = _spaces.map((s, i) => {
+    return {
+      href: s.href,
+      kor: s.label,
+      eng: s.helperText,
+      preview: (<div>{i + 1}</div>)
+    }
+  });
+
   return (
-    <main id="main">
-      <section>
-        <div className="container">
-          <div id="portfolio" className="portfolio">
-            <div className="container-fluid">
-              <ul className="portfolio-flters"></ul>
-            </div>
-          </div>
-
-          <div>
-            <section id="features" className="features scspace">
-              <div className="container">
-                <div className="tab-pane active show">
-                  <div className="row gy-4">
-                    <div>
-                      <h3>공간위 관리 공간</h3>
-                      <hr />
-                      <div>
-                        <b>공간위에서는 아래의 공간들을 관리합니다!</b>
-                      </div>
-                      <div>
-                        <b>
-                          공간들의 유지보수, 예약, 근로 교육 등을 진행하고
-                          있습니다.
-                        </b>
-                      </div>
-                      <hr />
-                      {SpaceTypesArray.map((spaceType, idx) => {
-                        return (
-                          <div key={`spaceReservationKey${spaceType}`}>
-                            <Link href={`/space/${idx}`}>
-                              {SpaceTypeNames[spaceType]}{" "}
-                            </Link>
-                            <br />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
-        </div>
-      </section>
-    </main>
+    <PageSelector
+      pages={spaces}
+    />
   );
 };
-
-export default Space;

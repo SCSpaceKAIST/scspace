@@ -13,8 +13,8 @@ import {
   IReservationResponse,
 } from "@scspace-depot/types/reservation";
 import { IUser } from "@scspace-depot/types/user";
-import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
-import { useSpaces } from "@scspace-client/Apis/space/useSpaces";
+import { useLoginCheck } from "@scspace-client/APIs/auth/useLoginCheck";
+import { useSpaces } from "@scspace-client/APIs/space/useSpaces";
 import MultipleRadioInput from "./inputs/MultipleRadioInput";
 import TextInput from "./inputs/TextInput";
 import {

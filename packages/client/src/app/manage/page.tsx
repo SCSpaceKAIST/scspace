@@ -1,21 +1,19 @@
 "use client";
 
 import Manage from "@scspace-client/Components/Manage/Manage";
-import PageHeader from "@scspace-client/Components/_commons/PageHeader";
-import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/APIs/auth/useLoginCheck";
+import PageTemplete from "@scspace-client/Components/_commons/PageTemplete";
 
 export default function SpacePage() {
   const { needAdmin } = useLoginCheck();
   needAdmin();
 
   return (
-    <div>
-      <PageHeader
-        link_to_prop={"/manage"}
-        page_name={"관리"}
-        sub_name="Manage"
-      />
+    <PageTemplete
+      title="관리"
+      subtitle="Management"
+    >
       <Manage />
-    </div>
+    </PageTemplete>
   );
 }

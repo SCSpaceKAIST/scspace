@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
+import { useLoginCheck } from "@scspace-client/APIs/auth/useLoginCheck";
 
 // T는 제네릭 타입으로, 컴포넌트마다 다를 수 있는 데이터 타입을 나타냅니다.
 // EX: AskType, FAQType,

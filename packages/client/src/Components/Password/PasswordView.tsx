@@ -2,7 +2,7 @@ import { useBoardData } from "@scspace-client/Hooks/useBoardData";
 import React, { useState, useEffect } from "react";
 import { IPassword, IPasswordValidation } from "@scspace-depot/types/password";
 import { IUser } from "@scspace-depot/types/user";
-import { useSpaces } from "@scspace-client/Apis/space/useSpaces";
+import { useSpaces } from "@scspace-client/APIs/space/useSpaces";
 import { useQueryApi } from "@scspace-client/Hooks/useApi";
 import PasswordBar from "./PasswordBar";
 

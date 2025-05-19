@@ -1,8 +1,8 @@
 "use client";
 import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 import CalendarView from "@scspace-client/Components/Calendar/CalendarView";
-import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
-import { useSpaces } from "@scspace-client/Apis/space/useSpaces";
+import { useLoginCheck } from "@scspace-client/APIs/auth/useLoginCheck";
+import { useSpaces } from "@scspace-client/APIs/space/useSpaces";
 import { useParams } from "next/navigation";
 import IndividualForm from "@scspace-client/Components/Reservation/forms/IndividualForm";
 import PianoForm from "@scspace-client/Components/Reservation/forms/PianoForm";

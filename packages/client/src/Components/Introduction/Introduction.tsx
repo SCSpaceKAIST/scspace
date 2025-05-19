@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import Scspace from "./Scspace";
 import Business from "./Business";
 import Rule from "./Rule";
+import Scroll from "../_commons/Scroll";
 
 const Introduction: React.FC = () => {
   const [info, setInfo] = useState([
@@ -23,25 +23,23 @@ const Introduction: React.FC = () => {
   };
 
   return (
-    <main id="main">
-      <section>
-        <div className="container">
-          <div id="portfolio" className="portfolio">
-            <div className="container-fluid">
-              <ul className="portfolio-flters">
-                {info.map((contents, idx) => (
-                  <li key={idx} onClick={() => onClickEvent(idx)}>
-                    {contents.which}
-                  </li>
-                ))}
-              </ul>
-            </div>
+    <Scroll>
+      <div className="container">
+        <div id="portfolio" className="portfolio">
+          <div className="container-fluid">
+            <ul className="portfolio-flters">
+              {info.map((contents, idx) => (
+                <li key={idx} onClick={() => onClickEvent(idx)}>
+                  {contents.which}
+                </li>
+              ))}
+            </ul>
           </div>
-
-          {info.find(contents => contents.clicked)?.text}
         </div>
-      </section>
-    </main>
+
+        {info.find(contents => contents.clicked)?.text}
+      </div>
+    </Scroll>
   );
 };
 

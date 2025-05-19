@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { useLoginCheck } from "@scspace-client/Apis/auth/useLoginCheck";
-import { Button, Menu, Portal } from "@chakra-ui/react"; 
+import { useLoginCheck } from "@scspace-client/APIs/auth/useLoginCheck";
+import { Button, Menu, Portal } from "@chakra-ui/react";
 
 export const LoginBtn: React.FC = () => {
   const { isLogined, userInfo, isSCS } = useLoginCheck();
@@ -26,7 +26,7 @@ export const LoginBtn: React.FC = () => {
         </Menu.Root>
       ) : (
         <Link href="/login" passHref>
-          <Button variant="outline" rounded="md">
+          <Button variant="outline" rounded="sm">
             Login
           </Button>
         </Link>
