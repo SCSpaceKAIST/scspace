@@ -15,11 +15,6 @@ export class ReservationPublicService {
     private readonly userPublicService: UserPublicService,
   ) {}
 
-  formatDateToSQL(date: Date): string {
-    // Date 객체를 SQL DATETIME 형식으로 변환
-    return date.toISOString().slice(0, 19).replace('T', ' ');
-  }
-
   private getDifferenceInMinutes(timeFrom: string, timeTo: string): number {
     return (new Date(timeTo).getTime() - new Date(timeFrom).getTime()) / (60 * 1000);
   }

@@ -125,6 +125,8 @@ export class ReservationRepository {
           title: reservationInput.title,
           timeFrom: timeFrom,
           timeTo: timeTo,
+          timePost: new Date().toISOString(),
+          timeUpdate: new Date().toISOString(),
           state: ReservationStateEnum.WAIT,
         } as InferInsertModel<typeof Reservation>);
 
@@ -177,6 +179,7 @@ export class ReservationRepository {
       title: data.title,
       timeFrom: data.timeFrom,
       timeTo: data.timeTo,
+      timeUpdate: new Date().toISOString(),
       state: data.state,
     } as Partial<InferInsertModel<typeof Reservation>>;
 
@@ -184,6 +187,13 @@ export class ReservationRepository {
       .update(Reservation)
       .set(updateData)
       .where(eq(Reservation.id, data.id!));
+    return result.affectedRows > 0;
+  }
+
+  async delete(id: number): Promise<boolean> {
+    const [result] = await this.db
+      .delete(Reservation)
+      .where(eq(Reservation.id, id));
     return result.affectedRows > 0;
   }
 }

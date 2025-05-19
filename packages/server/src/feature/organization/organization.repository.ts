@@ -60,6 +60,8 @@ export class OrganizationRepository {
       const insertData = {
         name: organization.name,
         delegatorId: organization.delegatorId,
+        timeRegister: new Date().toISOString(),
+        timeUpdate: new Date().toISOString(),
       } as InferInsertModel<typeof Organization>;
 
       const [insertResult] = await tx.insert(Organization).values(insertData);

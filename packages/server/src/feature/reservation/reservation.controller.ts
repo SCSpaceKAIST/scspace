@@ -8,7 +8,8 @@ import {
   BadRequestException,
   Logger,
   Put,
-  ParseIntPipe
+  ParseIntPipe,
+  Delete
 } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 import {
@@ -102,6 +103,11 @@ export class ReservationController {
     } catch (error) {
       throw new BadRequestException('Error updating reservation.');
     }
+  }
+
+  @Delete(':id')
+  async deleteReservation(@Param('id') id: number): Promise<boolean> {
+    return await this.reservationService.deleteReservation(id);
   }
 
   @Post('check/space')
