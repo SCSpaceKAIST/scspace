@@ -6,9 +6,10 @@ import { ReservationController } from './reservation.controller';
 import { SpaceModule } from 'src/feature/space/space.module';
 import { UserModule } from 'src/feature/user/user.module';
 import { ReservationPublicService } from './reservation.public.service';
+import { OrganizationModule } from 'src/feature/organization/organization.module';
 
 @Module({
-  imports: [DBModule, SpaceModule, UserModule],
+  imports: [DBModule, SpaceModule, UserModule, OrganizationModule],
   providers: [
     ReservationService,
     ReservationRepository,

@@ -13,16 +13,16 @@ export class UserPublicService {
   }
 
   async findUserByStudentNumber(studentNumber: number): Promise<MUser | null> {
-    return await this.userRepository.find(studentNumber);
+    const users = await this.userRepository.find({ studentNumber });
+    return users.length > 0 ? users[0] : null;
   }
 
   async fetchAll(ids: number[]): Promise<MUser[]> {
     return await this.userRepository.fetchAll(ids);
   }
 
-  async find(params: { id?: number; ids?: number[] }): Promise<MUser[]> {
-    const result = await this.userRepository.find(params);
-    return result;
+  async find(params: { id?: number; ids?: number[]; studentNumber?: number }): Promise<MUser[]> {
+    return await this.userRepository.find(params);
   }
 
   async isManager(userId: number): Promise<boolean> {
@@ -36,8 +36,9 @@ export class UserPublicService {
 
   async checkManager(userId: number): Promise<void> {
     const flag = await this.isManager(userId);
-    if (!flag)
+    if (!flag) {
       throw new BadRequestException(`User ID ${userId} is not a manager.`);
+    }
   }
 
   async insertUser(user: IUserCreate): Promise<MUser> {

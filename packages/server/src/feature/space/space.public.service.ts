@@ -1,29 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { SpaceRepository } from './space.repository';
-import { MSpace } from './space.model';
+import { ISpace } from '@scspace-depot/types/space';
 import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 
 @Injectable()
 export class SpacePublicService {
-  constructor(private readonly spaceRepository: SpaceRepository) {}
+  constructor(
+    private readonly spaceRepository: SpaceRepository,
+  ) {}
 
-  async fetchSpace(id: number): Promise<MSpace> {
-    return await this.spaceRepository.fetch(id);
+  async fetchById(id: number): Promise<ISpace> {
+    const space = await this.spaceRepository.fetch(id);
+    return space;
   }
 
-  async fetchSpaceAll(ids: number[]): Promise<MSpace[]> {
+  async fetchAllByIds(ids: number[]): Promise<ISpace[]> {
     return await this.spaceRepository.fetchAll(ids);
   }
 
-  async fetchSpaceAllBySpaceType(spaceType: SpaceTypeEnum): Promise<MSpace[]> {
+  async fetchAllBySpaceType(spaceType: SpaceTypeEnum): Promise<ISpace[]> {
     return await this.spaceRepository.fetchAll(spaceType);
   }
 
-  async findAll(): Promise<MSpace[]> {
-    return await this.spaceRepository.findSpace({});
+  async fetchAll(): Promise<ISpace[]> {
+    return await this.spaceRepository.fetchAll();
   }
 
-  async getSpaceCount(): Promise<number> {
-    return (await this.spaceRepository.findSpace({})).length;
+  async count(): Promise<number> {
+    return (await this.spaceRepository.fetchAll()).length;
   }
 }

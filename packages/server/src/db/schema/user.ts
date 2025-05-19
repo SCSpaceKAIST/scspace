@@ -2,7 +2,7 @@ import { mysqlTable, varchar, serial, int } from 'drizzle-orm/mysql-core';
 
 // users 테이블 정의
 export const User = mysqlTable('user', {
-  id: serial('id').primaryKey(),
+  id: int('id').primaryKey().autoincrement(),
   studentNumber: int('student_number').notNull(), // 학번(student_number) or 사번(employee_number)
   nameKr: varchar('name_kr', { length: 128 }).notNull(),
   nameEn: varchar('name_en', { length: 128 }).notNull(),

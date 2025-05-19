@@ -23,8 +23,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: IUserCreate) {
     try {
-      const user = await this.userPublicService.findUserByKaistUid(
-        payload.kaistUID,
+      const user = await this.userPublicService.findUserByStudentNumber(
+        payload.studentNumber,
       );
 
       if (user) {

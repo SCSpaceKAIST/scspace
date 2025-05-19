@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { UserPublicService } from './user.public.service';
 import { UserRepository } from './user.repository';
-import { IUser } from '@scspace-depot/types/user';
 
 @Injectable()
-export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
-
-  async getUser(userId: number): Promise<IUser> {
-    return await this.userRepository.fetch(userId);
+export class UserService extends UserPublicService {
+  constructor(userRepository: UserRepository) {
+    super(userRepository);
   }
 }

@@ -12,46 +12,23 @@ export class SpaceRepository {
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
   ) {}
 
-  async findSpace(params: { id?: number }): Promise<MSpace[]> {
-    const whereConditions: SQL[] = [];
-    if (params.id) whereConditions.push(eq(Space.id, params.id));
-
-    const space =
-      whereConditions.length > 0
-        ? await this.db
-            .select()
-            .from(Space)
-            .where(and(...whereConditions))
-        : await this.db.select().from(Space);
-
-    return space.map((space) => MSpace.fromDB(space));
-  }
-  async findSpaceIntro(params: { id?: number }): Promise<MSpace[]> {
-    const whereConditions: SQL[] = [];
-    if (params.id) whereConditions.push(eq(Space.id, params.id));
-
-    const space =
-      whereConditions.length > 0
-        ? await this.db
-            .select()
-            .from(Space)
-            .where(and(...whereConditions))
-        : await this.db.select().from(Space);
-
-    return space.map((space) => MSpace.fromDB(space));
-  }
-
   async fetch(id: number): Promise<MSpace> {
-    const space = await this.findSpace({ id });
+    const space = await this.db
+      .select()
+      .from(Space)
+      .where(eq(Space.id, id))
+      .then((spaces) => spaces[0]);
+
     if (!space) {
-      throw new NotFoundException('Space not found');
+      throw new NotFoundException(`Space with id ${id} not found`);
     }
 
-    return space[0];
+    return MSpace.fromDB(space);
   }
 
-  async fetchAll(ids?: number[]): Promise<MSpace[]>;
-  async fetchAll(spaceType?: SpaceTypeEnum): Promise<MSpace[]>;
+  async fetchAll(): Promise<MSpace[]>;
+  async fetchAll(ids: number[]): Promise<MSpace[]>;
+  async fetchAll(spaceType: SpaceTypeEnum): Promise<MSpace[]>;
   async fetchAll(arg?: number[] | SpaceTypeEnum): Promise<MSpace[]> {
     const whereConditions: SQL[] = [];
 

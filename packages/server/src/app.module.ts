@@ -7,8 +7,7 @@ import { AuthModule } from './feature/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { SpaceModule } from './feature/space/space.module';
 import { ReservationModule } from './feature/reservation/reservation.module';
-import { TeamModule } from './feature/team/team.module';
-import { SemesterModule } from './feature/semester/semester.module';
+import { OrganizationModule } from './feature/organization/organization.module';
 import { join } from 'path';
 
 @Module({
@@ -22,8 +21,7 @@ import { join } from 'path';
     AuthModule,
     SpaceModule,
     ReservationModule,
-    TeamModule,
-    SemesterModule,
+    OrganizationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

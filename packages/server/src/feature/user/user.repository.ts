@@ -13,56 +13,42 @@ export class UserRepository {
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
   ) {}
 
-  // TODO: params 방식으로 통일하기
-  async find(id: number): Promise<MUser | null>;
-  async find(kaistUID: string): Promise<MUser | null>;
   async find(params: {
     id?: number;
-    kaistUID?: string;
     ids?: number[];
-  }): Promise<MUser[]>;
-  async find(
-    arg: number | string | { id?: number; kaistUID?: string; ids?: number[] },
-  ): Promise<MUser | null | MUser[]> {
+    studentNumber?: number;
+  }): Promise<MUser[]> {
     const whereConditions: SQL[] = [];
-    if (typeof arg === 'number') {
-      whereConditions.push(eq(User.id, arg));
-    } else if (typeof arg === 'string') {
-      whereConditions.push(eq(User.kaistUID, arg));
-    } else {
-      // typeof arg === 'object'
-      if (arg.id) {
-        whereConditions.push(eq(User.id, arg.id));
-      }
-      if (arg.kaistUID) {
-        whereConditions.push(eq(User.kaistUID, arg.kaistUID));
-      }
-      if (arg.ids) {
-        whereConditions.push(inArray(User.id, arg.ids));
-      }
+    
+    if (params.id) {
+      whereConditions.push(eq(User.id, params.id));
+    }
+    if (params.ids) {
+      whereConditions.push(inArray(User.id, params.ids));
+    }
+    if (params.studentNumber) {
+      whereConditions.push(eq(User.studentNumber, params.studentNumber));
     }
 
-    const user = await this.db
+
+    const users = await this.db
       .select()
       .from(User)
       .where(and(...whereConditions));
 
-    if (typeof arg !== 'object') {
-      if (user.length === 0) {
-        return null;
-      }
-      return MUser.fromDB(user[0]);
-    }
+    return users.map((user) => MUser.fromDB(user));
+  }
 
-    return user.map((user) => MUser.fromDB(user));
+  async findOne(id: number): Promise<MUser | null> {
+    const users = await this.find({ id });
+    return users.length > 0 ? users[0] : null;
   }
 
   async fetch(id: number): Promise<MUser> {
-    const user = await this.find(id);
+    const user = await this.findOne(id);
     if (user === null) {
       throw new NotFoundException('User not found');
     }
-
     return user;
   }
 
@@ -71,18 +57,13 @@ export class UserRepository {
       return [];
     }
     const uniqueIds = [...new Set(ids)];
-    const whereConditions = [inArray(User.id, uniqueIds)];
-
-    const users = await this.db
-      .select()
-      .from(User)
-      .where(and(...whereConditions));
+    const users = await this.find({ ids: uniqueIds });
 
     if (users.length !== uniqueIds.length) {
       throw new NotFoundException('Some users not found');
     }
 
-    return users.map((user) => MUser.fromDB(user));
+    return users;
   }
 
   async insert(user: IUserCreate): Promise<MUser> {
@@ -93,9 +74,10 @@ export class UserRepository {
       throw new NotFoundException('User not found');
     }
 
-    const userCreated = await this.find({ id: result[0].id }).then(
-      takeOne('user'),
-    );
+    const userCreated = await this.findOne(result[0].id);
+    if (!userCreated) {
+      throw new NotFoundException('User not found after creation');
+    }
     return userCreated;
   }
 }

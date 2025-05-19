@@ -20,14 +20,14 @@ export class ReservationPublicService {
     return date.toISOString().slice(0, 19).replace('T', ' ');
   }
 
-  getDifferenceInMinutes(timeFrom: Date, timeTo: Date): number {
-    return Math.floor((timeTo.getTime() - timeFrom.getTime()) / (60 * 1000));
+  getDifferenceInMinutes(timeFrom: string, timeTo: string): number {
+    return Math.floor((new Date(timeTo).getTime() - new Date(timeFrom).getTime()) / (60 * 1000));
   }
 
   async checkTimeAvailability(
     spaceId: number,
-    timeFrom: Date,
-    timeTo: Date,
+    timeFrom: string,
+    timeTo: string,
   ): Promise<boolean> {
     const overlappingReservations = await this.reservationRepository.find({
       spaceId: spaceId,
@@ -44,7 +44,7 @@ export class ReservationPublicService {
   async getDailyReservationTime(
     userId: number,
     spaceId: number,
-    timeFrom: Date,
+    timeFrom: string,
   ): Promise<number> {
     const today = new Date(timeFrom);
     today.setHours(0, 0, 0, 0);
@@ -56,15 +56,18 @@ export class ReservationPublicService {
       spaceId: spaceId,
       state: ReservationStateEnum.GRANT,
       timeRange: {
-        timeFrom: today,
-        timeTo: tomorrow,
+        timeFrom: today.toISOString(),
+        timeTo: tomorrow.toISOString(),
       },
     });
 
     const totalReservedTime = todayReservations.reduce((acc, reservation) => {
       return (
         acc +
-        this.getDifferenceInMinutes(reservation.timeFrom, reservation.timeTo)
+        this.getDifferenceInMinutes(
+          reservation.timeFrom,
+          reservation.timeTo,
+        )
       );
     }, 0);
     Logger.log('Daily totalReservedTime', totalReservedTime);
@@ -76,7 +79,7 @@ export class ReservationPublicService {
   async getWeeklyReservationTime(
     userId: number,
     spaceId: number,
-    timeFrom: Date,
+    timeFrom: string,
   ): Promise<number> {
     const startOfWeek = new Date(timeFrom);
     startOfWeek.setDate(
@@ -92,15 +95,18 @@ export class ReservationPublicService {
       spaceId: spaceId,
       state: ReservationStateEnum.GRANT,
       timeRange: {
-        timeFrom: startOfWeek,
-        timeTo: endOfWeek,
+        timeFrom: startOfWeek.toISOString(),
+        timeTo: endOfWeek.toISOString(),
       },
     });
 
     const totalReservedTime = weeklyReservations.reduce((acc, reservation) => {
       return (
         acc +
-        this.getDifferenceInMinutes(reservation.timeFrom, reservation.timeTo)
+        this.getDifferenceInMinutes(
+          reservation.timeFrom,
+          reservation.timeTo,
+        )
       );
     }, 0);
     Logger.log('Weekly totalReservedTime', totalReservedTime);
@@ -110,8 +116,8 @@ export class ReservationPublicService {
   async checkUserReservationTime(
     userId: number,
     spaceId: number,
-    timeFrom: Date,
-    timeTo: Date,
+    timeFrom: string,
+    timeTo: string,
   ): Promise<boolean> {
     // 공간위원이면 최대 시간 제한 없음
     if (await this.userPublicService.isManager(userId)) {
@@ -125,7 +131,7 @@ export class ReservationPublicService {
       timeFrom,
     );
     const newReservationTime = this.getDifferenceInMinutes(timeFrom, timeTo);
-    const space = await this.spacePublicService.fetchSpace(spaceId);
+    const space = await this.spacePublicService.fetchById(spaceId);
     if (!space) {
       return false;
     }
@@ -153,8 +159,8 @@ export class ReservationPublicService {
   async checkReservationAvailability(
     userId: number,
     spaceId: number,
-    timeFrom: Date,
-    timeTo: Date,
+    timeFrom: string,
+    timeTo: string,
   ): Promise<boolean> {
     return (
       (await this.checkTimeAvailability(spaceId, timeFrom, timeTo)) &&
@@ -165,7 +171,7 @@ export class ReservationPublicService {
   async find(params: {
     userId?: number;
     spaceIds?: number[];
-    timeRange?: { timeFrom: Date; timeTo: Date };
+    timeRange?: { timeFrom: string; timeTo: string };
   }): Promise<MReservation[]> {
     return this.reservationRepository.find(params);
   }

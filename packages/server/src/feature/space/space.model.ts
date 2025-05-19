@@ -1,39 +1,29 @@
-import { ISpace, ISpaceIntroduction } from '@scspace-depot/types/space';
-import { Space, SpaceIntroduction } from '@schema';
+import { ISpace } from '@scspace-depot/types/space';
+import { Space } from '@schema';
+import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 import { InferSelectModel } from 'drizzle-orm';
 
 type SpaceDBResult = InferSelectModel<typeof Space>;
 
 export class MSpace implements ISpace {
   id: ISpace['id'];
-  name: ISpace['name'];
-  nameEng: ISpace['nameEng'];
+  nameKr: ISpace['nameKr'];
+  nameEn: ISpace['nameEn'];
   spaceType: ISpace['spaceType'];
 
-  constructor(private readonly space: ISpace) {
-    Object.assign(this, space);
+  constructor(data: ISpace) {
+    this.id = data.id;
+    this.nameKr = data.nameKr;
+    this.nameEn = data.nameEn;
+    this.spaceType = data.spaceType;
   }
 
-  static fromDB(space: SpaceDBResult): MSpace {
+  static fromDB(space: typeof Space.$inferSelect): MSpace {
     return new MSpace({
-      ...space,
-    });
-  }
-}
-
-export class MSpaceIntroduction implements ISpaceIntroduction {
-  id: ISpaceIntroduction['id'];
-  spaceType: ISpaceIntroduction['spaceType'];
-  introType: ISpaceIntroduction['introType'];
-  info: ISpaceIntroduction['info'];
-
-  constructor(private readonly spaceIntro: ISpaceIntroduction) {
-    Object.assign(this, spaceIntro);
-  }
-
-  static fromDB(spaceIntro: SpaceIntroduction): MSpaceIntroduction {
-    return new MSpaceIntroduction({
-      ...spaceIntro,
+      id: space.id,
+      nameKr: space.nameKr,
+      nameEn: space.nameEn,
+      spaceType: space.spaceType as SpaceTypeEnum,
     });
   }
 }

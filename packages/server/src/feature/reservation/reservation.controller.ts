@@ -8,6 +8,7 @@ import {
   BadRequestException,
   Logger,
   Put,
+  ParseIntPipe
 } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 import {
@@ -21,11 +22,12 @@ import {
 @Controller('reservation')
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
+
   @Get('/space/:spaceId')
-  async getReservationBySpaceID(@Param('spaceId') spaceId: string) {
+  async getReservationBySpaceID(@Param('spaceId') spaceId: number) {
     console.log('getReservationBySpaceID', spaceId);
     const res = await this.reservationService.getReservationBySpaceID(
-      parseInt(spaceId),
+      spaceId,
     );
     console.log('getReservationBySpaceID res', res);
     return res;
@@ -41,8 +43,9 @@ export class ReservationController {
     console.log('checkTimeAvailability', { spaceId, timeFrom, timeTo });
     const query: ISpaceTimeCheckRequest = {
       spaceId: parseInt(spaceId),
-      timeFrom: new Date(timeFrom),
-      timeTo: new Date(timeTo),
+      organizationId: 0, // TODO: Get from context
+      timeFrom: timeFrom,
+      timeTo: timeTo,
     };
     const res = await this.reservationService.checkTimeAvailability(query);
     console.log('checkTimeAvailability res', res);
@@ -66,6 +69,7 @@ export class ReservationController {
     const query: IUserTimeCheckRequest = {
       spaceId: parseInt(spaceId),
       userId: parseInt(userId),
+      organizationId: 0, // TODO: Get from context
       timeFrom: timeFrom,
       timeTo: timeTo,
     };
@@ -84,11 +88,11 @@ export class ReservationController {
 
   @Get('user/:id')
   async getReservationListByUserId(
-    @Param('id') userId: string,
+    @Param('id') userId: number,
   ): Promise<IReservationResponse[]> {
     console.log('getReservationListByUserId', userId);
     const res = await this.reservationService.getReservationListByUserId(
-      parseInt(userId),
+      userId,
     );
     console.log('getReservationListByUserId res', res);
     return res;
@@ -98,7 +102,7 @@ export class ReservationController {
   @Post()
   async postReservation(
     @Body() reservationInput: IReservationCreateBody,
-  ): Promise<boolean> {
+  ): Promise<IReservation> {
     console.log('postReservation', reservationInput);
     const res = await this.reservationService.postReservation({
       ...reservationInput,
@@ -121,5 +125,15 @@ export class ReservationController {
     } catch (error) {
       throw new BadRequestException('Error updating reservation.');
     }
+  }
+
+  @Post('check/space')
+  async checkSpaceTime(@Body() query: ISpaceTimeCheckRequest): Promise<boolean> {
+    return await this.reservationService.checkTimeAvailability(query);
+  }
+
+  @Post('check/user')
+  async checkUserTime(@Body() query: IUserTimeCheckRequest): Promise<boolean> {
+    return await this.reservationService.checkUserReservationTime(query);
   }
 }

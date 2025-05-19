@@ -2,7 +2,7 @@ import { IUser } from "../user";
 import { IReservationContent } from "./reservation.content.type";
 import { ReservationStateEnum, ReservationWorkerNeedEnum } from "../../enums/reservation.enum";
 import { ISpace } from "../space";
-import { IOrganization } from "./organization.type";
+import { IOrganization } from "../organization";
 
 // Table: reservations
 export interface IReservation {
@@ -37,7 +37,7 @@ export type IReservationCreateBody = IReservationCreate & {
 
 export type IReservationUpdate = Omit<
   IReservation,
-  "userId" | "timePost" | "spaceId" | "organizationId" | "timeEdit" | "state"
+  "userId" | "timePost" | "spaceId" | "organizationId"
 >;
 
 // 공간 예약 시간 체크 요청
