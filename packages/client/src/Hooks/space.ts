@@ -2,17 +2,27 @@
 
 import { ISpace } from "@scspace-depot/types/space";
 import { useQueryApi } from "./useAPI";
+import { useEffect, useState } from "react";
 
-export function useSpace() {
-    const getSpace = ({ id = -1 }: { id: number }) => {
-        let query: string = "/space/all";
-        if (id !== -1) query = `/space/${id}`;
+export function useSpace({ id }: { id?: number }) {
+    const [query, setQuery] = useState<string>("/space/all");
+    const [space, setSpace] = useState<ISpace[] | ISpace | null>(null);
 
-        const { data, isLoading, refetch } = useQueryApi<ISpace[] | ISpace>(query);
+    const { data, isLoading, refetch } = useQueryApi<ISpace[] | ISpace>(query);
 
-        while (isLoading);
-        return data;
-    }
+    useEffect(() => {
+        if (id) setQuery(`/space/${id}`);
+        else setQuery("/space/all");
+    }, [id])
 
-    return { getSpace };
+    useEffect(() => {
+        if (!data) {
+            setSpace(null);
+            return;
+        }
+
+        setSpace(data);
+    }, [data])
+
+    return { space, isLoading, refetch };
 }

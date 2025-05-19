@@ -161,7 +161,7 @@ export default function Calendar() {
       <Grid
         height="100%"
         templateRows="auto 1fr"
-        gap={4}
+        gap={2}
       >
         <Flex
           justify="space-between"

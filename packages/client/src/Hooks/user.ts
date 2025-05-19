@@ -2,14 +2,20 @@
 
 import { IUser } from "@scspace-depot/types/user";
 import { useQueryApi } from "./useAPI"
+import { useEffect, useState } from "react";
 
-export function useUser() {
-    const getUserInfo = ({ uid }: { uid: Number }) => {
-        const { data, isLoading, refetch } = useQueryApi<IUser>(`/user/profile/${uid}`);
+export function useUserInfo({ uid }: { uid: Number }) {
+    const { data, isLoading, refetch } = useQueryApi<IUser>(`/user/profile/${uid}`);
+    const [userInfo, setUserInfo] = useState<IUser | null>(null);
 
-        while (isLoading);
-        return data;
-    };
+    useEffect(() => {
+        if (!data) {
+            setUserInfo(null);
+            return;
+        }
 
-    return { getUserInfo, };
+        setUserInfo(data);
+    }, [uid]);
+
+    return { userInfo, isLoading, refetch };
 }
