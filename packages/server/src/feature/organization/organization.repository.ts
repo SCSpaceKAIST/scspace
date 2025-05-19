@@ -77,4 +77,8 @@ export class OrganizationRepository {
       return MOrganization.fromDB(newOrganization);
     });
   }
+
+  async delete(organizationId: number): Promise<void> {
+    await this.db.delete(Organization).where(eq(Organization.id, organizationId));
+  }
 } 

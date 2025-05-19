@@ -57,7 +57,7 @@ export class OrganizationMemberRepository {
     return member[0];
   }
 
-  async delete(organizationId: number, userId: number): Promise<void> {
+  async delete(organizationId: number, userId: number): Promise<boolean> {
     const result = await this.db
       .delete(OrganizationMember)
       .where(
@@ -70,5 +70,6 @@ export class OrganizationMemberRepository {
     if (!result) {
       throw new NotFoundException('Organization member not found');
     }
+    return true;
   }
 } 

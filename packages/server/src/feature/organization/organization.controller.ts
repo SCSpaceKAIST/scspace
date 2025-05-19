@@ -18,6 +18,11 @@ export class OrganizationController {
     return await this.organizationService.getOrganizations();
   }
 
+  @Delete(':id')
+  async deleteOrganization(@Param('id', ParseIntPipe) organizationId: number): Promise<void> {
+    return await this.organizationService.deleteOrganization(organizationId);
+  }
+
   @Get('user/:userId')
   async getOrganizationsByUserId(@Param('userId', ParseIntPipe) userId: number): Promise<IOrganization[]> {
     return await this.organizationService.getOrganizationsByUserId(userId);
@@ -42,7 +47,7 @@ export class OrganizationController {
   async removeMember(
     @Param('id', ParseIntPipe) organizationId: number,
     @Param('userId', ParseIntPipe) userId: number,
-  ): Promise<void> {
-    await this.organizationService.removeMember(organizationId, userId);
+  ): Promise<boolean> {
+    return await this.organizationService.removeMember(organizationId, userId);
   }
 } 

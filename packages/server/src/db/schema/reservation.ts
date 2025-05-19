@@ -17,13 +17,13 @@ export const Reservation = mysqlTable('reservation', {
   id: int('id').primaryKey().autoincrement(),
   userId: int('user_id')
     .notNull()
-    .references(() => User.id),
+    .references(() => User.id, { onDelete: 'cascade' }),
   organizationId: int('organization_id')
     .notNull()
-    .references(() => Organization.id),
+    .references(() => Organization.id, { onDelete: 'cascade' }),
   spaceId: int('space_id')
     .notNull()
-    .references(() => Space.id),
+    .references(() => Space.id, { onDelete: 'cascade' }),
   title: varchar('title', { length: 255 }).notNull(),
   timeFrom: timestamp('time_from', { mode: 'string' }).notNull(),
   timeTo: timestamp('time_to', { mode: 'string' }).notNull(),
