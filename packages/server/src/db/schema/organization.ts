@@ -1,7 +1,6 @@
 import {
   mysqlTable,
   int,
-  timestamp,
   varchar,
 } from 'drizzle-orm/mysql-core';
 
@@ -14,8 +13,8 @@ export const Organization = mysqlTable('organization', {
   delegatorId: int('delegator_id')
     .notNull()
     .references(() => User.id, { onDelete: 'cascade' }),
-  timeRegister: timestamp('time_register', { mode: 'string' }).notNull().defaultNow(),
-  timeUpdate: timestamp('time_update', { mode: 'string' }).notNull().defaultNow().onUpdateNow(),
+  timeRegister: varchar('time_register', { length: 255 }).notNull(),
+  timeUpdate: varchar('time_update', { length: 255 }).notNull(),
   // Foreign keys
   // delegatorId references users.userId O
 });
@@ -29,7 +28,7 @@ export const OrganizationMember = mysqlTable('organization_member', {
   userId: int('user_id')
     .notNull()
     .references(() => User.id, { onDelete: 'cascade' }),
-  timeRegister: timestamp('time_register', { mode: 'string' }).notNull().defaultNow(),
+  timeRegister: varchar('time_register', { length: 255 }).notNull(),
   // Foreign keys
   // organizationId references organizations.organizationId O
   // userId references users.userId O

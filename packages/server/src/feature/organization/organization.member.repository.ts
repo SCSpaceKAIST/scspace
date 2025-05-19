@@ -42,6 +42,7 @@ export class OrganizationMemberRepository {
       .values({
         organizationId,
         userId,
+        timeRegister: new Date().toISOString(),
       })
       .$returningId();
 
