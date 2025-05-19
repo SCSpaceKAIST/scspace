@@ -115,6 +115,55 @@ export class AuthService {
     return await fetchUserData();
   }
 
+  async tmp_login(res: any): Promise<void> {
+    try {
+
+      const payload = {
+        studentNumber: parseInt(process.env.ADMIN_USER_NUMBER),
+        nameKr: process.env.ADMIN_NAME_KR,
+        nameEn: process.env.ADMIN_NAME_EN,
+        email: process.env.ADMIN_EMAIL,
+        type: UserTypeEnum.ADMIN,
+      };
+      Logger.log('PAYLOAD');
+      Logger.log(JSON.stringify(payload));
+      const user = await this.userPublicService.findUserByStudentNumber(
+        payload.studentNumber,
+      );
+      Logger.log('USER');
+      Logger.log(JSON.stringify(user));
+
+      const createdUser = this.muserToUser(
+        !user ? await this.userPublicService.insertUser(payload) : user,
+      );
+      Logger.log('CREATED USER');
+      Logger.log(JSON.stringify(createdUser));
+      const token = this.jwtService.sign(createdUser, {
+        expiresIn: '7d',
+        issuer: 'scspace',
+        subject: 'userInfo',
+      });
+      Logger.log('TOKEN');
+      Logger.log(token);
+
+      res.cookie('scspacetoken1', token, {
+        maxAge: 60 * 60 * 1000 * 24 * 7,
+        secure: true,
+        sameSite: 'none',
+        httpOnly: true,
+        path: '/',
+      });
+      
+      res.redirect(
+        this.configService.get<string>('NEXT_PUBLIC_APP_URL') + '/',
+      );
+
+    } catch (error) {
+      console.error('API 통신 오류:', error);
+      res.status(500).send("Internal Server Error");
+    };
+  }
+
   async verification(cookies: any, res: Response): Promise<IUser | null> {
     // Deprecated
     const cookie = cookies.scspacetoken1;

@@ -13,6 +13,7 @@ import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt/jwt-guard';
 import { IVerificationResponse } from '@scspace-depot/types/auth/auth.type';
 import { ConfigService } from '@nestjs/config';
+import { IUserCreate } from '@scspace-depot/types/user';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -27,10 +28,9 @@ export class AuthController {
     @Res() res: Response,
   ): Promise<void> {
     // Logger.log('login', { state, code });
-    const loginRes = await this.authService.login(state, code, res);
+    await this.authService.login(state, code, res);
     // Logger.log('login res:', loginRes);
-    return res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
-    // return loginRes;
+    res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
   }
 
   @Get('login')
@@ -38,12 +38,7 @@ export class AuthController {
     @Res() res: Response,
   ): Promise<void> {
     Logger.log('login page');
-    Logger.log(
-      this.configService.get<string>('NEXT_PUBLIC_APP_URL') + '/',
-    );
-    res.redirect(
-      this.configService.get<string>('NEXT_PUBLIC_APP_URL') + '/',
-    );
+    await this.authService.tmp_login(res);
   }
 
   @Get('verification')

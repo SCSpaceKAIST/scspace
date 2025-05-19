@@ -42,7 +42,7 @@ export const useReservationSend = () => {
     }
     if (!userCheck) {
       alert(
-        `${space.name}의 최대 이용 시간을 초과하셨습니다.\n${space.name}의 최대 이용 시간은 ${reservationMaxDayTime[space.spaceType]}분 입니다.`,
+        `${space.nameKr}의 최대 이용 시간을 초과하셨습니다.\n${space.nameKr}의 최대 이용 시간은 ${reservationMaxDayTime[space.spaceType]}분 입니다.`,
       );
       return;
     }

@@ -23,61 +23,70 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    const client_id = "kaist-scs";
-    const server_url = "https://sso.kaist.ac.kr/auth/user/single/login/authorize";
-    const redirect_uri = "https://scspace.kws.sparcs.net/api/auth/login";
-    const state = randomString();
-    const nonce = randomString();
+    // const client_id = "kaist-scs";
+    // const server_url = "https://sso.kaist.ac.kr/auth/user/single/login/authorize";
+    // const redirect_uri = "https://scspace.kws.sparcs.net/api/auth/login";
+    // const state = randomString();
+    // const nonce = randomString();
     
-    const data = {
-      client_id: client_id,
-      redirect_uri: redirect_uri,
-      state: state,
-      nonce: nonce,
-    };
+    // const data = {
+    //   client_id: client_id,
+    //   redirect_uri: redirect_uri,
+    //   state: state,
+    //   nonce: nonce,
+    // };
 
-    const params = new URLSearchParams(data).toString();
+    // const params = new URLSearchParams(data).toString();
 
-    axios.post(server_url, params, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      }
-    }).then((res) => {
-      alert(res);
-    }).catch((err) => {
-      alert("ERROR: " + String(err));
-    });
+    // axios.post(server_url, params, {
+    //   headers: {
+    //     "Content-Type": "application/x-www-form-urlencoded"
+    //   }
+    // }).then((res) => {
+    //   alert(res);
+    // }).catch((err) => {
+    //   alert("ERROR: " + String(err));
+    // });
+
+    // const form = document.createElement('form');
+    // form.method = 'POST';
+    // form.action = server_url;
+
+    // // input 요소들 생성 및 추가
+    // const inputClientId = document.createElement('input');
+    // inputClientId.type = 'hidden';
+    // inputClientId.name = 'client_id';
+    // inputClientId.value = client_id;
+    // form.appendChild(inputClientId);
+
+    // const inputRedirectUri = document.createElement('input');
+    // inputRedirectUri.type = 'hidden';
+    // inputRedirectUri.name = 'redirect_uri';
+    // inputRedirectUri.value = redirect_uri;
+    // form.appendChild(inputRedirectUri);
+
+    // const inputState = document.createElement('input');
+    // inputState.type = 'hidden';
+    // inputState.name = 'state';
+    // inputState.value = state;
+    // form.appendChild(inputState);
+
+    // const inputNonce = document.createElement('input');
+    // inputNonce.type = 'hidden';
+    // inputNonce.name = 'nonce';
+    // inputNonce.value = nonce;
+    // form.appendChild(inputNonce);
+
+    // // // 폼을 body에 추가하고 submit
+    // document.body.appendChild(form);
+    // console.log(form);
+    // form.submit();
+
 
     const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = server_url;
+    form.method = 'GET';
+    form.action = 'http://localhost:33001/api/auth/login';
 
-    // input 요소들 생성 및 추가
-    const inputClientId = document.createElement('input');
-    inputClientId.type = 'hidden';
-    inputClientId.name = 'client_id';
-    inputClientId.value = client_id;
-    form.appendChild(inputClientId);
-
-    const inputRedirectUri = document.createElement('input');
-    inputRedirectUri.type = 'hidden';
-    inputRedirectUri.name = 'redirect_uri';
-    inputRedirectUri.value = redirect_uri;
-    form.appendChild(inputRedirectUri);
-
-    const inputState = document.createElement('input');
-    inputState.type = 'hidden';
-    inputState.name = 'state';
-    inputState.value = state;
-    form.appendChild(inputState);
-
-    const inputNonce = document.createElement('input');
-    inputNonce.type = 'hidden';
-    inputNonce.name = 'nonce';
-    inputNonce.value = nonce;
-    form.appendChild(inputNonce);
-
-    // // 폼을 body에 추가하고 submit
     document.body.appendChild(form);
     console.log(form);
     form.submit();

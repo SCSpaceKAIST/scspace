@@ -7,19 +7,22 @@ import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('/api');
 
   // CORS 설정
-  const corsOptions = {
+  app.enableCors({
     origin: [
+      'http://localhost:33000',
+      'http://localhost:33001',
       'https://localhost',
       'https://iam2.kaist.ac.kr',
-      'https://scspace.kws.sparcs.net',
+      'https://scspace.kws.sparcs.net'
     ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
-  };
-  app.setGlobalPrefix('/api');
-  app.enableCors();
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  });
+
   // 쿠키 파서 설정
   app.use(cookieParser());
 

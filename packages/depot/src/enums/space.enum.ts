@@ -8,4 +8,5 @@ export enum SpaceTypeEnum {
   SUMI = 7,
   OPEN = 8,
   WORK = 9,
+  BUSKING = 10,
 }
