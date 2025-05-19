@@ -11,8 +11,8 @@ export const useSpaces = (id = 0) => {
   );
   const [space, setSpace] = useState<ISpace>({
     id: 0,
-    name: "",
-    nameEng: "",
+    nameKr: "",
+    nameEn: "",
     spaceType: SpaceTypeEnum.INDIVIDUAL,
   });
 

@@ -2,6 +2,7 @@
 
 import ReservationList from "../Reservation/ReservationList";
 import PageSelector, { IPage } from "../PageSelector/PageSelector";
+import Organization from "../Organization/Organization";
 
 export default function Mypage() {
   const pages: IPage[] = [
@@ -14,7 +15,7 @@ export default function Mypage() {
     {
       kor: "단체 관리",
       eng: "Organization",
-      preview: (<div>Org</div>),
+      preview: (<Organization />),
       href: "/mypage/org"
     },
   ];

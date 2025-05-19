@@ -106,12 +106,9 @@ export default function PageSelector({
                     </Stack>
                 </Box>
             </Scroll>
-            <Box
-                display={{ base: "none", md: "block" }}
-                flexGrow={1}
-            >
+            <Scroll>
                 {pages[key].preview}
-            </Box>
+            </Scroll>
         </Grid>
     );
 }

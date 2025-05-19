@@ -154,7 +154,14 @@ export default function Redirect() {
         {
             href: "/mypage",
             label: "마이페이지",
-            helperText: "Mypage"
+            helperText: "Mypage",
+            subdomains: [
+                {
+                    href: "/mypage/org",
+                    label: "조직 관리",
+                    helperText: "Organization"
+                }
+            ]
         },
         {
             href: "/manage",
