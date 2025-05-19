@@ -60,6 +60,9 @@ export class ReservationService {
       spaceId, 
       ...(timeFrom && timeTo ? { timeRange: { timeFrom, timeTo } } : {})
     });
+    if (reservations.length === 0) {
+      return [];
+    }
 
     const userIds = reservations.map((reservation) => reservation.userId);
     const organizationIds = reservations.map((reservation) => reservation.organizationId);
