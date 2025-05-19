@@ -200,6 +200,10 @@ export class ReservationService {
     return await this.reservationRepository.update(newReservation);
   }
 
+  async deleteReservation(id: number): Promise<boolean> {
+    return await this.reservationRepository.delete(id);
+  }
+
   async getManageReservation(): Promise<IReservationResponse[]> {
     const reservations = await this.reservationRepository.find({
       states: [ReservationStateEnum.RECEIVED, ReservationStateEnum.WAIT],

@@ -189,4 +189,11 @@ export class ReservationRepository {
       .where(eq(Reservation.id, data.id!));
     return result.affectedRows > 0;
   }
+
+  async delete(id: number): Promise<boolean> {
+    const [result] = await this.db
+      .delete(Reservation)
+      .where(eq(Reservation.id, id));
+    return result.affectedRows > 0;
+  }
 }
