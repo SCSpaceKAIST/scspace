@@ -58,7 +58,7 @@ export class ReservationService {
     // If either timeFrom or timeTo is missing, fetch all reservations for the space
     const reservations = await this.reservationRepository.find({ 
       spaceId, 
-      ...(timeFrom && timeTo ? { timeRange: { timeFrom, timeTo } } : {})
+      ...(timeFrom && timeTo ? { timeRange: { timeFrom: new Date(timeFrom).toISOString(), timeTo: new Date(timeTo).toISOString() } } : {})
     });
     if (reservations.length === 0) {
       return [];
@@ -113,6 +113,9 @@ export class ReservationService {
     reservationInput: IReservationCreate,
   ): Promise<MReservation> {
     // 1. Validate all referenced entities exist
+
+    reservationInput.timeFrom = new Date(reservationInput.timeFrom).toISOString();
+    reservationInput.timeTo = new Date(reservationInput.timeTo).toISOString();
     const [user, organizations, space] = await Promise.all([
       this.userPublicService.fetchUser(reservationInput.userId),
       this.organizationPublicService.fetchByOrganizationIds([reservationInput.organizationId]),
@@ -163,6 +166,7 @@ export class ReservationService {
       throw new BadRequestException('Time is not available');
     }
 
+    console.log(reservationInput);
     // 5. Create the reservation
     const reservation = await this.reservationRepository.insert(reservationInput);
 
@@ -172,6 +176,8 @@ export class ReservationService {
   async updateReservation(
     reservationInput: IReservationUpdate,
   ): Promise<boolean> {
+    reservationInput.timeFrom = new Date(reservationInput.timeFrom).toISOString();
+    reservationInput.timeTo = new Date(reservationInput.timeTo).toISOString();
     const reservation = await this.reservationRepository
       .find({
         id: reservationInput.id,
