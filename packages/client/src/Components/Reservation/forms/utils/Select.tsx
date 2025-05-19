@@ -5,6 +5,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import CheckComponent from "./Checkbox";
+import { useState } from "react";
 
 export default function SelectComponent({
   label,
@@ -13,7 +14,9 @@ export default function SelectComponent({
   optionList
 }: {
   label: string,
-  checkboxLabel?: string
+  checkboxLabel?: {
+    [key: string]: string;
+  }
   placeholder: string
   optionList: {
     label: string,
@@ -24,10 +27,13 @@ export default function SelectComponent({
     items: optionList,
   });
 
+  const [selected, setSelected] = useState<string>(optionList[0].value);
+
   return (
     <Select.Root
       collection={options}
-      defaultValue={[optionList[0].value]}
+      value={[selected]}
+      onValueChange={(e) => setSelected(e.value[0])}
     >
       <Select.HiddenSelect />
       <Select.Label>
@@ -35,9 +41,9 @@ export default function SelectComponent({
           justify="space-between"
         >
           {label}
-          {checkboxLabel &&
+          {(checkboxLabel && checkboxLabel[selected]) &&
             <CheckComponent
-              label={checkboxLabel}
+              label={checkboxLabel[selected]}
             />
           }
         </Flex>

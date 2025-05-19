@@ -6,14 +6,14 @@ import interactionPlugin from "@fullcalendar/interaction";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import Dropdown from "react-bootstrap/Dropdown";
 import moment from "moment";
-import { useLoginCheck } from "@scspace-client/APIs/auth/useLoginCheck";
-import { useQueryApi } from "@scspace-client/Hooks/useApi";
+import { useAuth } from "@scspace-client/Hooks/auth";
+import { useQueryApi } from "@scspace-client/Hooks/useAPI";
 import {
   IReservation,
   IReservationResponse,
 } from "@scspace-depot/types/reservation";
 import { ISpace } from "@scspace-depot/types/space";
-import { useSpaces } from "@scspace-client/APIs/space/useSpaces";
+import { useSpaces } from "@scspace-client/Hooks/APIs/space/useSpaces";
 import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
 import { Tooltip } from "react-tooltip"; // 수정된 import 문
 import ReservationModal from "@scspace-client/Components/Reservation/ReservationModal";
@@ -54,7 +54,7 @@ resourcesData.forEach(resource => {
 const CalendarView: React.FC<CalendarProps> = ({ spaceId, space }) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [data, setData] = useState<ReservationEvent[]>([]);
-  const { userInfo, isSCS } = useLoginCheck();
+  const { userInfo, isSCS } = useAuth();
   const { spaceArray } = useSpaces(spaceId);
   const { linkPush } = useLinkPush();
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -176,7 +176,7 @@ const CalendarView: React.FC<CalendarProps> = ({ spaceId, space }) => {
         reservationInfo={selectedReservation}
         reserverInfo={selectedReserverInfo}
         setReservationInfo={setSelectedReservation}
-        refresh={() => {}}
+        refresh={() => { }}
       />
     </div>
   );

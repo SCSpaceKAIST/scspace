@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { useSpaces } from "@scspace-client/APIs/space/useSpaces";
 import {
   Stack,
   Separator,
@@ -25,7 +24,8 @@ import {
 import Scroll from "../_commons/Scroll";
 
 const Reservation: React.FC = () => {
-  const { spaceArray } = useSpaces();
+  const [dateFrom, setDateFrom] = useState<Date>(() => new Date());
+  const [dateTo, setDateTo] = useState<Date>(() => new Date());
 
   return (
     <Scroll>
@@ -42,10 +42,18 @@ const Reservation: React.FC = () => {
             <OrganizationForm />
           </GridItem>
           <GridItem colSpan={{ base: 6, md: 3 }}>
-            <DateForm label="start date & time" />
+            <DateForm
+              label="start date"
+              date={dateFrom}
+              setDate={setDateFrom}
+            />
           </GridItem>
           <GridItem colSpan={{ base: 6, md: 3 }}>
-            <DateForm label="end date & time" />
+            <DateForm
+              label="end date"
+              date={dateTo}
+              setDate={setDateTo}
+            />
           </GridItem>
           <GridItem colSpan={6}>
             <TitleForm />

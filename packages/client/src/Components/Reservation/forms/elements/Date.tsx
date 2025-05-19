@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { Button, Box, } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -8,16 +8,23 @@ import "react-datepicker/dist/react-datepicker.css";
 import FieldComponent from "../utils/Field";
 
 export function DateForm({
-  label
+  label,
+  date,
+  setDate,
+  maxDate,
+  minDate,
 }: {
-  label: string
+  label: string;
+  date: Date;
+  setDate: Dispatch<SetStateAction<Date>>;
+  maxDate?: Date;
+  minDate?: Date
 }) {
-  const [d, setD] = useState(new Date());
   const [text, setText] = useState("");
 
   useEffect(() => {
-    setText(d.toLocaleString());
-  }, [d]);
+    setText(date.toLocaleDateString());
+  }, [date]);
 
   return (
     <FieldComponent
@@ -30,12 +37,11 @@ export function DateForm({
     >
       <Box width="100%">
         <DatePicker
-          selected={d}
+          selected={date}
           onChange={(date) => {
-            if (date) setD(date);
+            if (date) setDate(date);
           }}
           wrapperClassName="datepicker"
-          showTimeInput
           customInput={
             <Button
               variant="outline"
@@ -45,6 +51,8 @@ export function DateForm({
               {text}
             </Button>
           }
+          maxDate={maxDate}
+          minDate={minDate}
         />
       </Box>
     </FieldComponent>

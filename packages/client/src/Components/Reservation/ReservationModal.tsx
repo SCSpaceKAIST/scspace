@@ -13,8 +13,8 @@ import {
   IReservationResponse,
 } from "@scspace-depot/types/reservation";
 import { IUser } from "@scspace-depot/types/user";
-import { useLoginCheck } from "@scspace-client/APIs/auth/useLoginCheck";
-import { useSpaces } from "@scspace-client/APIs/space/useSpaces";
+import { useAuth } from "@scspace-client/Hooks/auth";
+import { useSpaces } from "@scspace-client/Hooks/APIs/space/useSpaces";
 import MultipleRadioInput from "./inputs/MultipleRadioInput";
 import TextInput from "./inputs/TextInput";
 import {
@@ -22,7 +22,7 @@ import {
   ReservationWorkerNeedEnum,
 } from "@scspace-depot/enums/reservation.enum";
 import { enumToArray } from "@scspace-depot/utils";
-import { useMutationApi } from "@scspace-client/Hooks/useApi";
+import { useMutationApi } from "@scspace-client/Hooks/useAPI";
 
 interface ReservModalProps {
   reservationInfo: IReservationResponse | null;
@@ -41,7 +41,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
   setShowHide,
   refresh,
 }) => {
-  const { userInfo, isSCS } = useLoginCheck();
+  const { userInfo, isSCS } = useAuth();
 
   const [teamData, setTeamData] = useState<ITeam>();
   const [teamMembers, setTeamMembers] = useState<ITeamMemberResponse[]>([]);
@@ -126,8 +126,8 @@ const ReservModal: React.FC<ReservModalProps> = ({
           <div className="modal-second">
             {teamMembers.map(member =>
               reservation.content &&
-              isTeamContent(reservation.content) &&
-              reservation.content.teamMemberUserIds.includes(member.id) ? (
+                isTeamContent(reservation.content) &&
+                reservation.content.teamMemberUserIds.includes(member.id) ? (
                 <div key={member.id}>
                   학번: {member.user.userNumber} &nbsp; 이름:{" "}
                   {member.user.nameKr}
@@ -212,7 +212,7 @@ const ReservModal: React.FC<ReservModalProps> = ({
                   // character가 reservationCharacterOptions의 key 중 하나일 때만 반환
                   return (
                     reservationCharacterOptions[
-                      character as keyof typeof reservationCharacterOptions
+                    character as keyof typeof reservationCharacterOptions
                     ] + " "
                   );
                 }
@@ -282,8 +282,8 @@ const ReservModal: React.FC<ReservModalProps> = ({
             <div className="modal-second">
               {reservationInfo
                 ? moment(reservationInfo.timeFrom).format("MM월 DD일 HH:mm") +
-                  "~" +
-                  moment(reservationInfo.timeTo).format("MM월 DD일 HH:mm")
+                "~" +
+                moment(reservationInfo.timeTo).format("MM월 DD일 HH:mm")
                 : ""}
             </div>
           </div>

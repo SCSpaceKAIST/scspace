@@ -19,3 +19,21 @@ export default function Scroll({
         </Box>
     );
 }
+
+export function XScroll({
+    children
+}: {
+    children: React.ReactNode
+}) {
+    return (
+        <Box
+            id="x-scroll"
+            overflowX="auto"
+            scrollBehavior="smooth"
+            minW={0}
+            maxW="100%"
+        >
+            {children}
+        </Box>
+    );
+}

@@ -1,4 +1,4 @@
-import { useSpaces } from "@scspace-client/APIs/space/useSpaces";
+import { useSpaces } from "@scspace-client/Hooks/APIs/space/useSpaces";
 import { IPassword } from "@scspace-depot/types/password";
 import React from "react";
 

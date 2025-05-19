@@ -1,6 +1,6 @@
 import { ISpace } from "@scspace-depot/types/space";
 import { useEffect, useState } from "react";
-import { useQueryApi } from "@scspace-client/Hooks/useApi";
+import { useQueryApi } from "@scspace-client/Hooks/useAPI";
 import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 
 export const useSpaces = (id = 0) => {

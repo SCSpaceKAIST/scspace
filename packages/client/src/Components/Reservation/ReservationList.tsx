@@ -13,11 +13,11 @@ import {
   reservationStateOptionsEng,
 } from "@scspace-depot/types/reservation";
 import { IUser } from "@scspace-depot/types/user";
-import { useLoginCheck } from "@scspace-client/APIs/auth/useLoginCheck";
-import { useMutationApi } from "@scspace-client/Hooks/useApi";
+import { useAuth } from "@scspace-client/Hooks/auth";
+import { useMutationApi } from "@scspace-client/Hooks/useAPI";
 
 const ReservationList: React.FC = () => {
-  const { userInfo } = useLoginCheck();
+  const { userInfo } = useAuth();
   const {
     list,
     pageNumber,

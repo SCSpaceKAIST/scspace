@@ -5,9 +5,9 @@ import {
   ISpaceTimeCheckRequest,
   IUserTimeCheckRequest,
 } from "@scspace-depot/types/reservation";
-import { useQueryApi, useMutationApi } from "../../Hooks/useApi";
+import { useQueryApi, useMutationApi } from "../../useAPI";
 import { ISpace } from "@scspace-depot/types/space";
-import { useLinkPush } from "../../Hooks/useLinkPush";
+import { useLinkPush } from "../../useLinkPush";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 import { reservationMaxDayTime } from "@scspace-depot/consts/reservation.const";
 

@@ -1,12 +1,12 @@
 "use client";
 
-import { useQueryApi } from "@scspace-client/Hooks/useApi";
+import { useQueryApi } from "@scspace-client/Hooks/useAPI";
 import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
 import { IUser } from "@scspace-depot/types/user";
 import { IVerificationResponse } from "@scspace-depot/types/auth/auth.type";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
-export const useLoginCheck = () => {
+export const useAuth = () => {
   const { data, isLoading, refetch } = useQueryApi<IVerificationResponse>("/auth/verification");
 
   const userInfo: IUser | null = data?.isLogined ? data.userInfo : null;

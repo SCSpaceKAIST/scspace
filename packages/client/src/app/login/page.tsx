@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useLoginCheck } from "@scspace-client/APIs/auth/useLoginCheck";
+import { useAuth } from "@scspace-client/Hooks/auth";
 import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
 import { randomBytes, createHash } from "crypto";
 import axios from "axios";
 
 const LoginPage: React.FC = () => {
   const { linkPush } = useLinkPush();
-  const { isLogined } = useLoginCheck();
+  const { isLogined } = useAuth();
 
   function randomString() {
     const rnd = randomBytes(32).toString();
@@ -28,7 +28,7 @@ const LoginPage: React.FC = () => {
     // const redirect_uri = "https://scspace.kws.sparcs.net/api/auth/login";
     // const state = randomString();
     // const nonce = randomString();
-    
+
     // const data = {
     //   client_id: client_id,
     //   redirect_uri: redirect_uri,

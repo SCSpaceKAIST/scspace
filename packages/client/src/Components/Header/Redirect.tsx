@@ -146,6 +146,11 @@ export default function Redirect() {
             helperText: "Reservation",
         },
         {
+            href: "/calendar",
+            label: "예약 확인하기",
+            helperText: "Calendar",
+        },
+        {
             href: "/space",
             label: "공간위 관리 공간",
             helperText: "Spaces",

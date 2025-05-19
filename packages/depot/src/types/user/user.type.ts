@@ -8,4 +8,5 @@ export interface IUser {
   email: string | null;
   type: UserTypeEnum;
 }
+
 export type IUserCreate = Omit<IUser, "id">;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import {
     Stack,
     Separator,
@@ -19,7 +19,6 @@ function Title({ t }: { t: string; }) {
                 {t}
             </Heading>
         </Breadcrumb.Item>
-
     );
 }
 
@@ -34,7 +33,6 @@ function Subtitle({ t }: { t: string; }) {
                 {t}
             </Heading>
         </Breadcrumb.Item>
-
     );
 }
 
@@ -70,10 +68,10 @@ export default function PageTemplete({
                             {(typeof title === "string") ? (
                                 <Title t={title} />
                             ) : (title.map((t, i) => (
-                                <>
+                                <Fragment key={i + t}>
                                     {(i > 0) && <Breadcrumb.Separator />}
                                     <Title t={t} />
-                                </>
+                                </Fragment>
                             )))}
                         </Breadcrumb.List>
                     </Breadcrumb.Root>
@@ -85,10 +83,10 @@ export default function PageTemplete({
                             {(typeof subtitle === "string") ? (
                                 <Subtitle t={subtitle} />
                             ) : (subtitle.map((t, i) => (
-                                <>
+                                <Fragment key={t + i}>
                                     {(i > 0) && <Breadcrumb.Separator />}
                                     <Subtitle t={t} />
-                                </>
+                                </Fragment>
                             )))}
                         </Breadcrumb.List>
                     </Breadcrumb.Root>

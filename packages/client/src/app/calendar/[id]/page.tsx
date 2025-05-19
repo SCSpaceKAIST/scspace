@@ -3,7 +3,7 @@
 import PageHeader from "@scspace-client/Components/_commons/PageHeader";
 import { useParams } from "next/navigation";
 import CalendarView from "@scspace-client/Components/Calendar/CalendarView";
-import { useSpaces } from "@scspace-client/APIs/space/useSpaces";
+import { useSpaces } from "@scspace-client/Hooks/APIs/space/useSpaces";
 
 export default function SpaceIntroPage() {
   const params = useParams();
