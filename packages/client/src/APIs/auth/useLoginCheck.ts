@@ -7,8 +7,7 @@ import { IVerificationResponse } from "@scspace-depot/types/auth/auth.type";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 export const useLoginCheck = () => {
-  const { data, isLoading, refetch } =
-    useQueryApi<IVerificationResponse>("/auth/verification");
+  const { data, isLoading, refetch } = useQueryApi<IVerificationResponse>("/auth/verification");
 
   const userInfo: IUser | null = data?.isLogined ? data.userInfo : null;
   const isLogined = !!userInfo;

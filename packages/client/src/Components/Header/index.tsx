@@ -6,7 +6,7 @@ import {
   Spacer,
   Image,
 } from "@chakra-ui/react";
-import { LoginBtn } from "../Auth/LoginBtn";
+import { LoginBtn } from "./LoginBtn";
 
 import DrawerComponent from "./Drawer";
 import BreadcrumbComponent from "./Breadcrumb";

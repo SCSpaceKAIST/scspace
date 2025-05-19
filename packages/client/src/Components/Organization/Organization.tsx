@@ -2,40 +2,25 @@
 
 import {
     Table,
+    IconButton,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import Scroll from "../_commons/Scroll";
 import { useLoginCheck } from "@scspace-client/APIs/auth/useLoginCheck";
+import { IOrganization } from "@scspace-depot/types/organization";
 
 export default function Organization() {
     const loginCheck = useLoginCheck();
 
-    const items = [
-        { id: 1, name: "Laptop", category: "Electronics", price: 999.99 },
-        { id: 2, name: "Coffee Maker", category: "Home Appliances", price: 49.99 },
-        { id: 3, name: "Desk Chair", category: "Furniture", price: 150.0 },
-        { id: 4, name: "Smartphone", category: "Electronics", price: 799.99 },
-        { id: 5, name: "Headphones", category: "Accessories", price: 199.99 },
-        { id: 1, name: "Laptop", category: "Electronics", price: 999.99 },
-        { id: 1, name: "Laptop", category: "Electronics", price: 999.99 },
-        { id: 1, name: "Laptop", category: "Electronics", price: 999.99 },
-        { id: 1, name: "Laptop", category: "Electronics", price: 999.99 },
-        { id: 2, name: "Coffee Maker", category: "Home Appliances", price: 49.99 },
-        { id: 3, name: "Desk Chair", category: "Furniture", price: 150.0 },
-        { id: 4, name: "Smartphone", category: "Electronics", price: 799.99 },
-        { id: 5, name: "Headphones", category: "Accessories", price: 199.99 },
-        { id: 2, name: "Coffee Maker", category: "Home Appliances", price: 49.99 },
-        { id: 3, name: "Desk Chair", category: "Furniture", price: 150.0 },
-        { id: 4, name: "Smartphone", category: "Electronics", price: 799.99 },
-        { id: 5, name: "Headphones", category: "Accessories", price: 199.99 },
-        { id: 2, name: "Coffee Maker", category: "Home Appliances", price: 49.99 },
-        { id: 3, name: "Desk Chair", category: "Furniture", price: 150.0 },
-        { id: 4, name: "Smartphone", category: "Electronics", price: 799.99 },
-        { id: 5, name: "Headphones", category: "Accessories", price: 199.99 },
-        { id: 2, name: "Coffee Maker", category: "Home Appliances", price: 49.99 },
-        { id: 3, name: "Desk Chair", category: "Furniture", price: 150.0 },
-        { id: 4, name: "Smartphone", category: "Electronics", price: 799.99 },
-        { id: 5, name: "Headphones", category: "Accessories", price: 199.99 },
-    ]
+    const [orgs, setOrgs] = useState<IOrganization[]>([
+        {
+            id: 0,
+            name: "temp",
+            delegatorId: 0,
+            timeRegister: 'r time',
+            timeUpdate: 'u time'
+        }
+    ])
 
     return (
         <Scroll>
@@ -45,18 +30,42 @@ export default function Organization() {
                 colorPalette="blue"
             >
                 <Table.Header >
-                    <Table.Row>
-                        <Table.ColumnHeader>Name</Table.ColumnHeader>
-                        <Table.ColumnHeader>Create Time</Table.ColumnHeader>
-                        <Table.ColumnHeader textAlign="end">Show Detail</Table.ColumnHeader>
+                    <Table.Row bg="bg.muted">
+                        <Table.ColumnHeader>
+                            Name
+                        </Table.ColumnHeader>
+                        <Table.ColumnHeader>
+                            Delegator
+                        </Table.ColumnHeader>
+                        <Table.ColumnHeader>
+                            Create Time
+                        </Table.ColumnHeader>
+                        <Table.ColumnHeader>
+                            Update Time
+                        </Table.ColumnHeader>
+                        <Table.ColumnHeader textAlign="end">
+                            Show Detail
+                        </Table.ColumnHeader>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {items.map((item) => (
-                        <Table.Row key={item.id}>
-                            <Table.Cell>{item.name}</Table.Cell>
-                            <Table.Cell>{item.category}</Table.Cell>
-                            <Table.Cell textAlign="end">{item.price}</Table.Cell>
+                    {orgs.map((org) => (
+                        <Table.Row key={org.id}>
+                            <Table.Cell>
+                                {org.name}
+                            </Table.Cell>
+                            <Table.Cell>
+                                {org.delegatorId}
+                            </Table.Cell>
+                            <Table.Cell>
+                                {org.timeRegister}
+                            </Table.Cell>
+                            <Table.Cell>
+                                {org.timeUpdate}
+                            </Table.Cell>
+                            <Table.Cell textAlign="end">
+                                Button
+                            </Table.Cell>
                         </Table.Row>
                     ))}
                 </Table.Body>
