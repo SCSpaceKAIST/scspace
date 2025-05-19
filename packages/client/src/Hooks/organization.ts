@@ -1,20 +1,19 @@
 "use client"
 
-import { IOrganization, IOrganizationMember } from "@scspace-depot/types/organization";
+import { IOrganization, IOrganizationResponse } from "@scspace-depot/types/organization";
 import { useEffect, useState } from "react";
 import { useQueryApi } from "./useAPI";
 
-export function useOrganization({ id, uid }: { id?: number; uid?: number }) {
+export function useOrganization({ uid }: { uid?: number }) {
     const [query, setQuery] = useState<string>("/organization/");
-    const [organization, setOrganization] = useState<IOrganization[] | IOrganization | null>(null);
+    const [organization, setOrganization] = useState<IOrganization[] | null>(null);
 
-    const { data, isLoading, refetch } = useQueryApi<IOrganization[] | IOrganization>(query);
+    const { data, isLoading, refetch } = useQueryApi<IOrganization[]>(query);
 
     useEffect(() => {
-        if (id) setQuery(`/organization/${id}`);
-        else if (uid) setQuery(`/organization/user/${uid}`);
+        if (uid) setQuery(`/organization/user/${uid}`);
         else setQuery("/organization")
-    }, [id, uid])
+    }, [uid])
 
     useEffect(() => {
         if (!data) {
@@ -26,4 +25,22 @@ export function useOrganization({ id, uid }: { id?: number; uid?: number }) {
     }, [data])
 
     return { organization, isLoading, refetch };
+}
+
+export function useOrganizationDetail({ id }: { id: number }) {
+    const [organizationDetail, setOrganizationDetail] = useState<IOrganizationResponse | null>(null);
+
+    const { data, isLoading, refetch } = useQueryApi<IOrganizationResponse>(`/organization/${id}`);
+
+    useEffect(() => {
+        if (!data) {
+            setOrganizationDetail(null);
+            return;
+        }
+
+        setOrganizationDetail(data);
+    }, [data])
+
+    return { organizationDetail, isLoading, refetch };
+
 }

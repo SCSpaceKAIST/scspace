@@ -1,6 +1,5 @@
 "use client"
 
-import ReservationList from "../Reservation/ReservationList";
 import PageSelector, { IPage } from "../PageSelector/PageSelector";
 import Organization from "../Organization/Organization";
 
@@ -9,7 +8,7 @@ export default function Mypage() {
     {
       kor: "예약 목록",
       eng: "Reservation List",
-      preview: (<ReservationList />),
+      preview: (<div>Reserv List</div>),
       href: "/mypage"
     },
     {

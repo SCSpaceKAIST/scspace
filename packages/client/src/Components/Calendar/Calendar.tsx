@@ -69,7 +69,7 @@ function Day({ RESs }: { RESs: IRes[] }) {
                   margin={0}
                   color="gray.focusRing"
                 >
-                  {i.toString().padStart(2, '0')}:00
+                  {(i + 1).toString().padStart(2, '0')}:00
                 </Text>
               </Box>
             </GridItem>
@@ -132,7 +132,7 @@ function Day({ RESs }: { RESs: IRes[] }) {
               margin={0}
               color="gray.focusRing"
             >
-              {r.toString().padStart(2, '0')}:00
+              {(r + 1).toString().padStart(2, '0')}:00
             </Text>
           </Box>
         </GridItem>
