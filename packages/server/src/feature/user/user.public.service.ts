@@ -33,8 +33,7 @@ export class UserPublicService {
     const user = await this.fetchUser(userId);
     return (
       user.type === UserTypeEnum.MANAGER ||
-      user.type === UserTypeEnum.ADMIN ||
-      user.type === UserTypeEnum.CHIEF
+      user.type === UserTypeEnum.ADMIN
     );
   }
 

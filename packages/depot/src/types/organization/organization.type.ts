@@ -10,9 +10,13 @@ export interface IOrganization {
   timeUpdate: string;
 }
 
-export type IOrganizationResponse = IOrganization & {
+export type IOrganizationAll = IOrganization & {
   delegator: IUser;
   members: IOrganizationMemberResponse[];
+};
+
+export type IOrganizationDelegator = IOrganization & {
+  delegator: IUser;
 };
 
 export type IOrganizationCreate = Omit<

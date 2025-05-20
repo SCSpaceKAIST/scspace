@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Delete, Put, Param, ParseIntPipe, Body } from '@nestjs/common';
 import { OrganizationService } from './organization.service';
-import { IDefaultResponse, IOrganization, IOrganizationCreate, IOrganizationResponse, IOrganizationUser } from '@scspace-depot/types/organization';
+import { IDefaultResponse, IOrganization, IOrganizationCreate, IOrganizationDelegator, IOrganizationUser } from '@scspace-depot/types/organization';
 import { MOrganizationMember } from './organization.member.model';
 
 @Controller('organization')
@@ -22,7 +22,7 @@ export class OrganizationController {
   @Get(':id')
   async getOrganization(
     @Param('id', ParseIntPipe) organizationId: number,
-  ): Promise<IOrganizationResponse> {
+  ): Promise<IOrganizationDelegator> {
     return await this.organizationService.getOrganizationById(organizationId);
   }
 
