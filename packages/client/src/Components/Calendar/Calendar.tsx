@@ -23,13 +23,10 @@ import { DateForm } from "../Reservation/forms";
 import { IRes, IReservationHookRes, useReservations } from "@scspace-client/Hooks/reservation";
 import { useEffect, useState } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
+import { useAllSpace } from "@scspace-client/Hooks/space";
 
 function SpaceSelect() {
-  const spaces = [
-    { label: "Space 1", value: "1" },
-    { label: "Space 2", value: "2" },
-    { label: "Space 3", value: "3" },
-  ]
+  const { spaces } = useAllSpace();
 
   return (
     <SelectComponent
