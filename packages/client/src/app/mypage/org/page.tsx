@@ -4,7 +4,7 @@ import Organization from "@scspace-client/Components/Organization/Organization";
 export default function SpacePage() {
     return (
         <PageTemplete
-            title={["마이페이지", "단체 관리"]}
+            title={["마이페이지", "조직 관리"]}
             subtitle={["Mypage", "Organization"]}
         >
             <Organization />

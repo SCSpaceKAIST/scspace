@@ -23,8 +23,9 @@ import { formatDateToSQL } from '@scspace-server/common/util';
 
 @Controller('reservation')
 export class ReservationController {
-  constructor(private readonly reservationService: ReservationService) {}
+  constructor(private readonly reservationService: ReservationService) { }
 
+  //HOOK: useReservations
   @Get('space')
   async getReservationBySpaceID(
     @Query('spaceId', ParseIntPipe) spaceId: number,

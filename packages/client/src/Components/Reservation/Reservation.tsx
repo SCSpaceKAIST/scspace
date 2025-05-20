@@ -6,7 +6,6 @@ import {
   Separator,
   Grid, GridItem,
   Button,
-  Box,
 } from "@chakra-ui/react";
 import {
   SpaceForm,
