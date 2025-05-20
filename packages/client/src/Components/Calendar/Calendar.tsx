@@ -3,12 +3,19 @@
 import {
   Box,
   Center,
+  Dialog,
   Flex,
   Grid,
   GridItem,
+  IconButton,
+  Portal,
   Separator,
   Stack,
-  Text
+  Text,
+  Alert,
+  CloseButton,
+  Float,
+  Circle
 } from "@chakra-ui/react";
 import Scroll from "../_commons/Scroll";
 import SelectComponent from "../Reservation/forms/utils/Select";
@@ -16,6 +23,7 @@ import { DateForm } from "../Reservation/forms";
 import { IRes, IReservationHookRes, useReservations } from "@scspace-client/Hooks/reservation";
 import { useEffect, useState } from "react";
 import { createHash } from "crypto";
+import { HiOutlineSearch } from "react-icons/hi";
 
 function SpaceSelect() {
   const spaces = [
@@ -145,87 +153,142 @@ export default function Calendar() {
   const [res, setRes] = useState<IReservationHookRes>({});
   const [dateFrom, setDateFrom] = useState<Date>(() => new Date());
   const [dateTo, setDateTo] = useState<Date>(() => new Date());
+  const [searchDate, setSearchDate] = useState<{ dateFrom: Date, dateTo: Date }>({
+    dateFrom: dateFrom,
+    dateTo: dateTo
+  });
+  const [alertOpen, setAlertOpen] = useState<boolean>(false);
 
   const { reservation } = useReservations({
     spaceId: 1,
-    dateFrom: dateFrom,
-    dateTo: dateTo,
+    dateFrom: searchDate.dateFrom,
+    dateTo: searchDate.dateTo,
   });
 
   useEffect(() => {
     setRes(reservation);
   }, [reservation]);
 
+  function search() {
+    if ((new Date(dateTo.valueOf() - dateFrom.valueOf())).getDate() > 14) {
+      setAlertOpen(true);
+    } else {
+      setSearchDate({
+        dateFrom: dateFrom,
+        dateTo: dateTo
+      });
+    }
+  }
+
   return (
-    <Scroll>
-      <Grid
-        height="100%"
-        templateRows="auto 1fr"
-        gap={2}
+    <>
+      <Dialog.Root
+        role="alertdialog"
+        open={alertOpen}
+        onOpenChange={(e) => setAlertOpen(e.open)}
       >
-        <Flex
-          justify="space-between"
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner onClick={() => setAlertOpen(false)}>
+            <Dialog.Content>
+              <Alert.Root status="error">
+                <Alert.Indicator />
+                <Alert.Content>
+                  <Alert.Title>
+                    2주 초과의 기간은 검색할 수 없습니다.
+                  </Alert.Title>
+                  <Alert.Description>
+                    You can't search for periods longer than two weeks.
+                  </Alert.Description>
+                </Alert.Content>
+                <CloseButton pos="relative" top={-2} insetEnd={-2} />
+              </Alert.Root>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
+      <Scroll>
+        <Grid
+          height="100%"
+          templateRows="auto 1fr"
+          gap={2}
         >
-          <Stack width="24vh">
-            <SpaceSelect />
-          </Stack>
-          <Stack direction="row" width="48vh" gap={2}>
-            <DateForm
-              label="start date"
-              date={dateFrom}
-              setDate={setDateFrom}
-              maxDate={dateTo}
-            />
-            <DateForm
-              label="end date"
-              date={dateTo}
-              setDate={setDateTo}
-              minDate={dateFrom}
-            />
-          </Stack>
-        </Flex>
-        <Box
-          id="scroll"
-          overflow="auto"
-          scrollBehavior="smooth"
-          minH={0}
-          minW={0}
-          maxH="100%"
-          maxW="100%"
-          rounded="sm"
-          borderWidth="1px"
-        >
-          <Grid
-            templateColumns={`repeat(${Object.keys(res).length}, 1fr)`}
-            gap={0}
+          <Flex
+            justify="space-between"
           >
-            {Object.keys(res).map((k, i) => (
-              <Stack
-                direction="row"
-                minW="32vh"
-                key={i}
-                gap={0}
+            <Stack width="24vh">
+              <SpaceSelect />
+            </Stack>
+            <Stack direction="row" width="48vh" gap={2} alignItems="end">
+              <IconButton
+                variant="outline"
+                rounded="sm"
+                onClick={search}
               >
-                {(i > 0) && <Separator orientation="vertical" height="100%" />}
+                <HiOutlineSearch />
+                {(searchDate.dateFrom.toISOString() !== dateFrom.toISOString() || searchDate.dateTo.toISOString() !== dateTo.toISOString()) && (
+                  <Float>
+                    <Circle size="3" bg="red" />
+                  </Float>
+                )}
+              </IconButton>
+              <DateForm
+                label="start date"
+                date={dateFrom}
+                setDate={setDateFrom}
+                maxDate={dateTo}
+              />
+              <DateForm
+                label="end date"
+                date={dateTo}
+                setDate={setDateTo}
+                minDate={dateFrom}
+              />
+            </Stack>
+          </Flex>
+          <Box
+            id="scroll"
+            overflow="auto"
+            scrollBehavior="smooth"
+            minH={0}
+            minW={0}
+            maxH="100%"
+            maxW="100%"
+            rounded="sm"
+            borderWidth="1px"
+          >
+            <Grid
+              templateColumns={`repeat(${Object.keys(res).length}, 1fr)`}
+              gap={0}
+            >
+              {Object.keys(res).map((k, i) => (
                 <Stack
-                  width="100%"
+                  direction="row"
+                  minW="32vh"
+                  key={i}
                   gap={0}
                 >
-                  <Center>
-                    <Text
-                      margin={1}
-                      padding={0}
-                    >
-                      {k}
-                    </Text>
-                  </Center>
-                  <Day RESs={res[k]} />
+                  {(i > 0) && <Separator orientation="vertical" height="100%" />}
+                  <Stack
+                    width="100%"
+                    gap={0}
+                  >
+                    <Center>
+                      <Text
+                        margin={1}
+                        padding={0}
+                      >
+                        {k}
+                      </Text>
+                    </Center>
+                    <Day RESs={res[k]} />
+                  </Stack>
                 </Stack>
-              </Stack>
-            ))}
-          </Grid>
-        </Box>
-      </Grid>
-    </Scroll >
+              ))}
+            </Grid>
+          </Box>
+        </Grid>
+      </Scroll >
+    </>
   );
 };
