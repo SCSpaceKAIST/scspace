@@ -1,4 +1,4 @@
-import { Injectable, Inject, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema, User } from 'src/db/schema';
@@ -46,6 +46,9 @@ export class UserRepository {
   }
 
   async fetch(id: number): Promise<MUser> {
+    if (id === 0) {
+      throw new NotFoundException('User not found');
+    }
     const user = await this.findOne(id);
     if (user === null) {
       throw new NotFoundException('User not found');
@@ -73,6 +76,10 @@ export class UserRepository {
   }
 
   async insert(user: IUserCreate): Promise<MUser> {
+    const userExist = await this.find({ studentNumber: user.studentNumber });
+    if (userExist.length > 0) {
+      throw new BadRequestException('User already exists');
+    }
     const result = await this.db.insert(User).values(user).$returningId();
     Logger.log('ADD USER ' + JSON.stringify(user));
 
