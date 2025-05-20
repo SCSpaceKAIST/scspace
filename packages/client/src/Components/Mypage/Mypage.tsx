@@ -12,7 +12,7 @@ export default function Mypage() {
       href: "/mypage"
     },
     {
-      kor: "단체 관리",
+      kor: "조직 관리",
       eng: "Organization",
       preview: (<Organization />),
       href: "/mypage/org"

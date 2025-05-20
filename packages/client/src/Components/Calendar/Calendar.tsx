@@ -22,7 +22,6 @@ import SelectComponent from "../Reservation/forms/utils/Select";
 import { DateForm } from "../Reservation/forms";
 import { IRes, IReservationHookRes, useReservations } from "@scspace-client/Hooks/reservation";
 import { useEffect, useState } from "react";
-import { createHash } from "crypto";
 import { HiOutlineSearch } from "react-icons/hi";
 
 function SpaceSelect() {
