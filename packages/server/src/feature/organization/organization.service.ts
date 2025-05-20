@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { OrganizationRepository } from './organization.repository';
 import { OrganizationMemberRepository } from './organization.member.repository';
-import { IOrganization, IOrganizationCreate, IOrganizationResponse, IOrganizationMemberResponse } from '@scspace-depot/types/organization';
+import { IOrganization, IOrganizationCreate, IOrganizationResponse, IOrganizationMemberResponse, IDeleteOrganization } from '@scspace-depot/types/organization';
 import { MOrganizationMember } from './organization.member.model';
 import { UserRepository } from '../user/user.repository';
 @Injectable()
@@ -32,12 +32,14 @@ export class OrganizationService {
     return organizations;
   }
 
-  async deleteOrganization(organizationId: number): Promise<void> {
+  async deleteOrganization(organizationId: number): Promise<IDeleteOrganization> {
     const organization = await this.organizationRepository.fetchById(organizationId);
     if (!organization) {
       throw new NotFoundException('Organization not found');
     }
     await this.organizationRepository.delete(organizationId);
+
+    return { success: true };
   }
 
   async getOrganizations(): Promise<IOrganization[]> {

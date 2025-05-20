@@ -18,13 +18,12 @@ import {
 import { useState, useEffect, useRef } from "react";
 import Scroll from "../_commons/Scroll";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { useOrganization, useOrganizationDetail } from "@scspace-client/Hooks/organization";
+import { useOrganization, useOrganizationAPI, useOrganizationDetail } from "@scspace-client/Hooks/organization";
 import { IOrganization, IOrganizationResponse } from "@scspace-depot/types/organization";
 import { IUser } from "@scspace-depot/types/user";
 import { HiMiniXMark, HiPlus } from "react-icons/hi2";
 import TooltipComponent from "../Tooltip/Tooptip";
 import LoadingComponent from "../Loading/Loading";
-import { deleteOrg, newOrg } from "@scspace-client/APIs/organization";
 import { HiOutlineRefresh } from "react-icons/hi";
 import InputComponent from "../Reservation/forms/utils/Input";
 
@@ -67,9 +66,19 @@ function Member({ user }: { user: IUser }) {
     );
 }
 
-function Delete({ id }: { id: number }) {
+function Delete({ id, onSuccess }: {
+    id: number;
+    onSuccess: () => any;
+}) {
+    const deleteOrganization = useOrganizationAPI({ id }).deleteOrg
+    const [open, setOpen] = useState<boolean>(false);
+
     return (
-        <Dialog.Root role="alertdialog">
+        <Dialog.Root
+            role="alertdialog"
+            open={open}
+            onOpenChange={(e) => setOpen(e.open)}
+        >
             <Dialog.Trigger asChild>
                 <Button colorPalette="red" rounded="sm">
                     Delete
@@ -87,25 +96,36 @@ function Delete({ id }: { id: number }) {
                             account and remove your data from our systems.
                         </Dialog.Body>
                         <Dialog.Footer>
-                            <Dialog.ActionTrigger asChild>
-                                <Button variant="outline" rounded="sm">Cancel</Button>
-                            </Dialog.ActionTrigger>
                             <Button
                                 colorPalette="red"
                                 rounded="sm"
-                                onClick={() => console.log(deleteOrg({ id: id }))}
+                                onClick={() => deleteOrganization({}, {
+                                    onSuccess: () => {
+                                        console.log(1);
+                                        onSuccess();
+                                        setOpen(false);
+                                    }
+                                })}
                             >
                                 Delete
                             </Button>
+                            <Dialog.ActionTrigger asChild>
+                                <Button variant="outline" rounded="sm">
+                                    Cancel
+                                </Button>
+                            </Dialog.ActionTrigger>
                         </Dialog.Footer>
                     </Dialog.Content>
                 </Dialog.Positioner>
             </Portal>
-        </Dialog.Root>
+        </Dialog.Root >
     );
 }
 
-function OrgDetail({ id }: { id: number }) {
+function OrgDetail({ id, onDelete }: {
+    id: number;
+    onDelete: () => any;
+}) {
     const { organizationDetail, refetch } = useOrganizationDetail({ id: id });
 
     return (organizationDetail ? (
@@ -167,7 +187,10 @@ function OrgDetail({ id }: { id: number }) {
             </Dialog.Body >
             <Separator />
             <Dialog.Footer>
-                <Delete id={0} />
+                <Delete
+                    id={id}
+                    onSuccess={() => onDelete()}
+                />
                 <Dialog.ActionTrigger asChild>
                     <Button variant="outline" rounded="sm">
                         Close
@@ -180,16 +203,18 @@ function OrgDetail({ id }: { id: number }) {
     ));
 }
 
-function NewOrg({ uid }: { uid: number | null }) {
+function NewOrg({ uid, onSuccess }: {
+    uid: number | null;
+    onSuccess: () => any;
+}) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [name, setName] = useState<string>("");
     const [open, setOpen] = useState<boolean>(false);
+    const generateOrganization = useOrganizationAPI().generateOrg;
 
     return (
         <Dialog.Root
             initialFocusEl={() => inputRef.current}
-            open={open}
-            onOpenChange={(e) => setOpen(e.open)}
         >
             <Dialog.Trigger asChild>
                 <IconButton
@@ -218,20 +243,22 @@ function NewOrg({ uid }: { uid: number | null }) {
                             />
                         </Dialog.Body>
                         <Dialog.Footer>
-                            <Dialog.CloseTrigger asChild>
+                            <Dialog.ActionTrigger asChild>
                                 <Button variant="outline" rounded="sm">
                                     Cancel
                                 </Button>
-                            </Dialog.CloseTrigger>
+                            </Dialog.ActionTrigger>
                             <Dialog.ActionTrigger asChild>
                                 <Button
                                     rounded="sm"
                                     onClick={() => {
                                         if (name && uid) {
                                             setOpen(false);
-                                            newOrg({
+                                            generateOrganization({
                                                 name: name,
                                                 delegatorId: uid
+                                            }, {
+                                                onSuccess: () => onSuccess()
                                             });
                                         }
                                     }}
@@ -251,9 +278,7 @@ export default function Organization() {
     const { userInfo, needLogin } = useAuth();
     const [selected, setSelected] = useState<number>(-1);
 
-    useEffect(() => {
-        needLogin();
-    }, []);
+    useEffect(() => needLogin());
 
     const { organization, refetch } = useOrganization({ uid: userInfo?.id });
 
@@ -299,7 +324,10 @@ export default function Organization() {
                                 <TooltipComponent
                                     content="Make New Organization"
                                 >
-                                    <NewOrg uid={userInfo?.id ?? 0} />
+                                    <NewOrg
+                                        uid={userInfo?.id ?? 0}
+                                        onSuccess={refetch}
+                                    />
                                 </TooltipComponent>
                             </HStack>
                         </Flex>
@@ -357,7 +385,13 @@ export default function Organization() {
                         <Dialog.Backdrop />
                         <Dialog.Positioner>
                             <Dialog.Content>
-                                <OrgDetail id={selected} />
+                                <OrgDetail
+                                    id={selected}
+                                    onDelete={() => {
+                                        refetch();
+                                        setOpen(false);
+                                    }}
+                                />
                             </Dialog.Content>
                         </Dialog.Positioner>
                     </Portal>

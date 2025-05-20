@@ -24,3 +24,11 @@ export type IOrganizationUpdate = Omit<
   IOrganization,
   "id" | "timeRegister" | "timeUpdate"
 >;
+
+export interface IOrganizationUser {
+  userId: number;
+};
+
+export interface IDeleteOrganization {
+  success: boolean;
+};
