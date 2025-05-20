@@ -31,14 +31,14 @@ export function deleteOrg({ id }: { id: number }) {
     return { status };
 }
 
-export function postOrg({ org }: { org: IOrganizationCreate }) {
-    const { status, mutateAsync } = useMutationApi<IOrganization, IOrganizationCreate>(
+export function newOrg(org: IOrganizationCreate) {
+    const { status, mutate } = useMutationApi<IOrganization, IOrganizationCreate>(
         "/organization/",
         "POST"
     );
 
     useEffect(() => {
-        mutateAsync(org, {
+        mutate(org, {
             onSuccess: (d, v, c) => console.log('Success', d, v, c)
         });
     }, [org.delegatorId, org.name])

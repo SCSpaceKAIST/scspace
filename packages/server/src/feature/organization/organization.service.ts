@@ -10,7 +10,7 @@ export class OrganizationService {
     private readonly organizationRepository: OrganizationRepository,
     private readonly organizationMemberRepository: OrganizationMemberRepository,
     private readonly userRepository: UserRepository,
-  ) {}
+  ) { }
 
   async createOrganization(organization: IOrganizationCreate): Promise<IOrganization> {
 
@@ -52,8 +52,8 @@ export class OrganizationService {
     const rawMembers = await this.organizationMemberRepository.find({ organizationId });
     const delegators = await this.userRepository.find({ id: organization.delegatorId });
     // Get all member users
-    const memberUsers = await this.userRepository.find({ 
-      ids: rawMembers.map(member => member.userId) 
+    const memberUsers = await this.userRepository.find({
+      ids: rawMembers.map(member => member.userId)
     });
 
     // Create member responses with user and organization info

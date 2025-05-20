@@ -11,7 +11,7 @@ import { formatDateToSQL } from '@scspace-server/common/util';
 export class OrganizationRepository {
   constructor(
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
-  ) {}
+  ) { }
 
   async fetch(userId: number): Promise<IOrganization[]>;
   async fetch(organizationIds: number[]): Promise<IOrganization[]>;
@@ -31,9 +31,9 @@ export class OrganizationRepository {
       .innerJoin(OrganizationMember, eq(Organization.id, OrganizationMember.organizationId))
       .where(and(...whereConditions));
 
-    if (result.length !== 1) {
-      throw new NotFoundException('Organization not found');
-    }
+    // if (result.length !== 1) {
+    //   throw new NotFoundException('Organization not found');
+    // }
 
     const organizations = result.map((e) => e.organization);
 

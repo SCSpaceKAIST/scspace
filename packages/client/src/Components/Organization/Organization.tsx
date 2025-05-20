@@ -8,24 +8,25 @@ import {
     Grid,
     Dialog,
     Portal,
-    Center,
-    Heading,
     Separator,
-    Stack,
-    CloseButton,
-    StackSeparator,
     Wrap,
-    Box,
     Field,
-    IconButton
+    IconButton,
+    DataList,
+    HStack
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Scroll from "../_commons/Scroll";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useOrganization, useOrganizationDetail } from "@scspace-client/Hooks/organization";
-import { IOrganizationResponse } from "@scspace-depot/types/organization";
+import { IOrganization, IOrganizationResponse } from "@scspace-depot/types/organization";
 import { IUser } from "@scspace-depot/types/user";
-import { HiMiniXMark } from "react-icons/hi2";
+import { HiMiniXMark, HiPlus } from "react-icons/hi2";
+import TooltipComponent from "../Tooltip/Tooptip";
+import LoadingComponent from "../Loading/Loading";
+import { deleteOrg, newOrg } from "@scspace-client/APIs/organization";
+import { HiOutlineRefresh } from "react-icons/hi";
+import InputComponent from "../Reservation/forms/utils/Input";
 
 function Member({ user }: { user: IUser }) {
     return (
@@ -66,58 +67,183 @@ function Member({ user }: { user: IUser }) {
     );
 }
 
-function OrgDetail({ org }: { org: IOrganizationResponse }) {
+function Delete({ id }: { id: number }) {
     return (
-        <Stack
-            separator={<StackSeparator />}
+        <Dialog.Root role="alertdialog">
+            <Dialog.Trigger asChild>
+                <Button colorPalette="red" rounded="sm">
+                    Delete
+                </Button>
+            </Dialog.Trigger>
+            <Portal>
+                <Dialog.Backdrop />
+                <Dialog.Positioner>
+                    <Dialog.Content>
+                        <Dialog.Header>
+                            <Dialog.Title>Are you sure?</Dialog.Title>
+                        </Dialog.Header>
+                        <Dialog.Body>
+                            This action cannot be undone. This will permanently delete your
+                            account and remove your data from our systems.
+                        </Dialog.Body>
+                        <Dialog.Footer>
+                            <Dialog.ActionTrigger asChild>
+                                <Button variant="outline" rounded="sm">Cancel</Button>
+                            </Dialog.ActionTrigger>
+                            <Button
+                                colorPalette="red"
+                                rounded="sm"
+                                onClick={() => console.log(deleteOrg({ id: id }))}
+                            >
+                                Delete
+                            </Button>
+                        </Dialog.Footer>
+                    </Dialog.Content>
+                </Dialog.Positioner>
+            </Portal>
+        </Dialog.Root>
+    );
+}
+
+function OrgDetail({ id }: { id: number }) {
+    const { organizationDetail, refetch } = useOrganizationDetail({ id: id });
+
+    return (organizationDetail ? (
+        <>
+            <Dialog.Header>
+                <HStack width="100%" justify="space-between">
+                    <HStack>
+                        <IconButton rounded="sm" variant="ghost" onClick={() => refetch()}>
+                            <HiOutlineRefresh color="gray" />
+                        </IconButton>
+                        <Dialog.Title>
+                            {organizationDetail.name}
+                        </Dialog.Title>
+                    </HStack>
+                    <DataList.Root orientation="horizontal" gap={1}>
+                        <DataList.Item gap={0}>
+                            <DataList.ItemLabel>
+                                Create Time
+                            </DataList.ItemLabel>
+                            <DataList.ItemValue margin={0}>
+                                {organizationDetail.timeRegister}
+                            </DataList.ItemValue>
+                        </DataList.Item>
+                        <DataList.Item gap={0}>
+                            <DataList.ItemLabel>
+                                Update Time
+                            </DataList.ItemLabel>
+                            <DataList.ItemValue margin={0}>
+                                {organizationDetail.timeUpdate}
+                            </DataList.ItemValue>
+                        </DataList.Item>
+                    </DataList.Root>
+                </HStack>
+            </Dialog.Header>
+            <Separator />
+            <Dialog.Body px={8} py={4}>
+                <DataList.Root orientation="horizontal">
+                    <DataList.Item>
+                        <DataList.ItemLabel>
+                            Delegator
+                        </DataList.ItemLabel>
+                        <DataList.ItemValue margin={0}>
+                            <Member user={organizationDetail.delegator} />
+                        </DataList.ItemValue>
+                    </DataList.Item>
+                    <DataList.Item>
+                        <DataList.ItemLabel>
+                            Members
+                        </DataList.ItemLabel>
+                        <DataList.ItemValue margin={0}>
+                            <Wrap>
+                                {organizationDetail.members.map((m) => (
+                                    <Member key={m.user.email} user={m.user} />
+                                ))}
+                            </Wrap>
+                        </DataList.ItemValue>
+                    </DataList.Item>
+                </DataList.Root>
+            </Dialog.Body >
+            <Separator />
+            <Dialog.Footer>
+                <Delete id={0} />
+                <Dialog.ActionTrigger asChild>
+                    <Button variant="outline" rounded="sm">
+                        Close
+                    </Button>
+                </Dialog.ActionTrigger>
+            </Dialog.Footer>
+        </>
+    ) : (
+        <LoadingComponent />
+    ));
+}
+
+function NewOrg({ uid }: { uid: number | null }) {
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [name, setName] = useState<string>("");
+    const [open, setOpen] = useState<boolean>(false);
+
+    return (
+        <Dialog.Root
+            initialFocusEl={() => inputRef.current}
+            open={open}
+            onOpenChange={(e) => setOpen(e.open)}
         >
-            <Grid
-                templateColumns="auto 1fr"
-                gap={4}
-            >
-                <Box
-                    width='24vh'
-                    textAlign="end"
-                    alignItems="end"
+            <Dialog.Trigger asChild>
+                <IconButton
+                    variant="outline"
+                    rounded="sm"
                 >
-                    <Text
-                        margin={0}
-                        padding={0}
-                        fontSize="lg"
-                        fontWeight="semibold"
-                    >
-                        Deligator
-                    </Text>
-                </Box>
-                <Wrap gap={2}>
-                    <Member user={org.delegator} />
-                </Wrap>
-            </Grid>
-            <Grid
-                templateColumns="auto 1fr"
-                gap={4}
-            >
-                <Box
-                    width='24vh'
-                    textAlign="end"
-                    alignItems="end"
-                >
-                    <Text
-                        margin={0}
-                        padding={0}
-                        fontSize="lg"
-                        fontWeight="semibold"
-                    >
-                        Members
-                    </Text>
-                </Box>
-                {org.members.map((m) => (
-                    <Wrap gap={2}>
-                        <Member user={m.user} />
-                    </Wrap>
-                ))}
-            </Grid>
-        </Stack>
+                    <HiPlus />
+                </IconButton>
+            </Dialog.Trigger>
+            <Portal>
+                <Dialog.Backdrop />
+                <Dialog.Positioner>
+                    <Dialog.Content>
+                        <Dialog.Header>
+                            <Dialog.Title>
+                                Make New Organization
+                            </Dialog.Title>
+                        </Dialog.Header>
+                        <Dialog.Body pb="4">
+                            <InputComponent
+                                label="Organization Name"
+                                placeholder="Input Name"
+                                ref={inputRef}
+                                value={name}
+                                setValue={setName}
+                            />
+                        </Dialog.Body>
+                        <Dialog.Footer>
+                            <Dialog.CloseTrigger asChild>
+                                <Button variant="outline" rounded="sm">
+                                    Cancel
+                                </Button>
+                            </Dialog.CloseTrigger>
+                            <Dialog.ActionTrigger asChild>
+                                <Button
+                                    rounded="sm"
+                                    onClick={() => {
+                                        if (name && uid) {
+                                            setOpen(false);
+                                            newOrg({
+                                                name: name,
+                                                delegatorId: uid
+                                            });
+                                        }
+                                    }}
+                                >
+                                    Generate
+                                </Button>
+                            </Dialog.ActionTrigger>
+                        </Dialog.Footer>
+                    </Dialog.Content>
+                </Dialog.Positioner>
+            </Portal>
+        </Dialog.Root>
     );
 }
 
@@ -129,8 +255,7 @@ export default function Organization() {
         needLogin();
     }, []);
 
-    const { organization } = useOrganization({ uid: userInfo?.id });
-    const { organizationDetail } = useOrganizationDetail({ id: selected });
+    const { organization, refetch } = useOrganization({ uid: userInfo?.id });
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -157,15 +282,26 @@ export default function Organization() {
                                 margin={0}
                                 color="gray.focusRing"
                             >
-                                Click each row to see detail of organization {userInfo?.id}
+                                Click each row to see detail of organization
                             </Text>
-                            <Button
-                                variant="outline"
-                                rounded="sm"
-                                onClick={() => setOpen(true)}
-                            >
-                                Make new organization
-                            </Button>
+                            <HStack>
+                                <TooltipComponent
+                                    content="Refresh"
+                                >
+                                    <IconButton
+                                        rounded="sm"
+                                        variant="ghost"
+                                        onClick={() => refetch()}
+                                    >
+                                        <HiOutlineRefresh color="gray" />
+                                    </IconButton>
+                                </TooltipComponent>
+                                <TooltipComponent
+                                    content="Make New Organization"
+                                >
+                                    <NewOrg uid={userInfo?.id ?? 0} />
+                                </TooltipComponent>
+                            </HStack>
                         </Flex>
                         <Scroll>
                             <Table.Root
@@ -190,7 +326,7 @@ export default function Organization() {
                                     </Table.Row>
                                 </Table.Header>
                                 <Table.Body>
-                                    {organization.map((org) => (
+                                    {organization.map((org: IOrganization) => (
                                         <Table.Row
                                             key={org.id}
                                             onClick={() => {
@@ -221,30 +357,13 @@ export default function Organization() {
                         <Dialog.Backdrop />
                         <Dialog.Positioner>
                             <Dialog.Content>
-                                <Dialog.Header>
-                                    <Dialog.Title>
-                                        {organizationDetail?.name ?? "Loding..."}
-                                    </Dialog.Title>
-                                    <Dialog.CloseTrigger asChild>
-                                        <CloseButton size="sm" />
-                                    </Dialog.CloseTrigger>
-                                </Dialog.Header>
-                                <Separator />
-                                {organizationDetail && (
-                                    <Dialog.Body>
-                                        <OrgDetail org={organizationDetail} />
-                                    </Dialog.Body>
-                                )}
+                                <OrgDetail id={selected} />
                             </Dialog.Content>
                         </Dialog.Positioner>
                     </Portal>
                 </Dialog.Root>
             ) : (
-                <Center height="100%">
-                    <Heading margin={0} padding={0}>
-                        Loding...
-                    </Heading>
-                </Center>
+                <LoadingComponent />
             )}
         </Scroll >
     );

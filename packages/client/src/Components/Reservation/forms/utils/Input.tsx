@@ -1,18 +1,25 @@
 import { Input, } from "@chakra-ui/react";
 import FieldComponent from "./Field";
+import { Dispatch, RefObject, SetStateAction } from "react";
 
 export default function InputComponent({
   label,
   placeholder,
+  value,
+  setValue,
   helpertext,
   errortext,
   disabled,
+  ref,
 }: {
-  label: string,
-  placeholder: string,
-  helpertext?: string,
-  errortext?: string,
-  disabled?: boolean,
+  label: string;
+  placeholder: string;
+  value: string;
+  setValue: Dispatch<SetStateAction<string>>;
+  helpertext?: string;
+  errortext?: string;
+  disabled?: boolean;
+  ref?: RefObject<HTMLInputElement | null>
 }) {
   return (
     <FieldComponent
@@ -25,6 +32,9 @@ export default function InputComponent({
     >
       <Input
         placeholder={placeholder}
+        ref={ref ?? null}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
       />
     </FieldComponent>
   );

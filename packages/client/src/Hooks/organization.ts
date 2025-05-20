@@ -1,8 +1,8 @@
 "use client"
 
-import { IOrganization, IOrganizationResponse } from "@scspace-depot/types/organization";
+import { IOrganization, IOrganizationMember, IOrganizationResponse } from "@scspace-depot/types/organization";
 import { useEffect, useState } from "react";
-import { useQueryApi } from "./useAPI";
+import { useMutationApi, useQueryApi } from "./useAPI";
 
 export function useOrganization({ uid }: { uid?: number }) {
     const [query, setQuery] = useState<string>("/organization/");
@@ -42,5 +42,11 @@ export function useOrganizationDetail({ id }: { id: number }) {
     }, [data])
 
     return { organizationDetail, isLoading, refetch };
+}
 
+export function useOrganizationAPI() {
+    const addOrgMember = useMutationApi<IOrganizationMember, {}>(
+        `/organization/${id}/add-member/${uid}`,
+        "GET"
+    );
 }
