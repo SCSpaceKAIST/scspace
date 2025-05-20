@@ -29,6 +29,6 @@ export interface IOrganizationUser {
   userId: number;
 };
 
-export interface IDeleteOrganization {
+export interface IDefaultResponse {
   success: boolean;
 };

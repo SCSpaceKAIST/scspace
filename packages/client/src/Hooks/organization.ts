@@ -1,6 +1,6 @@
 "use client"
 
-import { IDeleteOrganization, IOrganization, IOrganizationCreate, IOrganizationMember, IOrganizationResponse, IOrganizationUser } from "@scspace-depot/types/organization";
+import { IDefaultResponse, IOrganization, IOrganizationCreate, IOrganizationMember, IOrganizationResponse, IOrganizationUser } from "@scspace-depot/types/organization";
 import { useEffect, useState } from "react";
 import { useMutationApi, useQueryApi } from "./useAPI";
 
@@ -53,13 +53,13 @@ export function useOrganizationAPI(oid?: { id: number }) {
     );
     const generateOrg = newOrg.mutate;
 
-    const delOrg = useMutationApi<void, IDeleteOrganization>(
+    const delOrg = useMutationApi<IDefaultResponse, {}>(
         `/organization/${id}`,
         "DELETE"
     );
     const deleteOrg = delOrg.mutate;
 
-    const rmvOrgMember = useMutationApi<boolean, IOrganizationUser>(
+    const rmvOrgMember = useMutationApi<IDefaultResponse, IOrganizationUser>(
         `/organization/${id}/remove-member`,
         "PUT"
     );

@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { OrganizationRepository } from './organization.repository';
 import { OrganizationMemberRepository } from './organization.member.repository';
-import { IOrganization, IOrganizationCreate, IOrganizationResponse, IOrganizationMemberResponse, IDeleteOrganization } from '@scspace-depot/types/organization';
+import { IOrganization, IOrganizationCreate, IOrganizationResponse, IOrganizationMemberResponse, IDefaultResponse } from '@scspace-depot/types/organization';
 import { MOrganizationMember } from './organization.member.model';
 import { UserRepository } from '../user/user.repository';
 @Injectable()
@@ -32,7 +32,7 @@ export class OrganizationService {
     return organizations;
   }
 
-  async deleteOrganization(organizationId: number): Promise<IDeleteOrganization> {
+  async deleteOrganization(organizationId: number): Promise<IDefaultResponse> {
     const organization = await this.organizationRepository.fetchById(organizationId);
     if (!organization) {
       throw new NotFoundException('Organization not found');
@@ -95,7 +95,7 @@ export class OrganizationService {
     return await this.organizationMemberRepository.insert(organizationId, userId);
   }
 
-  async removeMember(organizationId: number, userId: number): Promise<boolean> {
+  async removeMember(organizationId: number, userId: number): Promise<IDefaultResponse> {
     const organization = await this.organizationRepository.fetchById(organizationId);
     if (!organization) {
       throw new NotFoundException('Organization not found');
@@ -105,6 +105,6 @@ export class OrganizationService {
       throw new NotFoundException('User not in organization');
     }
     const result = await this.organizationMemberRepository.delete(organizationId, userId);
-    return result;
+    return { success: result };
   }
 } 
