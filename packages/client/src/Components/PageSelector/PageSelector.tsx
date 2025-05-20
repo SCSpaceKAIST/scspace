@@ -1,6 +1,6 @@
 "use client"
 
-import React, { use, useState, } from "react";
+import React, { useState, } from "react";
 import {
     Stack,
     Separator,
@@ -9,11 +9,11 @@ import {
     Box,
     Grid,
     Flex,
-    Link,
     useBreakpointValue
 } from "@chakra-ui/react";
 import Scroll from "../_commons/Scroll";
 import { useRouter } from "next/navigation";
+import LoadingComponent from "../Loading/Loading";
 
 export interface IPage {
     kor: string;
@@ -55,7 +55,11 @@ export default function PageSelector({
     const [key, setKey] = useState<number>(0);
     const router = useRouter();
 
-    return (
+    const isMd = useBreakpointValue({ base: false, md: true });
+
+    return ((!pages || pages.length === 0) ? (
+        <LoadingComponent />
+    ) : (
         <Grid
             id="temp"
             gap={4}
@@ -94,10 +98,13 @@ export default function PageSelector({
                                     md: "32vh"
                                 }}
                                 padding={4}
-                                onClick={useBreakpointValue({
-                                    md: () => setKey(i),
-                                    base: () => router.push(p.href)
-                                })}
+                                onClick={() => {
+                                    if (isMd) {
+                                        setKey(i);
+                                    } else {
+                                        router.push(p.href);
+                                    }
+                                }}
                                 key={p.href}
                             >
                                 <Element p={p} />
@@ -110,5 +117,5 @@ export default function PageSelector({
                 {pages[key].preview}
             </Scroll>
         </Grid>
-    );
+    ));
 }

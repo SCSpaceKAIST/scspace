@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ILink from "./interfaces/Link";
 import {
     Blockquote,
@@ -12,6 +12,7 @@ import {
     Collapsible,
 } from "@chakra-ui/react";
 import { HiPlus } from "react-icons/hi2";
+import { useAllSpace } from "@scspace-client/Hooks/space";
 
 function RedirectLinks({ links }: { links: ILink[] }) {
     return (
@@ -29,7 +30,6 @@ function RedirectLinks({ links }: { links: ILink[] }) {
                         <Collapsible.Root
                             key={l.href}
                             as={Stack}
-                            defaultOpen
                             gap={0}
                         >
                             <Stack direction="row" >
@@ -45,6 +45,7 @@ function RedirectLinks({ links }: { links: ILink[] }) {
                                         width="100%"
                                         height="fit-content"
                                         color="inherit"
+                                        disabled={l.disabled ?? false}
                                     >
                                         <Field.Root
                                             margin={2}
@@ -82,98 +83,77 @@ function RedirectLinks({ links }: { links: ILink[] }) {
 }
 
 export default function Redirect() {
-    const [spaces, setSpaces] = useState<ILink[]>([
-        {
-            href: "/space/individual-practice-room",
-            helperText: "Individual Practice Room",
-            label: "개인연습실"
-        }, {
-            href: "/space/piano-room",
-            helperText: "Piano Room",
-            label: "피아노실"
-        },
-        {
-            href: "/space/ullim-hall",
-            helperText: "Josumi Hall",
-            label: "조수미홀",
-        },
-        {
-            href: "/space/mirae-hall",
-            helperText: "Mirae Hall",
-            label: "미래홀"
-        },
-        {
-            href: "/space/seminar-room",
-            helperText: "Seminar Room",
-            label: "세미나실"
-        },
-        {
-            href: "/space/open-space",
-            helperText: "Open Space",
-            label: "오픈 스페이스"
-        },
-        {
-            href: "/space/group-practice-room",
-            helperText: "Ensemble Room",
-            label: "합주실"
-        },
-        {
-            href: "/space/dance-studio",
-            helperText: "Dance Studio",
-            label: "무예실"
-        },
-        {
-            href: "/space/workshop",
-            helperText: "Workshop",
-            label: "창작공방",
-        },
-        {
-            href: "/",
-            helperText: "Busking Zone",
-            label: "버스킹 존"
-        }
-    ]);
+    const { spaces } = useAllSpace();
+    const [spaceLinks, setSpaceLinks] = useState<ILink[]>([]);
+    const [links, setLinks] = useState<ILink[]>([]);
 
-    const [links, setLinks] = useState<ILink[]>([
-        {
-            href: "/introduction",
-            label: "공간위에 대해",
-            helperText: "About SCSpace",
-        },
-        {
-            href: "/reservation",
-            label: "공간 예약하기",
-            helperText: "Reservation",
-        },
-        {
-            href: "/calendar",
-            label: "예약 확인하기",
-            helperText: "Calendar",
-        },
-        {
-            href: "/space",
-            label: "공간위 관리 공간",
-            helperText: "Spaces",
-            subdomains: spaces,
-        },
-        {
-            href: "/mypage",
-            label: "마이페이지",
-            helperText: "Mypage",
-            subdomains: [
-                {
-                    href: "/mypage/org",
-                    label: "조직 관리",
-                    helperText: "Organization"
-                }
-            ]
-        },
-        {
-            href: "/manage",
-            label: "관리",
-            helperText: "Management"
-        }
-    ]);
+    useEffect(() => {
+        if (spaces) setSpaceLinks(spaces.map((s): ILink => {
+            return {
+                href: `/space/${s.id}`,
+                helperText: s.nameEn,
+                label: s.nameKr,
+                disabled: true
+            }
+        }))
+    }, [spaces]);
+
+    useEffect(() => {
+        setLinks([
+            {
+                href: "/introduction",
+                label: "공간위에 대해",
+                helperText: "About SCSpace",
+                disabled: true
+            },
+            {
+                href: "/notice",
+                label: "공지사항",
+                helperText: "Notice",
+                disabled: true
+            },
+            {
+                href: "/reservation",
+                label: "공간 예약하기",
+                helperText: "Reservation",
+            },
+            {
+                href: "/calendar",
+                label: "예약 확인하기",
+                helperText: "Calendar",
+            },
+            {
+                href: "/space",
+                label: "공간위 관리 공간",
+                helperText: "Spaces",
+                subdomains: spaceLinks,
+            },
+            {
+                href: "/mypage",
+                label: "마이페이지",
+                helperText: "Mypage",
+                subdomains: [
+                    {
+                        href: "/mypage/reservation",
+                        label: "예약 목록",
+                        helperText: "Reservation List",
+                        disabled: true
+                    },
+                    {
+                        href: "/mypage/organization",
+                        label: "조직 관리",
+                        helperText: "Organization"
+                    }
+                ]
+            },
+            {
+                href: "/manage",
+                label: "관리",
+                helperText: "Management",
+                disabled: true
+            }
+        ]);
+    }, [spaceLinks]);
 
     return (<RedirectLinks links={links} />);
 }

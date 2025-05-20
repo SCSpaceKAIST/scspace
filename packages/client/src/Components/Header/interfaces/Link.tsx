@@ -3,4 +3,5 @@ export default interface ILink {
     helperText: string;
     label: string;
     subdomains?: ILink[];
+    disabled?: boolean;
 };

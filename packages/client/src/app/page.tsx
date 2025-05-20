@@ -1,19 +1,26 @@
-"use client";
-import React from "react";
-import Banner from "@scspace-client/Components/Main/Banner";
+import { Center, Heading, Separator, StackSeparator, VStack } from "@chakra-ui/react";
 
-interface MainProps {
-  // Next.js에서는 history가 기본으로 제공되지 않으므로,
-  // 필요에 따라 history 사용 방법을 조정해야 합니다.
-  //history?: any; // 필요시 history 타입을 명확히 정의할 수 있습니다.
-}
-
-const Main: React.FC<MainProps> = (props: MainProps) => {
+export default function SpacePage() {
   return (
-    <div>
-      <Banner />
-    </div>
+    <Center height="100%">
+      <VStack separator={<StackSeparator />}>
+        <VStack px={16}>
+          <Heading>
+            홈 화면은 개발중입니다.
+          </Heading>
+          <Heading>
+            사이드 메뉴를 이용하시길 바랍니다.
+          </Heading>
+        </VStack>
+        <VStack px={16}>
+          <Heading>
+            The home screen is under development.
+          </Heading>
+          <Heading>
+            Please use the side menu.
+          </Heading>
+        </VStack>
+      </VStack>
+    </Center>
   );
 };
-
-export default Main;
