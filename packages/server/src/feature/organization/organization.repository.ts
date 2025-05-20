@@ -54,6 +54,10 @@ export class OrganizationRepository {
       .from(Organization)
       .where(eq(Organization.id, organizationId));
 
+    if (result.length === 0) {
+      throw new NotFoundException('Organization not found');
+    }
+
     return MOrganization.fromDB(result[0]);
   }
   async insert(organization: IOrganizationCreate): Promise<IOrganization> {
