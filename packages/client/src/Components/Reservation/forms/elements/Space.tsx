@@ -5,8 +5,9 @@ import { useAllSpace } from "@scspace-client/Hooks/space";
 import { SmallLoading } from "@scspace-client/Components/Loading/Loading";
 import { Dispatch, SetStateAction } from "react";
 
-export function SpaceForm({ setSpaceId }: {
+export function SpaceForm({ setSpaceId, setCheck }: {
   setSpaceId: Dispatch<SetStateAction<number>>;
+  setCheck: Dispatch<SetStateAction<boolean>>;
 }) {
   const { spaces } = useAllSpace();
 
@@ -26,9 +27,10 @@ export function SpaceForm({ setSpaceId }: {
       })}
       checkboxLabel={{
         "조수미홀": "use Lobby",
-        "버스킹 존": "use Busking Zone"
+        "오픈스페이스": "use Busking Zone"
       }}
       onChange={onChange}
+      setCheck={setCheck}
     />
   ) : (
     <SmallLoading />

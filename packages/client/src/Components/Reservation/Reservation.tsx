@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Stack,
   Separator,
@@ -41,10 +41,11 @@ export default function Reservation() {
   const [desk, setDesk] = useState<number>(0);
   const [chair, setChair] = useState<number>(0);
   const [worker, setWorker] = useState<number>(0);
+  const [check, setCheck] = useState<boolean>(false);
 
   function submit() {
     console.log(
-      spaceId, orgId,
+      spaceId, check, orgId,
       dateFrom, dateTo,
       hourFrom, hourTo,
       title,
@@ -66,7 +67,10 @@ export default function Reservation() {
           py={2}
         >
           <GridItem colSpan={{ base: 6, md: 3 }}>
-            <SpaceForm setSpaceId={setSpaceId} />
+            <SpaceForm
+              setSpaceId={setSpaceId}
+              setCheck={setCheck}
+            />
           </GridItem>
           <GridItem colSpan={{ base: 6, md: 3 }}>
             {userInfo ? (

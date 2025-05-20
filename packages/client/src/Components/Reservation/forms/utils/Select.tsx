@@ -7,7 +7,7 @@ import {
   Span,
 } from "@chakra-ui/react";
 import CheckComponent from "./Checkbox";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 export interface ISelectOption {
   label: string;
@@ -19,7 +19,8 @@ export default function SelectComponent({
   label,
   checkboxLabel,
   optionList,
-  onChange
+  onChange,
+  setCheck = () => null
 }: {
   label: string;
   checkboxLabel?: {
@@ -27,6 +28,7 @@ export default function SelectComponent({
   } | string;
   optionList: ISelectOption[];
   onChange: (e: ISelectOption) => any;
+  setCheck?: Dispatch<SetStateAction<boolean>>;
 }) {
   const options = createListCollection({
     items: optionList,
@@ -54,9 +56,13 @@ export default function SelectComponent({
           {label}
           {(checkboxLabel && (
             (typeof checkboxLabel === "string") ? (
-              <CheckComponent label={checkboxLabel} />
+              <CheckComponent label={checkboxLabel}
+              />
             ) : (checkboxLabel[_label] && (
-              <CheckComponent label={checkboxLabel[_label]} />
+              <CheckComponent
+                label={checkboxLabel[_label]}
+                onChange={(e) => setCheck(e)}
+              />
             ))
           ))}
         </Flex>
