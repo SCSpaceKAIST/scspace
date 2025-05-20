@@ -15,26 +15,43 @@ import {
   Alert,
   CloseButton,
   Float,
-  Circle
+  Circle,
+  Spinner
 } from "@chakra-ui/react";
 import Scroll from "../_commons/Scroll";
-import SelectComponent from "../Reservation/forms/utils/Select";
+import SelectComponent, { ISelectOption } from "../Reservation/forms/utils/Select";
 import { DateForm } from "../Reservation/forms";
 import { IRes, IReservationHookRes, useReservations } from "@scspace-client/Hooks/reservation";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
 import { useAllSpace } from "@scspace-client/Hooks/space";
 
-function SpaceSelect() {
+function SpaceSelect({ setSpaceId }: {
+  setSpaceId: Dispatch<SetStateAction<number>>;
+}) {
   const { spaces } = useAllSpace();
 
-  return (
+  function onChange(e: ISelectOption) {
+    setSpaceId(parseInt(e.value));
+  }
+
+  return (spaces ? (
     <SelectComponent
       label="Space Name"
-      placeholder="Select Space"
-      optionList={spaces}
+      optionList={spaces.map((s) => {
+        return {
+          label: s.nameKr,
+          description: s.nameEn,
+          value: s.id.toString()
+        }
+      })}
+      onChange={onChange}
     />
-  );
+  ) : (
+    <Center bg="bg.muted" rounded="sm" height="100%">
+      <Spinner />
+    </Center>
+  ));
 }
 
 function stringToColor(str: string): string {
@@ -68,7 +85,6 @@ function stringToColor(str: string): string {
 }
 
 function Day({ RESs }: { RESs: IRes[] }) {
-  console.log("RESs", RESs)
   if (RESs.length === 0) {
     const temp = [];
     for (let i = 0; i < 24; i += 1) temp.push(i);
@@ -171,31 +187,84 @@ function Day({ RESs }: { RESs: IRes[] }) {
   );
 }
 
+export function CalendarView({ spaceId, dateFrom, dateTo }: {
+  spaceId: number;
+  dateFrom: Date;
+  dateTo: Date;
+}) {
+  const { reservation } = useReservations({
+    spaceId: spaceId,
+    dateFrom: dateFrom,
+    dateTo: dateTo,
+  });
+
+  return (
+    <Box
+      id="scroll"
+      overflow="auto"
+      scrollBehavior="smooth"
+      minH={0}
+      minW={0}
+      maxH="100%"
+      maxW="100%"
+      rounded="sm"
+      borderWidth="1px"
+    >
+      <Grid
+        templateColumns={`repeat(${Object.keys(reservation).length}, 1fr)`}
+        gap={0}
+      >
+        {Object.keys(reservation).map((k, i) => (
+          <Stack
+            direction="row"
+            minW="32vh"
+            key={i}
+            gap={0}
+          >
+            {(i > 0) && <Separator orientation="vertical" height="100%" />}
+            <Stack
+              width="100%"
+              gap={0}
+            >
+              <Center>
+                <Text
+                  margin={1}
+                  padding={0}
+                >
+                  {k}
+                </Text>
+              </Center>
+              <Day RESs={reservation[k]} />
+            </Stack>
+          </Stack>
+        ))}
+      </Grid>
+    </Box>
+  );
+}
+
 export default function Calendar() {
-  const [res, setRes] = useState<IReservationHookRes>({});
   const [dateFrom, setDateFrom] = useState<Date>(() => new Date());
   const [dateTo, setDateTo] = useState<Date>(() => new Date());
-  const [searchDate, setSearchDate] = useState<{ dateFrom: Date, dateTo: Date }>({
+  const [spaceId, setSpaceId] = useState<number>(1);
+
+  const [searchData, setSearchData] = useState<{
+    spaceId: number;
+    dateFrom: Date,
+    dateTo: Date
+  }>({
+    spaceId: spaceId,
     dateFrom: dateFrom,
     dateTo: dateTo
   });
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
 
-  const { reservation } = useReservations({
-    spaceId: 1,
-    dateFrom: searchDate.dateFrom,
-    dateTo: searchDate.dateTo,
-  });
-
-  useEffect(() => {
-    setRes(reservation);
-  }, [reservation]);
-
   function search() {
     if ((new Date(dateTo.valueOf() - dateFrom.valueOf())).getDate() > 14) {
       setAlertOpen(true);
     } else {
-      setSearchDate({
+      setSearchData({
+        spaceId: spaceId,
         dateFrom: dateFrom,
         dateTo: dateTo
       });
@@ -239,7 +308,7 @@ export default function Calendar() {
             justify="space-between"
           >
             <Stack width="24vh">
-              <SpaceSelect />
+              <SpaceSelect setSpaceId={setSpaceId} />
             </Stack>
             <Stack direction="row" width="48vh" gap={2} alignItems="end">
               <IconButton
@@ -248,11 +317,15 @@ export default function Calendar() {
                 onClick={search}
               >
                 <HiOutlineSearch />
-                {(searchDate.dateFrom.toISOString() !== dateFrom.toISOString() || searchDate.dateTo.toISOString() !== dateTo.toISOString()) && (
-                  <Float>
-                    <Circle size="3" bg="red" />
-                  </Float>
-                )}
+                {(
+                  searchData.dateFrom.toISOString() !== dateFrom.toISOString() ||
+                  searchData.dateTo.toISOString() !== dateTo.toISOString() ||
+                  searchData.spaceId !== spaceId
+                ) && (
+                    <Float>
+                      <Circle size="3" bg="red" />
+                    </Float>
+                  )}
               </IconButton>
               <DateForm
                 label="start date"
@@ -268,47 +341,11 @@ export default function Calendar() {
               />
             </Stack>
           </Flex>
-          <Box
-            id="scroll"
-            overflow="auto"
-            scrollBehavior="smooth"
-            minH={0}
-            minW={0}
-            maxH="100%"
-            maxW="100%"
-            rounded="sm"
-            borderWidth="1px"
-          >
-            <Grid
-              templateColumns={`repeat(${Object.keys(res).length}, 1fr)`}
-              gap={0}
-            >
-              {Object.keys(res).map((k, i) => (
-                <Stack
-                  direction="row"
-                  minW="32vh"
-                  key={i}
-                  gap={0}
-                >
-                  {(i > 0) && <Separator orientation="vertical" height="100%" />}
-                  <Stack
-                    width="100%"
-                    gap={0}
-                  >
-                    <Center>
-                      <Text
-                        margin={1}
-                        padding={0}
-                      >
-                        {k}
-                      </Text>
-                    </Center>
-                    <Day RESs={res[k]} />
-                  </Stack>
-                </Stack>
-              ))}
-            </Grid>
-          </Box>
+          <CalendarView
+            spaceId={searchData.spaceId}
+            dateFrom={searchData.dateFrom}
+            dateTo={searchData.dateTo}
+          />
         </Grid>
       </Scroll >
     </>

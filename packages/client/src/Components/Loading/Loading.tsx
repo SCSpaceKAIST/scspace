@@ -17,3 +17,11 @@ export default function LoadingComponent({ content }: { content?: string }) {
         </Center>
     );
 }
+
+export function SmallLoading() {
+    return (
+        <Center bg="bg.muted" rounded="sm" height="100%">
+            <Spinner />
+        </Center>
+    );
+}

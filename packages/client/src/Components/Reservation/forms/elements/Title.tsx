@@ -1,11 +1,16 @@
+import { Dispatch, SetStateAction } from "react";
 import InputComponent from "../utils/Input";
 
-export function TitleForm() {
+export function TitleForm({ title, setTitle }: {
+  title: string;
+  setTitle: Dispatch<SetStateAction<string>>;
+}) {
   return (
     <InputComponent
       label="Title"
       placeholder="Input Title"
-      helpertext="이런것도 있음"
+      value={title}
+      setValue={setTitle}
     />
   );
 }

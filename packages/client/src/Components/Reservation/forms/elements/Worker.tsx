@@ -1,10 +1,15 @@
 import NumberInputComponent from "../utils/NumberInput";
+import { Dispatch, SetStateAction } from "react";
 
-export function WorkerForm() {
+export function WorkerForm({ count, setCount }: {
+  count: number;
+  setCount: Dispatch<SetStateAction<number>>;
+}) {
   return (
     <NumberInputComponent
       label="Worker"
-      defaultValue="0"
+      value={count.toString()}
+      onChange={v => setCount(parseInt(v))}
     />
   );
 }

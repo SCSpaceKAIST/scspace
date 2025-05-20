@@ -22,7 +22,7 @@ export function useSpace({ id }: { id: number }) {
 
 export function useAllSpace() {
     const [spaces, setSpaces] = useState<ISpace[] | null>(null);
-    const { data, isLoading, refetch } = useQueryApi<ISpace[]>('/space/all');
+    const { data, isLoading, refetch } = useQueryApi<ISpace[]>('/space');
 
     useEffect(() => {
         if (!data) {

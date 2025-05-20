@@ -1,18 +1,21 @@
 import { NumberInput, } from "@chakra-ui/react";
 import FieldComponent from "./Field";
+import { Dispatch, SetStateAction } from "react";
 
 export default function NumberInputComponent({
   label,
-  defaultValue,
   helpertext,
   errortext,
   disabled,
+  value,
+  onChange,
 }: {
-  label: string,
-  defaultValue: string,
-  helpertext?: string,
-  errortext?: string,
-  disabled?: boolean,
+  label: string;
+  helpertext?: string;
+  errortext?: string;
+  disabled?: boolean;
+  value: string;
+  onChange: (value: string) => any;
 }) {
   return (
     <FieldComponent
@@ -24,7 +27,8 @@ export default function NumberInputComponent({
       }}
     >
       <NumberInput.Root
-        defaultValue={defaultValue}
+        value={value}
+        onValueChange={(e) => onChange(e.value)}
         width="100%"
       >
         <NumberInput.Control />

@@ -3,58 +3,76 @@ import {
   Portal,
   createListCollection,
   Flex,
+  Stack,
+  Span,
 } from "@chakra-ui/react";
 import CheckComponent from "./Checkbox";
 import { useState } from "react";
 
+export interface ISelectOption {
+  label: string;
+  value: string;
+  description?: string;
+}
+
 export default function SelectComponent({
   label,
   checkboxLabel,
-  placeholder,
-  optionList
+  optionList,
+  onChange
 }: {
-  label: string,
+  label: string;
   checkboxLabel?: {
     [key: string]: string;
-  }
-  placeholder: string
-  optionList: {
-    label: string,
-    value: string
-  }[]
+  } | string;
+  optionList: ISelectOption[];
+  onChange: (e: ISelectOption) => any;
 }) {
   const options = createListCollection({
     items: optionList,
   });
 
-  const [selected, setSelected] = useState<string>(optionList[0].value);
+  const [_value, _setValue] = useState<string>(optionList[0].value);
+  const [_label, _setLabel] = useState<string>(optionList[0].label);
+  const [_dscrp, _setDscrp] = useState<string>(optionList[0].description ?? "");
 
   return (
     <Select.Root
+      size="lg"
       collection={options}
-      value={[selected]}
-      onValueChange={(e) => setSelected(e.value[0])}
+      value={[_value]}
+      onValueChange={(e) => {
+        _setValue(e.value[0]);
+        _setDscrp(e.items[0].description ?? "");
+        _setLabel(e.items[0].label);
+        onChange(e.items[0]);
+      }}
     >
       <Select.HiddenSelect />
       <Select.Label>
-        <Flex
-          justify="space-between"
-        >
+        <Flex justify="space-between">
           {label}
-          {(checkboxLabel && checkboxLabel[selected]) &&
-            <CheckComponent
-              label={checkboxLabel[selected]}
-            />
-          }
+          {(checkboxLabel && (
+            (typeof checkboxLabel === "string") ? (
+              <CheckComponent label={checkboxLabel} />
+            ) : (checkboxLabel[_label] && (
+              <CheckComponent label={checkboxLabel[_label]} />
+            ))
+          ))}
         </Flex>
       </Select.Label>
       <Select.Control>
         <Select.Trigger
           rounded="sm"
         >
-          <Select.ValueText
-            placeholder={placeholder}
-          />
+          <Stack gap={0} width="100%">
+            <Select.ValueText>
+              {_label}
+            </Select.ValueText>
+            <Span color="fg.muted" textStyle="xs">
+              {_dscrp}
+            </Span>
+          </Stack>
         </Select.Trigger>
         <Select.IndicatorGroup>
           <Select.Indicator />
@@ -68,13 +86,20 @@ export default function SelectComponent({
                 item={o}
                 key={o.value}
               >
-                {o.label}
+                <Stack gap={0}>
+                  <Select.ItemText>
+                    {o.label}
+                  </Select.ItemText>
+                  <Span color="fg.muted" textStyle="xs">
+                    {o.description ?? ""}
+                  </Span>
+                </Stack>
                 <Select.ItemIndicator />
               </Select.Item>
             ))}
           </Select.Content>
         </Select.Positioner>
       </Portal>
-    </Select.Root>
+    </Select.Root >
   );
 }

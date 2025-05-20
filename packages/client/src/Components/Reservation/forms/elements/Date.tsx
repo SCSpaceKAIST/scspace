@@ -35,8 +35,9 @@ export function DateForm({
         disabled: false,
       }}
     >
-      <Box width="100%">
+      <Box width="100%" zIndex={10}>
         <DatePicker
+          popperProps={{ strategy: 'fixed' }}
           selected={date}
           onChange={(date) => {
             if (date) setDate(date);

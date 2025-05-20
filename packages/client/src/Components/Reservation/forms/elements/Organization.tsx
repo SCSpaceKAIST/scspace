@@ -1,16 +1,38 @@
-import SelectComponent from "../utils/Select";
+import { useOrganization } from "@scspace-client/Hooks/organization";
+import SelectComponent, { ISelectOption } from "../utils/Select";
+import { Dispatch, SetStateAction } from "react";
 
-export function OrganizationForm() {
-  const organizations = [
-    { label: "Org 1", value: "1" },
-    { label: "Org 2", value: "2" },
-  ]
+export function OrganizationForm({ id, setOrgId }: {
+  id: number;
+  setOrgId: Dispatch<SetStateAction<number>>;
+}) {
+  const { organization } = useOrganization({ uid: id });
+  const organizations: ISelectOption[] = [
+    {
+      label: "개인 예약",
+      value: "0",
+      description: "use as individual"
+    }
+  ];
+
+  function onChange(e: ISelectOption) {
+    setOrgId(parseInt(e.value));
+  }
 
   return (
     <SelectComponent
       label="Organization Name"
-      placeholder="Select Organization"
-      optionList={organizations}
+      optionList={organization ? ([
+        organizations[0],
+        ...organization.map((o): ISelectOption => {
+          return {
+            label: o.name,
+            value: o.id.toString(),
+            description: "Delegator: " + o.delegatorId.toString()
+          }
+        })
+      ]) : (organizations)}
+      onChange={onChange}
     />
   );
 }

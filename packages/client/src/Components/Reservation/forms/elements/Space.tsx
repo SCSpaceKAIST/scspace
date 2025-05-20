@@ -1,23 +1,36 @@
 "use client"
 
-import SelectComponent from "../utils/Select";
+import SelectComponent, { ISelectOption } from "../utils/Select";
+import { useAllSpace } from "@scspace-client/Hooks/space";
+import { SmallLoading } from "@scspace-client/Components/Loading/Loading";
+import { Dispatch, SetStateAction } from "react";
 
-export function SpaceForm() {
-  const spaces = [
-    { label: "Space 1", value: "1" },
-    { label: "Space 2", value: "2" },
-    { label: "Space 3", value: "3" },
-  ]
+export function SpaceForm({ setSpaceId }: {
+  setSpaceId: Dispatch<SetStateAction<number>>;
+}) {
+  const { spaces } = useAllSpace();
 
-  return (
+  function onChange(e: ISelectOption) {
+    setSpaceId(parseInt(e.value));
+  }
+
+  return (spaces ? (
     <SelectComponent
       label="Space Name"
-      placeholder="Select Space"
-      optionList={spaces}
+      optionList={spaces.map((s): ISelectOption => {
+        return {
+          label: s.nameKr,
+          description: s.nameEn,
+          value: s.id.toString()
+        }
+      })}
       checkboxLabel={{
-        1: "use Lobby",
-        2: "use Busking Zone",
+        "조수미홀": "use Lobby",
+        "버스킹 존": "use Busking Zone"
       }}
+      onChange={onChange}
     />
-  );
+  ) : (
+    <SmallLoading />
+  ));
 }

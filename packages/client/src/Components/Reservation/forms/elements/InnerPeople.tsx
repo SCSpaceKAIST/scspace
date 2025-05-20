@@ -1,10 +1,15 @@
+import { Dispatch, SetStateAction } from "react";
 import NumberInputComponent from "../utils/NumberInput";
 
-export function InnerPeopleForm() {
+export function InnerPeopleForm({ count, setCount }: {
+  count: number;
+  setCount: Dispatch<SetStateAction<number>>;
+}) {
   return (
     <NumberInputComponent
       label="Inner Participant Number"
-      defaultValue="10"
+      value={count.toString()}
+      onChange={v => setCount(parseInt(v))}
     />
   );
 }
