@@ -8,6 +8,13 @@
       "when": 1741663796792,
       "tag": "0000_wise_yellow_claw",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1747670951859,
+      "tag": "0001_cute_warpath",
+      "breakpoints": true
     }
   ]
 }

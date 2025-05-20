@@ -17,8 +17,12 @@ export class UserPublicService {
     return users.length > 0 ? users[0] : null;
   }
 
-  async fetchAll(ids: number[]): Promise<MUser[]> {
-    return await this.userRepository.fetchAll(ids);
+  async fetchAllByIds(ids: number[]): Promise<MUser[]> {
+    return await this.userRepository.fetchAllByIds(ids);
+  }
+
+  async fetchAll(): Promise<MUser[]> {
+    return await this.userRepository.fetchAll();
   }
 
   async find(params: { id?: number; ids?: number[]; studentNumber?: number }): Promise<MUser[]> {
@@ -47,5 +51,10 @@ export class UserPublicService {
 
   async getUserCount(): Promise<number> {
     return (await this.userRepository.find({})).length;
+  }
+
+  async deleteUser(id: number): Promise<boolean> {
+    const result = await this.userRepository.delete(id);
+    return result;
   }
 }

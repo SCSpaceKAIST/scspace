@@ -10,7 +10,7 @@ import { sql } from 'drizzle-orm';
 
 // Organization Table
 export const Organization = mysqlTable('organization', {
-  id: int('id').primaryKey().autoincrement(),
+  id: int('id').primaryKey().autoincrement().unique(),
   name: varchar('name', { length: 128 }).notNull(),
   delegatorId: int('delegator_id')
     .notNull()

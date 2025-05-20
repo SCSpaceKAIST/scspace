@@ -19,6 +19,7 @@ import {
   ISpaceTimeCheckRequest,
   IUserTimeCheckRequest
 } from '@scspace-depot/types/reservation';
+import { formatDateToSQL } from '@scspace-server/common/util';
 
 @Controller('reservation')
 export class ReservationController {
@@ -47,8 +48,8 @@ export class ReservationController {
     const query: ISpaceTimeCheckRequest = {
       spaceId: spaceId,
       organizationId: 0, // TODO: Get from context
-      timeFrom: new Date(timeFrom).toISOString(),
-      timeTo: new Date(timeTo).toISOString(),
+      timeFrom: formatDateToSQL(new Date(timeFrom)),
+      timeTo: formatDateToSQL(new Date(timeTo)),
     };
     return await this.reservationService.checkTimeAvailability(query);
   }
@@ -65,8 +66,8 @@ export class ReservationController {
       spaceId: spaceId,
       userId: userId,
       organizationId: 0, // TODO: Get from context
-      timeFrom: new Date(timeFrom).toISOString(),
-      timeTo: new Date(timeTo).toISOString(),
+      timeFrom: formatDateToSQL(new Date(timeFrom)),
+      timeTo: formatDateToSQL(new Date(timeTo)),
     };
     return await this.reservationService.checkUserReservationTime(query);
   }

@@ -4,6 +4,7 @@ import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema, OrganizationMember } from 'src/db/schema';
 import { and, eq, inArray, SQL } from 'drizzle-orm';
 import { MOrganizationMember } from './organization.member.model';
+import { formatDateToSQL } from '@scspace-server/common/util';
 
 @Injectable()
 export class OrganizationMemberRepository {
@@ -42,7 +43,7 @@ export class OrganizationMemberRepository {
       .values({
         organizationId,
         userId,
-        timeRegister: new Date().toISOString(),
+        timeRegister: formatDateToSQL(new Date()),
       })
       .$returningId();
 

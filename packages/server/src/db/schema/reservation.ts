@@ -13,7 +13,7 @@ import { Space } from './space';
 
 // Reservations Table
 export const Reservation = mysqlTable('reservation', {
-  id: int('id').primaryKey().autoincrement(),
+  id: int('id').primaryKey().autoincrement().unique(),
   userId: int('user_id')
     .notNull()
     .references(() => User.id, { onDelete: 'cascade' }),

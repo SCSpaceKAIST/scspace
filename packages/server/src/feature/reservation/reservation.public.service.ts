@@ -6,7 +6,7 @@ import { UserPublicService } from '@scspace-server/feature/user/user.public.serv
 import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
 import { reservationMaxWeekTime } from '@scspace-depot/consts/reservation.const';
 import { MReservation } from '@scspace-server/feature/reservation/reservation.model';
-
+import { formatDateToSQL } from '@scspace-server/common/util';
 @Injectable()
 export class ReservationPublicService {
   constructor(
@@ -51,8 +51,8 @@ export class ReservationPublicService {
       spaceId: spaceId,
       state: ReservationStateEnum.GRANT,
       timeRange: {
-        timeFrom: today.toISOString(),
-        timeTo: tomorrow.toISOString(),
+        timeFrom: formatDateToSQL(today),
+        timeTo: formatDateToSQL(tomorrow),
       },
     });
 
@@ -90,8 +90,8 @@ export class ReservationPublicService {
       spaceId: spaceId,
       state: ReservationStateEnum.GRANT,
       timeRange: {
-        timeFrom: startOfWeek.toISOString(),
-        timeTo: endOfWeek.toISOString(),
+        timeFrom: formatDateToSQL(startOfWeek),
+        timeTo: formatDateToSQL(endOfWeek),
       },
     });
 

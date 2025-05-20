@@ -53,7 +53,7 @@ export class UserRepository {
     return user;
   }
 
-  async fetchAll(ids: number[]): Promise<MUser[]> {
+  async fetchAllByIds(ids: number[]): Promise<MUser[]> {
     if (ids.length === 0) {
       return [];
     }
@@ -64,6 +64,11 @@ export class UserRepository {
       throw new NotFoundException('Some users not found');
     }
 
+    return users;
+  }
+
+  async fetchAll(): Promise<MUser[]> {
+    const users = await this.find({});
     return users;
   }
 
@@ -80,5 +85,10 @@ export class UserRepository {
       throw new NotFoundException('User not found after creation');
     }
     return userCreated;
+  }
+
+  async delete(id: number): Promise<boolean> {
+    const result = await this.db.delete(User).where(eq(User.id, id));
+    return result.length > 0;
   }
 }

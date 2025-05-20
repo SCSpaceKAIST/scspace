@@ -8,7 +8,7 @@ import {
 import { IOrganization } from '@scspace-depot/types/organization';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ReservationRepository } from './reservation.repository';
-import { checkContainAllId, takeAll, takeOne, timeRangeCheck } from 'src/common/util';
+import { checkContainAllId, formatDateToSQL, takeAll, takeOne, timeRangeCheck } from 'src/common/util';
 import { UserPublicService } from '../user/user.public.service';
 import { SpacePublicService } from '../space/space.public.service';
 import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
@@ -58,7 +58,7 @@ export class ReservationService {
     // If either timeFrom or timeTo is missing, fetch all reservations for the space
     const reservations = await this.reservationRepository.find({ 
       spaceId, 
-      ...(timeFrom && timeTo ? { timeRange: { timeFrom: new Date(timeFrom).toISOString(), timeTo: new Date(timeTo).toISOString() } } : {})
+      ...(timeFrom && timeTo ? { timeRange: { timeFrom: formatDateToSQL(new Date(timeFrom)), timeTo: formatDateToSQL(new Date(timeTo)) } } : {})
     });
     if (reservations.length === 0) {
       return [];
@@ -68,7 +68,7 @@ export class ReservationService {
     const organizationIds = reservations.map((reservation) => reservation.organizationId);
 
     const [users, space, organizations] = await Promise.all([
-      this.userPublicService.fetchAll(userIds).then(takeAll(userIds, 'users')),
+      this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
       this.spacePublicService.fetchById(spaceId),
       this.organizationPublicService.fetchByOrganizationIds(organizationIds),
     ]) as [IUser[], ISpace, IOrganization[]];
@@ -114,8 +114,8 @@ export class ReservationService {
   ): Promise<MReservation> {
     // 1. Validate all referenced entities exist
 
-    reservationInput.timeFrom = new Date(reservationInput.timeFrom).toISOString();
-    reservationInput.timeTo = new Date(reservationInput.timeTo).toISOString();
+    reservationInput.timeFrom = formatDateToSQL(new Date(reservationInput.timeFrom));
+    reservationInput.timeTo = formatDateToSQL(new Date(reservationInput.timeTo));
     const [user, organizations, space] = await Promise.all([
       this.userPublicService.fetchUser(reservationInput.userId),
       this.organizationPublicService.fetchByOrganizationIds([reservationInput.organizationId]),
@@ -176,8 +176,8 @@ export class ReservationService {
   async updateReservation(
     reservationInput: IReservationUpdate,
   ): Promise<boolean> {
-    reservationInput.timeFrom = new Date(reservationInput.timeFrom).toISOString();
-    reservationInput.timeTo = new Date(reservationInput.timeTo).toISOString();
+    reservationInput.timeFrom = formatDateToSQL(new Date(reservationInput.timeFrom));
+    reservationInput.timeTo = formatDateToSQL(new Date(reservationInput.timeTo));
     const reservation = await this.reservationRepository
       .find({
         id: reservationInput.id,
@@ -220,7 +220,7 @@ export class ReservationService {
     const spaceIds = reservations.map((reservation) => reservation.spaceId);
 
     const [users, organizations, spaces] = await Promise.all([
-      this.userPublicService.fetchAll(userIds).then(takeAll(userIds, 'users')),
+      this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
       this.organizationPublicService.fetchByOrganizationIds(organizationIds),
       this.spacePublicService.fetchAllByIds(spaceIds),
     ]) as [IUser[], IOrganization[], ISpace[]];
@@ -249,7 +249,7 @@ export class ReservationService {
     const spaceIds = reservations.map((reservation) => reservation.spaceId);
 
     const [users, organizations, spaces] = await Promise.all([
-      this.userPublicService.fetchAll(userIds).then(takeAll(userIds, 'users')),
+      this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
       this.organizationPublicService.fetchByOrganizationIds(organizationIds),
       this.spacePublicService.fetchAllByIds(spaceIds),
     ]) as [IUser[], IOrganization[], ISpace[]];
