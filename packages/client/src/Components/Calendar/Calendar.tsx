@@ -99,7 +99,7 @@ export function CalendarView({ spaceId, dateFrom, dateTo }: {
         role="alertdialog"
         open={open}
         onOpenChange={(e) => setOpen(e.open)}
-        size="cover"
+        size="xl"
       >
         <Portal>
           <Dialog.Backdrop />

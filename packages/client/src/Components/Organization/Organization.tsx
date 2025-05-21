@@ -38,7 +38,7 @@ export default function Organization() {
                 <Dialog.Root
                     open={open}
                     onOpenChange={(e) => setOpen(e.open)}
-                    size="cover"
+                    size="xl"
                     initialFocusEl={() => null}
                 >
                     <Grid
