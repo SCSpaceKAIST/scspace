@@ -18,6 +18,7 @@ import {
   InferInsertModel,
   gt,
   lt,
+  desc,
 } from 'drizzle-orm';
 import {
   IReservationCreate,
@@ -45,6 +46,7 @@ export class ReservationRepository {
     organizationId?: number;
     state?: ReservationStateEnum;
     states?: ReservationStateEnum[];
+    limit?: number;
     timeRange?: {
       timeFrom?: string;
       timeTo?: string;
@@ -88,13 +90,25 @@ export class ReservationRepository {
       }
     }
 
-    const reservations = await this.db
-      .select(
-      )
-      .from(Reservation)
-      .where(and(...whereClause));
+    if (param.limit) {
+      const reservations = await this.db
+        .select(
+        )
+        .from(Reservation)
+        .where(and(...whereClause))
+        .orderBy(desc(Reservation.id))
+        .limit(param.limit);
 
-    return reservations;
+      return reservations;
+    }else{
+      const reservations = await this.db
+        .select(
+        )
+        .from(Reservation)
+        .where(and(...whereClause));
+
+      return reservations;
+    }
   }
 
   async fetchContent(id: number): Promise<MReservationContent> {
