@@ -201,7 +201,7 @@ export class ReservationPublicService {
       timeTo,
     );
 
-    if (isOverlap) {
+    if (!isOverlap) {
       throw new BadRequestException('Time is already reserved');
     }
   }
