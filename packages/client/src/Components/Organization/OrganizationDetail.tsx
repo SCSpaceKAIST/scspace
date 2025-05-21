@@ -27,16 +27,16 @@ export default function OrganizationDetail({ id, onDelete }: {
     return (organizationDetail ? (
         <>
             <Dialog.Header>
-                <HStack width="100%" justify="space-between">
+                <HStack width="100%" justify="space-between" alignItems="start">
                     <HStack>
-                        <IconButton rounded="sm" variant="ghost" onClick={() => refetch()}>
+                        <IconButton rounded="sm" variant="ghost" onClick={() => refetch()} size="sm">
                             <HiOutlineRefresh color="gray" />
                         </IconButton>
-                        <Dialog.Title>
+                        <Dialog.Title margin={0}>
                             {organizationDetail.name}
                         </Dialog.Title>
                     </HStack>
-                    <DataList.Root orientation="horizontal" gap={1}>
+                    <DataList.Root orientation="horizontal" gap={1} color="fg.muted">
                         <DataList.Item gap={0}>
                             <DataList.ItemLabel>
                                 Create Time

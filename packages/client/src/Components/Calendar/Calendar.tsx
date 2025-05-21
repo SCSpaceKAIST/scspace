@@ -17,7 +17,7 @@ import {
   DataList,
   Separator,
   Fieldset,
-  Field
+  HStack,
 } from "@chakra-ui/react";
 import Scroll from "../_commons/Scroll";
 import SelectComponent from "../Reservation/forms/utils/Select";
@@ -27,6 +27,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAllSpace } from "@scspace-client/Hooks/space";
 import LoadingComponent from "../Loading/Loading";
 import { IReservationAll } from "@scspace-depot/types/reservation";
+import DeleteBtn from "./DeleteBtn";
 
 function SpaceSelect({ setSpaceId }: {
   setSpaceId: Dispatch<SetStateAction<number>>;
@@ -112,170 +113,186 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
     setSelectedRes(filtered[0]);
   }, [selected]);
 
+  function onDeleteSuccess() {
+    refetch();
+    setOpen(false);
+  }
+
   return (
     <>
       <Dialog.Root
-        role="alertdialog"
         open={open}
         onOpenChange={(e) => setOpen(e.open)}
         size="xl"
       >
         <Portal>
           <Dialog.Backdrop />
-          <Dialog.Positioner onClick={() => setOpen(false)}>
+          <Dialog.Positioner>
             <Dialog.Content>
-              <Center margin={8}>
-                {selectedRes ? (
-                  <Fieldset.Root>
-                    <Fieldset.Legend>
-                      Reservation Detail
-                    </Fieldset.Legend>
-                    <Fieldset.Content>
-                      <DataList.Root orientation="horizontal" width="100%">
+              {selectedRes ? (
+                <>
+                  <Dialog.Header>
+                    <HStack width="100%" justifyContent="space-between" alignItems="start">
+                      <Dialog.Title whiteSpace="nowrap">
+                        {selectedRes.title}
+                      </Dialog.Title>
+                      <DataList.Root orientation="horizontal" gap={1} color="fg.muted">
                         <DataList.Item gap={0}>
                           <DataList.ItemLabel>
-                            Title
+                            Create Time
                           </DataList.ItemLabel>
                           <DataList.ItemValue margin={0}>
-                            {selectedRes.title}
+                            {selectedRes.timePost}
                           </DataList.ItemValue>
                         </DataList.Item>
                         <DataList.Item gap={0}>
                           <DataList.ItemLabel>
-                            Description
+                            Update Time
                           </DataList.ItemLabel>
                           <DataList.ItemValue margin={0}>
-                            {selectedRes.content.description}
-                          </DataList.ItemValue>
-                        </DataList.Item>
-                        <Separator />
-                        <DataList.Item gap={0} alignItems="start">
-                          <DataList.ItemLabel>
-                            Content
-                          </DataList.ItemLabel>
-                          <DataList.ItemValue margin={0} >
-                            <DataList.Root orientation="horizontal" margin={0} >
-                              <DataList.Item gap={0}>
-                                <DataList.ItemLabel>
-                                  # of Internal
-                                </DataList.ItemLabel>
-                                <DataList.ItemValue margin={0} >
-                                  {selectedRes.content.innerParticipantNumber}
-                                </DataList.ItemValue>
-                              </DataList.Item>
-                              <DataList.Item gap={0}>
-                                <DataList.ItemLabel>
-                                  # of External
-                                </DataList.ItemLabel>
-                                <DataList.ItemValue margin={0} >
-                                  {selectedRes.content.outerParticipantNumber}
-                                </DataList.ItemValue>
-                              </DataList.Item>
-                              <DataList.Item gap={0}>
-                                <DataList.ItemLabel>
-                                  Food Info
-                                </DataList.ItemLabel>
-                                <DataList.ItemValue margin={0}>
-                                  {(selectedRes.content.food === "") ? (
-                                    <Text margin={0} padding={0} color="bg.emphasized">
-                                      Did Not Entered
-                                    </Text>
-                                  ) : (selectedRes.content.food)}
-                                </DataList.ItemValue>
-                              </DataList.Item>
-                              <DataList.Item gap={0}>
-                                <DataList.ItemLabel>
-                                  # of Desk
-                                </DataList.ItemLabel>
-                                <DataList.ItemValue margin={0} >
-                                  {selectedRes.content.desk}
-                                </DataList.ItemValue>
-                              </DataList.Item>
-                              <DataList.Item gap={0}>
-                                <DataList.ItemLabel>
-                                  # of Chair
-                                </DataList.ItemLabel>
-                                <DataList.ItemValue margin={0} >
-                                  {selectedRes.content.chair}
-                                </DataList.ItemValue>
-                              </DataList.Item>
-                              <DataList.Item gap={0}>
-                                <DataList.ItemLabel>
-                                  # of Worker
-                                </DataList.ItemLabel>
-                                <DataList.ItemValue margin={0} >
-                                  {selectedRes.content.workerNeed}
-                                </DataList.ItemValue>
-                              </DataList.Item>
-                              {(selectedRes.spaceId === 11) && (
-                                <DataList.Item gap={0}>
-                                  <DataList.ItemLabel>
-                                    Lobby
-                                  </DataList.ItemLabel>
-                                  <DataList.ItemValue margin={0} >
-                                    {selectedRes.content.lobby ? "Yes" : "No"}
-                                  </DataList.ItemValue>
-                                </DataList.Item>
-                              )}
-                              {(selectedRes.spaceId === 13) && (
-                                <DataList.Item gap={0}>
-                                  <DataList.ItemLabel>
-                                    Busking Zone
-                                  </DataList.ItemLabel>
-                                  <DataList.ItemValue margin={0} >
-                                    {selectedRes.content.busking ? "Yes" : "No"}
-                                  </DataList.ItemValue>
-                                </DataList.Item>
-                              )}
-                            </DataList.Root>
-                          </DataList.ItemValue>
-                        </DataList.Item>
-                        <Separator />
-                        <DataList.Item gap={0}>
-                          <DataList.ItemLabel>
-                            Time
-                          </DataList.ItemLabel>
-                          <DataList.ItemValue margin={0} >
-                            {selectedRes.timeFrom} - {selectedRes.timeTo}
-                          </DataList.ItemValue>
-                        </DataList.Item>
-                        <DataList.Item gap={0}>
-                          <DataList.ItemLabel>
-                            Space
-                          </DataList.ItemLabel>
-                          <DataList.ItemValue margin={0} >
-                            {selectedRes.space.nameKr} ({selectedRes.space.nameEn})
-                          </DataList.ItemValue>
-                        </DataList.Item>
-                        <DataList.Item gap={0}>
-                          <DataList.ItemLabel>
-                            Booker
-                          </DataList.ItemLabel>
-                          <DataList.ItemValue margin={0} >
-                            {(selectedRes.organizationId === 1) ? (
-                              selectedRes.user.nameKr
-                            ) : (
-                              selectedRes.organization.name
-                            )}
+                            {selectedRes.timeUpdate}
                           </DataList.ItemValue>
                         </DataList.Item>
                       </DataList.Root>
-                    </Fieldset.Content>
-                    <Fieldset.HelperText>
-                      <Stack gap={0} width="100%" alignContent="end">
-                        <Text margin={0} padding={0} textAlign="end">
-                          Post Time: {selectedRes.timePost}
-                        </Text>
-                        <Text margin={0} padding={0} textAlign="end">
-                          Last Update: {selectedRes.timeUpdate}
-                        </Text>
-                      </Stack>
-                    </Fieldset.HelperText>
-                  </Fieldset.Root>
-                ) : (
+                    </HStack>
+                  </Dialog.Header>
+                  <Dialog.Body>
+                    <DataList.Root orientation="horizontal" width="100%">
+                      <DataList.Item gap={0}>
+                        <DataList.ItemLabel>
+                          Description
+                        </DataList.ItemLabel>
+                        <DataList.ItemValue margin={0}>
+                          {selectedRes.content.description}
+                        </DataList.ItemValue>
+                      </DataList.Item>
+                      <Separator />
+                      <DataList.Item gap={0} alignItems="start">
+                        <DataList.ItemLabel>
+                          Content
+                        </DataList.ItemLabel>
+                        <DataList.ItemValue margin={0} >
+                          <DataList.Root orientation="horizontal" margin={0} >
+                            <DataList.Item gap={0}>
+                              <DataList.ItemLabel>
+                                # of Internal
+                              </DataList.ItemLabel>
+                              <DataList.ItemValue margin={0} >
+                                {selectedRes.content.innerParticipantNumber}
+                              </DataList.ItemValue>
+                            </DataList.Item>
+                            <DataList.Item gap={0}>
+                              <DataList.ItemLabel>
+                                # of External
+                              </DataList.ItemLabel>
+                              <DataList.ItemValue margin={0} >
+                                {selectedRes.content.outerParticipantNumber}
+                              </DataList.ItemValue>
+                            </DataList.Item>
+                            <DataList.Item gap={0}>
+                              <DataList.ItemLabel>
+                                Food Info
+                              </DataList.ItemLabel>
+                              <DataList.ItemValue margin={0}>
+                                {(selectedRes.content.food === "") ? (
+                                  <Text margin={0} padding={0} color="bg.emphasized">
+                                    Did Not Entered
+                                  </Text>
+                                ) : (selectedRes.content.food)}
+                              </DataList.ItemValue>
+                            </DataList.Item>
+                            <DataList.Item gap={0}>
+                              <DataList.ItemLabel>
+                                # of Desk
+                              </DataList.ItemLabel>
+                              <DataList.ItemValue margin={0} >
+                                {selectedRes.content.desk}
+                              </DataList.ItemValue>
+                            </DataList.Item>
+                            <DataList.Item gap={0}>
+                              <DataList.ItemLabel>
+                                # of Chair
+                              </DataList.ItemLabel>
+                              <DataList.ItemValue margin={0} >
+                                {selectedRes.content.chair}
+                              </DataList.ItemValue>
+                            </DataList.Item>
+                            <DataList.Item gap={0}>
+                              <DataList.ItemLabel>
+                                # of Worker
+                              </DataList.ItemLabel>
+                              <DataList.ItemValue margin={0} >
+                                {selectedRes.content.workerNeed}
+                              </DataList.ItemValue>
+                            </DataList.Item>
+                            {(selectedRes.spaceId === 11) && (
+                              <DataList.Item gap={0}>
+                                <DataList.ItemLabel>
+                                  Lobby
+                                </DataList.ItemLabel>
+                                <DataList.ItemValue margin={0} >
+                                  {selectedRes.content.lobby ? "Yes" : "No"}
+                                </DataList.ItemValue>
+                              </DataList.Item>
+                            )}
+                            {(selectedRes.spaceId === 13) && (
+                              <DataList.Item gap={0}>
+                                <DataList.ItemLabel>
+                                  Busking Zone
+                                </DataList.ItemLabel>
+                                <DataList.ItemValue margin={0} >
+                                  {selectedRes.content.busking ? "Yes" : "No"}
+                                </DataList.ItemValue>
+                              </DataList.Item>
+                            )}
+                          </DataList.Root>
+                        </DataList.ItemValue>
+                      </DataList.Item>
+                      <Separator />
+                      <DataList.Item gap={0}>
+                        <DataList.ItemLabel>
+                          Time
+                        </DataList.ItemLabel>
+                        <DataList.ItemValue margin={0} >
+                          {selectedRes.timeFrom} - {selectedRes.timeTo}
+                        </DataList.ItemValue>
+                      </DataList.Item>
+                      <DataList.Item gap={0}>
+                        <DataList.ItemLabel>
+                          Space
+                        </DataList.ItemLabel>
+                        <DataList.ItemValue margin={0} >
+                          {selectedRes.space.nameKr} ({selectedRes.space.nameEn})
+                        </DataList.ItemValue>
+                      </DataList.Item>
+                      <DataList.Item gap={0}>
+                        <DataList.ItemLabel>
+                          Booker
+                        </DataList.ItemLabel>
+                        <DataList.ItemValue margin={0} >
+                          {(selectedRes.organizationId === 1) ? (
+                            selectedRes.user.nameKr
+                          ) : (
+                            selectedRes.organization.name
+                          )}
+                        </DataList.ItemValue>
+                      </DataList.Item>
+                    </DataList.Root>
+                  </Dialog.Body>
+                  <Dialog.Footer>
+                    <DeleteBtn rid={selectedRes.id} onSuccess={onDeleteSuccess} />
+                    <Dialog.ActionTrigger asChild>
+                      <Button variant="outline" rounded="sm">
+                        Close
+                      </Button>
+                    </Dialog.ActionTrigger>
+                  </Dialog.Footer>
+                </>
+              ) : (
+                <Center margin={8}>
                   <LoadingComponent />
-                )}
-              </Center>
+                </Center>
+              )}
             </Dialog.Content>
           </Dialog.Positioner>
         </Portal>

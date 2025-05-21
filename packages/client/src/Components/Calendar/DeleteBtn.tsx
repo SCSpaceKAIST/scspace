@@ -1,15 +1,14 @@
-
 "use client"
 
 import { Button, Dialog, Portal, } from "@chakra-ui/react";
+import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { useState, } from "react";
-import { useOrganizationAPI, } from "@scspace-client/Hooks/organization";
 
-export default function DeleteBtn({ id, onSuccess }: {
-    id: number;
+export default function DeleteBtn({ rid, onSuccess }: {
+    rid: number;
     onSuccess: () => any;
 }) {
-    const deleteOrganization = useOrganizationAPI({ id }).deleteOrg
+    const deleteReservation = useReservationAPI({ rid }).deleteRes
     const [open, setOpen] = useState<boolean>(false);
 
     return (
@@ -33,13 +32,13 @@ export default function DeleteBtn({ id, onSuccess }: {
                         </Dialog.Header>
                         <Dialog.Body>
                             This action cannot be undone.
-                            This will permanently delete this organization and remove data from our systems.
+                            This will permanently delete this reservation and remove data from our systems.
                         </Dialog.Body>
                         <Dialog.Footer>
                             <Button
                                 colorPalette="red"
                                 rounded="sm"
-                                onClick={() => deleteOrganization({}, {
+                                onClick={() => deleteReservation({}, {
                                     onSuccess: () => {
                                         onSuccess();
                                         setOpen(false);

@@ -39,7 +39,6 @@ export default function Organization() {
                     open={open}
                     onOpenChange={(e) => setOpen(e.open)}
                     size="xl"
-                    initialFocusEl={() => null}
                 >
                     <Grid
                         height="100%"
