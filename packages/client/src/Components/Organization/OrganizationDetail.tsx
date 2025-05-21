@@ -72,7 +72,8 @@ export default function OrganizationDetail({ id, onDelete }: {
                             />
                         </DataList.ItemValue>
                     </DataList.Item>
-                    <DataList.Item>
+                    <Separator />
+                    <DataList.Item alignItems="start">
                         <DataList.ItemLabel>
                             <HStack gap={2}>
                                 <Text margin={0} padding={0}>

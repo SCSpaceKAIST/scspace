@@ -25,6 +25,7 @@ export class ReservationController {
   constructor(private readonly reservationService: ReservationService) { }
 
   //HOOK: useReservations
+  //HOOK: useDateReservations
   @Get('space')
   async getReservationBySpaceID(
     @Query('spaceId', ParseIntPipe) spaceId: number,
@@ -38,6 +39,7 @@ export class ReservationController {
     );
   }
 
+  //HOOK: useUserReservation
   @Get('user/:id')
   async getReservationListByUserId(
     @Param('id') userId: number,
@@ -45,11 +47,13 @@ export class ReservationController {
     return await this.reservationService.getReservationListByUserId(userId);
   }
 
+  //HOOK: useWaitReservations
   @Get('manage')
   async getManageReservation(): Promise<IReservationAll[]> {
     return await this.reservationService.getManageReservation();
   }
 
+  //HOOK: useReservationAPI
   @Post()
   async postReservation(
     @Body() reservationInput: IReservationCreate,

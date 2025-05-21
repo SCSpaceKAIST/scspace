@@ -64,35 +64,30 @@ export function useOrganizationDetail({ id }: { id: number }) {
 export function useOrganizationAPI(oid?: { id: number }) {
     const id = oid?.id ?? null;
 
-    const postOrg = useMutationApi<IOrganization, IOrganizationCreate>(
+    const createOrg = useMutationApi<IOrganization, IOrganizationCreate>(
         "/organization/",
         "POST"
-    );
-    const createOrg = postOrg.mutate;
+    ).mutate;
 
-    const putOrg = useMutationApi<IOrganization, IOrganizationCreate>(
+    const updateOrg = useMutationApi<IOrganization, IOrganizationCreate>(
         `/organization/${id}`,
         "PUT"
-    );
-    const updateOrg = putOrg.mutate;
+    ).mutate;
 
-    const addOrgMember = useMutationApi<IOrganizationMember, IOrganizationUser>(
+    const addMember = useMutationApi<IOrganizationMember, IOrganizationUser>(
         `/organization/${id}/add`,
         "PUT"
-    );
-    const addMember = addOrgMember.mutate;
+    ).mutate;
 
-    const rmvOrgMember = useMutationApi<ISuccessResponse, IOrganizationUser>(
+    const removeMember = useMutationApi<ISuccessResponse, IOrganizationUser>(
         `/organization/${id}/delete`,
         "PUT"
-    );
-    const removeMember = rmvOrgMember.mutate;
+    ).mutate;
 
-    const delOrg = useMutationApi<IOrganization, {}>(
+    const deleteOrg = useMutationApi<IOrganization, {}>(
         `/organization/${id}`,
         "DELETE"
-    );
-    const deleteOrg = delOrg.mutate;
+    ).mutate;
 
     return {
         createOrg,

@@ -7,25 +7,19 @@ import {
   Flex,
   Grid,
   GridItem,
-  IconButton,
   Portal,
   Stack,
   Text,
-  Alert,
-  CloseButton,
   Float,
-  Circle,
   Spinner,
-  DataList,
   VStack,
   Button
 } from "@chakra-ui/react";
 import Scroll from "../_commons/Scroll";
 import SelectComponent from "../Reservation/forms/utils/Select";
 import { DateForm } from "../Reservation/forms";
-import { useReservations } from "@scspace-client/Hooks/reservation";
+import { useDateReservations } from "@scspace-client/Hooks/reservation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { HiOutlineSearch } from "react-icons/hi";
 import { useAllSpace } from "@scspace-client/Hooks/space";
 import LoadingComponent from "../Loading/Loading";
 
@@ -83,15 +77,18 @@ function stringToColor(str: string): string {
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-export function CalendarView({ spaceId, dateFrom, dateTo }: {
+export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: {
+  refetchCounter?: number;
   spaceId: number;
   dateFrom: Date;
   dateTo: Date;
 }) {
-  const { reservation } = useReservations({ spaceId, dateFrom, dateTo, });
+  const { reservation, refetch } = useDateReservations({ spaceId, dateFrom, dateTo, });
   const dates = Object.keys(reservation);
   const times = Array.from({ length: 24 }, (_, i) => i);
   const [open, setOpen] = useState<boolean>(false);
+
+  useEffect(() => { refetch() }, [refetchCounter]);
 
   return (
     <>
@@ -234,10 +231,10 @@ export function CalendarView({ spaceId, dateFrom, dateTo }: {
                         justifyContent="center"
                       >
                         <Text margin={0} padding={0} fontSize="lg" fontWeight="semibold">
-                          공간위 개발
+                          {slot.title}
                         </Text>
                         <Text margin={0} padding={0} fontSize="sm">
-                          학생문화공간위원회
+                          {slot.name}
                         </Text>
                       </VStack>
                     </Button>

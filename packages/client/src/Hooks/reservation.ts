@@ -1,14 +1,42 @@
 "use client"
 
 import { ReservationStateEnum } from "@scspace-depot/enums/reservation.enum";
-import { useQueryApi } from "./useAPI"
-import { IReservationResponse } from "@scspace-depot/types/reservation"
+import { useMutationApi, useQueryApi } from "./useAPI"
+import { IReservation, IReservationAll, IReservationCreate, IReservationUpdate } from "@scspace-depot/types/reservation"
 import { useEffect, useState } from "react";
+import { ISuccessResponse } from "@scspace-depot/types/common/common.type";
+
+function formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
+export function useReservations({ spaceId, dateFrom, dateTo }: {
+    spaceId: number;
+    dateFrom: Date;
+    dateTo: Date;
+}) {
+    const { data, isLoading, refetch } = useQueryApi<IReservationAll[]>(`/reservation/space?spaceId=${spaceId}&timeFrom=${formatDate(dateFrom)}&timeTo=${formatDate(dateTo)}`);
+
+    const [reservations, setReservations] = useState<IReservationAll[] | null>(null);
+
+    useEffect(() => {
+        if (!data) {
+            setReservations(null);
+            return;
+        }
+        setReservations(data);
+    }, [data, spaceId, dateFrom.getTime(), dateTo.getTime()]);
+
+    return { reservations, isLoading, refetch };
+}
 
 export interface IRes {
     id: number;
-    userId: number;
-    organizationId: number;
+    name: string;
     title: string;
     hourFrom: number;
     hourTo: number;
@@ -19,11 +47,10 @@ export interface IReservationHookRes {
     [key: string]: IRes[]
 }
 
-function format({ d, hF, hT }: { d: any; hF: number; hT: number }) {
+function format({ d, hF, hT }: { d: IReservationAll; hF: number; hT: number }): IRes {
     return {
         id: d.id,
-        userId: d.userId,
-        organizationId: d.organizationId,
+        name: (d.organizationId === 1) ? d.user.nameKr : d.organization.name,
         title: d.title,
         hourFrom: hF,
         hourTo: hT,
@@ -31,25 +58,19 @@ function format({ d, hF, hT }: { d: any; hF: number; hT: number }) {
     };
 }
 
-function formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
-}
-
-export function useReservations({ spaceId, dateFrom, dateTo, }: {
+export function useDateReservations({ spaceId, dateFrom, dateTo, }: {
     spaceId: number;
     dateFrom: Date;
     dateTo: Date;
 }) {
-    const { data, isLoading, refetch } = useQueryApi<IReservationResponse[]>(`/reservation/space?spaceId=${spaceId}&timeFrom=${formatDate(dateFrom)}&timeTo=${formatDate(dateTo)}`);
+    const { reservations, isLoading, refetch } = useReservations({ spaceId, dateFrom, dateTo });
+
+    useEffect(() => { refetch() }, [spaceId, dateFrom.getTime(), dateTo.getTime()]);
 
     const [reservation, setReservation] = useState<IReservationHookRes>({});
 
     useEffect(() => {
-        if (!data) {
+        if (!reservations) {
             setReservation({});
             return;
         }
@@ -65,7 +86,7 @@ export function useReservations({ spaceId, dateFrom, dateTo, }: {
 
         console.log(_reservation);
 
-        data.map((d) => {
+        reservations.map((d) => {
             const tF = new Date(d.timeFrom);
             const tT = new Date(d.timeTo);
 
@@ -94,7 +115,58 @@ export function useReservations({ spaceId, dateFrom, dateTo, }: {
         });
 
         setReservation(_reservation);
-    }, [data, dateFrom.toDateString(), dateTo.toDateString(), spaceId]);
+    }, [reservations]);
 
     return { reservation, isLoading, refetch };
+};
+
+export function useUserReservation({ uid }: { uid: number; }) {
+    const { data, isLoading, refetch } = useQueryApi<IReservationAll[]>(`/reservation/user/${uid}`);
+    const [userReservation, setUserReservation] = useState<IReservationAll[]>([]);
+
+    useEffect(() => {
+        if (!data) {
+            setUserReservation([]);
+            return;
+        }
+        setUserReservation(data);
+    }, [data, uid]);
+
+    return { userReservation, isLoading, refetch };
+};
+
+export function useWaitReservations() {
+    const { data, isLoading, refetch } = useQueryApi<IReservationAll[]>(`/reservation/manage`);
+    const [waitReservation, setWaitReservation] = useState<IReservationAll[]>([]);
+
+    useEffect(() => {
+        if (!data) {
+            setWaitReservation([]);
+            return;
+        }
+        setWaitReservation(data);
+    }, [data]);
+
+    return { waitReservation, isLoading, refetch };
+}
+
+export function useReservationAPI(Rid?: { rid: number }) {
+    const rid = Rid?.rid ?? 0;
+
+    const createRes = useMutationApi<IReservation, IReservationCreate>(
+        "/reservation/",
+        "POST"
+    ).mutate;
+
+    const updateRes = useMutationApi<IReservation, IReservationUpdate>(
+        `/reservation/${rid}`,
+        "PUT"
+    ).mutate;
+
+    const deleteRes = useMutationApi<ISuccessResponse, {}>(
+        `/reservation/${rid}`,
+        "DELETE"
+    ).mutate;
+
+    return { createRes, updateRes, deleteRes };
 };

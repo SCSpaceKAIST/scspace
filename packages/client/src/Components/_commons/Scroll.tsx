@@ -13,6 +13,7 @@ export default function Scroll({
             scrollbar="hidden"
             scrollBehavior="smooth"
             minH={0}
+            height="100%"
             maxH="100%"
         >
             {children}

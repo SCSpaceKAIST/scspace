@@ -25,6 +25,11 @@ import { useAuth } from "@scspace-client/Hooks/auth";
 import { SmallLoading } from "../Loading/Loading";
 import { CalendarView } from "../Calendar/Calendar";
 import { HourForm } from "./forms/elements/Hour";
+import { useReservationAPI } from "@scspace-client/Hooks/reservation";
+
+function formatTime(date: Date, hour: number) {
+  return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}T${hour.toString().padStart(2, '0')}:00:00.000Z`;
+}
 
 export default function Reservation() {
   const [dateFrom, setDateFrom] = useState<Date>(() => new Date());
@@ -43,6 +48,9 @@ export default function Reservation() {
   const [worker, setWorker] = useState<number>(0);
   const [check, setCheck] = useState<boolean>(false);
 
+  const createReservation = useReservationAPI().createRes;
+  const { userInfo } = useAuth();
+
   function submit() {
     console.log(
       spaceId, check, orgId,
@@ -54,9 +62,35 @@ export default function Reservation() {
       food,
       desk, chair, worker
     );
+
+    if (!userInfo) return;
+
+    createReservation({
+      content: {
+        description: dscrp,
+        innerParticipantNumber: inner,
+        outerParticipantNumber: outer,
+        food: food,
+        desk: desk,
+        chair: chair,
+        lobby: check && (spaceId === 11),
+        busking: check && (spaceId === 13),
+        workerNeed: worker
+      },
+      userId: userInfo.id,
+      organizationId: orgId,
+      spaceId: spaceId,
+      title: title,
+      timeFrom: formatTime(dateFrom, hourFrom),
+      timeTo: formatTime(dateTo, hourTo),
+    }, {
+      onSuccess: () => {
+        setCount(c => c + 1);
+      }
+    });
   }
 
-  const { userInfo } = useAuth();
+  const [count, setCount] = useState<number>(0);
 
   return (
     <Scroll>
@@ -87,6 +121,7 @@ export default function Reservation() {
               label="start date"
               date={dateFrom}
               setDate={setDateFrom}
+              maxDate={dateTo}
             />
           </GridItem>
           <GridItem colSpan={{ base: 6, md: 3 }}>
@@ -94,6 +129,7 @@ export default function Reservation() {
               label="end date"
               date={dateTo}
               setDate={setDateTo}
+              minDate={dateFrom}
             />
           </GridItem>
           <GridItem colSpan={{ base: 6, md: 3 }}>
@@ -110,9 +146,10 @@ export default function Reservation() {
           </GridItem>
           <GridItem colSpan={6} >
             <CalendarView
-              dateFrom={dateFrom}
-              dateTo={dateTo}
+              dateFrom={new Date(dateFrom.getFullYear(), dateFrom.getMonth(), dateFrom.getDate() - 1)}
+              dateTo={new Date(dateTo.getFullYear(), dateTo.getMonth(), dateTo.getDate() + 1)}
               spaceId={spaceId}
+              refetchCounter={count}
             />
           </GridItem>
           <GridItem colSpan={6}>

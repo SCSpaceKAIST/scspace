@@ -1,6 +1,6 @@
 "use client"
 
-import { Flex, Text, Field, } from "@chakra-ui/react";
+import { Flex, Text, Field, HStack, } from "@chakra-ui/react";
 import { IUser } from "@scspace-depot/types/user";
 
 import DeleteMemberBtn from "./DeleteMemberBtn";
@@ -14,7 +14,7 @@ export default function Member({ refetch, oid, user, deletable = false, showDele
     showDeleteButton?: boolean;
 }) {
     return (
-        <Field.Root
+        <HStack
             borderWidth="1px"
             rounded="sm"
             padding={2}
@@ -43,9 +43,9 @@ export default function Member({ refetch, oid, user, deletable = false, showDele
                     />
                 )}
             </Flex>
-            <Field.HelperText>
-                {user.studentNumber} {user.nameEn}
-            </Field.HelperText>
-        </Field.Root>
+            <Text>
+                {user.studentNumber}
+            </Text>
+        </HStack>
     );
 }
