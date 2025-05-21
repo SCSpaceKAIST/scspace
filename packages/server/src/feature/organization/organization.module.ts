@@ -6,8 +6,7 @@ import { OrganizationMemberRepository } from './organization.member.repository';
 import { OrganizationPublicService } from './organization.public.service';
 import { DBModule } from '@scspace-server/db/db.module';
 import { UserModule } from '../user/user.module';
-import { UserRepository } from '../user/user.repository';
-import { UserPublicService } from '../user/user.public.service';
+
 @Module({
   imports: [DBModule, UserModule],
   controllers: [OrganizationController],
@@ -16,7 +15,6 @@ import { UserPublicService } from '../user/user.public.service';
     OrganizationRepository,
     OrganizationMemberRepository,
     OrganizationPublicService,
-    UserPublicService,
   ],
   exports: [OrganizationService, OrganizationPublicService],
 })

@@ -14,78 +14,19 @@ import {
 import { ReservationService } from './reservation.service';
 import {
   IReservation,
-  IReservationResponse,
   IReservationCreate,
   ISpaceTimeCheckRequest,
-  IUserTimeCheckRequest
+  IUserTimeCheckRequest,
+  IReservationUpdate,
+  IReservationAll
 } from '@scspace-depot/types/reservation';
 import { formatDateToSQL } from '@scspace-server/common/util';
+import { ISuccessResponse } from '@scspace-depot/types/common';
 
 @Controller('reservation')
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) { }
 
-  //HOOK: useReservations
-  @Get('space')
-  async getReservationBySpaceID(
-    @Query('spaceId', ParseIntPipe) spaceId: number,
-    @Query('timeFrom') timeFrom?: string,
-    @Query('timeTo') timeTo?: string
-  ): Promise<IReservationResponse[]> {
-    return await this.reservationService.getReservationBySpaceIDBetweenTime(
-      spaceId,
-      timeFrom,
-      timeTo,
-    );
-  }
-
-  // 예약 시간대가 비었는지 확인하는 GET 요청
-  @Get('timeCheck')
-  async checkTimeAvailability(
-    @Query('spaceId', ParseIntPipe) spaceId: number,
-    @Query('timeFrom') timeFrom: string,
-    @Query('timeTo') timeTo: string,
-  ): Promise<boolean> {
-    const query: ISpaceTimeCheckRequest = {
-      spaceId: spaceId,
-      organizationId: 0, // TODO: Get from context
-      timeFrom: formatDateToSQL(new Date(timeFrom)),
-      timeTo: formatDateToSQL(new Date(timeTo)),
-    };
-    return await this.reservationService.checkTimeAvailability(query);
-  }
-
-  // 사용자의 주간 예약 시간 확인하는 GET 요청
-  @Get('userCheck')
-  async checkUserReservationTime(
-    @Query('spaceId', ParseIntPipe) spaceId: number,
-    @Query('userId', ParseIntPipe) userId: number,
-    @Query('timeFrom') timeFrom: string,
-    @Query('timeTo') timeTo: string,
-  ): Promise<boolean> {
-    const query: IUserTimeCheckRequest = {
-      spaceId: spaceId,
-      userId: userId,
-      organizationId: 0, // TODO: Get from context
-      timeFrom: formatDateToSQL(new Date(timeFrom)),
-      timeTo: formatDateToSQL(new Date(timeTo)),
-    };
-    return await this.reservationService.checkUserReservationTime(query);
-  }
-
-  @Get('manage')
-  async getManageReservation(): Promise<IReservationResponse[]> {
-    return await this.reservationService.getManageReservation();
-  }
-
-  @Get('user/:id')
-  async getReservationListByUserId(
-    @Param('id') userId: number,
-  ): Promise<IReservationResponse[]> {
-    return await this.reservationService.getReservationListByUserId(userId);
-  }
-
-  // 예약을 등록하는 POST 요청
   @Post()
   async postReservation(
     @Body() reservationInput: IReservationCreate,
@@ -95,9 +36,8 @@ export class ReservationController {
 
   @Put()
   async updateReservation(
-    @Body() reservationInput: IReservation,
-  ): Promise<boolean> {
-    Logger.log('Update Reservation: ' + JSON.stringify(reservationInput));
+    @Body() reservationInput: IReservationUpdate,
+  ): Promise<IReservation> {
     try {
       const result =
         await this.reservationService.updateReservation(reservationInput);
@@ -108,8 +48,34 @@ export class ReservationController {
   }
 
   @Delete(':id')
-  async deleteReservation(@Param('id') id: number): Promise<boolean> {
+  async deleteReservation(@Param('id') id: number): Promise<ISuccessResponse> {
     return await this.reservationService.deleteReservation(id);
+  }
+
+  //HOOK: useReservations
+  @Get('space')
+  async getReservationBySpaceID(
+    @Query('spaceId', ParseIntPipe) spaceId: number,
+    @Query('timeFrom') timeFrom?: string,
+    @Query('timeTo') timeTo?: string
+  ): Promise<IReservationAll[]> {
+    return await this.reservationService.getReservationBySpaceIDBetweenTime(
+      spaceId,
+      timeFrom,
+      timeTo,
+    );
+  }
+
+  @Get('user/:id')
+  async getReservationListByUserId(
+    @Param('id') userId: number,
+  ): Promise<IReservationAll[]> {
+    return await this.reservationService.getReservationListByUserId(userId);
+  }
+
+  @Get('manage')
+  async getManageReservation(): Promise<IReservationAll[]> {
+    return await this.reservationService.getManageReservation();
   }
 
   @Post('check/space')

@@ -2,6 +2,8 @@ import {
   Injectable,
   Inject,
   BadRequestException,
+  NotFoundException,
+  Logger,
 } from '@nestjs/common';
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
@@ -22,11 +24,13 @@ import {
 import {
   IReservationCreate,
   IReservation,
+  IReservationSimple,
+  IReservationUpdate,
 } from '@scspace-depot/types/reservation';
 import {
   ReservationStateEnum,
 } from '@scspace-depot/enums/reservation.enum';
-import { MReservation } from '@scspace-server/feature/reservation/reservation.model';
+import { MReservation, MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
 import { formatDateToSQL } from '@scspace-server/common/util';
 
 @Injectable()
@@ -35,7 +39,7 @@ export class ReservationRepository {
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>
   ) {}
 
-  async find(param: {
+  async fetch(param: {
     id?: number;
     userId?: number;
     spaceId?: number;
@@ -47,8 +51,9 @@ export class ReservationRepository {
       timeFrom?: string;
       timeTo?: string;
     };
-  }): Promise<MReservation[]> {
+  }): Promise<MReservationSimple[]> {
     const whereClause: SQL[] = [];
+
     if (param.id) {
       whereClause.push(eq(Reservation.id, param.id));
     }
@@ -86,109 +91,111 @@ export class ReservationRepository {
     }
 
     const reservations = await this.db
-      .select({
-        reservation: Reservation,
-        reservationContent: ReservationContent,
-      })
-      .from(Reservation)
-      .leftJoin(
-        ReservationContent,
-        eq(Reservation.id, ReservationContent.id),
+      .select(
       )
+      .from(Reservation)
       .where(and(...whereClause));
 
-    if (reservations.length === 0) {
-      return [];
-    }
+    return reservations;
+  }
 
-    // Filter out reservations without content
-    const validReservations = reservations.filter(
-      (result) => result.reservationContent !== null
-    );
-
-    return validReservations.map((result) => MReservation.fromDB(result.reservation, result.reservationContent));
+  async fetchContent(id: number): Promise<MReservationContent> {
+    const reservationContent = await this.db
+      .select()
+      .from(ReservationContent)
+      .where(eq(ReservationContent.id, id));
+    return reservationContent[0];
   }
 
   async insert(
     reservationInput: IReservationCreate,
-  ): Promise<MReservation> {
-    return await this.db.transaction(async (tx) => {
-      const timeFrom = formatDateToSQL(new Date(reservationInput.timeFrom));
-      const timeTo = formatDateToSQL(new Date(reservationInput.timeTo));
-      // Insert reservation
-      const [insertedReservation] = await tx
-        .insert(Reservation)
-        .values({
-          userId: reservationInput.userId,
-          organizationId: reservationInput.organizationId,
-          spaceId: reservationInput.spaceId,
-          title: reservationInput.title,
-          timeFrom: timeFrom,
-          timeTo: timeTo,
-          timePost: formatDateToSQL(new Date()),
-          timeUpdate: formatDateToSQL(new Date()),
-          state: ReservationStateEnum.WAIT,
-        } as InferInsertModel<typeof Reservation>);
+  ): Promise<[MReservationSimple, MReservationContent]> {
+    const insertData = {
+      userId: reservationInput.userId,
+      organizationId: reservationInput.organizationId,
+      spaceId: reservationInput.spaceId,
+      title: reservationInput.title,
+      timeFrom: formatDateToSQL(new Date(reservationInput.timeFrom)),
+      timeTo: formatDateToSQL(new Date(reservationInput.timeTo)),
+      timePost: formatDateToSQL(new Date()),
+      timeUpdate: formatDateToSQL(new Date()),
+      state: ReservationStateEnum.WAIT,
+    } as InferInsertModel<typeof Reservation>;
+    
+    const [result] = await this.db.insert(Reservation).values(insertData);
+    if (!result.insertId) {
+      throw new Error('Failed to get inserted ID');
+    }
 
-      const reservationId = insertedReservation.insertId;
-      if (!reservationId) {
-        throw new BadRequestException('Failed to insert reservation');
-      }
+    const reservationCreated = await this.fetch({ id: result.insertId });
+    if (reservationCreated.length === 0) {
+      throw new NotFoundException('Reservation not found after creation');
+    }
+    const insertContentData = {
+      id: result.insertId,
+      description: reservationInput.content.description,
+      innerParticipantNumber: reservationInput.content.innerParticipantNumber,
+      outerParticipantNumber: reservationInput.content.outerParticipantNumber,
+      food: reservationInput.content.food,
+      desk: reservationInput.content.desk,
+      chair: reservationInput.content.chair,
+      lobby: reservationInput.content.lobby,
+      busking: reservationInput.content.busking,
+      workerNeed: reservationInput.content.workerNeed,
+    } as InferInsertModel<typeof ReservationContent>;
 
-      // Insert reservation content
-      await tx.insert(ReservationContent)
-        .values({
-          id: reservationId,
-          description: reservationInput.content?.description ?? '',
-          innerParticipantNumber: reservationInput.content?.innerParticipantNumber ?? 0,
-          outerParticipantNumber: reservationInput.content?.outerParticipantNumber ?? 0,
-          food: reservationInput.content?.food ?? '',
-          desk: reservationInput.content?.desk ?? 0,
-          chair: reservationInput.content?.chair ?? 0,
-          lobby: reservationInput.content?.lobby ?? false,
-          workerNeed: reservationInput.content?.workerNeed ?? 1,
-        } as InferInsertModel<typeof ReservationContent>);
+    await this.db.insert(ReservationContent).values(insertContentData);
+    const reservationContentCreated = await this.fetchContent(result.insertId);
+    if (!reservationContentCreated) {
+      throw new Error('Failed to create reservation content');
+    }
 
-      // Fetch the complete reservation with content
-      const result = await tx
-        .select({
-          reservation: Reservation,
-          reservationContent: ReservationContent,
-        })
-        .from(Reservation)
-        .leftJoin(
-          ReservationContent,
-          eq(Reservation.id, ReservationContent.id),
-        )
-        .where(eq(Reservation.id, reservationId))
-        .then((results) => results[0]);
-
-      if (!result || !result.reservationContent) {
-        throw new BadRequestException('Failed to fetch created reservation');
-      }
-
-      return MReservation.fromDB(result.reservation, result.reservationContent);
-    });
+    return [reservationCreated[0], reservationContentCreated];
   }
 
-  async update(data: Partial<IReservation>): Promise<boolean> {
+  async update(data: IReservationUpdate): Promise<[MReservationSimple, MReservationContent]> {
     const updateData = {
       userId: data.userId,
-      organizationId: data.organizationId,
-      spaceId: data.spaceId,
       title: data.title,
       timeFrom: data.timeFrom,
       timeTo: data.timeTo,
       timeUpdate: formatDateToSQL(new Date()),
-      state: data.state,
     } as Partial<InferInsertModel<typeof Reservation>>;
 
     const [result] = await this.db
       .update(Reservation)
       .set(updateData)
       .where(eq(Reservation.id, data.id!));
-    return result.affectedRows > 0;
+    if (!result.insertId) {
+      throw new Error('Failed to update reservation');
+    }
+    const reservationUpdated = await this.fetch({ id: data.id! });
+    if (reservationUpdated.length === 0) {
+      throw new NotFoundException('Reservation not found after update');
+    }
+    const updateContentData = {
+      id: data.id!,
+      description: data.content.description,
+      innerParticipantNumber: data.content.innerParticipantNumber,
+      outerParticipantNumber: data.content.outerParticipantNumber,
+      food: data.content.food,
+      desk: data.content.desk,
+      chair: data.content.chair,
+      lobby: data.content.lobby,
+      busking: data.content.busking,
+      workerNeed: data.content.workerNeed,
+    } as InferInsertModel<typeof ReservationContent>;
+
+    await this.db.update(ReservationContent).set(updateContentData).where(eq(ReservationContent.id, data.id!));
+
+    const reservationContentUpdated = await this.fetchContent(data.id!);
+    if (!reservationContentUpdated) {
+      throw new NotFoundException('Reservation content not found after update');
+    }
+
+    return [reservationUpdated[0], reservationContentUpdated];
   }
+
 
   async delete(id: number): Promise<boolean> {
     const [result] = await this.db

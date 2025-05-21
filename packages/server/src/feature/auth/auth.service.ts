@@ -9,11 +9,13 @@ import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { Response } from 'express';
 import { UserPublicService } from '../user/user.public.service';
 import { MUser } from '../user/user.model';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userPublicService: UserPublicService,
+    private readonly userService: UserService,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
@@ -75,14 +77,14 @@ export class AuthService {
         const payload = this.ssoToUser(data);
         Logger.log('PAYLOAD');
         Logger.log(JSON.stringify(payload));
-        const user = await this.userPublicService.findUserByStudentNumber(
+        const user = await this.userPublicService.fetchByStudentNumber(
           payload.studentNumber,
         );
         Logger.log('USER');
         Logger.log(JSON.stringify(user));
 
         const createdUser = this.muserToUser(
-          !user ? await this.userPublicService.insertUser(payload) : user,
+          !user ? await this.userService.insert(payload) : user,
         );
         Logger.log('CREATED USER');
         Logger.log(JSON.stringify(createdUser));
@@ -127,14 +129,14 @@ export class AuthService {
       };
       Logger.log('PAYLOAD');
       Logger.log(JSON.stringify(payload));
-      const user = await this.userPublicService.findUserByStudentNumber(
+      const user = await this.userPublicService.fetchByStudentNumber(
         payload.studentNumber,
       );
       Logger.log('USER');
       Logger.log(JSON.stringify(user));
 
       const createdUser = this.muserToUser(
-        !user ? await this.userPublicService.insertUser(payload) : user,
+        !user ? await this.userService.insert(payload) : user,
       );
       Logger.log('CREATED USER');
       Logger.log(JSON.stringify(createdUser));

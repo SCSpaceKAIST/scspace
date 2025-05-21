@@ -1,12 +1,14 @@
 import {
-  IReservationResponse,
   ISpaceTimeCheckRequest,
   IUserTimeCheckRequest,
   IReservationCreate,
   IReservationUpdate,
+  IReservationAll,
+  IReservationContent,
+  IReservation,
 } from '@scspace-depot/types/reservation';
 import { IOrganization } from '@scspace-depot/types/organization';
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ReservationRepository } from './reservation.repository';
 import { checkContainAllId, formatDateToSQL, takeAll, takeOne, timeRangeCheck } from 'src/common/util';
 import { UserPublicService } from '../user/user.public.service';
@@ -18,7 +20,8 @@ import { ISpace } from '@scspace-depot/types/space';
 import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 import { reservationMaxDayTime, reservationMaxWeekTime } from '@scspace-depot/consts/reservation.const';
 import { OrganizationPublicService } from '../organization/organization.public.service';
-import { MReservation } from './reservation.model';
+import { MReservation, MReservationContent } from './reservation.model';
+import { ISuccessResponse } from '@scspace-depot/types/common';
 
 @Injectable()
 export class ReservationService {
@@ -29,60 +32,6 @@ export class ReservationService {
     private readonly userPublicService: UserPublicService,
     private readonly organizationPublicService: OrganizationPublicService,
   ) {}
-
-  private getWeekRange(date: Date): { start: Date; end: Date } {
-    const start = new Date(date);
-    start.setDate(start.getDate() - start.getDay()); // Sunday
-    start.setHours(0, 0, 0, 0);
-
-    const end = new Date(start);
-    end.setDate(end.getDate() + 6); // Saturday
-    end.setHours(23, 59, 59, 999);
-
-    return { start, end };
-  }
-
-  private calculateDurationInMinutes(from: Date, to: Date): number {
-    return Math.floor((to.getTime() - from.getTime()) / (1000 * 60));
-  }
-
-  async getReservationBySpaceIDBetweenTime(
-    spaceId: number,
-    timeFrom?: string,
-    timeTo?: string,
-  ): Promise<IReservationResponse[]> {
-
-    if (timeFrom && timeTo && !timeRangeCheck(timeFrom, timeTo)) {
-      throw new BadRequestException('timeFrom must be before timeTo');
-    }
-    // If either timeFrom or timeTo is missing, fetch all reservations for the space
-    const reservations = await this.reservationRepository.find({ 
-      spaceId, 
-      ...(timeFrom && timeTo ? { timeRange: { timeFrom: formatDateToSQL(new Date(timeFrom)), timeTo: formatDateToSQL(new Date(timeTo)) } } : {})
-    });
-    if (reservations.length === 0) {
-      return [];
-    }
-
-    const userIds = reservations.map((reservation) => reservation.userId);
-    const organizationIds = reservations.map((reservation) => reservation.organizationId);
-
-    const [users, space, organizations] = await Promise.all([
-      this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
-      this.spacePublicService.fetchById(spaceId),
-      this.organizationPublicService.fetchByOrganizationIds(organizationIds),
-    ]) as [IUser[], ISpace, IOrganization[]];
-
-    checkContainAllId(userIds, users, 'users');
-    checkContainAllId(organizationIds, organizations, 'organizations');
-
-    return reservations.map((reservation) => ({
-      ...reservation,
-      user: users.find(user => user.id === reservation.userId)!,
-      organization: organizations.find(org => org.id === reservation.organizationId)!,
-      space,
-    }));
-  }
 
   async checkTimeAvailability(query: ISpaceTimeCheckRequest): Promise<boolean> {
     if (query.timeFrom && query.timeTo && !timeRangeCheck(query.timeFrom, query.timeTo)) {
@@ -101,7 +50,7 @@ export class ReservationService {
     if (query.timeFrom && query.timeTo && !timeRangeCheck(query.timeFrom, query.timeTo)) {
       throw new BadRequestException('timeFrom must be before timeTo');
     }
-    return await this.reservationPublicService.checkUserReservationTime(
+    return await this.reservationPublicService.validateTimeConstraints(
       query.userId,
       query.spaceId,
       query.timeFrom,
@@ -109,138 +58,92 @@ export class ReservationService {
     );
   }
 
-  async postReservation(
-    reservationInput: IReservationCreate,
-  ): Promise<MReservation> {
-    // 1. Validate all referenced entities exist
-
-    reservationInput.timeFrom = formatDateToSQL(new Date(reservationInput.timeFrom));
-    reservationInput.timeTo = formatDateToSQL(new Date(reservationInput.timeTo));
-    const [user, organizations, space] = await Promise.all([
-      this.userPublicService.fetchUser(reservationInput.userId),
-      this.organizationPublicService.fetchByOrganizationIds([reservationInput.organizationId]),
-      this.spacePublicService.fetchById(reservationInput.spaceId),
-    ]);
-
-    if (!user) {
-      throw new BadRequestException('User not found');
+  async wholeTimeCheck(userId: number, spaceId: number, timeFrom: string, timeTo: string): Promise<void> {
+    if (!timeFrom || !timeTo) {
+      throw new BadRequestException('timeFrom and timeTo are required');
     }
 
-    if (!organizations || organizations.length === 0) {
-      throw new BadRequestException('Organization not found');
-    }
-
-    if (!space) {
-      throw new BadRequestException('Space not found');
-    }
-
-    // 2. Check if user belongs to the organization
-    const userOrganization = await this.organizationPublicService.fetchByUserId(reservationInput.userId);
-    if (!userOrganization || userOrganization.id !== reservationInput.organizationId) {
-      throw new BadRequestException('User does not belong to the specified organization');
-    }
-
-    if (reservationInput.timeFrom && reservationInput.timeTo && !timeRangeCheck(reservationInput.timeFrom, reservationInput.timeTo)) {
+    if (!timeRangeCheck(timeFrom, timeTo)) {
       throw new BadRequestException('timeFrom must be before timeTo');
     }
 
-    // 3. Validate time constraints
-    await this.reservationPublicService.validateTimeConstraints(
-      reservationInput.userId,
-      reservationInput.spaceId,
-      reservationInput.timeFrom,
-      reservationInput.timeTo,
-      { 
-        throwError: true,
-      }
-    );
+    timeFrom = formatDateToSQL(new Date(timeFrom));
+    timeTo = formatDateToSQL(new Date(timeTo));
 
-    // 4. Check if the time is available
     const isAvailable = await this.reservationPublicService.checkTimeAvailability(
-      reservationInput.spaceId,
-      reservationInput.timeFrom,
-      reservationInput.timeTo,
+      spaceId,
+      timeFrom,
+      timeTo,
     );
 
     if (!isAvailable) {
       throw new BadRequestException('Time is not available');
     }
 
-    console.log(reservationInput);
-    // 5. Create the reservation
-    const reservation = await this.reservationRepository.insert(reservationInput);
-
-    return reservation;
+    await this.reservationPublicService.validateTimeConstraints(
+      userId,
+      spaceId,
+      timeFrom,
+      timeTo,
+      { 
+        throwError: true,
+      }
+    );
   }
 
-  async updateReservation(
-    reservationInput: IReservationUpdate,
-  ): Promise<boolean> {
-    reservationInput.timeFrom = formatDateToSQL(new Date(reservationInput.timeFrom));
-    reservationInput.timeTo = formatDateToSQL(new Date(reservationInput.timeTo));
-    const reservation = await this.reservationRepository
-      .find({
-        id: reservationInput.id,
-      })
-      .then(takeOne('reservation'));
+  async getReservationContentById(id: number): Promise<IReservationContent> {
+    return MReservationContent.fromDB(await this.reservationRepository.fetchContent(id));
+  }
 
-    // If updating time or state to GRANT, validate time constraints
-    if (reservationInput.timeFrom && reservationInput.timeTo) {
-      await this.reservationPublicService.validateTimeConstraints(
-        reservation.userId,
-        reservation.spaceId,
-        reservationInput.timeFrom,
-        reservationInput.timeTo,
-        { 
-          throwError: true,
-          excludeReservationId: reservation.id 
-        }
-      );
+  async getReservationContentByIds(ids: number[]): Promise<IReservationContent[]> {
+    const reservationContents = await Promise.all(ids.map(async (id) => await this.reservationRepository.fetchContent(id)));
+    return reservationContents.map(MReservationContent.fromDB);
+  }
+
+  async getReservationBySpaceIDBetweenTime(
+    spaceId: number,
+    timeFrom?: string,
+    timeTo?: string,
+  ): Promise<IReservationAll[]> {
+
+    if (timeFrom && timeTo && !timeRangeCheck(timeFrom, timeTo)) {
+      throw new BadRequestException('timeFrom must be before timeTo');
     }
-
-    const newReservation = {
-      ...reservation,
-      ...reservationInput,
-    };
-
-    return await this.reservationRepository.update(newReservation);
-  }
-
-  async deleteReservation(id: number): Promise<boolean> {
-    return await this.reservationRepository.delete(id);
-  }
-
-  async getManageReservation(): Promise<IReservationResponse[]> {
-    const reservations = await this.reservationRepository.find({
-      states: [ReservationStateEnum.RECEIVED, ReservationStateEnum.WAIT],
+    // If either timeFrom or timeTo is missing, fetch all reservations for the space
+    const reservations = await this.reservationRepository.fetch({ 
+      spaceId, 
+      ...(timeFrom && timeTo ? { timeRange: { timeFrom: formatDateToSQL(new Date(timeFrom)), timeTo: formatDateToSQL(new Date(timeTo)) } } : {})
     });
+    if (reservations.length === 0) {
+      return [];
+    }
 
     const userIds = reservations.map((reservation) => reservation.userId);
     const organizationIds = reservations.map((reservation) => reservation.organizationId);
-    const spaceIds = reservations.map((reservation) => reservation.spaceId);
 
-    const [users, organizations, spaces] = await Promise.all([
+    const [users, space, organizations, reservationContents] = await Promise.all([
       this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
-      this.organizationPublicService.fetchByOrganizationIds(organizationIds),
-      this.spacePublicService.fetchAllByIds(spaceIds),
-    ]) as [IUser[], IOrganization[], ISpace[]];
+      this.spacePublicService.fetchById(spaceId),
+      this.organizationPublicService.fetchByIds(organizationIds),
+      this.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
+    ]) as [IUser[], ISpace, IOrganization[], IReservationContent[]];
 
     checkContainAllId(userIds, users, 'users');
     checkContainAllId(organizationIds, organizations, 'organizations');
-    checkContainAllId(spaceIds, spaces, 'spaces');
 
     return reservations.map((reservation) => ({
       ...reservation,
       user: users.find(user => user.id === reservation.userId)!,
       organization: organizations.find(org => org.id === reservation.organizationId)!,
-      space: spaces.find(space => space.id === reservation.spaceId)!,
+      space,
+      content: reservationContents.find(content => content.id === reservation.id)!,
     }));
   }
 
   async getReservationListByUserId(
     userId: number,
-  ): Promise<IReservationResponse[]> {
-    const reservations = await this.reservationRepository.find({
+  ): Promise<IReservationAll[]> {
+    const reservations = await this.reservationRepository.fetch({
       userId,
     });
 
@@ -248,11 +151,12 @@ export class ReservationService {
     const organizationIds = reservations.map((reservation) => reservation.organizationId);
     const spaceIds = reservations.map((reservation) => reservation.spaceId);
 
-    const [users, organizations, spaces] = await Promise.all([
+    const [users, organizations, spaces, reservationContents] = await Promise.all([
       this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
-      this.organizationPublicService.fetchByOrganizationIds(organizationIds),
+      this.organizationPublicService.fetchByIds(organizationIds),
       this.spacePublicService.fetchAllByIds(spaceIds),
-    ]) as [IUser[], IOrganization[], ISpace[]];
+      this.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
+    ]) as [IUser[], IOrganization[], ISpace[], IReservationContent[]];
 
     checkContainAllId(userIds, users, 'users');
     checkContainAllId(organizationIds, organizations, 'organizations');
@@ -263,6 +167,7 @@ export class ReservationService {
       user: users.find(user => user.id === reservation.userId)!,
       organization: organizations.find(org => org.id === reservation.organizationId)!,
       space: spaces.find(space => space.id === reservation.spaceId)!,
+      content: reservationContents.find(content => content.id === reservation.id)!,
     }));
   }
 
@@ -282,5 +187,105 @@ export class ReservationService {
       case SpaceTypeEnum.SUMI:
         return ReservationStateEnum.WAIT;
     }
+  }
+
+
+  async postReservation(
+    reservationInput: IReservationCreate,
+  ): Promise<IReservation> {
+
+    await this.wholeTimeCheck(reservationInput.userId, reservationInput.spaceId, reservationInput.timeFrom, reservationInput.timeTo);
+
+    const [user, organizations, space] = await Promise.all([
+      this.userPublicService.fetchById(reservationInput.userId),
+      this.organizationPublicService.fetchById(reservationInput.organizationId),
+      this.spacePublicService.fetchById(reservationInput.spaceId),
+    ]);
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    if (!organizations) {
+      throw new BadRequestException('Organization not found');
+    }
+
+    if (!space) {
+      throw new BadRequestException('Space not found');
+    }
+
+    const userOrganizations = await this.organizationPublicService.fetchByUserId(reservationInput.userId);
+    if (!userOrganizations.some(org => org.id === reservationInput.organizationId)) {
+      throw new BadRequestException('User does not belong to the specified organization');
+    }
+
+    const [reservation, reservationContent] = await this.reservationRepository.insert(reservationInput);
+
+    return MReservation.fromDB(
+      reservation,
+      reservationContent,
+    );
+  }
+
+  async updateReservation(
+    reservationInput: IReservationUpdate,
+  ): Promise<MReservation> {
+    const reservation = await this.reservationRepository.fetch({
+      id: reservationInput.id,
+    });
+
+    if (reservation.length === 0) {
+      throw new NotFoundException('Reservation not found');
+    }
+
+    await this.wholeTimeCheck(reservation[0].userId, reservation[0].spaceId, reservationInput.timeFrom, reservationInput.timeTo);
+    reservationInput.timeFrom = formatDateToSQL(new Date(reservationInput.timeFrom));
+    reservationInput.timeTo = formatDateToSQL(new Date(reservationInput.timeTo));
+
+    const [reservationUpdated, reservationContentUpdated] = await this.reservationRepository.update(reservationInput);
+
+    return MReservation.fromDB(
+      reservationUpdated,
+      reservationContentUpdated,
+    );
+  }
+
+  async deleteReservation(id: number): Promise<ISuccessResponse> {
+    const result = await this.reservationRepository.delete(id);
+    if (!result) {
+      throw new NotFoundException('Reservation not found');
+    }
+    return {
+      success: true,
+    };
+  }
+
+  async getManageReservation(): Promise<IReservationAll[]> {
+    const reservations = await this.reservationRepository.fetch({
+      states: [ReservationStateEnum.RECEIVED, ReservationStateEnum.WAIT],
+    });
+
+    const userIds = reservations.map((reservation) => reservation.userId);
+    const organizationIds = reservations.map((reservation) => reservation.organizationId);
+    const spaceIds = reservations.map((reservation) => reservation.spaceId);
+
+    const [users, organizations, spaces, reservationContents] = await Promise.all([
+      this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
+      this.organizationPublicService.fetchByIds(organizationIds),
+      this.spacePublicService.fetchAllByIds(spaceIds),
+      this.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
+    ]) as [IUser[], IOrganization[], ISpace[], IReservationContent[]];
+
+    checkContainAllId(userIds, users, 'users');
+    checkContainAllId(organizationIds, organizations, 'organizations');
+    checkContainAllId(spaceIds, spaces, 'spaces');
+
+    return reservations.map((reservation) => ({
+      ...reservation,
+      user: users.find(user => user.id === reservation.userId)!,
+      organization: organizations.find(org => org.id === reservation.organizationId)!,
+      space: spaces.find(space => space.id === reservation.spaceId)!,
+      content: reservationContents.find(content => content.id === reservation.id)!,
+    }));
   }
 }

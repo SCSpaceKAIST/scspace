@@ -5,7 +5,7 @@ import { reservationMaxDayTime } from '@scspace-depot/consts/reservation.const';
 import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
 import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
 import { reservationMaxWeekTime } from '@scspace-depot/consts/reservation.const';
-import { MReservation } from '@scspace-server/feature/reservation/reservation.model';
+import { MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
 import { formatDateToSQL } from '@scspace-server/common/util';
 @Injectable()
 export class ReservationPublicService {
@@ -24,7 +24,7 @@ export class ReservationPublicService {
     timeFrom: string,
     timeTo: string,
   ): Promise<boolean> {
-    const overlappingReservations = await this.reservationRepository.find({
+    const overlappingReservations = await this.reservationRepository.fetch({
       spaceId: spaceId,
       timeRange: {
         timeFrom: timeFrom,
@@ -46,7 +46,7 @@ export class ReservationPublicService {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const todayReservations = await this.reservationRepository.find({
+    const todayReservations = await this.reservationRepository.fetch({
       userId: userId,
       spaceId: spaceId,
       state: ReservationStateEnum.GRANT,
@@ -85,7 +85,7 @@ export class ReservationPublicService {
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(endOfWeek.getDate() + 7); // 주의 끝일 (다음 주 월요일 0시 0분 0초)
 
-    const weeklyReservations = await this.reservationRepository.find({
+    const weeklyReservations = await this.reservationRepository.fetch({
       userId: userId,
       spaceId: spaceId,
       state: ReservationStateEnum.GRANT,
@@ -161,15 +161,6 @@ export class ReservationPublicService {
     return isWithinLimits;
   }
 
-  async checkUserReservationTime(
-    userId: number,
-    spaceId: number,
-    timeFrom: string,
-    timeTo: string,
-  ): Promise<boolean> {
-    return this.validateTimeConstraints(userId, spaceId, timeFrom, timeTo);
-  }
-
   async checkReservationAvailability(
     userId: number,
     spaceId: number,
@@ -178,7 +169,7 @@ export class ReservationPublicService {
   ): Promise<boolean> {
     return (
       (await this.checkTimeAvailability(spaceId, timeFrom, timeTo)) &&
-      (await this.checkUserReservationTime(userId, spaceId, timeFrom, timeTo))
+      (await this.validateTimeConstraints(userId, spaceId, timeFrom, timeTo))
     );
   }
 
@@ -186,7 +177,7 @@ export class ReservationPublicService {
     userId?: number;
     spaceIds?: number[];
     timeRange?: { timeFrom: string; timeTo: string };
-  }): Promise<MReservation[]> {
-    return this.reservationRepository.find(params);
+  }): Promise<MReservationSimple[]> {
+    return this.reservationRepository.fetch(params);
   }
 }

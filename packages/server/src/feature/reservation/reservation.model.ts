@@ -1,7 +1,10 @@
-import { IReservation, IReservationContent } from '@scspace-depot/types/reservation';
+import { IReservation, IReservationContent, IReservationSimple, IReservationSimpleAll } from '@scspace-depot/types/reservation';
 import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
-import { Reservation, ReservationContent, schema } from '@schema';
+import { Reservation, ReservationContent, schema, Space } from '@schema';
 import { InferSelectModel } from 'drizzle-orm';
+import { ISpace } from '@scspace-depot/types/space';
+import { IUser } from '@scspace-depot/types/user';
+import { IOrganization } from '@scspace-depot/types/organization';
 
 type ReservationDBResult = {
   reservation: InferSelectModel<typeof schema.Reservation>;
@@ -111,6 +114,47 @@ export class MReservation implements IReservation {
         busking: false,
         workerNeed: 1,
       }),
+    });
+  }
+}
+
+export class MReservationSimple implements IReservationSimple {
+  id: IReservationSimple['id'];
+  userId: IReservationSimple['userId'];
+  organizationId: IReservationSimple['organizationId'];
+  spaceId: IReservationSimple['spaceId'];
+  title: IReservationSimple['title'];
+  timeFrom: IReservationSimple['timeFrom'];
+  timeTo: IReservationSimple['timeTo'];
+  timePost: IReservationSimple['timePost'];
+  timeUpdate: IReservationSimple['timeUpdate'];
+  state: IReservationSimple['state'];
+
+  constructor(data: IReservationSimple) {
+    this.id = data.id;
+    this.userId = data.userId;
+    this.organizationId = data.organizationId;
+    this.spaceId = data.spaceId;
+    this.title = data.title;
+    this.timeFrom = data.timeFrom;
+    this.timeTo = data.timeTo;
+    this.timePost = data.timePost;
+    this.timeUpdate = data.timeUpdate;
+    this.state = data.state;
+  }
+
+  static fromDB(reservation: typeof Reservation.$inferSelect): MReservationSimple {
+    return new MReservationSimple({
+      id: reservation.id,
+      userId: reservation.userId,
+      organizationId: reservation.organizationId,
+      spaceId: reservation.spaceId,
+      title: reservation.title,
+      timeFrom: reservation.timeFrom,
+      timeTo: reservation.timeTo,
+      timePost: reservation.timePost,
+      timeUpdate: reservation.timeUpdate,
+      state: reservation.state,
     });
   }
 }
