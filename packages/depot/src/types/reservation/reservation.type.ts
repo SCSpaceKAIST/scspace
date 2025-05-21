@@ -1,5 +1,5 @@
 import { IUser } from "../user";
-import { IReservationContent } from "./reservation.content.type";
+import { IReservationContent, IReservationContentCreate } from "./reservation.content.type";
 import { ReservationStateEnum, ReservationWorkerNeedEnum } from "../../enums/reservation.enum";
 import { ISpace } from "../space";
 import { IOrganization } from "../organization";
@@ -35,8 +35,10 @@ export type IReservationSimpleAll = IReservationSimple & {
 
 export type IReservationCreate = Omit<
   IReservation,
-  "id" | "timePost" |  "timeUpdate" | "state"
->;
+  "id" | "timePost" |  "timeUpdate" | "state" | "content"
+> & {
+  content: IReservationContentCreate;
+};
 
 export type IReservationUpdate = Omit<
   IReservation,

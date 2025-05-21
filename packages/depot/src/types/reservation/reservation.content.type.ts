@@ -10,3 +10,5 @@ export interface IReservationContent {
   busking: boolean;
   workerNeed: number;
 }
+
+export type IReservationContentCreate = Omit<IReservationContent, "id">;
