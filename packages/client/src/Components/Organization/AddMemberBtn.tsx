@@ -1,10 +1,10 @@
 import { Dialog, DialogBackdrop, Button, IconButton, Portal, Fieldset, Field, HStack, PinInput, Icon, Stack, Text, Flex, VStack, Wrap } from "@chakra-ui/react";
 import { useStudent } from "@scspace-client/Hooks/user";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { HiPlus } from "react-icons/hi";
 import { IUser } from "@scspace-depot/types/user";
 import { HiMiniXMark } from "react-icons/hi2";
-import { useOrganization, useOrganizationAPI } from "@scspace-client/Hooks/organization";
+import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 
 function NewMember({ user, unSelect }: {
     user: IUser;
@@ -134,7 +134,7 @@ export default function AddMemberBtn({ oid, refetch }: {
                                                 Search Student (by Student Number)
                                             </Text>
                                             <Text margin={0} padding={0}>
-                                                Press "ENTER" to select student
+                                                {'Press "ENTER" to select student'}
                                             </Text>
                                         </Flex>
                                     </Field.Label>
@@ -164,10 +164,10 @@ export default function AddMemberBtn({ oid, refetch }: {
                                     <Field.HelperText>
                                         <Stack gap={0}>
                                             <Text margin={0} padding={0}>
-                                                Please make sure you enter student number correctly.
+                                                {"Please make sure you enter student number correctly."}
                                             </Text>
                                             <Text margin={0} padding={0}>
-                                                If a student has never logged in to the site, they won't be found.
+                                                {"If a student has never logged in to the site, they won't be found."}
                                             </Text>
                                         </Stack>
                                     </Field.HelperText>
@@ -179,6 +179,7 @@ export default function AddMemberBtn({ oid, refetch }: {
                                     <Wrap>
                                         {selected.map((m) => (
                                             <NewMember
+                                                key={m.studentNumber}
                                                 user={m}
                                                 unSelect={unSelect}
                                             />

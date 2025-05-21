@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
+import { useLinkPush } from "@scspace-client/Hooks/auth";
 import { useMutationApi } from "@scspace-client/Hooks/useAPI";
 const LogOutPage: React.FC = () => {
   const { linkPush } = useLinkPush();

@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { useLinkPush } from "@scspace-client/Hooks/useLinkPush";
+import { useLinkPush } from "@scspace-client/Hooks/auth";
 import { randomBytes, createHash } from "crypto";
 import axios from "axios";
 

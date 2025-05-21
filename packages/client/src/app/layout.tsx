@@ -1,10 +1,4 @@
 import "./globals.css";
-import "../../static/vendor/bootstrap/css/bootstrap.min.css";
-import "../../static/vendor/bootstrap-icons/bootstrap-icons.css";
-import "../../static/vendor/aos/aos.css";
-import "../../static/vendor/glightbox/css/glightbox.min.css";
-import "../../static/vendor/swiper/swiper-bundle.min.css";
-import "../../static/css/variables.css";
 import "../../static/css/main.css";
 import Header from "@scspace-client/Components/Header";
 import { ReactNode } from "react";
