@@ -93,7 +93,6 @@ export default function Redirect() {
                 href: `/space/${s.id}`,
                 helperText: s.nameEn,
                 label: s.nameKr,
-                disabled: true
             }
         }))
     }, [spaces]);

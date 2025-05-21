@@ -5,8 +5,8 @@ import { useQueryApi } from "./useAPI";
 import { useEffect, useState } from "react";
 
 export function useSpace({ id }: { id: number }) {
-    const [space, setSpace] = useState<ISpace[] | null>(null);
-    const { data, isLoading, refetch } = useQueryApi<ISpace[]>(`/space/${id}`);
+    const [space, setSpace] = useState<ISpace | null>(null);
+    const { data, isLoading, refetch } = useQueryApi<ISpace>(`/space/${id}`);
 
     useEffect(() => {
         if (!data) {

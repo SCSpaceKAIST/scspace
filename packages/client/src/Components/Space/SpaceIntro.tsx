@@ -1,32 +1,24 @@
-import React, { useState, useEffect } from "react";
+"use clien"
 
-import { IIntroduction } from "@scspace-depot/types/space";
+import { Center, Heading, StackSeparator, VStack } from "@chakra-ui/react";
+import { ISpace } from "@scspace-depot/types/space";
 
-interface SpaceIntroductionProps {
-  data: IIntroduction;
-}
+export default function SpaceIntro({ space }: { space: ISpace }) {
 
-const SpaceIntro: React.FC<SpaceIntroductionProps> = ({ data }) => {
   return (
-    <div className="space">
-      <div className="fst-italic">{data.intro}</div>
-      {data.content.map((content, idx) => (
-        <div key={idx}>
-          <h4>{content.title}</h4>
-          {content.body.map((body, idxHead) => (
-            <div key={idxHead}>
-              <div>{body.head}</div>
-              <ul>
-                {body.list.map((item, listIdx) => (
-                  <li key={listIdx}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      ))}
-    </div>
+    <Center height="100%">
+      <VStack separator={<StackSeparator />}>
+        <VStack px={16}>
+          <Heading>
+            {space.nameKr}
+          </Heading>
+        </VStack>
+        <VStack px={16}>
+          <Heading>
+            {space.nameEn}
+          </Heading>
+        </VStack>
+      </VStack>
+    </Center>
   );
-};
-
-export default SpaceIntro;
+}

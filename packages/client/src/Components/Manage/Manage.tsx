@@ -1,9 +1,6 @@
 import React from "react";
 // import AskManageList from "@scspace-client/Components/Ask/AskManageList";
-import ReservationManageList from "@scspace-client/Components/Reservation/ReservationManageList";
-import PasswordView from "../Password/PasswordView";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import PageTemplete from "../_commons/PageTemplete";
 
 export default function Manage() {
   const { userInfo } = useAuth();

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import PageSelector, { IPage, } from "../PageSelector/PageSelector";
 import { useAllSpace } from "@scspace-client/Hooks/space";
+import SpaceIntro from "./SpaceIntro";
 
 export default function Space() {
   const { spaces } = useAllSpace();
@@ -15,7 +16,7 @@ export default function Space() {
           href: `/space/${s.id}`,
           kor: s.nameKr,
           eng: s.nameEn,
-          preview: (<div>{s.nameKr}</div>)
+          preview: (<SpaceIntro space={s} />)
         }
       }));
   }, [spaces]);

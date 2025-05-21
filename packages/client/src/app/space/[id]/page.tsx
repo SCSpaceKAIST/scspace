@@ -1,24 +1,25 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { SpaceTypeNames, SpaceTypesArray } from "@scspace-depot/types/space";
-import SpaceView from "@scspace-client/Components/Space/SpaceView";
 import PageTemplete from "@scspace-client/Components/_commons/PageTemplete";
+import { useSpace } from "@scspace-client/Hooks/space";
+import LoadingComponent from "@scspace-client/Components/Loading/Loading";
+import SpaceIntro from "@scspace-client/Components/Space/SpaceIntro";
 
 export default function SpaceIntroPage() {
   const params = useParams();
-  const id = parseInt(params.id as string, 10); // URL의 [id] 부분을 숫자로 변환
+  const id = parseInt(params.id as string, 10);
 
-  // if (isNaN(id) || id < 0 || id >= SpaceTypesArray.length) {
-  //   // id가 유효한 숫자가 아닌 경우 처리
-  //   return <div>Invalid ID provided.</div>;
-  // }
-  return (
+  const { space } = useSpace({ id: id });
+
+  return (space ? (
     <PageTemplete
-      title="Space Detail"
-      subtitle="Space Detail"
+      title={["공간", space.nameKr]}
+      subtitle={["Space", space.nameEn]}
     >
-      {id}
+      <SpaceIntro space={space} />
     </PageTemplete>
-  );
+  ) : (
+    <LoadingComponent />
+  ));
 }
