@@ -5,8 +5,6 @@ import {
   Post,
   Query,
   Body,
-  BadRequestException,
-  Logger,
   Put,
   ParseIntPipe,
   Delete
@@ -20,37 +18,11 @@ import {
   IReservationUpdate,
   IReservationAll
 } from '@scspace-depot/types/reservation';
-import { formatDateToSQL } from '@scspace-server/common/util';
 import { ISuccessResponse } from '@scspace-depot/types/common';
 
 @Controller('reservation')
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) { }
-
-  @Post()
-  async postReservation(
-    @Body() reservationInput: IReservationCreate,
-  ): Promise<IReservation> {
-    return await this.reservationService.postReservation(reservationInput);
-  }
-
-  @Put()
-  async updateReservation(
-    @Body() reservationInput: IReservationUpdate,
-  ): Promise<IReservation> {
-    try {
-      const result =
-        await this.reservationService.updateReservation(reservationInput);
-      return result;
-    } catch (error) {
-      throw new BadRequestException('Error updating reservation.');
-    }
-  }
-
-  @Delete(':id')
-  async deleteReservation(@Param('id') id: number): Promise<ISuccessResponse> {
-    return await this.reservationService.deleteReservation(id);
-  }
 
   //HOOK: useReservations
   @Get('space')
@@ -76,6 +48,25 @@ export class ReservationController {
   @Get('manage')
   async getManageReservation(): Promise<IReservationAll[]> {
     return await this.reservationService.getManageReservation();
+  }
+
+  @Post()
+  async postReservation(
+    @Body() reservationInput: IReservationCreate,
+  ): Promise<IReservation> {
+    return await this.reservationService.postReservation(reservationInput);
+  }
+
+  @Put()
+  async updateReservation(
+    @Body() reservationInput: IReservationUpdate,
+  ): Promise<IReservation> {
+    return await this.reservationService.updateReservation(reservationInput);
+  }
+
+  @Delete(':id')
+  async deleteReservation(@Param('id') id: number): Promise<ISuccessResponse> {
+    return await this.reservationService.deleteReservation(id);
   }
 
   @Post('check/space')

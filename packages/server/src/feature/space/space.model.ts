@@ -18,12 +18,12 @@ export class MSpace implements ISpace {
     this.spaceType = data.spaceType;
   }
 
-  static fromDB(space: typeof Space.$inferSelect): MSpace {
-    return new MSpace({
+  static fromDB(space: typeof Space.$inferSelect): ISpace {
+    return {
       id: space.id,
       nameKr: space.nameKr,
       nameEn: space.nameEn,
       spaceType: space.spaceType as SpaceTypeEnum,
-    });
+    };
   }
 }

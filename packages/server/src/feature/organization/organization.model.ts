@@ -19,13 +19,13 @@ export class MOrganization implements IOrganization {
     this.timeUpdate = organization.timeUpdate;
   }
 
-  static fromDB(organization: OrganizationDBResult): MOrganization {
-    return new MOrganization({
+  static fromDB(organization: OrganizationDBResult): IOrganization {
+    return {
       id: organization.id,
       name: organization.name,
       delegatorId: organization.delegatorId,
       timeRegister: organization.timeRegister,
       timeUpdate: organization.timeUpdate,
-    });
+    };
   }
 } 

@@ -40,7 +40,7 @@ export type IReservationCreate = Omit<
 
 export type IReservationUpdate = Omit<
   IReservation,
-  "timePost" | "spaceId" | "organizationId" | "timePost" | "timeUpdate" | "state"
+  "spaceId" | "organizationId" | "timePost" | "timeUpdate" | "state"
 >;
 
 // 공간 예약 시간 체크 요청

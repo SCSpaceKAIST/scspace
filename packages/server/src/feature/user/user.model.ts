@@ -21,14 +21,14 @@ export class MUser implements IUser {
     this.type = user.type;
   }
 
-  static fromDB(user: UserDBResult): MUser {
-    return new MUser({
+  static fromDB(user: UserDBResult): IUser {
+    return {
       id: user.id,
       nameKr: user.nameKr ?? 'SSO 이름 오류',
       nameEn: user.nameEn ?? 'SSO Name Error',
       studentNumber: user.studentNumber,
       email: user.email,
       type: user.type,
-    });
+    };
   }
 }

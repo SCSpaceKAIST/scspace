@@ -16,6 +16,6 @@ import { UserModule } from '../user/user.module';
     OrganizationMemberRepository,
     OrganizationPublicService,
   ],
-  exports: [OrganizationService, OrganizationPublicService],
+  exports: [OrganizationPublicService],
 })
 export class OrganizationModule {} 

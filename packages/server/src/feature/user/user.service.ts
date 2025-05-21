@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { UserPublicService } from './user.public.service';
 import { UserRepository } from './user.repository';
 import { MUser } from './user.model';
 import { IUser, IUserCreate } from '@scspace-depot/types/user';
@@ -9,7 +8,6 @@ import { ISuccessResponse } from '@scspace-depot/types/common';
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly userPublicService: UserPublicService,
   ) {
   }
 
@@ -23,8 +21,8 @@ export class UserService {
   }
 
   async delete(id: number): Promise<ISuccessResponse> {
-    const user = await this.userPublicService.fetchById(id);
-    if (!user) {
+    const userExist = await this.userRepository.fetch({ id });
+    if (userExist.length === 0) {
       throw new BadRequestException(`User ID ${id} not found.`);
     }
     await this.userRepository.delete(id);

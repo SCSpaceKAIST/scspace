@@ -45,15 +45,6 @@ export class AuthController {
       .json({ isLogined: !!verifyRes, userInfo: verifyRes });
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('idJwt')
-  getUserIdWithJWT(@Req() req) {
-    Logger.log(req.user);
-
-    return 1;
-    //return this.userService.getUserNameWithToken();
-  }
-
   @Post('login')
   async login(
     @Body('state') state: string,

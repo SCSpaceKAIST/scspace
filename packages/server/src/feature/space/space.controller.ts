@@ -8,17 +8,11 @@ export class SpaceController {
 
   @Get()
   async findAllSpace(): Promise<ISpace[]> {
-    console.log('findAllSpace');
-    const res = await this.spaceService.fetchAll();
-    console.log('findAllSpace res', res);
-    return res;
+    return await this.spaceService.fetchAll();
   }
 
   @Get(':id')
   async findSpaceByID(@Param('id') id: string): Promise<ISpace> {
-    console.log('findSpaceByID', id);
-    const res = await this.spaceService.fetchById(parseInt(id));
-    console.log('findSpaceByID res', res);
-    return res;
+    return await this.spaceService.fetchById(parseInt(id));
   }
 }

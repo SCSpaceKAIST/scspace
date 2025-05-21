@@ -1,9 +1,7 @@
 import {
   Injectable,
   Inject,
-  BadRequestException,
   NotFoundException,
-  Logger,
 } from '@nestjs/common';
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
@@ -119,7 +117,7 @@ export class ReservationRepository {
       timeTo: formatDateToSQL(new Date(reservationInput.timeTo)),
       timePost: formatDateToSQL(new Date()),
       timeUpdate: formatDateToSQL(new Date()),
-      state: ReservationStateEnum.WAIT,
+      state: ReservationStateEnum.GRANT,
     } as InferInsertModel<typeof Reservation>;
     
     const [result] = await this.db.insert(Reservation).values(insertData);
@@ -165,8 +163,8 @@ export class ReservationRepository {
     const [result] = await this.db
       .update(Reservation)
       .set(updateData)
-      .where(eq(Reservation.id, data.id!));
-    if (!result.insertId) {
+      .where(eq(Reservation.id, data.id));
+    if (!result.affectedRows) {
       throw new Error('Failed to update reservation');
     }
     const reservationUpdated = await this.fetch({ id: data.id! });
@@ -186,7 +184,10 @@ export class ReservationRepository {
       workerNeed: data.content.workerNeed,
     } as InferInsertModel<typeof ReservationContent>;
 
-    await this.db.update(ReservationContent).set(updateContentData).where(eq(ReservationContent.id, data.id!));
+    const [ resultContent ] =  await this.db.update(ReservationContent).set(updateContentData).where(eq(ReservationContent.id, data.id!));
+    if (!resultContent.affectedRows) {
+      throw new Error('Failed to update reservation content');
+    }
 
     const reservationContentUpdated = await this.fetchContent(data.id!);
     if (!reservationContentUpdated) {

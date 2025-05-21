@@ -10,12 +10,12 @@ import { OrganizationModule } from 'src/feature/organization/organization.module
 
 @Module({
   imports: [DBModule, SpaceModule, UserModule, OrganizationModule],
+  controllers: [ReservationController],
   providers: [
     ReservationRepository,
     ReservationPublicService,
     ReservationService,
   ],
-  controllers: [ReservationController],
-  exports: [ReservationPublicService, ReservationService],
+  exports: [ReservationPublicService],
 })
 export class ReservationModule {}

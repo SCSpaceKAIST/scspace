@@ -2,11 +2,12 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { UserRepository } from './user.repository';
 import { MUser } from './user.model';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
-import { IUser } from '@scspace-depot/types/user';
+import { IUser, IUserCreate } from '@scspace-depot/types/user';
+import { UserService } from './user.service';
 
 @Injectable()
 export class UserPublicService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepository: UserRepository, private readonly userService: UserService) {}
 
   async fetchById(id: number): Promise<IUser> {
     if (id === 0) {
@@ -38,6 +39,10 @@ export class UserPublicService {
 
   async fetchAll(): Promise<IUser[]> {
     return (await this.userRepository.fetchAll()).map(MUser.fromDB);
+  }
+
+  async insert(user: IUserCreate): Promise<IUser> {
+    return this.userService.insert(user);
   }
 
   async count(): Promise<number> {

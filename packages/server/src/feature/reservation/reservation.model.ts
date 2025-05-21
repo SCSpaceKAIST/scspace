@@ -1,10 +1,6 @@
 import { IReservation, IReservationContent, IReservationSimple, IReservationSimpleAll } from '@scspace-depot/types/reservation';
-import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
-import { Reservation, ReservationContent, schema, Space } from '@schema';
+import { Reservation, ReservationContent, schema } from '@schema';
 import { InferSelectModel } from 'drizzle-orm';
-import { ISpace } from '@scspace-depot/types/space';
-import { IUser } from '@scspace-depot/types/user';
-import { IOrganization } from '@scspace-depot/types/organization';
 
 type ReservationDBResult = {
   reservation: InferSelectModel<typeof schema.Reservation>;
@@ -36,8 +32,8 @@ export class MReservationContent implements IReservationContent {
     this.workerNeed = data.workerNeed ?? 1;
   }
 
-  static fromDB(reservationContent: typeof ReservationContent.$inferSelect): MReservationContent {
-    return new MReservationContent({
+  static fromDB(reservationContent: typeof ReservationContent.$inferSelect): IReservationContent {
+    return {
       id: reservationContent.id,
       description: reservationContent.description,
       innerParticipantNumber: reservationContent.innerParticipantNumber,
@@ -48,7 +44,7 @@ export class MReservationContent implements IReservationContent {
       lobby: reservationContent.lobby,
       busking: reservationContent.busking,
       workerNeed: reservationContent.workerNeed,
-    });
+    };
   }
 }
 
@@ -90,8 +86,8 @@ export class MReservation implements IReservation {
     });
   }
 
-  static fromDB(reservation: typeof Reservation.$inferSelect, reservationContent: typeof ReservationContent.$inferSelect): MReservation {
-    return new MReservation({
+  static fromDB(reservation: typeof Reservation.$inferSelect, reservationContent: typeof ReservationContent.$inferSelect): IReservation {
+    return {
       id: reservation.id,
       userId: reservation.userId,
       organizationId: reservation.organizationId,
@@ -114,7 +110,7 @@ export class MReservation implements IReservation {
         busking: false,
         workerNeed: 1,
       }),
-    });
+    };
   }
 }
 
@@ -143,8 +139,8 @@ export class MReservationSimple implements IReservationSimple {
     this.state = data.state;
   }
 
-  static fromDB(reservation: typeof Reservation.$inferSelect): MReservationSimple {
-    return new MReservationSimple({
+  static fromDB(reservation: typeof Reservation.$inferSelect): IReservationSimple {
+    return {
       id: reservation.id,
       userId: reservation.userId,
       organizationId: reservation.organizationId,
@@ -155,6 +151,6 @@ export class MReservationSimple implements IReservationSimple {
       timePost: reservation.timePost,
       timeUpdate: reservation.timeUpdate,
       state: reservation.state,
-    });
+    };
   }
 }

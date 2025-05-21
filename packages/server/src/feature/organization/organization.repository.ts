@@ -79,7 +79,7 @@ export class OrganizationRepository {
     } as InferInsertModel<typeof Organization>;
 
     const [result] = await this.db.update(Organization).set(updateData).where(eq(Organization.id, organizationId));
-    if (!result.insertId) {
+    if (!result.affectedRows) {
       throw new Error('Failed to update organization');
     }
 

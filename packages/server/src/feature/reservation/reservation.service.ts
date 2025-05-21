@@ -10,7 +10,7 @@ import {
 import { IOrganization } from '@scspace-depot/types/organization';
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ReservationRepository } from './reservation.repository';
-import { checkContainAllId, formatDateToSQL, takeAll, takeOne, timeRangeCheck } from 'src/common/util';
+import { checkContainAllId, formatDateToSQL, takeAll, timeRangeCheck } from 'src/common/util';
 import { UserPublicService } from '../user/user.public.service';
 import { SpacePublicService } from '../space/space.public.service';
 import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
@@ -18,7 +18,6 @@ import { ReservationPublicService } from './reservation.public.service';
 import { IUser } from '@scspace-depot/types/user';
 import { ISpace } from '@scspace-depot/types/space';
 import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
-import { reservationMaxDayTime, reservationMaxWeekTime } from '@scspace-depot/consts/reservation.const';
 import { OrganizationPublicService } from '../organization/organization.public.service';
 import { MReservation, MReservationContent } from './reservation.model';
 import { ISuccessResponse } from '@scspace-depot/types/common';
@@ -243,7 +242,6 @@ export class ReservationService {
     reservationInput.timeTo = formatDateToSQL(new Date(reservationInput.timeTo));
 
     const [reservationUpdated, reservationContentUpdated] = await this.reservationRepository.update(reservationInput);
-
     return MReservation.fromDB(
       reservationUpdated,
       reservationContentUpdated,
