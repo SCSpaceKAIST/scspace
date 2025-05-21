@@ -74,11 +74,11 @@ export class ReservationService {
 
   async getReservationListByUserId(
     userId: number,
-    count: number,
+    limit: number,
   ): Promise<IReservationAll[]> {
     const reservations = await this.reservationRepository.fetch({
       userId: userId,
-      limit: count,
+      limit: limit,
     });
 
     const userIds = reservations.map((reservation) => reservation.userId);

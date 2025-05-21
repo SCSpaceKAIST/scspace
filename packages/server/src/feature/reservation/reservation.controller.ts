@@ -41,9 +41,9 @@ export class ReservationController {
   @Get('user/:id')
   async getReservationListByUserId(
     @Param('id') userId: number,
-    @Query('count', ParseIntPipe) count: number,
+    @Query('limit', ParseIntPipe) limit: number,
   ): Promise<IReservationAll[]> {
-    return await this.reservationService.getReservationListByUserId(userId, count);
+    return await this.reservationService.getReservationListByUserId(userId, limit);
   }
 
   @Get('manage')
