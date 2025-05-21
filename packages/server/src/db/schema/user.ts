@@ -7,5 +7,5 @@ export const User = mysqlTable('user', {
   nameKr: varchar('name_kr', { length: 128 }).notNull(),
   nameEn: varchar('name_en', { length: 128 }).notNull(),
   email: varchar('email', { length: 128 }).notNull().unique(),
-  type: int('type').notNull().default(1), // type은 enum 필드 user, manager, admin, chief
+  type: int('type').notNull().default(1), // type은 enum 필드 user, manager, admin
 });

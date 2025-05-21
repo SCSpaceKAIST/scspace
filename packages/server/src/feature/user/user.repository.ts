@@ -2,10 +2,10 @@ import { Injectable, Inject, Logger, NotFoundException, BadRequestException } fr
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema, User } from 'src/db/schema';
-import { and, eq, inArray, SQL } from 'drizzle-orm';
+import { and, eq, inArray, InferInsertModel, SQL } from 'drizzle-orm';
 import { IUserCreate } from '@scspace-depot/types/user';
 import { MUser } from './user.model';
-import { takeOne } from 'src/common/util';
+import { formatDateToSQL, takeOne } from 'src/common/util';
 
 @Injectable()
 export class UserRepository {
@@ -13,7 +13,7 @@ export class UserRepository {
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
   ) {}
 
-  async find(params: {
+  async fetch(params: {
     id?: number;
     ids?: number[];
     studentNumber?: number;
@@ -30,72 +30,43 @@ export class UserRepository {
       whereConditions.push(eq(User.studentNumber, params.studentNumber));
     }
 
-
     const users = await this.db
       .select()
       .from(User)
       .where(and(...whereConditions));
 
-    return users.map((user) => MUser.fromDB(user));
-  }
-
-  async findOne(id: number): Promise<MUser | null> {
-    const users = await this.find({ id });
-    console.log(users);
-    return users.length > 0 ? users[0] : null;
-  }
-
-  async fetch(id: number): Promise<MUser> {
-    if (id === 0) {
-      throw new NotFoundException('User not found');
-    }
-    const user = await this.findOne(id);
-    if (user === null) {
-      throw new NotFoundException('User not found');
-    }
-    return user;
-  }
-
-  async fetchAllByIds(ids: number[]): Promise<MUser[]> {
-    if (ids.length === 0) {
-      return [];
-    }
-    const uniqueIds = [...new Set(ids)];
-    const users = await this.find({ ids: uniqueIds });
-
-    if (users.length !== uniqueIds.length) {
-      throw new NotFoundException('Some users not found');
-    }
-
     return users;
   }
 
   async fetchAll(): Promise<MUser[]> {
-    const users = await this.find({});
+    const users = await this.db.select().from(User);
     return users;
   }
 
   async insert(user: IUserCreate): Promise<MUser> {
-    const userExist = await this.find({ studentNumber: user.studentNumber });
-    if (userExist.length > 0) {
-      throw new BadRequestException('User already exists');
-    }
-    const result = await this.db.insert(User).values(user).$returningId();
-    Logger.log('ADD USER ' + JSON.stringify(user));
+    const insertData = {
+      studentNumber: user.studentNumber,
+      nameKr: user.nameKr,
+      nameEn: user.nameEn,
+      email: user.email,
+      timeRegister: formatDateToSQL(new Date()),
+      timeUpdate: formatDateToSQL(new Date()),
+    } as InferInsertModel<typeof User>;
 
-    if (!result) {
-      throw new NotFoundException('User not found');
+    const [result] = await this.db.insert(User).values(insertData);
+    if (!result.insertId) {
+      throw new Error('Failed to get inserted ID');
     }
 
-    const userCreated = await this.findOne(result[0].id);
-    if (!userCreated) {
+    const userCreated = await this.fetch({ id: result.insertId });
+    if (userCreated.length === 0) {
       throw new NotFoundException('User not found after creation');
     }
-    return userCreated;
+    Logger.log('ADD USER ' + JSON.stringify(user));
+    return userCreated[0];
   }
 
-  async delete(id: number): Promise<boolean> {
-    const result = await this.db.delete(User).where(eq(User.id, id));
-    return result.length > 0;
+  async delete(id: number): Promise<void> {
+    await this.db.delete(User).where(eq(User.id, id));
   }
 }

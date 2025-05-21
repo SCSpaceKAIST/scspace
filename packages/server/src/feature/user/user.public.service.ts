@@ -1,59 +1,55 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { MUser } from './user.model';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
-import { IUserCreate } from '@scspace-depot/types/user';
+import { IUser } from '@scspace-depot/types/user';
 
 @Injectable()
 export class UserPublicService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async fetchUser(id: number): Promise<MUser> {
-    return await this.userRepository.fetch(id);
+  async fetchById(id: number): Promise<IUser> {
+    if (id === 0) {
+      throw new NotFoundException('User not found');
+    }
+    const user = await this.userRepository.fetch({ id: id });
+    if (user.length === 0) {
+      throw new NotFoundException('User not found');
+    }
+    return MUser.fromDB(user[0]);
   }
 
-  async findUserByStudentNumber(studentNumber: number): Promise<MUser | null> {
-    const users = await this.userRepository.find({ studentNumber });
-    return users.length > 0 ? users[0] : null;
+  async fetchByStudentNumber(studentNumber: number): Promise<IUser> {
+    const user = await this.userRepository.fetch({ studentNumber: studentNumber });
+    if (user.length === 0) { 
+      throw new BadRequestException(`User with student number ${studentNumber} not found.`);
+    }
+    return MUser.fromDB(user[0]);
   }
 
-  async fetchAllByIds(ids: number[]): Promise<MUser[]> {
-    return await this.userRepository.fetchAllByIds(ids);
+  async fetchAllByIds(ids: number[]): Promise<IUser[]> {
+    const uniqueIds = [...new Set(ids)];
+    const users = await this.userRepository.fetch({ ids: uniqueIds });
+    if (users.length !== uniqueIds.length) {
+      throw new NotFoundException('Some users not found');
+    }
+    return users.map(MUser.fromDB);
   }
 
-  async fetchAll(): Promise<MUser[]> {
-    return await this.userRepository.fetchAll();
+  async fetchAll(): Promise<IUser[]> {
+    return (await this.userRepository.fetchAll()).map(MUser.fromDB);
   }
 
-  async find(params: { id?: number; ids?: number[]; studentNumber?: number }): Promise<MUser[]> {
-    return await this.userRepository.find(params);
+  async count(): Promise<number> {
+    return (await this.userRepository.fetchAll()).length;
   }
 
   async isManager(userId: number): Promise<boolean> {
-    const user = await this.fetchUser(userId);
+    const user = await this.fetchById(userId);
     return (
       user.type === UserTypeEnum.MANAGER ||
       user.type === UserTypeEnum.ADMIN
     );
   }
 
-  async checkManager(userId: number): Promise<void> {
-    const flag = await this.isManager(userId);
-    if (!flag) {
-      throw new BadRequestException(`User ID ${userId} is not a manager.`);
-    }
-  }
-
-  async insertUser(user: IUserCreate): Promise<MUser> {
-    return await this.userRepository.insert(user);
-  }
-
-  async getUserCount(): Promise<number> {
-    return (await this.userRepository.find({})).length;
-  }
-
-  async deleteUser(id: number): Promise<boolean> {
-    const result = await this.userRepository.delete(id);
-    return result;
-  }
 }

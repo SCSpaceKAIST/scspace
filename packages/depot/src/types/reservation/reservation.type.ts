@@ -19,7 +19,15 @@ export interface IReservation {
   state: ReservationStateEnum;
 }
 
-export type IReservationResponse = IReservation & {
+export type IReservationAll = IReservation & {
+  space: ISpace;
+  user: IUser;
+  organization: IOrganization;
+};
+
+export type IReservationSimple = Omit<IReservation, "content">;
+
+export type IReservationSimpleAll = IReservationSimple & {
   space: ISpace;
   user: IUser;
   organization: IOrganization;
@@ -27,24 +35,30 @@ export type IReservationResponse = IReservation & {
 
 export type IReservationCreate = Omit<
   IReservation,
-  "id" | "timePost" | "timeEdit" | "timeUpdate" | "state"
+  "id" | "timePost" |  "timeUpdate" | "state"
 >;
 
 export type IReservationUpdate = Omit<
   IReservation,
-  "userId" | "timePost" | "spaceId" | "organizationId" | "timeUpdate" | "state"
+  "timePost" | "spaceId" | "organizationId" | "timePost" | "timeUpdate" | "state"
 >;
 
 // 공간 예약 시간 체크 요청
 export type ISpaceTimeCheckRequest = Pick<
   IReservationCreate,
-  "spaceId" | "organizationId" | "timeFrom" | "timeTo"
+  "spaceId" | "timeFrom" | "timeTo"
 >;
 
 // 사용자 예약 시간 체크 요청
 export type IUserTimeCheckRequest = ISpaceTimeCheckRequest & {
   userId: number;
 };
+
+// userId는 status를 바꾸는 사람의 id (isManager 확인 후 변경 가능하게 할꺼임)
+export type IReservationStatusUpdate = Pick<
+  IReservation,
+  "userId" | "id" | "state"
+>;
 
 export const reservationStateOptions: {
   [key in ReservationStateEnum]: string;

@@ -32,7 +32,3 @@ export type IOrganizationUpdate = Omit<
 export interface IOrganizationUser {
   userId: number;
 };
-
-export interface IDefaultResponse {
-  success: boolean;
-};

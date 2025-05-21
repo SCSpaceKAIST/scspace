@@ -1,11 +1,12 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException, Logger, BadRequestException } from '@nestjs/common';
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
-import { schema, Organization, OrganizationMember } from '@schema';
-import { and, eq, inArray, SQL, InferInsertModel } from 'drizzle-orm';
-import { IOrganization, IOrganizationCreate } from '@scspace-depot/types/organization';
+import { schema, Organization, OrganizationMember, User } from '@schema';
+import { and, eq, inArray, SQL, InferInsertModel, or } from 'drizzle-orm';
+import { IOrganization, IOrganizationCreate, IOrganizationDelegator, IOrganizationUpdate } from '@scspace-depot/types/organization';
 import { MOrganization } from './organization.model';
 import { formatDateToSQL } from '@scspace-server/common/util';
+import { MUser } from '../user/user.model';
 
 @Injectable()
 export class OrganizationRepository {
@@ -13,76 +14,81 @@ export class OrganizationRepository {
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
   ) { }
 
-  async fetch(userId: number): Promise<IOrganization[]>;
-  async fetch(organizationIds: number[]): Promise<IOrganization[]>;
-  async fetch(arg: number | number[]): Promise<IOrganization[]> {
+  async fetch(params: {
+    id?: number;
+    ids?: number[];
+    userId?: number;
+  }): Promise<MOrganization[]> {
     const whereConditions: SQL[] = [];
 
-    if (Array.isArray(arg)) {
-      const uniqueIds = [...new Set(arg)];
+    if (params.id) {
+      whereConditions.push(eq(Organization.id, params.id));
+    }
+    if (params.ids) {
+      const uniqueIds = [...new Set(params.ids)];
       whereConditions.push(inArray(Organization.id, uniqueIds));
-    } else {
-      whereConditions.push(eq(OrganizationMember.userId, arg));
+    }
+    if (params.userId) {
+      whereConditions.push(eq(OrganizationMember.userId, params.userId));
     }
 
     const result = await this.db
       .select()
       .from(Organization)
-      .innerJoin(OrganizationMember, eq(Organization.id, OrganizationMember.organizationId))
+      .leftJoin(OrganizationMember, eq(Organization.id, OrganizationMember.organizationId))
       .where(and(...whereConditions));
 
-    // if (result.length !== 1) {
-    //   throw new NotFoundException('Organization not found');
-    // }
-
-    const organizations = result.map((e) => e.organization);
-
-    return organizations.map((organization) => MOrganization.fromDB(organization));
+    return result.map((e) => e.organization);
   }
 
-  async fetchAll(): Promise<IOrganization[]> {
-    const result = await this.db
+  async fetchAll(): Promise<MOrganization[]> {
+    return await this.db
       .select()
       .from(Organization);
-
-    return result.map((e) => MOrganization.fromDB(e));
   }
 
-  async fetchById(organizationId: number): Promise<IOrganization> {
-    const result = await this.db
-      .select()
-      .from(Organization)
-      .where(eq(Organization.id, organizationId));
+  async insert(organization: IOrganizationCreate): Promise<MOrganization> {
+    const insertData = {
+      name: organization.name,
+      delegatorId: organization.delegatorId,
+      timeRegister: formatDateToSQL(new Date()),
+      timeUpdate: formatDateToSQL(new Date()),
+    } as InferInsertModel<typeof Organization>;
 
-    if (result.length === 0) {
-      throw new NotFoundException('Organization not found');
+    const [result] = await this.db.insert(Organization).values(insertData);
+    if (!result.insertId) {
+      throw new Error('Failed to get inserted ID');
     }
 
-    return MOrganization.fromDB(result[0]);
+    const organizationCreated = await this.fetch({ id: result.insertId });
+    if (organizationCreated.length === 0) {
+      throw new NotFoundException('Organization not found after creation');
+    }
+
+    Logger.log('ADD ORGANIZATION ' + JSON.stringify(organization));
+    return organizationCreated[0];
   }
-  async insert(organization: IOrganizationCreate): Promise<IOrganization> {
-    return await this.db.transaction(async (tx) => {
-      const insertData = {
-        name: organization.name,
-        delegatorId: organization.delegatorId,
-        timeRegister: formatDateToSQL(new Date()),
-        timeUpdate: formatDateToSQL(new Date()),
-      } as InferInsertModel<typeof Organization>;
 
-      const [insertResult] = await tx.insert(Organization).values(insertData);
-      const organizationId = insertResult.insertId;
+  async update(organizationId: number, organization: IOrganization): Promise<MOrganization> {
+    const updateData = {
+      id: organizationId,
+      name: organization.name,
+      delegatorId: organization.delegatorId,
+      timeRegister: organization.timeRegister,
+      timeUpdate: formatDateToSQL(new Date()),
+    } as InferInsertModel<typeof Organization>;
 
-      if (!organizationId) {
-        throw new Error('Failed to insert organization');
-      }
+    const [result] = await this.db.update(Organization).set(updateData).where(eq(Organization.id, organizationId));
+    if (!result.insertId) {
+      throw new Error('Failed to update organization');
+    }
 
-      const [newOrganization] = await tx
-        .select()
-        .from(Organization)
-        .where(eq(Organization.id, organizationId));
+    const organizationUpdated = await this.fetch({ id: organizationId });
+    if (organizationUpdated.length === 0) {
+      throw new NotFoundException('Organization not found after update');
+    }
 
-      return MOrganization.fromDB(newOrganization);
-    });
+    return organizationUpdated[0];
   }
 
   async delete(organizationId: number): Promise<void> {

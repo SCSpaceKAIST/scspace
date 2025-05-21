@@ -8,12 +8,17 @@ import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { IUserCreate } from '@scspace-depot/types/user';
 import { ISpace } from '@scspace-depot/types/space';
 import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
+import { IOrganization, IOrganizationCreate } from '@scspace-depot/types/organization';
+import { OrganizationPublicService } from './feature/organization/organization.public.service';
+import { formatDateToSQL } from './common/util';
+
 @Injectable()
 export class AppService {
   constructor(
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
     private readonly userPublicService: UserPublicService,
     private readonly spacePublicService: SpacePublicService,
+    private readonly organizationPublicService: OrganizationPublicService,
   ) { }
 
   getHello(): string {
@@ -22,7 +27,8 @@ export class AppService {
 
   async fillContent(): Promise<boolean> {
     const spaceCount = await this.spacePublicService.count();
-    const userCount = await this.userPublicService.getUserCount();
+    const userCount = await this.userPublicService.count();
+    const organizationCount = await this.organizationPublicService.count();
 
     if (spaceCount == 0) {
       const spaces: Omit<ISpace, 'id'>[] = [
@@ -87,13 +93,8 @@ export class AppService {
           spaceType: SpaceTypeEnum.WORK,
         },
         {
-          nameKr: '옥상',
-          nameEn: 'Rooftop',
-          spaceType: SpaceTypeEnum.OPEN,
-        },
-        {
-          nameKr: '커뮤니티 마당',
-          nameEn: 'Community Yard',
+          nameKr: '오픈스페이스',
+          nameEn: 'Open Space',
           spaceType: SpaceTypeEnum.OPEN,
         },
         {
@@ -102,13 +103,13 @@ export class AppService {
           spaceType: SpaceTypeEnum.OPEN,
         },
         {
-          nameKr: '모임터',
-          nameEn: 'Meeting Space',
+          nameKr: '1층 로비',
+          nameEn: '1st Floor Lobby',
           spaceType: SpaceTypeEnum.OPEN,
         },
         {
-          nameKr: '로비',
-          nameEn: 'Lobby',
+          nameKr: '2층 로비',
+          nameEn: '2nd Floor Lobby',
           spaceType: SpaceTypeEnum.OPEN,
         },
       ];
@@ -135,6 +136,20 @@ export class AppService {
       });
 
       return true;
+    }
+
+    if (organizationCount == 0) {
+      const organizations: IOrganization = {
+        id: 0,
+        name: 'individual',
+        delegatorId: 1,
+        timeRegister: formatDateToSQL(new Date()),
+        timeUpdate: formatDateToSQL(new Date()),
+        }
+
+      await this.db.transaction(async (tx) => {
+        await tx.insert(schema.Organization).values(organizations);
+      });
     }
   }
 }

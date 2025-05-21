@@ -21,18 +21,6 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
-  @Post('login')
-  async login(
-    @Body('state') state: string,
-    @Body('code') code: string,
-    @Res() res: Response,
-  ): Promise<void> {
-    // Logger.log('login', { state, code });
-    await this.authService.login(state, code, res);
-    // Logger.log('login res:', loginRes);
-    res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
-  }
-
   @Get('login')
   async loginGet(
     @Res() res: Response,
@@ -57,14 +45,6 @@ export class AuthController {
       .json({ isLogined: !!verifyRes, userInfo: verifyRes });
   }
 
-  @Post('logout')
-  async logout(@Res() res: Response): Promise<void> {
-    console.log('logout');
-    res.clearCookie('scspacetoken1', { path: '/' });
-
-    return res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
-  }
-
   @UseGuards(JwtAuthGuard)
   @Get('idJwt')
   getUserIdWithJWT(@Req() req) {
@@ -72,5 +52,25 @@ export class AuthController {
 
     return 1;
     //return this.userService.getUserNameWithToken();
+  }
+
+  @Post('login')
+  async login(
+    @Body('state') state: string,
+    @Body('code') code: string,
+    @Res() res: Response,
+  ): Promise<void> {
+    // Logger.log('login', { state, code });
+    await this.authService.login(state, code, res);
+    // Logger.log('login res:', loginRes);
+    res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
+  }
+
+  @Post('logout')
+  async logout(@Res() res: Response): Promise<void> {
+    console.log('logout');
+    res.clearCookie('scspacetoken1', { path: '/' });
+
+    return res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
   }
 }

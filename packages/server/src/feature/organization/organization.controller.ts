@@ -1,59 +1,72 @@
 import { Controller, Get, Post, Delete, Put, Param, ParseIntPipe, Body } from '@nestjs/common';
 import { OrganizationService } from './organization.service';
-import { IDefaultResponse, IOrganization, IOrganizationCreate, IOrganizationDelegator, IOrganizationUser } from '@scspace-depot/types/organization';
+import { IOrganization, IOrganizationAll, IOrganizationCreate, IOrganizationDelegator, IOrganizationMember, IOrganizationUpdate, IOrganizationUser } from '@scspace-depot/types/organization';
 import { MOrganizationMember } from './organization.member.model';
+import { ISuccessResponse } from '@scspace-depot/types/common';
+import { OrganizationPublicService } from './organization.public.service';
 
 @Controller('organization')
 export class OrganizationController {
-  constructor(private readonly organizationService: OrganizationService) { }
+  constructor(
+    private readonly organizationService: OrganizationService,
+    private readonly organizationPublicService: OrganizationPublicService,
+  ) { }
 
-  // HOOK: useOrganization 
-  @Get('user/:userId')
-  async getOrganizationsByUserId(@Param('userId', ParseIntPipe) userId: number): Promise<IOrganization[]> {
-    return await this.organizationService.getOrganizationsByUserId(userId);
-  }
-
+  // HOOK: useOrganizationAPI
   @Get()
-  async getOrganizations(): Promise<IOrganization[]> {
-    return await this.organizationService.getOrganizations();
+  async getOrganizations(): Promise<IOrganizationDelegator[]> {
+    return await this.organizationService.getAll();
   }
 
   // HOOK: useOrganizationDetail
   @Get(':id')
-  async getOrganization(
+  async getOrganizationById(
     @Param('id', ParseIntPipe) organizationId: number,
-  ): Promise<IOrganizationDelegator> {
-    return await this.organizationService.getOrganizationById(organizationId);
+  ): Promise<IOrganizationAll> {
+    return await this.organizationService.getDeepById(organizationId);
   }
 
-  // HOOK: useOrganizationAPI
+  // HOOK: useOrganization 
+  @Get('user/:id')
+  async getOrganizationsByUserId(@Param('id', ParseIntPipe) id: number): Promise<IOrganizationDelegator[]> {
+    return await this.organizationPublicService.fetchByUserId(id);
+  }
+
   @Post()
   async createOrganization(
     @Body() organization: IOrganizationCreate,
   ): Promise<IOrganization> {
-    return await this.organizationService.createOrganization(organization);
+    return await this.organizationService.insert(organization);
+  }
+
+  @Put(':id')
+  async updateOrganization(
+    @Param('id', ParseIntPipe) organizationId: number,
+    @Body() organizationNew: IOrganizationUpdate,
+  ): Promise<IOrganization> {
+    return await this.organizationService.update(organizationId, organizationNew);
+  }
+
+  @Put(':id/add/')
+  async addMember(
+    @Param('id', ParseIntPipe) organizationId: number,
+    @Body() oid: IOrganizationUser,
+  ): Promise<MOrganizationMember> {
+    return await this.organizationService.insertMember(organizationId, oid.userId);
+  }
+
+  @Put(':id/delete/')
+  async removeMember(
+    @Param('id', ParseIntPipe) organizationId: number,
+    @Body() oid: IOrganizationUser,
+  ): Promise<ISuccessResponse> {
+    return await this.organizationService.deleteMember(organizationId, oid.userId);
   }
 
   @Delete(':id')
   async deleteOrganization(
     @Param('id', ParseIntPipe) organizationId: number
-  ): Promise<IDefaultResponse> {
-    return await this.organizationService.deleteOrganization(organizationId);
-  }
-
-  @Put(':id/add-member/')
-  async addMember(
-    @Param('id', ParseIntPipe) organizationId: number,
-    @Body() oid: IOrganizationUser,
-  ): Promise<MOrganizationMember> {
-    return await this.organizationService.addMember(organizationId, oid.userId);
-  }
-
-  @Put(':id/remove-member/')
-  async removeMember(
-    @Param('id', ParseIntPipe) organizationId: number,
-    @Body() oid: IOrganizationUser,
-  ): Promise<IDefaultResponse> {
-    return await this.organizationService.removeMember(organizationId, oid.userId);
+  ): Promise<ISuccessResponse> {
+    return await this.organizationService.delete(organizationId);
   }
 } 
