@@ -45,7 +45,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           href="https://cdn3.devexpress.com/jslib/22.1.4/css/dx.light.css"
         />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <Providers>
           <Flex
             width="100vw"

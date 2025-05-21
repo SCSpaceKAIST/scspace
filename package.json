@@ -36,6 +36,7 @@
   "dependencies": {
     "@chakra-ui/next-js": "^2.4.2",
     "@chakra-ui/react": "^3.19.1",
+    "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@fullcalendar/core": "^6.1.17",
     "@fullcalendar/daygrid": "^6.1.17",

@@ -13,15 +13,20 @@ import {
   Float,
   Spinner,
   VStack,
-  Button
+  Button,
+  DataList,
+  Separator,
+  Fieldset,
+  Field
 } from "@chakra-ui/react";
 import Scroll from "../_commons/Scroll";
 import SelectComponent from "../Reservation/forms/utils/Select";
 import { DateForm } from "../Reservation/forms";
-import { useDateReservations } from "@scspace-client/Hooks/reservation";
+import { useDateReservations, useReservations } from "@scspace-client/Hooks/reservation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAllSpace } from "@scspace-client/Hooks/space";
 import LoadingComponent from "../Loading/Loading";
+import { IReservationAll } from "@scspace-depot/types/reservation";
 
 function SpaceSelect({ setSpaceId }: {
   setSpaceId: Dispatch<SetStateAction<number>>;
@@ -83,12 +88,29 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
   dateFrom: Date;
   dateTo: Date;
 }) {
-  const { reservation, refetch } = useDateReservations({ spaceId, dateFrom, dateTo, });
-  const dates = Object.keys(reservation);
+  const { dateReservation, refetch } = useDateReservations({ spaceId, dateFrom, dateTo, });
+  const dates = Object.keys(dateReservation);
   const times = Array.from({ length: 24 }, (_, i) => i);
   const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => { refetch() }, [refetchCounter]);
+
+  const [selected, setSelected] = useState<number>(0);
+  const { reservations, refetch: refetchDetail } = useReservations({ spaceId, dateFrom, dateTo });
+  const [selectedRes, setSelectedRes] = useState<IReservationAll | null>(null);
+
+  useEffect(() => {
+    if (!reservations) {
+      setSelectedRes(null);
+      return;
+    }
+    const filtered = reservations.filter(r => (r.id === selected));
+    if (filtered.length === 0) {
+      setSelectedRes(null);
+      return;
+    }
+    setSelectedRes(filtered[0]);
+  }, [selected]);
 
   return (
     <>
@@ -102,11 +124,162 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
           <Dialog.Backdrop />
           <Dialog.Positioner onClick={() => setOpen(false)}>
             <Dialog.Content>
-              Reservation Detail
+              <Center margin={8}>
+                {selectedRes ? (
+                  <Fieldset.Root>
+                    <Fieldset.Legend>
+                      Reservation Detail
+                    </Fieldset.Legend>
+                    <Fieldset.Content>
+                      <DataList.Root orientation="horizontal" width="100%">
+                        <DataList.Item gap={0}>
+                          <DataList.ItemLabel>
+                            Title
+                          </DataList.ItemLabel>
+                          <DataList.ItemValue margin={0}>
+                            {selectedRes.title}
+                          </DataList.ItemValue>
+                        </DataList.Item>
+                        <DataList.Item gap={0}>
+                          <DataList.ItemLabel>
+                            Description
+                          </DataList.ItemLabel>
+                          <DataList.ItemValue margin={0}>
+                            {selectedRes.content.description}
+                          </DataList.ItemValue>
+                        </DataList.Item>
+                        <Separator />
+                        <DataList.Item gap={0} alignItems="start">
+                          <DataList.ItemLabel>
+                            Content
+                          </DataList.ItemLabel>
+                          <DataList.ItemValue margin={0} >
+                            <DataList.Root orientation="horizontal" margin={0} >
+                              <DataList.Item gap={0}>
+                                <DataList.ItemLabel>
+                                  # of Internal
+                                </DataList.ItemLabel>
+                                <DataList.ItemValue margin={0} >
+                                  {selectedRes.content.innerParticipantNumber}
+                                </DataList.ItemValue>
+                              </DataList.Item>
+                              <DataList.Item gap={0}>
+                                <DataList.ItemLabel>
+                                  # of External
+                                </DataList.ItemLabel>
+                                <DataList.ItemValue margin={0} >
+                                  {selectedRes.content.outerParticipantNumber}
+                                </DataList.ItemValue>
+                              </DataList.Item>
+                              <DataList.Item gap={0}>
+                                <DataList.ItemLabel>
+                                  Food Info
+                                </DataList.ItemLabel>
+                                <DataList.ItemValue margin={0}>
+                                  {(selectedRes.content.food === "") ? (
+                                    <Text margin={0} padding={0} color="bg.emphasized">
+                                      Did Not Entered
+                                    </Text>
+                                  ) : (selectedRes.content.food)}
+                                </DataList.ItemValue>
+                              </DataList.Item>
+                              <DataList.Item gap={0}>
+                                <DataList.ItemLabel>
+                                  # of Desk
+                                </DataList.ItemLabel>
+                                <DataList.ItemValue margin={0} >
+                                  {selectedRes.content.desk}
+                                </DataList.ItemValue>
+                              </DataList.Item>
+                              <DataList.Item gap={0}>
+                                <DataList.ItemLabel>
+                                  # of Chair
+                                </DataList.ItemLabel>
+                                <DataList.ItemValue margin={0} >
+                                  {selectedRes.content.chair}
+                                </DataList.ItemValue>
+                              </DataList.Item>
+                              <DataList.Item gap={0}>
+                                <DataList.ItemLabel>
+                                  # of Worker
+                                </DataList.ItemLabel>
+                                <DataList.ItemValue margin={0} >
+                                  {selectedRes.content.workerNeed}
+                                </DataList.ItemValue>
+                              </DataList.Item>
+                              {(selectedRes.spaceId === 11) && (
+                                <DataList.Item gap={0}>
+                                  <DataList.ItemLabel>
+                                    Lobby
+                                  </DataList.ItemLabel>
+                                  <DataList.ItemValue margin={0} >
+                                    {selectedRes.content.lobby ? "Yes" : "No"}
+                                  </DataList.ItemValue>
+                                </DataList.Item>
+                              )}
+                              {(selectedRes.spaceId === 13) && (
+                                <DataList.Item gap={0}>
+                                  <DataList.ItemLabel>
+                                    Busking Zone
+                                  </DataList.ItemLabel>
+                                  <DataList.ItemValue margin={0} >
+                                    {selectedRes.content.busking ? "Yes" : "No"}
+                                  </DataList.ItemValue>
+                                </DataList.Item>
+                              )}
+                            </DataList.Root>
+                          </DataList.ItemValue>
+                        </DataList.Item>
+                        <Separator />
+                        <DataList.Item gap={0}>
+                          <DataList.ItemLabel>
+                            Time
+                          </DataList.ItemLabel>
+                          <DataList.ItemValue margin={0} >
+                            {selectedRes.timeFrom} - {selectedRes.timeTo}
+                          </DataList.ItemValue>
+                        </DataList.Item>
+                        <DataList.Item gap={0}>
+                          <DataList.ItemLabel>
+                            Space
+                          </DataList.ItemLabel>
+                          <DataList.ItemValue margin={0} >
+                            {selectedRes.space.nameKr} ({selectedRes.space.nameEn})
+                          </DataList.ItemValue>
+                        </DataList.Item>
+                        <DataList.Item gap={0}>
+                          <DataList.ItemLabel>
+                            Booker
+                          </DataList.ItemLabel>
+                          <DataList.ItemValue margin={0} >
+                            {(selectedRes.organizationId === 1) ? (
+                              selectedRes.user.nameKr
+                            ) : (
+                              selectedRes.organization.name
+                            )}
+                          </DataList.ItemValue>
+                        </DataList.Item>
+                      </DataList.Root>
+                    </Fieldset.Content>
+                    <Fieldset.HelperText>
+                      <Stack gap={0} width="100%" alignContent="end">
+                        <Text margin={0} padding={0} textAlign="end">
+                          Post Time: {selectedRes.timePost}
+                        </Text>
+                        <Text margin={0} padding={0} textAlign="end">
+                          Last Update: {selectedRes.timeUpdate}
+                        </Text>
+                      </Stack>
+                    </Fieldset.HelperText>
+                  </Fieldset.Root>
+                ) : (
+                  <LoadingComponent />
+                )}
+              </Center>
             </Dialog.Content>
           </Dialog.Positioner>
         </Portal>
-      </Dialog.Root>
+      </Dialog.Root >
       <Box
         id="scroll"
         position="relative"
@@ -121,7 +294,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
         borderTopWidth="1px"
       >
         <Grid
-          templateColumns={`auto repeat(${Object.keys(reservation).length}, 1fr)`}
+          templateColumns={`auto repeat(${Object.keys(dateReservation).length}, 1fr)`}
           templateRows="auto repeat(24, 1fr)"
           gap={0}
           minW="max-content"
@@ -189,7 +362,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
           {/* Now the actual day slots */}
           {dates.map((date, ci) =>
             times.map((hour, ri) => {
-              const slot = reservation[date].find(
+              const slot = dateReservation[date].find(
                 (r) => r.hourFrom <= hour && r.hourTo > hour
               );
               if (!slot) {
@@ -220,7 +393,10 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                       asChild
                       rounded="0"
                       variant="ghost"
-                      onClick={() => setOpen(true)}
+                      onClick={() => {
+                        setSelected(slot.id);
+                        setOpen(true)
+                      }}
                     >
                       <VStack
                         height="100%"
