@@ -7,7 +7,8 @@ import {
     Wrap,
     IconButton,
     DataList,
-    HStack
+    HStack,
+    Text
 } from "@chakra-ui/react";
 import { useOrganizationDetail } from "@scspace-client/Hooks/organization";
 import LoadingComponent from "../Loading/Loading";
@@ -15,6 +16,7 @@ import { HiOutlineRefresh } from "react-icons/hi";
 
 import Member from "./Member";
 import DeleteBtn from "./DeleteBtn";
+import AddMemberBtn from "./AddMemberBtn";
 
 export default function OrganizationDetail({ id, onDelete }: {
     id: number;
@@ -72,7 +74,12 @@ export default function OrganizationDetail({ id, onDelete }: {
                     </DataList.Item>
                     <DataList.Item>
                         <DataList.ItemLabel>
-                            Members
+                            <HStack gap={2}>
+                                <Text margin={0} padding={0}>
+                                    Members
+                                </Text>
+                                <AddMemberBtn oid={organizationDetail.id} refetch={refetch} />
+                            </HStack>
                         </DataList.ItemLabel>
                         <DataList.ItemValue margin={0}>
                             <Wrap>

@@ -13,7 +13,7 @@ export default function NewOrganizationBtn({ uid, onSuccess }: {
     const inputRef = useRef<HTMLInputElement>(null);
     const [name, setName] = useState<string>("");
     const [open, setOpen] = useState<boolean>(false);
-    const generateOrganization = useOrganizationAPI().generateOrg;
+    const generateOrganization = useOrganizationAPI().createOrg;
 
     return (
         <Dialog.Root

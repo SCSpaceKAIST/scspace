@@ -1,19 +1,37 @@
 "use client"
 
-import { IDefaultResponse, IOrganization, IOrganizationCreate, IOrganizationMember, IOrganizationResponse, IOrganizationUser } from "@scspace-depot/types/organization";
+import {
+    IOrganization,
+    IOrganizationAll,
+    IOrganizationCreate,
+    IOrganizationDelegator,
+    IOrganizationMember,
+    IOrganizationUpdate,
+    IOrganizationUser,
+} from "@scspace-depot/types/organization";
 import { useEffect, useState } from "react";
 import { useMutationApi, useQueryApi } from "./useAPI";
+import { ISuccessResponse } from "@scspace-depot/types/common/common.type";
 
-export function useOrganization({ uid }: { uid?: number }) {
-    const [query, setQuery] = useState<string>("/organization/");
-    const [organization, setOrganization] = useState<IOrganization[] | null>(null);
-
-    const { data, isLoading, refetch } = useQueryApi<IOrganization[]>(query);
+export function useAllOrganization() {
+    const [organization, setOrganization] = useState<IOrganizationDelegator[] | null>(null);
+    const { data, isLoading, refetch } = useQueryApi<IOrganizationDelegator[]>("/organization/");
 
     useEffect(() => {
-        if (uid) setQuery(`/organization/user/${uid}`);
-        else setQuery("/organization")
-    }, [uid])
+        if (!data) {
+            setOrganization(null);
+            return;
+        }
+
+        setOrganization(data);
+    }, [data])
+
+    return { organization, isLoading, refetch };
+}
+
+export function useOrganization({ uid }: { uid?: number }) {
+    const [organization, setOrganization] = useState<IOrganizationDelegator[] | null>(null);
+    const { data, isLoading, refetch } = useQueryApi<IOrganizationDelegator[]>(`/organization/user/${uid}`);
 
     useEffect(() => {
         if (!data) {
@@ -28,9 +46,8 @@ export function useOrganization({ uid }: { uid?: number }) {
 }
 
 export function useOrganizationDetail({ id }: { id: number }) {
-    const [organizationDetail, setOrganizationDetail] = useState<IOrganizationResponse | null>(null);
-
-    const { data, isLoading, refetch } = useQueryApi<IOrganizationResponse>(`/organization/${id}`);
+    const [organizationDetail, setOrganizationDetail] = useState<IOrganizationAll | null>(null);
+    const { data, isLoading, refetch } = useQueryApi<IOrganizationAll>(`/organization/${id}`);
 
     useEffect(() => {
         if (!data) {
@@ -47,32 +64,39 @@ export function useOrganizationDetail({ id }: { id: number }) {
 export function useOrganizationAPI(oid?: { id: number }) {
     const id = oid?.id ?? null;
 
-    const newOrg = useMutationApi<IOrganization, IOrganizationCreate>(
+    const postOrg = useMutationApi<IOrganization, IOrganizationCreate>(
         "/organization/",
         "POST"
     );
-    const generateOrg = newOrg.mutate;
+    const createOrg = postOrg.mutate;
 
-    const delOrg = useMutationApi<IDefaultResponse, {}>(
+    const putOrg = useMutationApi<IOrganization, IOrganizationCreate>(
+        `/organization/${id}`,
+        "PUT"
+    );
+    const updateOrg = putOrg.mutate;
+
+    const addOrgMember = useMutationApi<IOrganizationMember, IOrganizationUser>(
+        `/organization/${id}/add`,
+        "PUT"
+    );
+    const addMember = addOrgMember.mutate;
+
+    const rmvOrgMember = useMutationApi<ISuccessResponse, IOrganizationUser>(
+        `/organization/${id}/delete`,
+        "PUT"
+    );
+    const removeMember = rmvOrgMember.mutate;
+
+    const delOrg = useMutationApi<IOrganization, {}>(
         `/organization/${id}`,
         "DELETE"
     );
     const deleteOrg = delOrg.mutate;
 
-    const rmvOrgMember = useMutationApi<IDefaultResponse, IOrganizationUser>(
-        `/organization/${id}/remove-member`,
-        "PUT"
-    );
-    const removeMember = rmvOrgMember.mutate;
-
-    const addOrgMember = useMutationApi<IOrganizationMember, IOrganizationUser>(
-        `/organization/${id}/add-member`,
-        "PUT"
-    );
-    const addMember = addOrgMember.mutate;
-
     return {
-        generateOrg,
+        createOrg,
+        updateOrg,
         deleteOrg,
         removeMember,
         addMember,

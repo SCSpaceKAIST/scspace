@@ -4,6 +4,7 @@ import { Flex, Text, Field, } from "@chakra-ui/react";
 import { IUser } from "@scspace-depot/types/user";
 
 import DeleteMemberBtn from "./DeleteMemberBtn";
+import React from "react";
 
 export default function Member({ refetch, oid, user, deletable = false, showDeleteButton = true }: {
     refetch: () => any;

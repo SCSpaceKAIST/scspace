@@ -15,7 +15,40 @@ export function useUserInfo({ uid }: { uid: Number }) {
         }
 
         setUserInfo(data);
-    }, [uid]);
+    }, [uid, data]);
 
     return { userInfo, isLoading, refetch };
+}
+
+export function useAllUser() {
+    const { data, isLoading, refetch } = useQueryApi<IUser[]>(`/user/`);
+    const [users, setUsers] = useState<IUser[] | null>(null);
+
+    useEffect(() => {
+        if (!data) {
+            setUsers(null);
+            return;
+        }
+
+        setUsers(data);
+    }, [data]);
+
+    return { users, isLoading, refetch };
+}
+
+export function useStudent({ studentNumber }: { studentNumber: string }) {
+    const { data, isLoading, refetch } = useQueryApi<IUser>(`/user/studentNumber/${studentNumber}`);
+    const [student, setStudent] = useState<IUser | null>(null);
+
+    useEffect(() => {
+        if (!data) {
+            setStudent(null);
+            return;
+        }
+
+        setStudent(data);
+    }, [studentNumber, data]);
+
+    return { student, isLoading, refetch };
+
 }

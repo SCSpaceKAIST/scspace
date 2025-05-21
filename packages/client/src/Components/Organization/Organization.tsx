@@ -51,16 +51,11 @@ export default function Organization() {
                             justify="space-between"
                             alignItems="end"
                         >
-                            <Text
-                                margin={0}
-                                color="gray.focusRing"
-                            >
+                            <Text margin={0} color="gray.focusRing">
                                 Click each row to see detail of organization
                             </Text>
                             <HStack>
-                                <TooltipComponent
-                                    content="Refresh"
-                                >
+                                <TooltipComponent content="Refresh">
                                     <IconButton
                                         rounded="sm"
                                         variant="ghost"

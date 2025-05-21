@@ -9,8 +9,9 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly userPublicService: UserPublicService,
-  ) {}
+  ) { }
 
+  //HOOK: useUserInfo
   @Get(':id')
   async getUserById(@Param('id', ParseIntPipe) id: number): Promise<IUser> {
     return await this.userPublicService.fetchById(id);

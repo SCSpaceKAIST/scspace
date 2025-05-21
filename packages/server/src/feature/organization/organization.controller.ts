@@ -12,10 +12,16 @@ export class OrganizationController {
     private readonly organizationPublicService: OrganizationPublicService,
   ) { }
 
-  // HOOK: useOrganizationAPI
+  // HOOK: useAllOrganization
   @Get()
   async getOrganizations(): Promise<IOrganizationDelegator[]> {
     return await this.organizationService.getAll();
+  }
+
+  // HOOK: useOrganization 
+  @Get('user/:id')
+  async getOrganizationsByUserId(@Param('id', ParseIntPipe) id: number): Promise<IOrganizationDelegator[]> {
+    return await this.organizationPublicService.fetchByUserId(id);
   }
 
   // HOOK: useOrganizationDetail
@@ -26,12 +32,7 @@ export class OrganizationController {
     return await this.organizationService.getDeepById(organizationId);
   }
 
-  // HOOK: useOrganization 
-  @Get('user/:id')
-  async getOrganizationsByUserId(@Param('id', ParseIntPipe) id: number): Promise<IOrganizationDelegator[]> {
-    return await this.organizationPublicService.fetchByUserId(id);
-  }
-
+  // HOOK: useOrganizationAPI
   @Post()
   async createOrganization(
     @Body() organization: IOrganizationCreate,

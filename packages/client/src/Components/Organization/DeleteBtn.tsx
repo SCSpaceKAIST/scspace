@@ -24,8 +24,8 @@ export default function DeleteBtn({ id, onSuccess }: {
                 </Button>
             </Dialog.Trigger>
             <Portal>
-                <Dialog.Backdrop />
-                <Dialog.Positioner>
+                <Dialog.Backdrop zIndex={1500} />
+                <Dialog.Positioner zIndex={1600}>
                     <Dialog.Content>
                         <Dialog.Header>
                             <Dialog.Title>Are you sure?</Dialog.Title>

@@ -76,7 +76,7 @@ export function useReservations({ spaceId, dateFrom, dateTo, }: {
                 _reservation[dF].push(format({ d: d, hF: tF.getHours(), hT: tT.getHours() }));
             } else {
                 if (tF.getDate() >= dateFrom.getDate()) {
-                    _reservation[dF].push(format({ d: d, hF: tF.getHours(), hT: 23 }));
+                    _reservation[dF].push(format({ d: d, hF: tF.getHours(), hT: 24 }));
                 }
                 if (tT.getDate() <= dateTo.getDate()) {
                     _reservation[dT].push(format({ d: d, hF: 0, hT: tT.getHours() }));
@@ -87,7 +87,7 @@ export function useReservations({ spaceId, dateFrom, dateTo, }: {
 
                 while (_temp.getDate() + 1 <= tT.getDate()) {
                     const midKey = _temp.toDateString();
-                    _reservation[midKey].push(format({ d, hF: 0, hT: 23 }));
+                    _reservation[midKey].push(format({ d, hF: 0, hT: 24 }));
                     _temp.setDate(_temp.getDate() + 1);
                 }
             }

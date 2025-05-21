@@ -9,31 +9,30 @@ import {
   GridItem,
   IconButton,
   Portal,
-  Separator,
   Stack,
   Text,
   Alert,
   CloseButton,
   Float,
   Circle,
-  Spinner
+  Spinner,
+  DataList,
+  VStack,
+  Button
 } from "@chakra-ui/react";
 import Scroll from "../_commons/Scroll";
-import SelectComponent, { ISelectOption } from "../Reservation/forms/utils/Select";
+import SelectComponent from "../Reservation/forms/utils/Select";
 import { DateForm } from "../Reservation/forms";
-import { IRes, IReservationHookRes, useReservations } from "@scspace-client/Hooks/reservation";
+import { useReservations } from "@scspace-client/Hooks/reservation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
 import { useAllSpace } from "@scspace-client/Hooks/space";
+import LoadingComponent from "../Loading/Loading";
 
 function SpaceSelect({ setSpaceId }: {
   setSpaceId: Dispatch<SetStateAction<number>>;
 }) {
   const { spaces } = useAllSpace();
-
-  function onChange(e: ISelectOption) {
-    setSpaceId(parseInt(e.value));
-  }
 
   return (spaces ? (
     <SelectComponent
@@ -45,7 +44,7 @@ function SpaceSelect({ setSpaceId }: {
           value: s.id.toString()
         }
       })}
-      onChange={onChange}
+      onChange={(e) => setSpaceId(parseInt(e.value))}
     />
   ) : (
     <Center bg="bg.muted" rounded="sm" height="100%">
@@ -84,270 +83,239 @@ function stringToColor(str: string): string {
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-function Day({ RESs }: { RESs: IRes[] }) {
-  if (RESs.length === 0) {
-    const temp = [];
-    for (let i = 0; i < 24; i += 1) temp.push(i);
-
-    return (
-      <Grid
-        width="100%"
-        templateRows="repeat(24, 1fr)"
-        margin={0}
-      >
-        {temp.map((_, i) => {
-          return (
-            <GridItem
-              key={i}
-              width="100%"
-            >
-              <Separator />
-              <Box
-                width="100%"
-                height="64px"
-                padding={1}
-                textAlign="end"
-                alignContent="end"
-              >
-                <Text
-                  padding={0}
-                  margin={0}
-                  color="gray.focusRing"
-                >
-                  {(i + 1).toString().padStart(2, '0')}:00
-                </Text>
-              </Box>
-            </GridItem>
-          );
-        })}
-      </Grid>
-    );
-  }
-
-  const _RESs: (number | {
-    data: IRes;
-    color: string;
-  })[] = [];
-  let count = 0;
-  for (let i = 0; i < 24; i += 1) {
-    if (RESs[count] && (i === RESs[count].hourFrom)) {
-      _RESs.push({ data: RESs[count], color: stringToColor(RESs[count].title) });
-      i = RESs[count].hourTo;
-      count += 1;
-    } else _RESs.push(i);
-  }
-
-  return (
-    <Grid
-      width="100%"
-      templateRows="repeat(24, 1fr)"
-      margin={0}
-    >
-      {_RESs.map((r, j) => ((typeof r !== "number") ? (
-        <GridItem
-          rowSpan={r.data.hourTo + 1 - r.data.hourFrom}
-          width="100%"
-          key={r.data.title + " - " + j.toString()}
-          bg={r.color}
-        >
-          <Separator />
-          <Center
-            width="100%"
-            height="100%"
-          >
-            {
-              r.data.title
-            }
-          </Center>
-        </GridItem>
-      ) : (
-        <GridItem
-          key={j}
-          width="100%"
-        >
-          <Separator />
-          <Box
-            width="100%"
-            height="64px"
-            padding={1}
-            textAlign="end"
-            alignContent="end"
-          >
-            <Text
-              padding={0}
-              margin={0}
-              color="gray.focusRing"
-            >
-              {(r + 1).toString().padStart(2, '0')}:00
-            </Text>
-          </Box>
-        </GridItem>
-      )))}
-    </Grid>
-  );
-}
-
 export function CalendarView({ spaceId, dateFrom, dateTo }: {
   spaceId: number;
   dateFrom: Date;
   dateTo: Date;
 }) {
-  const { reservation } = useReservations({
-    spaceId: spaceId,
-    dateFrom: dateFrom,
-    dateTo: dateTo,
-  });
+  const { reservation } = useReservations({ spaceId, dateFrom, dateTo, });
+  const dates = Object.keys(reservation);
+  const times = Array.from({ length: 24 }, (_, i) => i);
+  const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <Box
-      id="scroll"
-      overflow="auto"
-      scrollBehavior="smooth"
-      minH={0}
-      minW={0}
-      maxH="100%"
-      maxW="100%"
-      rounded="sm"
-      borderWidth="1px"
-    >
-      <Grid
-        templateColumns={`repeat(${Object.keys(reservation).length}, 1fr)`}
-        gap={0}
+    <>
+      <Dialog.Root
+        role="alertdialog"
+        open={open}
+        onOpenChange={(e) => setOpen(e.open)}
+        size="cover"
       >
-        {Object.keys(reservation).map((k, i) => (
-          <Stack
-            direction="row"
-            minW="32vh"
-            key={i}
-            gap={0}
-          >
-            {(i > 0) && <Separator orientation="vertical" height="100%" />}
-            <Stack
-              width="100%"
-              gap={0}
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner onClick={() => setOpen(false)}>
+            <Dialog.Content>
+              Reservation Detail
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
+      <Box
+        id="scroll"
+        position="relative"
+        overflowX="auto"
+        overflowY="auto"
+        minH={0}
+        minW={0}
+        maxH="100%"
+        maxW="100%"
+        rounded="sm"
+        borderLeftWidth="1px"
+        borderTopWidth="1px"
+      >
+        <Grid
+          templateColumns={`auto repeat(${Object.keys(reservation).length}, 1fr)`}
+          templateRows="auto repeat(24, 1fr)"
+          gap={0}
+          minW="max-content"
+        >
+          <GridItem
+            rowStart={1}
+            colStart={1}
+            bg="bg.muted"
+            position="sticky"
+            top={0}
+            left={0}
+            zIndex={3}
+            borderBottomWidth="1px"
+            borderRightWidth="1px"
+          />
+
+          {/* Date headers */}
+          {dates.map((date, i) => (
+            <GridItem
+              key={date}
+              rowStart={1}
+              colStart={i + 2}      // shift right by 1
+              bg="bg.muted"
+              position="sticky"
+              top={0}
+              zIndex={1}
+              borderBottomWidth="1px"
+              borderRightWidth="1px"
+              textAlign="center"
             >
-              <Center>
-                <Text
-                  margin={1}
-                  padding={0}
-                >
-                  {k}
+              <Text fontWeight="semibold" mx={0} my={2} padding={0}>
+                {date}
+              </Text>
+            </GridItem>
+          ))}
+
+          {/* Time labels in first column */}
+          {times.map((hour) => (
+            <GridItem
+              key={hour}
+              rowStart={hour + 2}   // shift down by 1
+              colStart={1}
+              bg="bg.muted"
+              position="sticky"
+              left={0}
+              zIndex={1}
+              borderRightWidth="1px"
+              borderBottomWidth={(hour === 23) ? "1px" : "0"}
+            >
+              <Center height="100%" mx={3} color="bg.muted">
+                <Text fontSize="sm" margin={0} padding={0} visibility="hidden">
+                  00:00
                 </Text>
+                {(hour > 0) && (
+                  <Float placement="top-center">
+                    <Text fontSize="sm" margin={0} padding={0} color="black">
+                      {hour.toString().padStart(2, "0")}:00
+                    </Text>
+                  </Float>
+                )}
               </Center>
-              <Day RESs={reservation[k]} />
-            </Stack>
-          </Stack>
-        ))}
-      </Grid>
-    </Box>
+            </GridItem>
+          ))}
+
+          {/* Now the actual day slots */}
+          {dates.map((date, ci) =>
+            times.map((hour, ri) => {
+              const slot = reservation[date].find(
+                (r) => r.hourFrom <= hour && r.hourTo > hour
+              );
+              if (!slot) {
+                return (
+                  <GridItem
+                    key={`${date}-${hour}`}
+                    rowStart={hour + 2}
+                    colStart={ci + 2}
+                    borderBottomWidth="1px"
+                    borderRightWidth="1px"
+                    // minW="32vh"
+                    height="64px"
+                  />
+                );
+              } else if (slot.hourFrom === hour) {
+                // span multi-hour bookings
+                return (
+                  <GridItem
+                    key={`${date}-${hour}`}
+                    rowStart={hour + 2}
+                    colStart={ci + 2}
+                    rowSpan={slot.hourTo - slot.hourFrom}
+                    bg={stringToColor(slot.title)}
+                    borderBottomWidth="1px"
+                    borderRightWidth="1px"
+                  >
+                    <Button
+                      asChild
+                      rounded="0"
+                      variant="ghost"
+                      onClick={() => setOpen(true)}
+                    >
+                      <VStack
+                        height="100%"
+                        width="100%"
+                        margin={0}
+                        padding={0}
+                        gap={0}
+                        justifyContent="center"
+                      >
+                        <Text margin={0} padding={0} fontSize="lg" fontWeight="semibold">
+                          공간위 개발
+                        </Text>
+                        <Text margin={0} padding={0} fontSize="sm">
+                          학생문화공간위원회
+                        </Text>
+                      </VStack>
+                    </Button>
+                  </GridItem>
+                );
+              }
+              // we skip rendering rows that are covered by a span
+              return null;
+            })
+          )}
+        </Grid>
+      </Box>
+    </>
   );
 }
 
 export default function Calendar() {
-  const [dateFrom, setDateFrom] = useState<Date>(() => new Date());
-  const [dateTo, setDateTo] = useState<Date>(() => new Date());
+  const [date, setDate] = useState<Date>(() => new Date());
   const [spaceId, setSpaceId] = useState<number>(1);
 
   const [searchData, setSearchData] = useState<{
     spaceId: number;
     dateFrom: Date,
     dateTo: Date
-  }>({
-    spaceId: spaceId,
-    dateFrom: dateFrom,
-    dateTo: dateTo
-  });
-  const [alertOpen, setAlertOpen] = useState<boolean>(false);
+  } | null>(null);
 
-  function search() {
-    if ((new Date(dateTo.valueOf() - dateFrom.valueOf())).getDate() > 14) {
-      setAlertOpen(true);
-    } else {
-      setSearchData({
-        spaceId: spaceId,
-        dateFrom: dateFrom,
-        dateTo: dateTo
-      });
-    }
-  }
+  useEffect(() => {
+    const dS = new Date(date);
+    const dE = new Date(date);
+    const d = date.getDay();
+
+    dS.setDate(dS.getDate() - d);
+    dE.setDate(dS.getDate() + 6);
+
+    setSearchData({
+      spaceId: spaceId,
+      dateFrom: dS,
+      dateTo: dE
+    });
+  }, [spaceId, date.getTime()]);
 
   return (
-    <>
-      <Dialog.Root
-        role="alertdialog"
-        open={alertOpen}
-        onOpenChange={(e) => setAlertOpen(e.open)}
+    <Scroll>
+      <Grid
+        height="100%"
+        templateRows="auto 1fr"
+        gap={2}
       >
-        <Portal>
-          <Dialog.Backdrop />
-          <Dialog.Positioner onClick={() => setAlertOpen(false)}>
-            <Dialog.Content>
-              <Alert.Root status="error">
-                <Alert.Indicator />
-                <Alert.Content>
-                  <Alert.Title>
-                    2주 초과의 기간은 검색할 수 없습니다.
-                  </Alert.Title>
-                  <Alert.Description>
-                    You can't search for periods longer than two weeks.
-                  </Alert.Description>
-                </Alert.Content>
-                <CloseButton pos="relative" top={-2} insetEnd={-2} />
-              </Alert.Root>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Portal>
-      </Dialog.Root>
-      <Scroll>
-        <Grid
-          height="100%"
-          templateRows="auto 1fr"
-          gap={2}
+        <Flex
+          justify="space-between"
         >
-          <Flex
-            justify="space-between"
+          <Stack width="24vh" minW="fit-content">
+            <SpaceSelect setSpaceId={setSpaceId} />
+          </Stack>
+          <Stack
+            direction="row"
+            width="24vh"
+            minW="fit-content"
+            gap={2}
+            alignItems="end"
           >
-            <Stack width="24vh">
-              <SpaceSelect setSpaceId={setSpaceId} />
-            </Stack>
-            <Stack direction="row" width="48vh" gap={2} alignItems="end">
-              <IconButton
-                variant="outline"
-                rounded="sm"
-                onClick={search}
-              >
-                <HiOutlineSearch />
-                {(
-                  searchData.dateFrom.toISOString() !== dateFrom.toISOString() ||
-                  searchData.dateTo.toISOString() !== dateTo.toISOString() ||
-                  searchData.spaceId !== spaceId
-                ) && (
-                    <Float>
-                      <Circle size="3" bg="red" />
-                    </Float>
-                  )}
-              </IconButton>
-              <DateForm
-                label="start date"
-                date={dateFrom}
-                setDate={setDateFrom}
-                maxDate={dateTo}
-              />
-              <DateForm
-                label="end date"
-                date={dateTo}
-                setDate={setDateTo}
-                minDate={dateFrom}
-              />
-            </Stack>
-          </Flex>
+            <DateForm
+              label="select date"
+              date={date}
+              setDate={setDate}
+            />
+          </Stack>
+        </Flex>
+        {searchData ? (
           <CalendarView
             spaceId={searchData.spaceId}
             dateFrom={searchData.dateFrom}
             dateTo={searchData.dateTo}
           />
-        </Grid>
-      </Scroll >
-    </>
+        ) : (
+          <LoadingComponent />
+        )}
+      </Grid>
+    </Scroll >
   );
 };
