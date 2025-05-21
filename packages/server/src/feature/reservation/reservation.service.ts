@@ -32,73 +32,6 @@ export class ReservationService {
     private readonly organizationPublicService: OrganizationPublicService,
   ) {}
 
-  async checkTimeAvailability(query: ISpaceTimeCheckRequest): Promise<boolean> {
-    if (query.timeFrom && query.timeTo && !timeRangeCheck(query.timeFrom, query.timeTo)) {
-      throw new BadRequestException('timeFrom must be before timeTo');
-    }
-    return await this.reservationPublicService.checkTimeAvailability(
-      query.spaceId,
-      query.timeFrom,
-      query.timeTo,
-    );
-  }
-
-  async checkUserReservationTime(
-    query: IUserTimeCheckRequest,
-  ): Promise<boolean> {
-    if (query.timeFrom && query.timeTo && !timeRangeCheck(query.timeFrom, query.timeTo)) {
-      throw new BadRequestException('timeFrom must be before timeTo');
-    }
-    return await this.reservationPublicService.validateTimeConstraints(
-      query.userId,
-      query.spaceId,
-      query.timeFrom,
-      query.timeTo,
-    );
-  }
-
-  async wholeTimeCheck(userId: number, spaceId: number, timeFrom: string, timeTo: string): Promise<void> {
-    if (!timeFrom || !timeTo) {
-      throw new BadRequestException('timeFrom and timeTo are required');
-    }
-
-    if (!timeRangeCheck(timeFrom, timeTo)) {
-      throw new BadRequestException('timeFrom must be before timeTo');
-    }
-
-    timeFrom = formatDateToSQL(new Date(timeFrom));
-    timeTo = formatDateToSQL(new Date(timeTo));
-
-    const isAvailable = await this.reservationPublicService.checkTimeAvailability(
-      spaceId,
-      timeFrom,
-      timeTo,
-    );
-
-    if (!isAvailable) {
-      throw new BadRequestException('Time is not available');
-    }
-
-    await this.reservationPublicService.validateTimeConstraints(
-      userId,
-      spaceId,
-      timeFrom,
-      timeTo,
-      { 
-        throwError: true,
-      }
-    );
-  }
-
-  async getReservationContentById(id: number): Promise<IReservationContent> {
-    return MReservationContent.fromDB(await this.reservationRepository.fetchContent(id));
-  }
-
-  async getReservationContentByIds(ids: number[]): Promise<IReservationContent[]> {
-    const reservationContents = await Promise.all(ids.map(async (id) => await this.reservationRepository.fetchContent(id)));
-    return reservationContents.map(MReservationContent.fromDB);
-  }
-
   async getReservationBySpaceIDBetweenTime(
     spaceId: number,
     timeFrom?: string,
@@ -124,7 +57,7 @@ export class ReservationService {
       this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
       this.spacePublicService.fetchById(spaceId),
       this.organizationPublicService.fetchByIds(organizationIds),
-      this.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
+      this.reservationPublicService.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
     ]) as [IUser[], ISpace, IOrganization[], IReservationContent[]];
 
     checkContainAllId(userIds, users, 'users');
@@ -141,9 +74,11 @@ export class ReservationService {
 
   async getReservationListByUserId(
     userId: number,
+    limit: number,
   ): Promise<IReservationAll[]> {
     const reservations = await this.reservationRepository.fetch({
-      userId,
+      userId: userId,
+      limit: limit,
     });
 
     const userIds = reservations.map((reservation) => reservation.userId);
@@ -154,7 +89,7 @@ export class ReservationService {
       this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
       this.organizationPublicService.fetchByIds(organizationIds),
       this.spacePublicService.fetchAllByIds(spaceIds),
-      this.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
+      this.reservationPublicService.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
     ]) as [IUser[], IOrganization[], ISpace[], IReservationContent[]];
 
     checkContainAllId(userIds, users, 'users');
@@ -193,7 +128,7 @@ export class ReservationService {
     reservationInput: IReservationCreate,
   ): Promise<IReservation> {
 
-    await this.wholeTimeCheck(reservationInput.userId, reservationInput.spaceId, reservationInput.timeFrom, reservationInput.timeTo);
+    await this.reservationPublicService.checkWholeTime(reservationInput.userId, reservationInput.spaceId, reservationInput.timeFrom, reservationInput.timeTo);
 
     const [user, organizations, space] = await Promise.all([
       this.userPublicService.fetchById(reservationInput.userId),
@@ -237,7 +172,7 @@ export class ReservationService {
       throw new NotFoundException('Reservation not found');
     }
 
-    await this.wholeTimeCheck(reservation[0].userId, reservation[0].spaceId, reservationInput.timeFrom, reservationInput.timeTo);
+    await this.reservationPublicService.checkWholeTime(reservation[0].userId, reservation[0].spaceId, reservationInput.timeFrom, reservationInput.timeTo);
     reservationInput.timeFrom = formatDateToSQL(new Date(reservationInput.timeFrom));
     reservationInput.timeTo = formatDateToSQL(new Date(reservationInput.timeTo));
 
@@ -271,7 +206,7 @@ export class ReservationService {
       this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
       this.organizationPublicService.fetchByIds(organizationIds),
       this.spacePublicService.fetchAllByIds(spaceIds),
-      this.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
+      this.reservationPublicService.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
     ]) as [IUser[], IOrganization[], ISpace[], IReservationContent[]];
 
     checkContainAllId(userIds, users, 'users');

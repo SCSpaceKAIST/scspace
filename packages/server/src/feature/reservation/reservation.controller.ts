@@ -43,8 +43,9 @@ export class ReservationController {
   @Get('user/:id')
   async getReservationListByUserId(
     @Param('id') userId: number,
+    @Query('limit', ParseIntPipe) limit: number,
   ): Promise<IReservationAll[]> {
-    return await this.reservationService.getReservationListByUserId(userId);
+    return await this.reservationService.getReservationListByUserId(userId, limit);
   }
 
   //HOOK: useWaitReservations
@@ -71,15 +72,5 @@ export class ReservationController {
   @Delete(':id')
   async deleteReservation(@Param('id') id: number): Promise<ISuccessResponse> {
     return await this.reservationService.deleteReservation(id);
-  }
-
-  @Post('check/space')
-  async checkSpaceTime(@Body() query: ISpaceTimeCheckRequest): Promise<boolean> {
-    return await this.reservationService.checkTimeAvailability(query);
-  }
-
-  @Post('check/user')
-  async checkUserTime(@Body() query: IUserTimeCheckRequest): Promise<boolean> {
-    return await this.reservationService.checkUserReservationTime(query);
   }
 }
