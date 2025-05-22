@@ -38,14 +38,11 @@ export class ReservationService {
     timeTo?: number,
   ): Promise<IReservationAll[]> {
 
-    console.log(timeFrom, timeTo);
     if (timeFrom && timeTo) {
       if (timeFrom > timeTo) throw new BadRequestException('timeFrom must be before timeTo');
       const oneDayInMs = BigInt(1000) * BigInt(60) * BigInt(60) * BigInt(24);
       timeTo = Number(BigInt(timeTo) + oneDayInMs - BigInt(1));
-      console.log(timeFrom, timeTo);
     }
-    console.log(timeFrom, timeTo);
     // If either timeFrom or timeTo is missing, fetch all reservations for the space
     const reservations = await this.reservationRepository.fetch({ 
       spaceId, 
