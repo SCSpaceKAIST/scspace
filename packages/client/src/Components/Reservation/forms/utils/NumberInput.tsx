@@ -27,9 +27,11 @@ export default function NumberInputComponent({
       }}
     >
       <NumberInput.Root
+        bg="white"
         value={value}
         onValueChange={(e) => onChange(e.value)}
         width="100%"
+        min={0}
       >
         <NumberInput.Control />
         <NumberInput.Input />

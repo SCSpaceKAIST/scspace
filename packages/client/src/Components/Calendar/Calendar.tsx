@@ -144,7 +144,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                             Create Time
                           </DataList.ItemLabel>
                           <DataList.ItemValue margin={0}>
-                            {selectedRes.timePost}
+                            {(new Date(selectedRes.timePost)).toLocaleString()}
                           </DataList.ItemValue>
                         </DataList.Item>
                         <DataList.Item gap={0}>
@@ -152,7 +152,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                             Update Time
                           </DataList.ItemLabel>
                           <DataList.ItemValue margin={0}>
-                            {selectedRes.timeUpdate}
+                            {(new Date(selectedRes.timeUpdate)).toLocaleString()}
                           </DataList.ItemValue>
                         </DataList.Item>
                       </DataList.Root>
@@ -256,7 +256,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                           Time
                         </DataList.ItemLabel>
                         <DataList.ItemValue margin={0} >
-                          {selectedRes.timeFrom} - {selectedRes.timeTo}
+                          {(new Date(selectedRes.timeFrom)).toLocaleString()} - {(new Date(selectedRes.timeTo)).toLocaleString()}
                         </DataList.ItemValue>
                       </DataList.Item>
                       <DataList.Item gap={0}>
@@ -313,6 +313,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
         rounded="sm"
         borderLeftWidth="1px"
         borderTopWidth="1px"
+        bg="white"
       >
         <Grid
           templateColumns={`auto repeat(${Object.keys(dateReservation).length}, 1fr)`}

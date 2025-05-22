@@ -9,6 +9,7 @@ export default function FieldComponent({
     helpertext: string | null,
     errortext: string | null,
     disabled: boolean | false
+    required?: boolean | false
   },
   children: React.ReactNode,
 }) {
@@ -16,9 +17,10 @@ export default function FieldComponent({
     <Field.Root
       invalid={options?.errortext !== null}
       disabled={options?.disabled}
+      required={options.required}
     >
       <Field.Label>
-        {options.label}
+        {options.label} <Field.RequiredIndicator />
       </Field.Label>
       {children}
       {options.helpertext &&

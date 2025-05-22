@@ -8,7 +8,7 @@ export function DescriptionForm({ description, setDescription }: {
   return (
     <TextareaComponent
       label="Description"
-      placeholder="Input Description"
+      placeholder="Enter Description"
       value={description}
       setValue={setDescription}
     />

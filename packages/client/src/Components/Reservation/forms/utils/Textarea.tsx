@@ -27,9 +27,11 @@ export default function TextareaComponent({
         helpertext: helpertext || null,
         errortext: errortext || null,
         disabled: disabled || false,
+        required: true
       }}
     >
       <Textarea
+        bg="white"
         autoresize
         resize="none"
         placeholder={placeholder}

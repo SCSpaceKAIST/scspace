@@ -8,9 +8,10 @@ export function TitleForm({ title, setTitle }: {
   return (
     <InputComponent
       label="Title"
-      placeholder="Input Title"
+      placeholder="Enter Title"
       value={title}
       setValue={setTitle}
+      required={true}
     />
   );
 }

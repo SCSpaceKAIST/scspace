@@ -6,7 +6,6 @@ import {
     IOrganizationCreate,
     IOrganizationDelegator,
     IOrganizationMember,
-    IOrganizationUpdate,
     IOrganizationUser,
 } from "@scspace-depot/types/organization";
 import { useEffect, useState } from "react";

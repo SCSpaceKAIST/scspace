@@ -48,6 +48,7 @@ export function DateForm({
               variant="outline"
               rounded="sm"
               width="100%"
+              bg="white"
             >
               {text}
             </Button>

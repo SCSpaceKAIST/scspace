@@ -70,6 +70,8 @@ export default function SelectComponent({
       <Select.Control>
         <Select.Trigger
           rounded="sm"
+          bg="white"
+          cursor="pointer"
         >
           <Stack gap={0} width="100%">
             <Select.ValueText>
@@ -86,7 +88,7 @@ export default function SelectComponent({
       </Select.Control>
       <Portal>
         <Select.Positioner>
-          <Select.Content>
+          <Select.Content cursor="pointer">
             {options.items.map((o) => (
               <Select.Item
                 item={o}

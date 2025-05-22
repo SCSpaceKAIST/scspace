@@ -38,7 +38,7 @@ export default function SSOLogin() {
                             )}
                             <Center width="100%" height="100%">
                                 <Card.Root borderColor="fg.success">
-                                    <Card.Header>
+                                    <Card.Header gap={4}>
                                         <Card.Title>
                                             KAIST SSO LOGIN
                                         </Card.Title>
@@ -50,7 +50,7 @@ export default function SSOLogin() {
                                                 The KAIST Student Culture & Space Committee website only supports KAIST SSO (Pass-Ni) login.
                                             </Card.Description>
                                         </Stack>
-                                        <Button bg="#01438F" fontWeight="semibold" asChild>
+                                        <Button bg={{ base: "#01438F" }} fontWeight={{ base: "semibold", _hover: "bold" }} asChild>
                                             <Link href="/login/sso" passHref>
                                                 Login as a KAIST SSO
                                             </Link>
@@ -58,7 +58,7 @@ export default function SSOLogin() {
                                     </Card.Header>
                                     <Card.Body />
                                     <Card.Footer>
-                                        <Stack>
+                                        <Stack gap={4}>
                                             <Stack color="fg.subtle" fontSize="sm" gap={0}>
                                                 <Card.Description>
                                                     본 SSO 로그인을 통해 학생문화공간위원회의 개인정보처리방침에 동의하게 됩니다.
@@ -68,8 +68,8 @@ export default function SSOLogin() {
                                                 </Card.Description>
                                             </Stack>
                                             <Dialog.Trigger width='100%' asChild>
-                                                <Button variant="outline">
-                                                    Privacy Policy
+                                                <Button variant="outline" borderColor="fg.subtle">
+                                                    Show Privacy Policy
                                                 </Button>
                                             </Dialog.Trigger>
                                         </Stack>

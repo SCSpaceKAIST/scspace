@@ -5,6 +5,8 @@ import { useAuth } from "@scspace-client/Hooks/auth";
 import { useLinkPush } from "@scspace-client/Hooks/auth";
 import { randomBytes, createHash } from "crypto";
 import axios from "axios";
+import Scroll from "@scspace-client/Components/_commons/Scroll";
+import LoadingComponent from "@scspace-client/Components/Loading/Loading";
 
 const LoginPage: React.FC = () => {
     const { linkPush } = useLinkPush();
@@ -97,9 +99,9 @@ const LoginPage: React.FC = () => {
     console.log("test");
 
     return (
-        <div id="main">
-            <div>잠시 기다리면 로그인 페이지로 넘어갑니다...</div>
-        </div>
+        <Scroll>
+            <LoadingComponent />
+        </Scroll>
     );
 };
 

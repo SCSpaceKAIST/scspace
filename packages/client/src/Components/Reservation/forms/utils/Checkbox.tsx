@@ -6,6 +6,7 @@ export default function CheckComponent({ label, onChange = () => null }: {
 }) {
   return (
     <Checkbox.Root
+      bg="white"
       size="sm"
       onCheckedChange={e => onChange(!!e.checked)}
     >

@@ -11,6 +11,7 @@ export default function InputComponent({
   errortext,
   disabled,
   ref,
+  required = false
 }: {
   label: string;
   placeholder: string;
@@ -19,7 +20,8 @@ export default function InputComponent({
   helpertext?: string;
   errortext?: string;
   disabled?: boolean;
-  ref?: RefObject<HTMLInputElement | null>
+  ref?: RefObject<HTMLInputElement | null>;
+  required?: boolean;
 }) {
   return (
     <FieldComponent
@@ -28,9 +30,11 @@ export default function InputComponent({
         helpertext: helpertext || null,
         errortext: errortext || null,
         disabled: disabled || false,
+        required: required
       }}
     >
       <Input
+        bg="white"
         placeholder={placeholder}
         ref={ref ?? null}
         value={value}

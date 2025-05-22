@@ -6,12 +6,9 @@ import { IReservation, IReservationAll, IReservationCreate, IReservationUpdate }
 import { useEffect, useState } from "react";
 import { ISuccessResponse } from "@scspace-depot/types/common/common.type";
 
-function formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
+function formatDate(date: Date): number {
+    // return (new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours())).getTime();
+    return date.getTime()
 }
 
 export function useReservations({ spaceId, dateFrom, dateTo }: {
@@ -29,7 +26,7 @@ export function useReservations({ spaceId, dateFrom, dateTo }: {
             return;
         }
         setReservations(data);
-    }, [data, spaceId, dateFrom.getTime(), dateTo.getTime()]);
+    }, [data]);
 
     return { reservations, isLoading, refetch };
 }
@@ -67,6 +64,15 @@ export function useDateReservations({ spaceId, dateFrom, dateTo, }: {
 
     useEffect(() => { refetch() }, [spaceId, dateFrom.getTime(), dateTo.getTime()]);
 
+    useEffect(() => {
+        console.log(reservations?.map(r => {
+            const obj: any = { ...r }
+            obj.timeFrom = (new Date(r.timeFrom)).getHours();
+            obj.timeTo = new Date(r.timeTo)
+            return obj
+        }))
+    }, [reservations])
+
     const [dateReservation, setReservation] = useState<IReservationHookRes>({});
 
     useEffect(() => {
@@ -87,18 +93,20 @@ export function useDateReservations({ spaceId, dateFrom, dateTo, }: {
         reservations.map((d) => {
             const tF = new Date(d.timeFrom);
             const tT = new Date(d.timeTo);
+            tF.setHours(tF.getHours() - 9);
+            tT.setHours(tT.getHours() - 9);
 
             const dF = tF.toLocaleDateString();
             const dT = tT.toLocaleDateString();
 
             if (dF === dT) {
-                _reservation[dF].push(format({ d: d, hF: tF.getHours(), hT: tT.getHours() }));
+                if (_reservation[dF]) _reservation[dF].push(format({ d: d, hF: tF.getHours(), hT: tT.getHours() }));
             } else {
                 if (tF.getDate() >= dateFrom.getDate()) {
-                    _reservation[dF].push(format({ d: d, hF: tF.getHours(), hT: 24 }));
+                    if (_reservation[dF]) _reservation[dF].push(format({ d: d, hF: tF.getHours(), hT: 24 }));
                 }
                 if (tT.getDate() <= dateTo.getDate()) {
-                    _reservation[dT].push(format({ d: d, hF: 0, hT: tT.getHours() }));
+                    if (_reservation[dT]) _reservation[dT].push(format({ d: d, hF: 0, hT: tT.getHours() }));
                 }
 
                 let _temp = new Date(tF.toDateString());

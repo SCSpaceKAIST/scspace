@@ -44,10 +44,10 @@ export default function OrganizationDetail({ id, onDelete }: {
                             <HiOutlineRefresh color="gray" />
                         </IconButton>
                         <Stack gap={0}>
-                            <Text color="fg.muted" fontSize="xs">
+                            <Text color="fg.muted">
                                 Organization Name
                             </Text>
-                            <Dialog.Title margin={0} fontSize="2xl">
+                            <Dialog.Title>
                                 {organizationDetail.name}
                             </Dialog.Title>
                         </Stack>
@@ -58,7 +58,7 @@ export default function OrganizationDetail({ id, onDelete }: {
                                 Create Time
                             </DataList.ItemLabel>
                             <DataList.ItemValue margin={0}>
-                                {organizationDetail.timeRegister}
+                                {(new Date(organizationDetail.timeRegister)).toLocaleString()}
                             </DataList.ItemValue>
                         </DataList.Item>
                         <DataList.Item gap={0}>
@@ -66,7 +66,7 @@ export default function OrganizationDetail({ id, onDelete }: {
                                 Update Time
                             </DataList.ItemLabel>
                             <DataList.ItemValue margin={0}>
-                                {organizationDetail.timeUpdate}
+                                {(new Date(organizationDetail.timeUpdate)).toLocaleString()}
                             </DataList.ItemValue>
                         </DataList.Item>
                     </DataList.Root>

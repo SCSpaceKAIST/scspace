@@ -29,8 +29,8 @@ import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { toaster } from "../_commons/Toaster";
 
 function formatTime(date: Date, hour: number) {
-  const res = new Date(date);
-  res.setHours(hour);
+  const res = new Date(date.getTime());
+  res.setHours(hour - 9);
   res.setMinutes(0);
   res.setSeconds(0);
   res.setMilliseconds(0);
@@ -60,6 +60,22 @@ export default function Reservation() {
   const [e, setE] = useState<string>();
 
   function submit() {
+    if (title === "") {
+      toaster.warning({
+        title: "Reservate Failed",
+        description: "Please enter title"
+      });
+      return;
+    }
+
+    if (dscrp === "") {
+      toaster.warning({
+        title: "Reservate Failed",
+        description: "Please enter description"
+      });
+      return;
+    }
+
     if (!userInfo) return;
 
     toaster.promise(
