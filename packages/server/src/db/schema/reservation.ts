@@ -3,7 +3,7 @@ import {
   varchar,
   int,
   boolean,
-  timestamp,
+  bigint,
 } from 'drizzle-orm/mysql-core';
 import { relations } from 'drizzle-orm';
 
@@ -24,10 +24,10 @@ export const Reservation = mysqlTable('reservation', {
     .notNull()
     .references(() => Space.id, { onDelete: 'cascade' }),
   title: varchar('title', { length: 255 }).notNull(),
-  timeFrom: int('time_from').notNull(),
-  timeTo: int('time_to').notNull(),
-  timePost: int('time_post').notNull(),
-  timeUpdate: int('time_update').notNull(),
+  timeFrom: bigint('time_from', { mode: 'number' }).notNull(),
+  timeTo: bigint('time_to', { mode: 'number' }).notNull(),
+  timePost: bigint('time_post', { mode: 'number' }).notNull(),
+  timeUpdate: bigint('time_update', { mode: 'number' }).notNull(),
   state: int('state').notNull().default(1), // ['grant', 'wait', 'received', 'rejected']
 });
 

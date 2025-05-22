@@ -3,6 +3,7 @@ import {
   int,
   varchar,
   timestamp,
+  bigint,
 } from 'drizzle-orm/mysql-core';
 
 import { User } from './user';
@@ -15,8 +16,8 @@ export const Organization = mysqlTable('organization', {
   delegatorId: int('delegator_id')
     .notNull()
     .references(() => User.id, { onDelete: 'cascade' }),
-  timeRegister: int('time_register').notNull(),
-  timeUpdate: int('time_update').notNull(),
+  timeRegister: bigint('time_register', { mode: 'number' }).notNull(),
+  timeUpdate: bigint('time_update', { mode: 'number' }).notNull(),
   // Foreign keys
   // delegatorId references users.userId O
 });
@@ -30,7 +31,7 @@ export const OrganizationMember = mysqlTable('organization_member', {
   userId: int('user_id')
     .notNull()
     .references(() => User.id, { onDelete: 'cascade' }),
-  timeRegister: int('time_register').notNull(),
+  timeRegister: bigint('time_register', { mode: 'number' }).notNull(),
   // Foreign keys
   // organizationId references organizations.organizationId O
   // userId references users.userId O
