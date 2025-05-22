@@ -15,8 +15,8 @@ export const Organization = mysqlTable('organization', {
   delegatorId: int('delegator_id')
     .notNull()
     .references(() => User.id, { onDelete: 'cascade' }),
-  timeRegister: timestamp('time_register', { mode: 'string' }).notNull(),
-  timeUpdate: timestamp('time_update', { mode: 'string' }).notNull(),
+  timeRegister: int('time_register').notNull(),
+  timeUpdate: int('time_update').notNull(),
   // Foreign keys
   // delegatorId references users.userId O
 });
@@ -30,7 +30,7 @@ export const OrganizationMember = mysqlTable('organization_member', {
   userId: int('user_id')
     .notNull()
     .references(() => User.id, { onDelete: 'cascade' }),
-  timeRegister: timestamp('time_register', { mode: 'string' }).notNull(),
+  timeRegister: int('time_register').notNull(),
   // Foreign keys
   // organizationId references organizations.organizationId O
   // userId references users.userId O

@@ -34,29 +34,22 @@ export class ReservationService {
 
   async getReservationBySpaceIDBetweenTime(
     spaceId: number,
-    timeFrom?: string,
-    timeTo?: string,
+    timeFrom?: number,
+    timeTo?: number,
   ): Promise<IReservationAll[]> {
-
-    let timeFromDate: Date;
-    let timeToDate: Date;
 
     if (timeFrom && timeTo) {
       if (timeFrom === timeTo) {
-        timeFromDate = new Date(timeFrom);
-        timeToDate = new Date(new Date(timeTo).getTime() + (1000 * 60 * 60 * 24-1));
-      } else {
-        timeFromDate = new Date(timeFrom);
-        timeToDate = new Date(timeTo);
+        timeTo = timeFrom + (1000 * 60 * 60 * 24-1);
       }
-      if (!timeRangeCheck(timeFromDate, timeToDate)) {
+      if (!timeRangeCheck(new Date(timeFrom), new Date(timeTo))) {
         throw new BadRequestException('timeFrom must be before timeTo');
       }
     }
     // If either timeFrom or timeTo is missing, fetch all reservations for the space
     const reservations = await this.reservationRepository.fetch({ 
       spaceId, 
-      ...(timeFrom && timeTo ? { timeRange: { timeFrom: formatDateToSQL(timeFromDate), timeTo: formatDateToSQL(timeToDate) } } : {})
+      ...(timeFrom && timeTo ? { timeRange: { timeFrom: timeFrom, timeTo: timeTo } } : {})
     });
     if (reservations.length === 0) {
       return [];

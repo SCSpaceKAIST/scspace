@@ -6,7 +6,7 @@ export interface IOrganizationMember {
   id: number;
   organizationId: number;
   userId: number;
-  timeRegister: string;
+  timeRegister: number;
 }
 
 export type IOrganizationMemberResponse = IOrganizationMember & {

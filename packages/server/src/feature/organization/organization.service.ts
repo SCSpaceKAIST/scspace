@@ -57,7 +57,7 @@ export class OrganizationService {
       name: organizationNew.name,
       delegatorId: organizationNew.delegatorId,
       timeRegister: organization.timeRegister,
-      timeUpdate: formatDateToSQL(new Date()),
+      timeUpdate: new Date().getTime(),
     };
 
     const updatedOrganization = await this.organizationRepository.update(organizationId, updateData);
