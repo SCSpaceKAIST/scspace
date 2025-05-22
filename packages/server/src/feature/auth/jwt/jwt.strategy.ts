@@ -7,6 +7,8 @@ import { UserPublicService } from 'src/feature/user/user.public.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
+  private readonly logger = new Logger(JwtStrategy.name);
+
   constructor(
     private readonly userPublicService: UserPublicService,
     private readonly configService: ConfigService,
@@ -17,7 +19,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         ExtractJwt.fromAuthHeaderAsBearerToken(),
       ]),
       secretOrKey: configService.get('JWT_KEY'),
-      ignoreExpiration: false,
+      ignoreExpiration: true, // 나중에 꼭 변경
     });
   }
 
@@ -30,14 +32,26 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       if (user) {
         return user;
       } else {
-        Logger.log('NO USER');
         throw new UnauthorizedException('No User');
       }
-    } catch (e) {}
+    } catch (e) {
+      this.logger.error(`Error validating JWT: ${e}`);
+      throw e;
+    }
   }
+
   private static extractJWT(req): string | null {
     if (req.cookies && 'scspacetoken' in req.cookies) {
-      return req.cookies.scspacetoken;
+      const encodedToken = req.cookies.scspacetoken;
+      try {
+        // Try to decode the base64 token
+        const token = Buffer.from(encodedToken, 'base64').toString('utf8');
+        return token;
+      } catch (e) {
+        Logger.error(`Failed to decode base64 token: ${e}`);
+        // If decoding fails, return the original token
+        return encodedToken;
+      }
     }
     return null;
   }
