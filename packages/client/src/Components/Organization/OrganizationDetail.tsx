@@ -8,7 +8,8 @@ import {
     IconButton,
     DataList,
     HStack,
-    Text
+    Text,
+    Stack
 } from "@chakra-ui/react";
 import { useOrganizationDetail } from "@scspace-client/Hooks/organization";
 import LoadingComponent from "../Loading/Loading";
@@ -42,9 +43,14 @@ export default function OrganizationDetail({ id, onDelete }: {
                         <IconButton rounded="sm" variant="ghost" onClick={() => refetch()} size="sm">
                             <HiOutlineRefresh color="gray" />
                         </IconButton>
-                        <Dialog.Title margin={0} fontSize="2xl">
-                            {organizationDetail.name}
-                        </Dialog.Title>
+                        <Stack gap={0}>
+                            <Text color="fg.muted" fontSize="xs">
+                                Organization Name
+                            </Text>
+                            <Dialog.Title margin={0} fontSize="2xl">
+                                {organizationDetail.name}
+                            </Dialog.Title>
+                        </Stack>
                     </HStack>
                     <DataList.Root orientation="horizontal" gap={1} color="fg.muted">
                         <DataList.Item gap={0}>

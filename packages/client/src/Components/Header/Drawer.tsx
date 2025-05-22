@@ -57,9 +57,6 @@ export default function DrawerComponent() {
                                 gap={4}
                             >
                                 <Fieldset.Root>
-                                    <Fieldset.Legend>
-                                        Redirect Links
-                                    </Fieldset.Legend>
                                     <Fieldset.Content pr={4} >
                                         <Redirect />
                                     </Fieldset.Content>

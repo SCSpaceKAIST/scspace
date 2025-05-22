@@ -74,6 +74,7 @@ export default function Footer() {
                         target='_blank'
                         href={c.href}
                         key={c.href}
+                        color={{ _hover: "blue.500" }}
                     >
                         {c.icon}{c.label}
                     </Link>
