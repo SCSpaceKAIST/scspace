@@ -12,7 +12,6 @@ function Title({ t }: { t: string; }) {
         <Breadcrumb.Item>
             <Heading
                 color="black"
-                textStyle="3xl"
                 fontWeight="semibold"
                 margin={0}
             >
@@ -27,7 +26,7 @@ function Subtitle({ t }: { t: string; }) {
     return (
         <Breadcrumb.Item>
             <Heading
-                textStyle="lg"
+                textStyle="md"
                 margin={0}
             >
                 {t}
@@ -91,7 +90,6 @@ export default function PageTemplete({
                         </Breadcrumb.List>
                     </Breadcrumb.Root>
                 </Stack>
-                <Separator />
             </Stack>
             {children}
         </Grid>

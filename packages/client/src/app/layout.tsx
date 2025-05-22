@@ -56,6 +56,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               scrollbar="hidden"
               overflowY="auto"
               scrollBehavior="smooth"
+              bg="bg.subtle"
             >
               {children}
             </Box>

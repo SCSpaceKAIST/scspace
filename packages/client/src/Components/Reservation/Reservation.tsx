@@ -29,7 +29,12 @@ import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { toaster } from "../_commons/Toaster";
 
 function formatTime(date: Date, hour: number) {
-  return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}T${hour.toString().padStart(2, '0')}:00:00.000Z`;
+  const res = new Date(date);
+  res.setHours(hour);
+  res.setMinutes(0);
+  res.setSeconds(0);
+  res.setMilliseconds(0);
+  return res.getTime();
 }
 
 export default function Reservation() {
