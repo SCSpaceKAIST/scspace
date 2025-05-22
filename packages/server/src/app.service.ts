@@ -10,7 +10,6 @@ import { ISpace } from '@scspace-depot/types/space';
 import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 import { IOrganization, IOrganizationCreate } from '@scspace-depot/types/organization';
 import { OrganizationPublicService } from './feature/organization/organization.public.service';
-import { formatDateToSQL } from './common/util';
 
 @Injectable()
 export class AppService {

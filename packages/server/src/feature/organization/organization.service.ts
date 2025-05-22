@@ -1,15 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { OrganizationRepository } from './organization.repository';
 import { OrganizationMemberRepository } from './organization.member.repository';
-import { IOrganization, IOrganizationAll, IOrganizationCreate, IOrganizationDelegator, IOrganizationMemberResponse, IOrganizationUpdate } from '@scspace-depot/types/organization';
-import { MOrganizationMember } from './organization.member.model';
-import { ISuccessResponse } from '@scspace-depot/types/common';
-import { UserPublicService } from '../user/user.public.service';
+import { IOrganization, IOrganizationCreate, IOrganizationUpdate } from '@scspace-depot/types/organization';
 import { MOrganization } from './organization.model';
 import { OrganizationPublicService } from './organization.public.service';
-import { formatDateToSQL } from '@scspace-server/common/util';
-import { Organization } from '@scspace-server/db/schema';
-import { InferInsertModel } from 'drizzle-orm';
+import { UserPublicService } from '../user/user.public.service';
+import { ISuccessResponse } from '@scspace-depot/types/common';
 
 @Injectable()
 export class OrganizationService {
@@ -57,7 +53,7 @@ export class OrganizationService {
       name: organizationNew.name,
       delegatorId: organizationNew.delegatorId,
       timeRegister: organization.timeRegister,
-      timeUpdate: new Date().getTime(),
+      timeUpdate: organization.timeUpdate,
     };
 
     const updatedOrganization = await this.organizationRepository.update(organizationId, updateData);

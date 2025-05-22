@@ -6,7 +6,7 @@ import { UserPublicService } from '@scspace-server/feature/user/user.public.serv
 import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
 import { reservationMaxWeekTime } from '@scspace-depot/consts/reservation.const';
 import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
-import { formatDateToSQL, timeRangeCheck } from '@scspace-server/common/util';
+import { timeRangeCheck } from '@scspace-server/common/util';
 import { IReservationContent } from '@scspace-depot/types/reservation';
 @Injectable()
 export class ReservationPublicService {
@@ -16,15 +16,15 @@ export class ReservationPublicService {
     private readonly userPublicService: UserPublicService,
   ) {}
 
-  private getDifferenceInMinutes(timeFrom: Date, timeTo: Date): number {
-    return (timeTo.getTime() - timeFrom.getTime()) / (60 * 1000);
+  private getDifferenceInMinutes(timeFrom: number, timeTo: number): number {
+    return (timeTo - timeFrom) / (60 * 1000);
   }
 
   // 일간 예약 시간을 계산하는 함수
   async getDailyReservationTime(
     userId: number,
     spaceId: number,
-    timeFrom: Date,
+    timeFrom: number,
   ): Promise<number> {
     const today = new Date(timeFrom);
     today.setHours(0, 0, 0, 0);
@@ -45,8 +45,8 @@ export class ReservationPublicService {
       return (
         acc +
         this.getDifferenceInMinutes(
-          new Date(reservation.timeFrom),
-          new Date(reservation.timeTo),
+          reservation.timeFrom,
+          reservation.timeTo,
         )
       );
     }, 0);
@@ -57,7 +57,7 @@ export class ReservationPublicService {
   async getWeeklyReservationTime(
     userId: number,
     spaceId: number,
-    timeFrom: Date,
+    timeFrom: number,
   ): Promise<number> {
     const startOfWeek = new Date(timeFrom);
     startOfWeek.setDate(
@@ -82,8 +82,8 @@ export class ReservationPublicService {
       return (
         acc +
         this.getDifferenceInMinutes(
-          new Date(reservation.timeFrom),
-          new Date(reservation.timeTo),
+          reservation.timeFrom,
+          reservation.timeTo,
         )
       );
     }, 0);
@@ -94,8 +94,8 @@ export class ReservationPublicService {
   async validateTimeConstraints(
     userId: number,
     spaceId: number,
-    timeFrom: Date,
-    timeTo: Date,
+    timeFrom: number,
+    timeTo: number,
   ): Promise<boolean> {
     // 공간위원이면 최대 시간 제한 없음
     if (await this.userPublicService.isManager(userId)) {
@@ -137,14 +137,14 @@ export class ReservationPublicService {
   // 예약 시간 중복 검사
   async checkTimeAvailability(
     spaceId: number,
-    timeFrom: Date,
-    timeTo: Date,
+    timeFrom: number,
+    timeTo: number,
   ): Promise<boolean> {
     const overlappingReservations = await this.reservationRepository.fetch({
       spaceId: spaceId,
       timeRange: {
-        timeFrom: timeFrom.getTime(),
-        timeTo: timeTo.getTime(),
+        timeFrom: timeFrom,
+        timeTo: timeTo,
       },
     });
 
@@ -155,8 +155,8 @@ export class ReservationPublicService {
   async checkReservationAvailability(
     userId: number,
     spaceId: number,
-    timeFrom: Date,
-    timeTo: Date,
+    timeFrom: number,
+    timeTo: number,
   ): Promise<boolean> {
     return (
       (await this.checkTimeAvailability(spaceId, timeFrom, timeTo)) &&
@@ -172,16 +172,16 @@ export class ReservationPublicService {
     return this.reservationRepository.fetch(params);
   }
 
-  async checkWholeTime(userId: number, spaceId: number, timeFrom: Date, timeTo: Date): Promise<void> {
+  async checkWholeTime(userId: number, spaceId: number, timeFrom: number, timeTo: number): Promise<void> {
     if (!timeFrom || !timeTo) {
       throw new BadRequestException('timeFrom and timeTo are required');
     }
 
-    if (!timeRangeCheck(timeFrom, timeTo)) {
+    if (!timeRangeCheck((timeFrom), (timeTo))) {
       throw new BadRequestException('timeFrom must be before timeTo');
     }
-    if (timeFrom.getTime() === timeTo.getTime()) {
-      timeTo = new Date(timeTo.getTime() + (1000 * 60 * 60 * 24 - 1));
+    if (timeFrom === timeTo) {
+      timeTo = Number(BigInt(timeFrom) + BigInt(1000 * 60 * 60 * 24) - BigInt(1));
     }
 
     const isAvailable = await this.validateTimeConstraints(

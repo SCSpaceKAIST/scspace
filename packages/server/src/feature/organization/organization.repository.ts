@@ -1,12 +1,10 @@
 import { Injectable, Inject, NotFoundException, Logger, BadRequestException } from '@nestjs/common';
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
-import { schema, Organization, OrganizationMember, User } from '@schema';
-import { and, eq, inArray, SQL, InferInsertModel, or } from 'drizzle-orm';
-import { IOrganization, IOrganizationCreate, IOrganizationDelegator, IOrganizationUpdate } from '@scspace-depot/types/organization';
+import { schema, Organization, OrganizationMember } from '@schema';
+import { and, eq, inArray, SQL, InferInsertModel } from 'drizzle-orm';
+import { IOrganization, IOrganizationCreate, IOrganizationUpdate } from '@scspace-depot/types/organization';
 import { MOrganization } from './organization.model';
-import { formatDateToSQL } from '@scspace-server/common/util';
-import { MUser } from '../user/user.model';
 
 @Injectable()
 export class OrganizationRepository {

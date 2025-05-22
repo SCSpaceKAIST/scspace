@@ -5,7 +5,7 @@ import { schema, User } from 'src/db/schema';
 import { and, eq, inArray, InferInsertModel, SQL } from 'drizzle-orm';
 import { IUserCreate } from '@scspace-depot/types/user';
 import { MUser } from './user.model';
-import { formatDateToSQL, takeOne } from 'src/common/util';
+import { takeOne } from 'src/common/util';
 
 @Injectable()
 export class UserRepository {
@@ -49,8 +49,6 @@ export class UserRepository {
       nameKr: user.nameKr,
       nameEn: user.nameEn,
       email: user.email,
-      timeRegister: formatDateToSQL(new Date()),
-      timeUpdate: formatDateToSQL(new Date()),
     } as InferInsertModel<typeof User>;
 
     const [result] = await this.db.insert(User).values(insertData);

@@ -33,7 +33,6 @@ import {
   ReservationStateEnum,
 } from '@scspace-depot/enums/reservation.enum';
 import { MReservation, MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
-import { formatDateToSQL } from '@scspace-server/common/util';
 
 @Injectable()
 export class ReservationRepository {
@@ -87,12 +86,12 @@ export class ReservationRepository {
         whereClause.push(
           or(
             and(
-              gte(Reservation.timeFrom, timeFrom),
-              lte(Reservation.timeFrom, timeTo)
+              gt(Reservation.timeFrom, timeFrom),
+              lt(Reservation.timeFrom, timeTo)
             ),
             and(
-              gte(Reservation.timeTo, timeFrom),
-              lte(Reservation.timeTo, timeTo)
+              gt(Reservation.timeTo, timeFrom),
+              lt(Reservation.timeTo, timeTo)
             )
           )
         );
@@ -136,8 +135,8 @@ export class ReservationRepository {
       organizationId: reservationInput.organizationId,
       spaceId: reservationInput.spaceId,
       title: reservationInput.title,
-      timeFrom: new Date(reservationInput.timeFrom).getTime(),
-      timeTo: new Date(reservationInput.timeTo).getTime(),
+      timeFrom: reservationInput.timeFrom,
+      timeTo: reservationInput.timeTo,
       timePost: new Date().getTime(),
       timeUpdate: new Date().getTime(),
       state: ReservationStateEnum.GRANT,

@@ -10,7 +10,7 @@ import {
 import { IOrganization } from '@scspace-depot/types/organization';
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ReservationRepository } from './reservation.repository';
-import { checkContainAllId, formatDateToSQL, takeAll, timeRangeCheck } from 'src/common/util';
+import { checkContainAllId, takeAll, timeRangeCheck } from 'src/common/util';
 import { UserPublicService } from '../user/user.public.service';
 import { SpacePublicService } from '../space/space.public.service';
 import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
@@ -134,7 +134,7 @@ export class ReservationService {
     reservationInput: IReservationCreate,
   ): Promise<IReservation> {
 
-    await this.reservationPublicService.checkWholeTime(reservationInput.userId, reservationInput.spaceId, new Date(reservationInput.timeFrom), new Date(reservationInput.timeTo));
+    await this.reservationPublicService.checkWholeTime(reservationInput.userId, reservationInput.spaceId, reservationInput.timeFrom, reservationInput.timeTo);
 
     const [user, organizations, space] = await Promise.all([
       this.userPublicService.fetchById(reservationInput.userId),
@@ -178,7 +178,7 @@ export class ReservationService {
       throw new NotFoundException('Reservation not found');
     }
 
-    await this.reservationPublicService.checkWholeTime(reservation[0].userId, reservation[0].spaceId, new Date(reservationInput.timeFrom), new Date(reservationInput.timeTo));
+    await this.reservationPublicService.checkWholeTime(reservation[0].userId, reservation[0].spaceId, reservationInput.timeFrom, reservationInput.timeTo);
 
     const [reservationUpdated, reservationContentUpdated] = await this.reservationRepository.update(reservationInput);
     return MReservation.fromDB(
