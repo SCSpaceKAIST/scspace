@@ -20,7 +20,7 @@ export const useLinkPush = () => {
 };
 
 export const useAuth = () => {
-  const { data, isLoading, refetch } = useQueryApi<IVerificationResponse>("/auth/verification");
+  const { data, isLoading, refetch } = useQueryApi<IVerificationResponse>("/auth/verify");
 
   const userInfo: IUser | null = data?.isLogined ? data.userInfo : null;
   const isLogined = !!userInfo;

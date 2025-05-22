@@ -84,8 +84,6 @@ export function useDateReservations({ spaceId, dateFrom, dateTo, }: {
             _reservation[temp.toLocaleDateString()] = [];
         }
 
-        console.log(_reservation);
-
         reservations.map((d) => {
             const tF = new Date(d.timeFrom);
             const tT = new Date(d.timeTo);
@@ -105,13 +103,10 @@ export function useDateReservations({ spaceId, dateFrom, dateTo, }: {
 
                 let _temp = new Date(tF.toDateString());
                 _temp.setDate(_temp.getDate() + 1);
-                let _temp2 = new Date(tT.toDateString());
-                _temp2.setDate(_temp2.getDate() - 1);
 
-                while (_temp < _temp2) {
+                while (_temp < tT) {
                     const midKey = _temp.toLocaleDateString();
-                    console.log(midKey)
-                    _reservation[midKey].push(format({ d, hF: 0, hT: 24 }));
+                    if (_reservation[midKey]) _reservation[midKey].push(format({ d, hF: 0, hT: 24 }));
                     _temp.setDate(_temp.getDate() + 1);
                 }
             }
@@ -159,7 +154,7 @@ export function useReservationAPI(Rid?: { rid: number }) {
     const createRes = useMutationApi<IReservation, IReservationCreate>(
         "/reservation/",
         "POST"
-    ).mutate;
+    ).mutateAsync;
 
     const updateRes = useMutationApi<IReservation, IReservationUpdate>(
         `/reservation/${rid}`,

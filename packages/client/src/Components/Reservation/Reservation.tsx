@@ -26,6 +26,7 @@ import { SmallLoading } from "../Loading/Loading";
 import { CalendarView } from "../Calendar/Calendar";
 import { HourForm } from "./forms/elements/Hour";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
+import { toaster } from "../_commons/Toaster";
 
 function formatTime(date: Date, hour: number) {
   return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}T${hour.toString().padStart(2, '0')}:00:00.000Z`;
@@ -52,42 +53,56 @@ export default function Reservation() {
   const { userInfo } = useAuth();
 
   function submit() {
-    console.log(
-      spaceId, check, orgId,
-      dateFrom, dateTo,
-      hourFrom, hourTo,
-      title,
-      dscrp,
-      inner, outer,
-      food,
-      desk, chair, worker
-    );
-
     if (!userInfo) return;
 
-    createReservation({
-      content: {
-        description: dscrp,
-        innerParticipantNumber: inner,
-        outerParticipantNumber: outer,
-        food: food,
-        desk: desk,
-        chair: chair,
-        lobby: check && (spaceId === 11),
-        busking: check && (spaceId === 13),
-        workerNeed: worker
-      },
-      userId: userInfo.id,
-      organizationId: orgId,
-      spaceId: spaceId,
-      title: title,
-      timeFrom: formatTime(dateFrom, hourFrom),
-      timeTo: formatTime(dateTo, hourTo),
-    }, {
-      onSuccess: () => {
-        setCount(c => c + 1);
+    toaster.promise(
+      createReservation(
+        {
+          content: {
+            description: dscrp,
+            innerParticipantNumber: inner,
+            outerParticipantNumber: outer,
+            food: food,
+            desk: desk,
+            chair: chair,
+            lobby: check && (spaceId === 11),
+            busking: check && (spaceId === 13),
+            workerNeed: worker
+          },
+          userId: userInfo.id,
+          organizationId: orgId,
+          spaceId: spaceId,
+          title: title,
+          timeFrom: formatTime(dateFrom, hourFrom),
+          timeTo: formatTime(dateTo, hourTo),
+        },
+        {
+          onSuccess: (res) => {
+            setCount(c => c + 1);
+            console.log("SUCCESS", res)
+          },
+          onError(error, variables, context) {
+            console.log("ERROR", error, variables, context)
+          },
+        }
+      ),
+      {
+        loading: {
+          title: "Submitting...",
+          description: "Please wait",
+        },
+        success: {
+          title: "Submitted Successfully!",
+          description: "Enjoy Your Reservation",
+        },
+        error: {
+          title: "Reservate Failed",
+          description: "ERROR MESSAGE"
+        }
       }
-    });
+    );
+
+
   }
 
   const [count, setCount] = useState<number>(0);
@@ -95,6 +110,30 @@ export default function Reservation() {
   return (
     <Scroll>
       <Stack>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            toaster.create({
+              description: "File saved successfully",
+              type: "info",
+            })
+          }
+        >
+          Show Toast
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            toaster.create({
+              description: "1234",
+              type: "error",
+            })
+          }
+        >
+          Show Toast
+        </Button>
         <Grid
           templateColumns="repeat(6, 1fr)"
           gap={8}

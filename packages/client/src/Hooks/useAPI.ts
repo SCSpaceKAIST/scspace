@@ -21,12 +21,12 @@ export const useQueryApi = <ResponseType>(
     queryFn: async () => {
       const queryString = params
         ? "?" +
-          new URLSearchParams(
-            Object.entries(params).map(([key, val]) => [
-              key,
-              valueToString(val),
-            ]),
-          ).toString()
+        new URLSearchParams(
+          Object.entries(params).map(([key, val]) => [
+            key,
+            valueToString(val),
+          ]),
+        ).toString()
         : "";
       const res = await fetch(`${baseUrl}${endpoint}${queryString}`, {
         credentials: "include",
@@ -48,31 +48,31 @@ export const useMutationApi = <ResponseType, RequestParamType extends object>(
     mutationFn:
       method === "GET"
         ? async (content?: RequestParamType) => {
-            const queryString = content
-              ? "?" +
-                new URLSearchParams(
-                  Object.entries(content).map(([key, val]) => [
-                    key,
-                    valueToString(val),
-                  ]),
-                ).toString()
-              : "";
-            const res = await fetch(`${baseUrl}${endpoint}${queryString}`, {
-              credentials: "include",
-            });
-            if (!res.ok) throw new Error(res.statusText);
-            return res.json();
-          }
+          const queryString = content
+            ? "?" +
+            new URLSearchParams(
+              Object.entries(content).map(([key, val]) => [
+                key,
+                valueToString(val),
+              ]),
+            ).toString()
+            : "";
+          const res = await fetch(`${baseUrl}${endpoint}${queryString}`, {
+            credentials: "include",
+          });
+          if (!res.ok) throw new Error(res.statusText);
+          return res.json();
+        }
         : async (content?: RequestParamType) => {
-            const res = await fetch(`${baseUrl}${endpoint}`, {
-              method,
-              headers: { "Content-Type": "application/json" },
-              credentials: "include",
-              body: JSON.stringify(content ?? {}),
-            });
-            if (!res.ok) throw new Error(res.statusText);
-            return res.json();
-          },
+          const res = await fetch(`${baseUrl}${endpoint}`, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(content ?? {}),
+          });
+          if (!res.ok) throw new Error(res.statusText);
+          return res.json();
+        },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [endpoint] });
     },

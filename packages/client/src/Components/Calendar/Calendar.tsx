@@ -382,23 +382,13 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
 
           {/* Now the actual day slots */}
           {dates.map((date, ci) =>
-            times.map((hour, ri) => {
-              const slot = dateReservation[date].find(
-                (r) => r.hourFrom <= hour && r.hourTo > hour
+            times.map((hour) => {
+              const _slot = dateReservation[date].map((d, i) => { return { slot: d, i } }).find(
+                (r) => r.slot.hourFrom <= hour && r.slot.hourTo > hour
               );
-              if (!slot) {
-                return (
-                  <GridItem
-                    key={`${date}-${hour}`}
-                    rowStart={hour + 2}
-                    colStart={ci + 2}
-                    borderBottomWidth="1px"
-                    borderRightWidth="1px"
-                    // minW="32vh"
-                    height="64px"
-                  />
-                );
-              } else if (slot.hourFrom === hour) {
+              const slot = _slot?.slot ?? null;
+              const i = _slot?.i ?? 0;
+              if (slot && slot.hourFrom === hour) {
                 // span multi-hour bookings
                 return (
                   <GridItem
@@ -437,8 +427,21 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                     </Button>
                   </GridItem>
                 );
+              } else if (!slot || (dateReservation[date][i - 1] && dateReservation[date][i - 1].hourTo <= hour)) {
+                // we skip rendering rows that are covered by a span
+                return (
+                  <GridItem
+                    key={`${date}-${hour}`}
+                    rowStart={hour + 2}
+                    colStart={ci + 2}
+                    borderBottomWidth="1px"
+                    borderRightWidth="1px"
+                    // minW="32vh"
+                    height="64px"
+                  />
+                );
               }
-              // we skip rendering rows that are covered by a span
+
               return null;
             })
           )}

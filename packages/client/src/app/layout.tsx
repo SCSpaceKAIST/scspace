@@ -4,6 +4,8 @@ import Header from "@scspace-client/Components/Header";
 import { ReactNode } from "react";
 import Providers from "./providers";
 import { Box, Flex, } from "@chakra-ui/react";
+import ToasterComponent from "@scspace-client/Components/_commons/Toaster";
+
 export const metadata = {
   title: "학생문화공간위원회",
   description: "학생문화공간위원회 웹사이트",
@@ -41,6 +43,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body suppressHydrationWarning>
         <Providers>
+          <ToasterComponent />
           <Flex
             width="100vw"
             height="100vh"
