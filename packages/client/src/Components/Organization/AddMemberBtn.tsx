@@ -1,4 +1,4 @@
-import { Dialog, DialogBackdrop, Button, IconButton, Portal, Fieldset, Field, HStack, PinInput, Icon, Stack, Text, Flex, VStack, Wrap } from "@chakra-ui/react";
+import { Dialog, DialogBackdrop, Button, IconButton, Portal, Fieldset, Field, HStack, PinInput, Stack, Text, Flex, VStack, Wrap } from "@chakra-ui/react";
 import { useStudent } from "@scspace-client/Hooks/user";
 import { useEffect, useState } from "react";
 import { HiPlus } from "react-icons/hi";
@@ -11,17 +11,14 @@ function NewMember({ user, unSelect }: {
     unSelect?: (id: number) => any
 }) {
     return (
-        <Field.Root
+        <HStack
             borderWidth="1px"
             rounded="sm"
             padding={2}
             width="fit-content"
             textAlign="center"
         >
-            <Flex
-                width="100%"
-                justify="space-between"
-            >
+            <VStack gap={1}>
                 <Text
                     margin={0}
                     padding={0}
@@ -31,26 +28,26 @@ function NewMember({ user, unSelect }: {
                 >
                     {user.nameKr}
                 </Text>
-                {unSelect && (
-                    <IconButton
-                        variant="outline"
-                        rounded="sm"
-                        width="fit-content"
-                        height="fit-content"
-                        onClick={() => unSelect(user.studentNumber)}
-                    >
-                        <HiMiniXMark />
-                    </IconButton>
-                )}
-            </Flex>
-            <Field.HelperText>
-                {user.studentNumber} {user.nameEn}
-            </Field.HelperText>
-        </Field.Root>
+                <Text margin={0} padding={0} color="fg.muted" fontSize="xs">
+                    {user.studentNumber}
+                </Text>
+            </VStack>
+            {unSelect && (
+                <IconButton
+                    variant="outline"
+                    rounded="sm"
+                    size="xs"
+                    onClick={() => unSelect(user.studentNumber)}
+                >
+                    <HiMiniXMark />
+                </IconButton>
+            )}
+        </HStack>
     );
 }
 
-export default function AddMemberBtn({ oid, refetch }: {
+export default function AddMemberBtn({ oid, refetch, disabled = false }: {
+    disabled?: boolean;
     oid: number,
     refetch: () => any;
 }) {
@@ -100,7 +97,9 @@ export default function AddMemberBtn({ oid, refetch }: {
             onExitComplete={refetch}
         >
             <Dialog.Trigger asChild>
-                <IconButton size="sm" variant="outline" rounded="sm" >
+                <IconButton size="sm" variant="outline" rounded="sm"
+                    disabled={disabled}
+                >
                     <HiPlus color="gray" />
                 </IconButton>
             </Dialog.Trigger>

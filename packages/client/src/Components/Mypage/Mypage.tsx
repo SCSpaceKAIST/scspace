@@ -2,13 +2,14 @@
 
 import PageSelector, { IPage } from "../PageSelector/PageSelector";
 import Organization from "../Organization/Organization";
+import UserReservation from "../Reservation/UserRevervation/UserReservation";
 
 export default function Mypage() {
   const pages: IPage[] = [
     {
       kor: "예약 목록",
       eng: "Reservation List",
-      preview: (<div>Reserv List</div>),
+      preview: (<UserReservation />),
       href: "/mypage"
     },
     {

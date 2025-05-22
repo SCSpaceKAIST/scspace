@@ -16,7 +16,6 @@ import {
   Button,
   DataList,
   Separator,
-  Fieldset,
   HStack,
 } from "@chakra-ui/react";
 import Scroll from "../_commons/Scroll";
@@ -28,6 +27,7 @@ import { useAllSpace } from "@scspace-client/Hooks/space";
 import LoadingComponent from "../Loading/Loading";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import DeleteBtn from "./DeleteBtn";
+import { useAuth } from "@scspace-client/Hooks/auth";
 
 function SpaceSelect({ setSpaceId }: {
   setSpaceId: Dispatch<SetStateAction<number>>;
@@ -117,6 +117,8 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
     refetch();
     setOpen(false);
   }
+
+  const { userInfo } = useAuth();
 
   return (
     <>
@@ -282,9 +284,11 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                   <Dialog.Footer>
                     <DeleteBtn rid={selectedRes.id} onSuccess={onDeleteSuccess} />
                     <Dialog.ActionTrigger asChild>
-                      <Button variant="outline" rounded="sm">
-                        Close
-                      </Button>
+                      {(userInfo?.id === selectedRes.userId) && (
+                        <Button variant="outline" rounded="sm">
+                          Close
+                        </Button>
+                      )}
                     </Dialog.ActionTrigger>
                   </Dialog.Footer>
                 </>

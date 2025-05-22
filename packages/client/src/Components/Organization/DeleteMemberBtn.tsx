@@ -24,28 +24,27 @@ export default function DeleteMemberBtn({ onDelete, disabled, id, uid }: {
             role="alertdialog"
             open={open}
             onOpenChange={(e) => setOpen(e.open)}
+            placement="center"
         >
             <Dialog.Trigger asChild>
                 <IconButton
                     variant="outline"
                     rounded="sm"
-                    width="fit-content"
-                    height="fit-content"
                     disabled={!disabled}
+                    size="xs"
                 >
                     <HiMiniXMark />
                 </IconButton>
             </Dialog.Trigger>
             <Portal>
-                <Dialog.Backdrop />
-                <Dialog.Positioner>
+                <Dialog.Backdrop zIndex={1500} />
+                <Dialog.Positioner zIndex={1600}>
                     <Dialog.Content>
                         <Dialog.Header>
                             <Dialog.Title>Are you sure?</Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
-                            This action cannot be undone. This will permanently delete your
-                            account and remove your data from our systems.
+                            This action cannot be undone. This will permanently delete member in yout organization.
                         </Dialog.Body>
                         <Dialog.Footer>
                             <Button

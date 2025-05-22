@@ -136,7 +136,6 @@ export default function Redirect() {
                         href: "/mypage/reservation",
                         label: "예약 목록",
                         helperText: "Reservation List",
-                        disabled: true
                     },
                     {
                         href: "/mypage/organization",

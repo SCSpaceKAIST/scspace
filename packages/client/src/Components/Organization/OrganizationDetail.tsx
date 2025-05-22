@@ -17,12 +17,22 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import Member from "./Member";
 import DeleteBtn from "./DeleteBtn";
 import AddMemberBtn from "./AddMemberBtn";
+import { useAuth } from "@scspace-client/Hooks/auth";
+import { useEffect, useState } from "react";
 
 export default function OrganizationDetail({ id, onDelete }: {
     id: number;
     onDelete: () => any;
 }) {
     const { organizationDetail, refetch } = useOrganizationDetail({ id: id });
+    const { userInfo, needLogin } = useAuth();
+    const [isDelegator, setIsDelegator] = useState<boolean>(false);
+
+    useEffect(() => {
+        setIsDelegator((userInfo?.id ?? -1) === (organizationDetail?.delegatorId ?? -2));
+    }, [userInfo, organizationDetail]);
+
+    useEffect(() => { needLogin() }, []);
 
     return (organizationDetail ? (
         <>
@@ -32,7 +42,7 @@ export default function OrganizationDetail({ id, onDelete }: {
                         <IconButton rounded="sm" variant="ghost" onClick={() => refetch()} size="sm">
                             <HiOutlineRefresh color="gray" />
                         </IconButton>
-                        <Dialog.Title margin={0}>
+                        <Dialog.Title margin={0} fontSize="2xl">
                             {organizationDetail.name}
                         </Dialog.Title>
                     </HStack>
@@ -79,7 +89,11 @@ export default function OrganizationDetail({ id, onDelete }: {
                                 <Text margin={0} padding={0}>
                                     Members
                                 </Text>
-                                <AddMemberBtn oid={organizationDetail.id} refetch={refetch} />
+                                <AddMemberBtn
+                                    oid={organizationDetail.id}
+                                    refetch={refetch}
+                                    disabled={!isDelegator}
+                                />
                             </HStack>
                         </DataList.ItemLabel>
                         <DataList.ItemValue margin={0}>
@@ -89,7 +103,7 @@ export default function OrganizationDetail({ id, onDelete }: {
                                         refetch={refetch}
                                         oid={id}
                                         key={m.user.email} user={m.user}
-                                        deletable={m.user.id !== organizationDetail.delegator.id}
+                                        deletable={isDelegator && (m.user.id !== organizationDetail.delegator.id)}
                                     />
                                 ))}
                             </Wrap>
@@ -99,10 +113,12 @@ export default function OrganizationDetail({ id, onDelete }: {
             </Dialog.Body >
             <Separator />
             <Dialog.Footer>
-                <DeleteBtn
-                    id={id}
-                    onSuccess={() => onDelete()}
-                />
+                {(isDelegator) && (
+                    <DeleteBtn
+                        id={id}
+                        onSuccess={() => onDelete()}
+                    />
+                )}
                 <Dialog.ActionTrigger asChild>
                     <Button variant="outline" rounded="sm">
                         Close
