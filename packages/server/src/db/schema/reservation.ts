@@ -24,10 +24,10 @@ export const Reservation = mysqlTable('reservation', {
     .notNull()
     .references(() => Space.id, { onDelete: 'cascade' }),
   title: varchar('title', { length: 255 }).notNull(),
-  timeFrom: timestamp('time_from', { mode: 'string' }).notNull(),
-  timeTo: timestamp('time_to', { mode: 'string' }).notNull(),
-  timePost: timestamp('time_post', { mode: 'string' }).notNull(),
-  timeUpdate: timestamp('time_update', { mode: 'string' }).notNull(),
+  timeFrom: int('time_from').notNull(),
+  timeTo: int('time_to').notNull(),
+  timePost: int('time_post').notNull(),
+  timeUpdate: int('time_update').notNull(),
   state: int('state').notNull().default(1), // ['grant', 'wait', 'received', 'rejected']
 });
 

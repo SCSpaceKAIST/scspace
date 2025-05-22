@@ -51,8 +51,8 @@ export class ReservationRepository {
     states?: ReservationStateEnum[];
     limit?: number;
     timeRange?: {
-      timeFrom?: string;
-      timeTo?: string;
+      timeFrom?: number;
+      timeTo?: number;
     };
   }): Promise<MReservationSimple[]> {
     const whereClause: SQL[] = [];
@@ -83,7 +83,6 @@ export class ReservationRepository {
       const timeFrom = param.timeRange.timeFrom;
       const timeTo = param.timeRange.timeTo;
 
-      console.log(timeFrom, timeTo);
       if (timeFrom && timeTo) {
         whereClause.push(
           or(
@@ -99,7 +98,6 @@ export class ReservationRepository {
         );
       }
     }
-    console.log(whereClause);
 
     if (param.limit) {
       const reservations = await this.db
@@ -138,10 +136,10 @@ export class ReservationRepository {
       organizationId: reservationInput.organizationId,
       spaceId: reservationInput.spaceId,
       title: reservationInput.title,
-      timeFrom: formatDateToSQL(new Date(reservationInput.timeFrom)),
-      timeTo: formatDateToSQL(new Date(reservationInput.timeTo)),
-      timePost: formatDateToSQL(new Date()),
-      timeUpdate: formatDateToSQL(new Date()),
+      timeFrom: new Date(reservationInput.timeFrom).getTime(),
+      timeTo: new Date(reservationInput.timeTo).getTime(),
+      timePost: new Date().getTime(),
+      timeUpdate: new Date().getTime(),
       state: ReservationStateEnum.GRANT,
     } as InferInsertModel<typeof Reservation>;
     
@@ -182,7 +180,7 @@ export class ReservationRepository {
       title: data.title,
       timeFrom: data.timeFrom,
       timeTo: data.timeTo,
-      timeUpdate: formatDateToSQL(new Date()),
+      timeUpdate: new Date().getTime(),
     } as Partial<InferInsertModel<typeof Reservation>>;
 
     const [result] = await this.db

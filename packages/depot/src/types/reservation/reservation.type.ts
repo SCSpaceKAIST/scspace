@@ -12,10 +12,10 @@ export interface IReservation {
   spaceId: number;
   title: string;
   content: IReservationContent;
-  timeFrom: string;
-  timeTo: string;
-  timePost: string;
-  timeUpdate: string;
+  timeFrom: number;
+  timeTo: number;
+  timePost: number;
+  timeUpdate: number;
   state: ReservationStateEnum;
 }
 

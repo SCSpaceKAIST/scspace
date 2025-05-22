@@ -41,7 +41,7 @@ export class OrganizationMemberRepository {
     const insertData = {
       organizationId,
       userId,
-      timeRegister: formatDateToSQL(new Date()),
+      timeRegister: new Date().getTime(),
     } as InferInsertModel<typeof OrganizationMember>;
 
     await this.db.insert(OrganizationMember).values(insertData);

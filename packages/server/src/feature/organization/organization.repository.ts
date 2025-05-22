@@ -51,8 +51,8 @@ export class OrganizationRepository {
     const insertData = {
       name: organization.name,
       delegatorId: organization.delegatorId,
-      timeRegister: formatDateToSQL(new Date()),
-      timeUpdate: formatDateToSQL(new Date()),
+      timeRegister: new Date().getTime(),
+      timeUpdate: new Date().getTime(),
     } as InferInsertModel<typeof Organization>;
 
     const [result] = await this.db.insert(Organization).values(insertData);
@@ -69,13 +69,12 @@ export class OrganizationRepository {
     return organizationCreated[0];
   }
 
-  async update(organizationId: number, organization: IOrganization): Promise<MOrganization> {
+  async update(organizationId: number, organization: IOrganizationUpdate): Promise<MOrganization> {
     const updateData = {
       id: organizationId,
       name: organization.name,
       delegatorId: organization.delegatorId,
-      timeRegister: organization.timeRegister,
-      timeUpdate: formatDateToSQL(new Date()),
+      timeUpdate: new Date().getTime(),
     } as InferInsertModel<typeof Organization>;
 
     const [result] = await this.db.update(Organization).set(updateData).where(eq(Organization.id, organizationId));

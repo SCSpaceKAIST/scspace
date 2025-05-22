@@ -9,7 +9,6 @@ import { OrganizationService } from '@scspace-server/feature/organization/organi
 export class ManageGuard extends AuthGuard('jwt') {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const can = await super.canActivate(context);
-    
     if (!can) return false;
     
     const request = context.switchToHttp().getRequest();

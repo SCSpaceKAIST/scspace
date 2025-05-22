@@ -143,8 +143,8 @@ export class AppService {
         id: 0,
         name: 'individual',
         delegatorId: 1,
-        timeRegister: formatDateToSQL(new Date()),
-        timeUpdate: formatDateToSQL(new Date()),
+        timeRegister: new Date().getTime(),
+        timeUpdate: new Date().getTime(),
         }
 
       await this.db.transaction(async (tx) => {

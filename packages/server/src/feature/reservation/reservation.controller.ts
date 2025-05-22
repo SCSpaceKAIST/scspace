@@ -32,8 +32,8 @@ export class ReservationController {
   @Get('space')
   async getReservationBySpaceID(
     @Query('spaceId', ParseIntPipe) spaceId: number,
-    @Query('timeFrom') timeFrom?: string,
-    @Query('timeTo') timeTo?: string
+    @Query('timeFrom') timeFrom?: number,
+    @Query('timeTo') timeTo?: number
   ): Promise<IReservationAll[]> {
     return await this.reservationService.getReservationBySpaceIDBetweenTime(
       spaceId,

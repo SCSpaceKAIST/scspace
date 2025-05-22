@@ -36,8 +36,8 @@ export class ReservationPublicService {
       spaceId: spaceId,
       state: ReservationStateEnum.GRANT,
       timeRange: {
-        timeFrom: formatDateToSQL(today),
-        timeTo: formatDateToSQL(tomorrow),
+        timeFrom: today.getTime(),
+        timeTo: tomorrow.getTime(),
       },
     });
 
@@ -73,8 +73,8 @@ export class ReservationPublicService {
       spaceId: spaceId,
       state: ReservationStateEnum.GRANT,
       timeRange: {
-        timeFrom: formatDateToSQL(startOfWeek),
-        timeTo: formatDateToSQL(endOfWeek),
+        timeFrom: startOfWeek.getTime(),
+        timeTo: endOfWeek.getTime(),
       },
     });
 
@@ -143,8 +143,8 @@ export class ReservationPublicService {
     const overlappingReservations = await this.reservationRepository.fetch({
       spaceId: spaceId,
       timeRange: {
-        timeFrom: formatDateToSQL(timeFrom),
-        timeTo: formatDateToSQL(timeTo),
+        timeFrom: timeFrom.getTime(),
+        timeTo: timeTo.getTime(),
       },
     });
 
@@ -167,7 +167,7 @@ export class ReservationPublicService {
   async find(params: {
     userId?: number;
     spaceIds?: number[];
-    timeRange?: { timeFrom: string; timeTo: string };
+    timeRange?: { timeFrom: number; timeTo: number };
   }): Promise<MReservationSimple[]> {
     return this.reservationRepository.fetch(params);
   }

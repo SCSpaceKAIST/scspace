@@ -6,8 +6,8 @@ export interface IOrganization {
   id: number;
   name: string;
   delegatorId: number;
-  timeRegister: string;
-  timeUpdate: string;
+  timeRegister: number;
+  timeUpdate: number;
 }
 
 export type IOrganizationAll = IOrganization & {
