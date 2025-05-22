@@ -12,9 +12,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ChakraProvider
-        value={defaultSystem}
-      >
+      <ChakraProvider value={defaultSystem}>
         {children}
         <ReactQueryDevtools initialIsOpen={false} />
       </ChakraProvider>

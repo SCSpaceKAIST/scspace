@@ -61,7 +61,7 @@ export class ReservationController {
 
   // AuthGuard - jwt
   //HOOK: useReservationAPI
-  @UseGuards(MemberGuard)
+  // @UseGuards(MemberGuard)
   @Post()
   async postReservation(
     @Body() reservationInput: IReservationCreate,

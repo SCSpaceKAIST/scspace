@@ -52,6 +52,8 @@ export default function Reservation() {
   const createReservation = useReservationAPI().createRes;
   const { userInfo } = useAuth();
 
+  const [e, setE] = useState<string>();
+
   function submit() {
     if (!userInfo) return;
 
@@ -82,7 +84,8 @@ export default function Reservation() {
             console.log("SUCCESS", res)
           },
           onError(error, variables, context) {
-            console.log("ERROR", error, variables, context)
+            setE(error.message)
+            console.log("ERROR\n", error.message, "\n", variables, "\n", context)
           },
         }
       ),
@@ -97,12 +100,10 @@ export default function Reservation() {
         },
         error: {
           title: "Reservate Failed",
-          description: "ERROR MESSAGE"
+          description: e ?? "Please resubmit"
         }
       }
     );
-
-
   }
 
   const [count, setCount] = useState<number>(0);
@@ -110,30 +111,6 @@ export default function Reservation() {
   return (
     <Scroll>
       <Stack>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() =>
-            toaster.create({
-              description: "File saved successfully",
-              type: "info",
-            })
-          }
-        >
-          Show Toast
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() =>
-            toaster.create({
-              description: "1234",
-              type: "error",
-            })
-          }
-        >
-          Show Toast
-        </Button>
         <Grid
           templateColumns="repeat(6, 1fr)"
           gap={8}
