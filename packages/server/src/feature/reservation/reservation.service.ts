@@ -40,9 +40,10 @@ export class ReservationService {
 
     if (timeFrom && timeTo) {
       if (timeFrom === timeTo) {
-        timeTo = timeFrom + (1000 * 60 * 60 * 24-1);
+        const oneDayInMs = BigInt(1000) * BigInt(60) * BigInt(60) * BigInt(24);
+        timeTo = Number(BigInt(timeFrom) + oneDayInMs - BigInt(1));
       }
-      if (!timeRangeCheck(new Date(timeFrom), new Date(timeTo))) {
+      if (timeFrom >= timeTo) {
         throw new BadRequestException('timeFrom must be before timeTo');
       }
     }
@@ -186,7 +187,20 @@ export class ReservationService {
     );
   }
 
-  async deleteReservation(id: number): Promise<ISuccessResponse> {
+  async deleteReservation(id: number, user: IUser): Promise<ISuccessResponse> {
+      const reservation = await this.reservationRepository.fetch({
+        id: id,
+      });
+      if (reservation.length === 0) {
+        throw new NotFoundException('Reservation not found');
+      }
+    // individual
+    if (id === 1) {
+      if (reservation[0].userId !== user.id) {
+        throw new BadRequestException('User does not have permission to delete this reservation');
+      }
+    }
+
     const result = await this.reservationRepository.delete(id);
     if (!result) {
       throw new NotFoundException('Reservation not found');

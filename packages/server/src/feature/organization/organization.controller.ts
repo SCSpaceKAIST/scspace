@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Put, Param, ParseIntPipe, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Put, Param, ParseIntPipe, Body, UseGuards, BadRequestException, Req } from '@nestjs/common';
 import { OrganizationService } from './organization.service';
 import { IOrganization, IOrganizationAll, IOrganizationCreate, IOrganizationDelegator, IOrganizationMember, IOrganizationUpdate, IOrganizationUser } from '@scspace-depot/types/organization';
 import { MOrganizationMember } from './organization.member.model';
@@ -6,6 +6,7 @@ import { ISuccessResponse } from '@scspace-depot/types/common';
 import { OrganizationPublicService } from './organization.public.service';
 import { ManageGuard, UserGuard, MemberGuard, DelegatorGuard } from '../auth/jwt/jwt.guard';
 import { AuthGuard } from '@nestjs/passport';
+import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 
 @Controller('organization')
 export class OrganizationController {
@@ -33,7 +34,11 @@ export class OrganizationController {
   @Get(':id')
   async getOrganizationById(
     @Param('id', ParseIntPipe) id: number,
+    @Req() req: Request,
   ): Promise<IOrganizationAll> {
+    if (id === 1 && ((req as any).user.type !== UserTypeEnum.ADMIN && (req as any).user.type !== UserTypeEnum.MANAGER)) {
+      throw new BadRequestException('You cannot access the individual organization');
+    }
     return await this.organizationPublicService.fetchDeepById(id);
   }
 

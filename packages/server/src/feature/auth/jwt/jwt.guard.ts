@@ -5,6 +5,11 @@ import { IUser } from '@scspace-depot/types/user';
 import { OrganizationPublicService } from '@scspace-server/feature/organization/organization.public.service';
 import { OrganizationService } from '@scspace-server/feature/organization/organization.service';
 
+function isManage(user: IUser): boolean {
+  return user.type === UserTypeEnum.ADMIN
+    || user.type === UserTypeEnum.MANAGER;
+}
+
 @Injectable()
 export class ManageGuard extends AuthGuard('jwt') {
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -14,9 +19,7 @@ export class ManageGuard extends AuthGuard('jwt') {
     const request = context.switchToHttp().getRequest();
     const user = request.user as IUser;
     
-    if (user.type === UserTypeEnum.ADMIN
-      || user.type === UserTypeEnum.MANAGER
-    ) {
+    if (isManage(user)) {
       return true;
     }
     return false;
@@ -24,22 +27,27 @@ export class ManageGuard extends AuthGuard('jwt') {
 }
 
 @Injectable()
-export class UserGuard extends ManageGuard {
+export class UserGuard extends AuthGuard('jwt') {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const can = await super.canActivate(context);
     if (!can) return false;
 
     const request = context.switchToHttp().getRequest();
-    const userId = (request.user as IUser).id;
+    const user = (request.user as IUser);
+
+    if (isManage(user)) {
+      return true;
+    }
+
     const requestUserId = request.params.id;
-    if (userId === requestUserId) {
+    if (user.id === requestUserId) {
       return true;
     }
     return false;
   }
 }
 @Injectable()
-export class MemberGuard extends ManageGuard {
+export class MemberGuard extends AuthGuard('jwt') {
   constructor(
     private readonly organizationPublicService: OrganizationPublicService,
   ) {
@@ -52,6 +60,9 @@ export class MemberGuard extends ManageGuard {
 
     const request = context.switchToHttp().getRequest();
     const user = request.user as IUser;
+    if (isManage(user)) {
+      return true;
+    }
 
     let id = 0;
     if (request.params?.id) {
@@ -82,7 +93,7 @@ export class MemberGuard extends ManageGuard {
 }
 
 @Injectable()
-export class DelegatorGuard extends ManageGuard {
+export class DelegatorGuard extends AuthGuard('jwt') {
   constructor(
     private readonly organizationPublicService: OrganizationPublicService,
   ) {
@@ -90,9 +101,14 @@ export class DelegatorGuard extends ManageGuard {
   }
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const can = await super.canActivate(context);
+    if (!can) return false;
 
     const request = context.switchToHttp().getRequest();
-    const user = request.user as IUser;
+    const user = (request.user as IUser);
+    if (isManage(user)) {
+      return true;
+    }
+
     const delegator = await this.organizationPublicService.fetchDelegatorById(request.params.id);
     if (delegator.id === user.id) {
       return true;

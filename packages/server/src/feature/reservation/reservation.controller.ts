@@ -8,7 +8,8 @@ import {
   Put,
   ParseIntPipe,
   Delete,
-  UseGuards
+  UseGuards,
+  Req
 } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 import {
@@ -22,13 +23,14 @@ import {
 import { ISuccessResponse } from '@scspace-depot/types/common';
 import { AuthGuard } from '@nestjs/passport';
 import { MemberGuard, UserGuard } from '../auth/jwt/jwt.guard';
+import { IUser } from '@scspace-depot/types/user';
 @Controller('reservation')
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) { }
 
   //HOOK: useReservations
   //HOOK: useDateReservations
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Get('space')
   async getReservationBySpaceID(
     @Query('spaceId', ParseIntPipe) spaceId: number,
@@ -83,7 +85,7 @@ export class ReservationController {
   @Delete(':id')
   // 1인 경우를 고려하기 위해 추가
   // userid 비교 
-  async deleteReservation(@Param('id') id: number): Promise<ISuccessResponse> {
-    return await this.reservationService.deleteReservation(id);
+  async deleteReservation(@Param('id') id: number, @Req() req: Request): Promise<ISuccessResponse> {
+    return await this.reservationService.deleteReservation(id, (req as any).user as IUser);
   }
 }
