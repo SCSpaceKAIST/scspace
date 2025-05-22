@@ -19,13 +19,13 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
-  // @Get('login')
-  // async loginGet(
-  //   @Res() res: Response,
-  // ): Promise<void> {
-  //   Logger.log('login page');
-  //   await this.authService.tmp_login(res);
-  // }
+  @Get('login')
+  async loginGet(
+    @Res() res: Response,
+  ): Promise<void> {
+    Logger.log('login page');
+    await this.authService.tmp_login(res);
+  }
 
   @Get('verify')
   async verify(@Req() req: Request, @Res() res: Response): Promise<void> {
