@@ -7,13 +7,13 @@ import { AuthGuard } from '@nestjs/passport';
 export class SpaceController {
   constructor(private readonly spaceService: SpacePublicService) { }
 
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   async findAllSpace(): Promise<ISpace[]> {
     return await this.spaceService.fetchAll();
   }
 
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async findSpaceByID(@Param('id') id: string): Promise<ISpace> {
     return await this.spaceService.fetchById(parseInt(id));
