@@ -385,50 +385,78 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
           {dates.map((date, ci) =>
             times.map((hour) => {
               const _slot = dateReservation[date].map((d, i) => { return { slot: d, i } }).find(
-                (r) => r.slot.hourFrom <= hour && r.slot.hourTo > hour
+                (r) => (r.slot.hourFrom <= hour && r.slot.hourTo > hour)
               );
               const slot = _slot?.slot ?? null;
-              const i = _slot?.i ?? 0;
-              if (slot && slot.hourFrom === hour) {
-                // span multi-hour bookings
+              const i = _slot?.i ?? -1;
+              if (slot) {
+                if (slot.hourFrom === hour) {
+                  // span multi-hour bookings
+                  return (
+                    <GridItem
+                      key={`${date}-${hour}`}
+                      rowStart={hour + 2}
+                      colStart={ci + 2}
+                      rowSpan={slot.hourTo - slot.hourFrom}
+                      bg={stringToColor(slot.title)}
+                      borderBottomWidth="1px"
+                      borderRightWidth="1px"
+                    >
+                      <Button
+                        asChild
+                        rounded="0"
+                        variant="ghost"
+                        onClick={() => {
+                          setSelected(slot.id);
+                          setOpen(true)
+                        }}
+                      >
+                        <VStack
+                          height="100%"
+                          width="100%"
+                          margin={0}
+                          padding={0}
+                          gap={0}
+                          justifyContent="center"
+                        >
+                          <Text margin={0} padding={0} fontSize="lg" fontWeight="semibold">
+                            {slot.title}
+                          </Text>
+                          <Text margin={0} padding={0} fontSize="sm">
+                            {slot.name}
+                          </Text>
+                        </VStack>
+                      </Button>
+                    </GridItem>
+                  );
+                } else if (slot.hourFrom === 0 && slot.hourTo === 24 && i > 0) {
+                  return (
+                    <GridItem
+                      key={`${date}-${hour}`}
+                      rowStart={hour + 2}
+                      colStart={ci + 2}
+                      borderBottomWidth="1px"
+                      borderRightWidth="1px"
+                      // minW="32vh"
+                      height="64px"
+                    />
+                  );
+                }
+                // return null;
+              } else if (!slot) {
+                // we skip rendering rows that are covered by a span
                 return (
                   <GridItem
                     key={`${date}-${hour}`}
                     rowStart={hour + 2}
                     colStart={ci + 2}
-                    rowSpan={slot.hourTo - slot.hourFrom}
-                    bg={stringToColor(slot.title)}
                     borderBottomWidth="1px"
                     borderRightWidth="1px"
-                  >
-                    <Button
-                      asChild
-                      rounded="0"
-                      variant="ghost"
-                      onClick={() => {
-                        setSelected(slot.id);
-                        setOpen(true)
-                      }}
-                    >
-                      <VStack
-                        height="100%"
-                        width="100%"
-                        margin={0}
-                        padding={0}
-                        gap={0}
-                        justifyContent="center"
-                      >
-                        <Text margin={0} padding={0} fontSize="lg" fontWeight="semibold">
-                          {slot.title}
-                        </Text>
-                        <Text margin={0} padding={0} fontSize="sm">
-                          {slot.name}
-                        </Text>
-                      </VStack>
-                    </Button>
-                  </GridItem>
+                    // minW="32vh"
+                    height="64px"
+                  />
                 );
-              } else if (!slot || (dateReservation[date][i - 1] && dateReservation[date][i - 1].hourTo <= hour)) {
+              } else if (dateReservation[date][i - 1] && dateReservation[date][i - 1].hourTo <= hour) {
                 // we skip rendering rows that are covered by a span
                 return (
                   <GridItem
@@ -442,6 +470,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                   />
                 );
               }
+
 
               return null;
             })

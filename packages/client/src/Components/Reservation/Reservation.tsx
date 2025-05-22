@@ -30,7 +30,7 @@ import { toaster } from "../_commons/Toaster";
 
 function formatTime(date: Date, hour: number) {
   const res = new Date(date.getTime());
-  res.setHours(hour - 9);
+  res.setHours(hour);
   res.setMinutes(0);
   res.setSeconds(0);
   res.setMilliseconds(0);

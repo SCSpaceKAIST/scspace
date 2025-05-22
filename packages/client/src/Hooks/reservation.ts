@@ -93,8 +93,8 @@ export function useDateReservations({ spaceId, dateFrom, dateTo, }: {
         reservations.map((d) => {
             const tF = new Date(d.timeFrom);
             const tT = new Date(d.timeTo);
-            tF.setHours(tF.getHours() + 9);
-            tT.setHours(tT.getHours() + 9);
+            // tF.setHours(tF.getHours() + 9);
+            // tT.setHours(tT.getHours() + 9);
 
             const dF = tF.toLocaleDateString();
             const dT = tT.toLocaleDateString();
