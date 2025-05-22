@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Delete, Put, Param, ParseIntPipe, Body } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Put, Param, ParseIntPipe, Body, UseGuards } from '@nestjs/common';
 import { OrganizationService } from './organization.service';
 import { IOrganization, IOrganizationAll, IOrganizationCreate, IOrganizationDelegator, IOrganizationMember, IOrganizationUpdate, IOrganizationUser } from '@scspace-depot/types/organization';
 import { MOrganizationMember } from './organization.member.model';
 import { ISuccessResponse } from '@scspace-depot/types/common';
 import { OrganizationPublicService } from './organization.public.service';
+import { ManageGuard, UserGuard, MemberGuard, DelegatorGuard } from '../auth/jwt/jwt.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('organization')
 export class OrganizationController {
@@ -13,26 +15,31 @@ export class OrganizationController {
   ) { }
 
   // HOOK: useAllOrganization
+  @UseGuards(ManageGuard)
   @Get()
   async getOrganizations(): Promise<IOrganizationDelegator[]> {
-    return await this.organizationService.getAll();
+    return await this.organizationPublicService.fetchAll();
   }
 
   // HOOK: useOrganization 
+  @UseGuards(UserGuard)
   @Get('user/:id')
   async getOrganizationsByUserId(@Param('id', ParseIntPipe) id: number): Promise<IOrganizationDelegator[]> {
     return await this.organizationPublicService.fetchByUserId(id);
   }
 
   // HOOK: useOrganizationDetail
+  @UseGuards(MemberGuard)
   @Get(':id')
   async getOrganizationById(
-    @Param('id', ParseIntPipe) organizationId: number,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<IOrganizationAll> {
-    return await this.organizationService.getDeepById(organizationId);
+    return await this.organizationPublicService.fetchDeepById(id);
   }
 
   // HOOK: useOrganizationAPI
+
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async createOrganization(
     @Body() organization: IOrganizationCreate,
@@ -40,34 +47,38 @@ export class OrganizationController {
     return await this.organizationService.insert(organization);
   }
 
+  @UseGuards(DelegatorGuard)
   @Put(':id')
   async updateOrganization(
-    @Param('id', ParseIntPipe) organizationId: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() organizationNew: IOrganizationUpdate,
   ): Promise<IOrganization> {
-    return await this.organizationService.update(organizationId, organizationNew);
+    return await this.organizationService.update(id, organizationNew);
   }
 
+  @UseGuards(DelegatorGuard)
   @Put(':id/add/')
   async addMember(
-    @Param('id', ParseIntPipe) organizationId: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() oid: IOrganizationUser,
   ): Promise<MOrganizationMember> {
-    return await this.organizationService.insertMember(organizationId, oid.userId);
+    return await this.organizationPublicService.insertMember(id, oid.userId);
   }
 
+  @UseGuards(DelegatorGuard)
   @Put(':id/delete/')
   async removeMember(
-    @Param('id', ParseIntPipe) organizationId: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() oid: IOrganizationUser,
   ): Promise<ISuccessResponse> {
-    return await this.organizationService.deleteMember(organizationId, oid.userId);
+    return await this.organizationService.deleteMember(id, oid.userId);
   }
 
+  @UseGuards(DelegatorGuard)
   @Delete(':id')
   async deleteOrganization(
-    @Param('id', ParseIntPipe) organizationId: number
+    @Param('id', ParseIntPipe) id: number
   ): Promise<ISuccessResponse> {
-    return await this.organizationService.delete(organizationId);
+    return await this.organizationService.delete(id);
   }
 } 

@@ -16,7 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         JwtStrategy.extractJWT,
         ExtractJwt.fromAuthHeaderAsBearerToken(),
       ]),
-      secretOrKey: configService.get('JWT_KEY'), //for example. use ENV
+      secretOrKey: configService.get('JWT_KEY'),
       ignoreExpiration: false,
     });
   }
@@ -36,8 +36,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     } catch (e) {}
   }
   private static extractJWT(req): string | null {
-    if (req.cookies && 'scspacetoken1' in req.cookies) {
-      return req.cookies.scspacetoken1;
+    if (req.cookies && 'scspacetoken' in req.cookies) {
+      return req.cookies.scspacetoken;
     }
     return null;
   }

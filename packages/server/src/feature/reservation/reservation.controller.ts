@@ -7,7 +7,8 @@ import {
   Body,
   Put,
   ParseIntPipe,
-  Delete
+  Delete,
+  UseGuards
 } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 import {
@@ -19,13 +20,15 @@ import {
   IReservationAll
 } from '@scspace-depot/types/reservation';
 import { ISuccessResponse } from '@scspace-depot/types/common';
-
+import { AuthGuard } from '@nestjs/passport';
+import { MemberGuard, UserGuard } from '../auth/jwt/jwt.guard';
 @Controller('reservation')
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) { }
 
   //HOOK: useReservations
   //HOOK: useDateReservations
+  // @UseGuards(AuthGuard('jwt'))
   @Get('space')
   async getReservationBySpaceID(
     @Query('spaceId', ParseIntPipe) spaceId: number,
@@ -39,7 +42,9 @@ export class ReservationController {
     );
   }
 
+  // AuthGuard - user
   //HOOK: useUserReservation
+  @UseGuards(UserGuard)
   @Get('user/:id')
   async getReservationListByUserId(
     @Param('id') userId: number,
@@ -49,12 +54,14 @@ export class ReservationController {
   }
 
   //HOOK: useWaitReservations
-  @Get('manage')
-  async getManageReservation(): Promise<IReservationAll[]> {
-    return await this.reservationService.getManageReservation();
-  }
+  // @Get('manage')
+  // async getManageReservation(): Promise<IReservationAll[]> {
+  //   return await this.reservationService.getManageReservation();
+  // }
 
+  // AuthGuard - jwt
   //HOOK: useReservationAPI
+  @UseGuards(MemberGuard)
   @Post()
   async postReservation(
     @Body() reservationInput: IReservationCreate,
@@ -62,6 +69,8 @@ export class ReservationController {
     return await this.reservationService.postReservation(reservationInput);
   }
 
+  // AuthGuard - user
+  @UseGuards(MemberGuard)
   @Put()
   async updateReservation(
     @Body() reservationInput: IReservationUpdate,
@@ -69,7 +78,11 @@ export class ReservationController {
     return await this.reservationService.updateReservation(reservationInput);
   }
 
+  // AuthGuard - user
+  @UseGuards(MemberGuard)
   @Delete(':id')
+  // 1인 경우를 고려하기 위해 추가
+  // userid 비교 
   async deleteReservation(@Param('id') id: number): Promise<ISuccessResponse> {
     return await this.reservationService.deleteReservation(id);
   }

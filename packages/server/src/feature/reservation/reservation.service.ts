@@ -38,13 +38,25 @@ export class ReservationService {
     timeTo?: string,
   ): Promise<IReservationAll[]> {
 
-    if (timeFrom && timeTo && !timeRangeCheck(timeFrom, timeTo)) {
-      throw new BadRequestException('timeFrom must be before timeTo');
+    let timeFromDate: Date;
+    let timeToDate: Date;
+
+    if (timeFrom && timeTo) {
+      if (timeFrom === timeTo) {
+        timeFromDate = new Date(timeFrom);
+        timeToDate = new Date(new Date(timeTo).getTime() + (1000 * 60 * 60 * 24-1));
+      } else {
+        timeFromDate = new Date(timeFrom);
+        timeToDate = new Date(timeTo);
+      }
+      if (!timeRangeCheck(timeFromDate, timeToDate)) {
+        throw new BadRequestException('timeFrom must be before timeTo');
+      }
     }
     // If either timeFrom or timeTo is missing, fetch all reservations for the space
     const reservations = await this.reservationRepository.fetch({ 
       spaceId, 
-      ...(timeFrom && timeTo ? { timeRange: { timeFrom: formatDateToSQL(new Date(timeFrom)), timeTo: formatDateToSQL(new Date(timeTo)) } } : {})
+      ...(timeFrom && timeTo ? { timeRange: { timeFrom: formatDateToSQL(timeFromDate), timeTo: formatDateToSQL(timeToDate) } } : {})
     });
     if (reservations.length === 0) {
       return [];
@@ -128,7 +140,7 @@ export class ReservationService {
     reservationInput: IReservationCreate,
   ): Promise<IReservation> {
 
-    await this.reservationPublicService.checkWholeTime(reservationInput.userId, reservationInput.spaceId, reservationInput.timeFrom, reservationInput.timeTo);
+    await this.reservationPublicService.checkWholeTime(reservationInput.userId, reservationInput.spaceId, new Date(reservationInput.timeFrom), new Date(reservationInput.timeTo));
 
     const [user, organizations, space] = await Promise.all([
       this.userPublicService.fetchById(reservationInput.userId),
@@ -172,9 +184,7 @@ export class ReservationService {
       throw new NotFoundException('Reservation not found');
     }
 
-    await this.reservationPublicService.checkWholeTime(reservation[0].userId, reservation[0].spaceId, reservationInput.timeFrom, reservationInput.timeTo);
-    reservationInput.timeFrom = formatDateToSQL(new Date(reservationInput.timeFrom));
-    reservationInput.timeTo = formatDateToSQL(new Date(reservationInput.timeTo));
+    await this.reservationPublicService.checkWholeTime(reservation[0].userId, reservation[0].spaceId, new Date(reservationInput.timeFrom), new Date(reservationInput.timeTo));
 
     const [reservationUpdated, reservationContentUpdated] = await this.reservationRepository.update(reservationInput);
     return MReservation.fromDB(

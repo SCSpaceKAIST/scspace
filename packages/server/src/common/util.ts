@@ -1,9 +1,7 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
-export function timeRangeCheck(timeFrom: string, timeTo: string): boolean {
-  const timeFromDate = new Date(timeFrom);
-  const timeToDate = new Date(timeTo);
-  return timeFromDate <= timeToDate;
+export function timeRangeCheck(timeFrom: Date, timeTo: Date): boolean {
+  return timeFrom <= timeTo;
 }
 
 export function formatDateToSQL(date: Date): string {

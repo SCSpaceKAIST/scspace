@@ -19,6 +19,9 @@ import {
   gt,
   lt,
   desc,
+  lte,
+  gte,
+  or,
 } from 'drizzle-orm';
 import {
   IReservationCreate,
@@ -80,15 +83,23 @@ export class ReservationRepository {
       const timeFrom = param.timeRange.timeFrom;
       const timeTo = param.timeRange.timeTo;
 
+      console.log(timeFrom, timeTo);
       if (timeFrom && timeTo) {
         whereClause.push(
-          and(
-            gt(Reservation.timeTo, timeFrom),
-            lt(Reservation.timeFrom, timeTo)
+          or(
+            and(
+              gte(Reservation.timeFrom, timeFrom),
+              lte(Reservation.timeFrom, timeTo)
+            ),
+            and(
+              gte(Reservation.timeTo, timeFrom),
+              lte(Reservation.timeTo, timeTo)
+            )
           )
         );
       }
     }
+    console.log(whereClause);
 
     if (param.limit) {
       const reservations = await this.db

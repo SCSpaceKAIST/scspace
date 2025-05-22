@@ -19,66 +19,6 @@ export class OrganizationService {
     private readonly organizationPublicService: OrganizationPublicService,
     private readonly userPublicService: UserPublicService,
   ) { }
-  async getDeepById(organizationId: number): Promise<IOrganizationAll> {
-    const organization = await this.organizationPublicService.fetchById(organizationId);
-    const delegator = await this.userPublicService.fetchById(organization.delegatorId);
-    const members = await this.organizationMemberRepository.fetch({ organizationId: organizationId });
-
-    const memberDetails = members.length > 0 
-      ? await this.getMemberDetails(members)
-      : [];
-
-    return {
-      ...organization,
-      delegator,
-      members: memberDetails,
-    };
-  }
-
-  private async getMemberDetails(members: any[]): Promise<IOrganizationMemberResponse[]> {
-    const memberModels = members.map(MOrganizationMember.fromDB);
-    const memberUsers = await this.userPublicService.fetchAllByIds(
-      memberModels.map(member => member.userId)
-    );
-
-    return memberModels.map(member => {
-      const user = memberUsers.find(user => user.id === member.userId);
-      if (!user) {
-        throw new NotFoundException(`User not found for member ${member.id}`);
-      }
-      return { ...member, user };
-    });
-  }
-
-  async getAll(): Promise<IOrganizationDelegator[]> {
-    const organizations = await this.organizationPublicService.fetchAll();
-    const delegators = await this.userPublicService.fetchAllByIds(organizations.map(organization => organization.delegatorId));
-    return organizations.map(organization => ({
-      ...organization,
-      delegator: delegators.find(delegator => delegator.id === organization.delegatorId),
-    }));
-  }
-
-  async getMembersById(organizationId: number): Promise<MOrganizationMember[]> {
-    return (await this.organizationMemberRepository.fetch({ organizationId: organizationId })).map(MOrganizationMember.fromDB);
-  }
-
-  async insertMember(organizationId: number, userId: number): Promise<MOrganizationMember> {
-    const userExist = await this.userPublicService.fetchById(userId);
-    if (!userExist) {
-      throw new NotFoundException('User not found');
-    }
-    const organizationExist = await this.organizationPublicService.fetchById(organizationId);
-    if (!organizationExist) {
-      throw new NotFoundException('Organization not found');
-    }
-    const organizationMemberExist = await this.organizationMemberRepository.fetch({ organizationId, userId });
-    if (organizationMemberExist.length > 0) {
-      throw new BadRequestException('User already in organization');
-    }
-    const newOrganizationMember = await this.organizationMemberRepository.insert(organizationId, userId);
-    return MOrganizationMember.fromDB(newOrganizationMember);
-  }
 
   async deleteMember(organizationId: number, userId: number): Promise<ISuccessResponse> {
     const organizationExist = await this.organizationPublicService.fetchById(organizationId);

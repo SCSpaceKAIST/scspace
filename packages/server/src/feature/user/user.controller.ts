@@ -1,9 +1,10 @@
-import { Controller, Get, Param, ParseIntPipe, Post, Body, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Post, Body, Delete, Put, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { IUser, IUserCreate } from '@scspace-depot/types/user';
 import { ISuccessResponse } from '@scspace-depot/types/common';
 import { UserPublicService } from './user.public.service';
-
+import { ManageGuard } from '../auth/jwt/jwt.guard';
+import { AuthGuard } from '@nestjs/passport';
 @Controller('user')
 export class UserController {
   constructor(
@@ -12,21 +13,26 @@ export class UserController {
   ) { }
 
   //HOOK: useUserInfo
+  @UseGuards(ManageGuard)
   @Get(':id')
   async getUserById(@Param('id', ParseIntPipe) id: number): Promise<IUser> {
     return await this.userPublicService.fetchById(id);
   }
 
+  @UseGuards(ManageGuard)
   @Get()
   async getUsers(): Promise<IUser[]> {
     return await this.userPublicService.fetchAll();
   }
 
+  //HOOK: useUserInfo
+  @UseGuards(AuthGuard('jwt'))
   @Get('studentNumber/:studentNumber')
   async getUserByStudentNumber(@Param('studentNumber', ParseIntPipe) studentNumber: number): Promise<IUser> {
     return await this.userPublicService.fetchByStudentNumber(studentNumber);
   }
 
+  @UseGuards(ManageGuard)
   @Post()
   async postUser(
     @Body() body: IUserCreate
@@ -34,6 +40,8 @@ export class UserController {
     return await this.userService.insert(body);
   }
 
+  //HOOK: useUserInfo
+  @UseGuards(ManageGuard)
   @Delete(':id')
   async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<ISuccessResponse> {
     return await this.userService.delete(id);

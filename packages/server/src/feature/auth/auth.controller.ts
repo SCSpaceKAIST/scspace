@@ -10,10 +10,8 @@ import {
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt/jwt-guard';
 import { IVerificationResponse } from '@scspace-depot/types/auth/auth.type';
 import { ConfigService } from '@nestjs/config';
-import { IUserCreate } from '@scspace-depot/types/user';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -21,18 +19,18 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
-  @Get('login')
-  async loginGet(
-    @Res() res: Response,
-  ): Promise<void> {
-    Logger.log('login page');
-    await this.authService.tmp_login(res);
-  }
+  // @Get('login')
+  // async loginGet(
+  //   @Res() res: Response,
+  // ): Promise<void> {
+  //   Logger.log('login page');
+  //   await this.authService.tmp_login(res);
+  // }
 
-  @Get('verification')
-  async verification(@Req() req: Request, @Res() res: Response): Promise<void> {
+  @Get('verify')
+  async verify(@Req() req: Request, @Res() res: Response): Promise<void> {
     // console.log('verification', req.cookies);
-    const verifyRes = await this.authService.verification(req.cookies, res);
+    const verifyRes = await this.authService.verify(req.cookies, res);
     const response: IVerificationResponse = {
       isLogined: verifyRes !== null,
       userInfo: verifyRes,
@@ -59,8 +57,7 @@ export class AuthController {
 
   @Post('logout')
   async logout(@Res() res: Response): Promise<void> {
-    console.log('logout');
-    res.clearCookie('scspacetoken1', { path: '/' });
+    res.clearCookie('scspacetoken', { path: '/' });
 
     return res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
   }

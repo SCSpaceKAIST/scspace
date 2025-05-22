@@ -76,9 +76,9 @@ export class AuthService {
         );
         const createdUser = !user ? await this.userPublicService.insert(payload) : user;
         if (user) {
-          Logger.log('USER' + JSON.stringify(user));
+          Logger.log('USER ' + JSON.stringify(user));
         } else {
-          Logger.log('CREATED USER' + JSON.stringify(createdUser));
+          Logger.log('CREATED USER ' + JSON.stringify(createdUser));
         }
 
         const token = this.jwtService.sign(createdUser, {
@@ -86,7 +86,7 @@ export class AuthService {
           issuer: 'scspace',
           subject: 'userInfo',
         });
-        Logger.log('TOKEN' + token);
+        Logger.log('TOKEN ' + token);
 
         res.cookie('scspacetoken', Buffer.from(token).toString('base64'), {
           maxAge: 60 * 60 * 1000 * 24 * 7,
@@ -119,21 +119,19 @@ export class AuthService {
         email: process.env.ADMIN_EMAIL,
         type: UserTypeEnum.ADMIN,
       };
-      Logger.log('PAYLOAD');
-      Logger.log(JSON.stringify(payload));
+      Logger.log('PAYLOAD ' + JSON.stringify(payload));
       const user = await this.userPublicService.fetchByStudentNumber(
         payload.studentNumber,
       );
 
       const createdUser = !user ? await this.userPublicService.insert(payload) : user;
-      Logger.log('CREATED USER');
-      Logger.log(JSON.stringify(createdUser));
+      Logger.log('CREATED USER ' + JSON.stringify(user));
       const token = this.jwtService.sign(createdUser, {
         expiresIn: '7d',
         issuer: 'scspace',
         subject: 'userInfo',
       });
-      Logger.log('TOKEN' + token);
+      Logger.log('TOKEN ' + token);
 
       res.cookie('scspacetoken', Buffer.from(token).toString('base64'), {
         maxAge: 60 * 60 * 1000 * 24 * 7,
@@ -153,8 +151,7 @@ export class AuthService {
     };
   }
 
-  async verification(cookies: any, res: Response): Promise<IUser | null> {
-    // Deprecated
+  async verify(cookies: any, res: Response): Promise<IUser | null> {
     const cookie = cookies.scspacetoken;
     if (!cookie) {
       return null;
