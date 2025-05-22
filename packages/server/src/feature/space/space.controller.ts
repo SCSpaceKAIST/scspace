@@ -5,7 +5,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 @Controller('space')
 export class SpaceController {
-  constructor(private readonly spaceService: SpacePublicService) {}
+  constructor(private readonly spaceService: SpacePublicService) { }
 
   @UseGuards(AuthGuard('jwt'))
   @Get()
