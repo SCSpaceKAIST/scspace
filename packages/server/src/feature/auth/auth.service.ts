@@ -50,7 +50,6 @@ export class AuthService {
         if (!response.ok) throw new Error(`HTTP error ${response.status}`);
 
         const result = await response.json();
-        console.log(result);
 
         // return result;
 

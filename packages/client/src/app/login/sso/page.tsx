@@ -81,7 +81,6 @@ const LoginPage: React.FC = () => {
 
         // // 폼을 body에 추가하고 submit
         document.body.appendChild(form);
-        console.log(form);
         form.submit();
 
 
