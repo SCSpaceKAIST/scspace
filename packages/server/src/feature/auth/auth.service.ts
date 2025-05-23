@@ -16,96 +16,74 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async login(state: string, code: string, res: any): Promise<void> {
-    if (!code) return;
+  async login(state: string, code: string, res: Response): Promise<void> {
+    if (!code) {
+      res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
+      return;
+    }
 
-    // state => CSRF check 1
+    try {
+      const clientId = process.env.CLIENT_ID;
+      const clientSecret = process.env.CLIENT_SECRET;
+      const redirectUri = process.env.REDIRECT_URI;
+      const serverApiUrl = process.env.USER_INFO;
 
-    const clientId = process.env.CLIENT_ID;
-    const clientSecret = process.env.CLIENT_SECRET;
-    const redirectUri = process.env.REDIRECT_URI;
-    const serverApiUrl = process.env.USER_INFO;
+      const body = new URLSearchParams({
+        client_id: clientId,
+        client_secret: clientSecret,
+        code: code,
+        redirect_uri: redirectUri,
+      });
 
-    const getUrlParams = (key: string): string | null => {
-      return new URLSearchParams(window.location.search).get(key);
-    };
-    const body = new URLSearchParams({
-      client_id: clientId,
-      client_secret: clientSecret,
-      code: code,
-      redirect_uri: redirectUri,
-    });
-    console.log(body);
+      const response = await fetch(serverApiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+        },
+        body: body.toString(),
+      });
 
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(serverApiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-          },
-          body: body.toString(),
-        });
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
 
-        if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+      const result = await response.json();
+      const userInfo = result?.userInfo;
+      if (!userInfo) {
+        throw new Error('No user info in response');
+      }
 
-        const result = await response.json();
+      const payload = this.ssoToUser(userInfo);
+      const user = await this.userPublicService.fetchByStudentNumber(
+        payload.studentNumber,
+      );
+      const createdUser = !user ? await this.userPublicService.insert(payload) : user;
 
-        // return result;
+      const token = this.jwtService.sign(createdUser, {
+        expiresIn: '7d',
+        issuer: 'scspace',
+        subject: 'userInfo',
+      });
 
-        // if (result.errorCode) {
-        //   // setErrorCode(result.errorCode);
-        // } else if (result.nonce === sesNonce) {
-        //   const user = JSON.parse(result.userInfo);
-        //   setUserInfo(user);
-        //   console.log('User Mobile:', user.user_mbtlnum);
-        // }
-
-        const userInfo = result?.userInfo;
-
-        const resNonce = result?.nonce; // CSRF check 2
-
-        // ===== a parts of original code
-
-        const data = userInfo;
-
-        const payload = this.ssoToUser(data);
-        const user = await this.userPublicService.fetchByStudentNumber(
-          payload.studentNumber,
-        );
-        const createdUser = !user ? await this.userPublicService.insert(payload) : user;
-        if (user) {
-          Logger.log('USER ' + JSON.stringify(user));
-        } else {
-          Logger.log('CREATED USER ' + JSON.stringify(createdUser));
-        }
-
-        const token = this.jwtService.sign(createdUser, {
-          expiresIn: '7d',
-          issuer: 'scspace',
-          subject: 'userInfo',
-        });
-        Logger.log('TOKEN ' + token);
-
-        res.cookie('scspacetoken', Buffer.from(token).toString('base64'), {
-          maxAge: 60 * 60 * 1000 * 24 * 7,
-          secure: true,
-          sameSite: 'none',
-          httpOnly: true,
-          path: '/',
-        });
-        
-        res.redirect(
-          this.configService.get<string>('NEXT_PUBLIC_APP_URL') + '/',
-        );
-
-        return data;
-      } catch (error) {
-        console.error('API 통신 오류:', error);
-        res.status(500).send("Internal Server Error");
+      // 쿠키 설정
+      const cookieOptions = {
+        maxAge: 60 * 60 * 1000 * 24 * 7, // 7 days
+        secure: true,
+        sameSite: 'none' as const,
+        httpOnly: true,
+        path: '/',
       };
-    };
-    return await fetchUserData();
+
+      res.cookie('scspacetoken', Buffer.from(token).toString('base64'), cookieOptions);
+      
+      // 리다이렉트
+      const redirectUrl = this.configService.get<string>('NEXT_PUBLIC_APP_URL');
+      res.redirect(redirectUrl);
+
+    } catch (error) {
+      Logger.error('Login error:', error);
+      res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL') + '/login?error=auth_failed');
+    }
   }
 
   async tmp_login(res: any): Promise<void> {
