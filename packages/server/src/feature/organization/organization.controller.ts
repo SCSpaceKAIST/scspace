@@ -26,7 +26,8 @@ export class OrganizationController {
   @UseGuards(UserGuard)
   @Get('user/:id')
   async getOrganizationsByUserId(@Param('id', ParseIntPipe) id: number): Promise<IOrganizationDelegator[]> {
-    return await this.organizationPublicService.fetchByUserId(id);
+    const result = await this.organizationPublicService.fetchByUserId(id);
+    return result.filter(org => org.id !== 1);
   }
 
   // HOOK: useOrganizationDetail

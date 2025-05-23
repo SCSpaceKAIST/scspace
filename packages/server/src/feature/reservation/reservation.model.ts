@@ -15,7 +15,6 @@ export class MReservationContent implements IReservationContent {
   food: IReservationContent['food'];
   desk: IReservationContent['desk'];
   chair: IReservationContent['chair'];
-  lobby: IReservationContent['lobby'];
   busking: IReservationContent['busking'];
   workerNeed: IReservationContent['workerNeed'];
 
@@ -27,7 +26,6 @@ export class MReservationContent implements IReservationContent {
     this.food = data.food ?? '';
     this.desk = data.desk ?? 0;
     this.chair = data.chair ?? 0;
-    this.lobby = data.lobby ?? false;
     this.busking = data.busking ?? false;
     this.workerNeed = data.workerNeed ?? 1;
   }
@@ -41,7 +39,6 @@ export class MReservationContent implements IReservationContent {
       food: reservationContent.food,
       desk: reservationContent.desk,
       chair: reservationContent.chair,
-      lobby: reservationContent.lobby,
       busking: reservationContent.busking,
       workerNeed: reservationContent.workerNeed,
     };
@@ -80,7 +77,6 @@ export class MReservation implements IReservation {
       food: '',
       desk: 0,
       chair: 0,
-      lobby: false,
       busking: false,
       workerNeed: 1,
     });
@@ -106,7 +102,6 @@ export class MReservation implements IReservation {
         food: '',
         desk: 0,
         chair: 0,
-        lobby: false,
         busking: false,
         workerNeed: 1,
       }),

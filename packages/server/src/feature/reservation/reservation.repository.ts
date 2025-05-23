@@ -19,8 +19,6 @@ import {
   gt,
   lt,
   desc,
-  lte,
-  gte,
   or,
 } from 'drizzle-orm';
 import {
@@ -159,7 +157,6 @@ export class ReservationRepository {
       food: reservationInput.content.food,
       desk: reservationInput.content.desk,
       chair: reservationInput.content.chair,
-      lobby: reservationInput.content.lobby,
       busking: reservationInput.content.busking,
       workerNeed: reservationInput.content.workerNeed,
     } as InferInsertModel<typeof ReservationContent>;
@@ -201,7 +198,6 @@ export class ReservationRepository {
       food: data.content.food,
       desk: data.content.desk,
       chair: data.content.chair,
-      lobby: data.content.lobby,
       busking: data.content.busking,
       workerNeed: data.content.workerNeed,
     } as InferInsertModel<typeof ReservationContent>;

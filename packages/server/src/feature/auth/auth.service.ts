@@ -7,6 +7,7 @@ import { UserSSOType2025 } from '@scspace-depot/types/user/user.sso.type';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { Response } from 'express';
 import { UserPublicService } from '../user/user.public.service';
+import { OrganizationPublicService } from '../organization/organization.public.service';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,7 @@ export class AuthService {
     private readonly userPublicService: UserPublicService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private readonly organizationPublicService: OrganizationPublicService,
   ) {}
 
   async login(state: string, code: string, res: Response): Promise<void> {
@@ -58,6 +60,7 @@ export class AuthService {
         payload.studentNumber,
       );
       const createdUser = !user ? await this.userPublicService.insert(payload) : user;
+      await this.organizationPublicService.insertMember(createdUser.id, 1);
 
       const token = this.jwtService.sign(createdUser, {
         expiresIn: '7d',
