@@ -150,7 +150,7 @@ export class AuthService {
     };
   }
 
-  async verify(cookies: any, res: Response): Promise<IUser | null> {
+  async verify(cookies: any): Promise<IUser | null> {
     const cookie = cookies.scspacetoken;
     if (!cookie) {
       return null;
@@ -162,7 +162,8 @@ export class AuthService {
       return decoded;
     } catch (err) {
       if (err instanceof TokenExpiredError) {
-        res.clearCookie('scspacetoken', { path: '/' });
+        // 토큰이 만료된 경우 쿠키는 컨트롤러에서 처리
+        return null;
       }
       return null;
     }

@@ -29,18 +29,17 @@ export class AuthController {
 
   @Get('verify')
   async verify(@Req() req: Request, @Res() res: Response): Promise<void> {
-    // console.log('verification', req.cookies);
-    const verifyRes = await this.authService.verify(req.cookies, res);
-    const response: IVerificationResponse = {
-      isLogined: verifyRes !== null,
+    const verifyRes = await this.authService.verify(req.cookies);
+    
+    // 토큰이 만료되었거나 유효하지 않은 경우 쿠키 제거
+    if (!verifyRes) {
+      res.clearCookie('scspacetoken', { path: '/' });
+    }
+    
+    res.json({
+      isLogined: !!verifyRes,
       userInfo: verifyRes,
-    };
-    // console.log('verification res', verifyRes);
-    // console.log('verification return value', response);
-    res
-      .status(200)
-      .header('Content-Type', 'application/json') // 🔥 명시적으로 설정
-      .json({ isLogined: !!verifyRes, userInfo: verifyRes });
+    });
   }
 
   @Post('login')
@@ -49,9 +48,7 @@ export class AuthController {
     @Body('code') code: string,
     @Res() res: Response,
   ): Promise<void> {
-    // Logger.log('login', { state, code });
     await this.authService.login(state, code, res);
-    // Logger.log('login res:', loginRes);
     res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
   }
 
