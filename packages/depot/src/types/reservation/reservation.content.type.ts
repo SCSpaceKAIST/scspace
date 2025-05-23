@@ -6,7 +6,6 @@ export interface IReservationContent {
   food: string;
   desk: number;
   chair: number;
-  lobby: boolean;
   busking: boolean;
   workerNeed: number;
 }
