@@ -59,7 +59,9 @@ export class AuthService {
         payload.studentNumber,
       );
       const createdUser = !user ? await this.userPublicService.insert(payload) : user;
-      await this.organizationPublicService.insertMember(createdUser.id, 1);
+      if (!user){
+        await this.organizationPublicService.insertMember(1, createdUser.id);
+      }
 
       const token = this.jwtService.sign(createdUser, {
         expiresIn: '7d',
