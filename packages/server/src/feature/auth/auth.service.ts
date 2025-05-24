@@ -18,10 +18,9 @@ export class AuthService {
     private readonly organizationPublicService: OrganizationPublicService,
   ) {}
 
-  async login(state: string, code: string, res: Response): Promise<void> {
+  async login(state: string, code: string): Promise<string> {
     if (!code) {
-      res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
-      return;
+      throw new Error('No code provided');
     }
 
     try {
@@ -68,24 +67,10 @@ export class AuthService {
         subject: 'userInfo',
       });
 
-      // 쿠키 설정
-      const cookieOptions = {
-        maxAge: 60 * 60 * 1000 * 24 * 7, // 7 days
-        secure: true,
-        sameSite: 'none' as const,
-        httpOnly: true,
-        path: '/',
-      };
-
-      res.cookie('scspacetoken', Buffer.from(token).toString('base64'), cookieOptions);
-      
-      // 리다이렉트
-      const redirectUrl = this.configService.get<string>('NEXT_PUBLIC_APP_URL');
-      res.redirect(redirectUrl);
-
+      return token;
     } catch (error) {
       Logger.error('Login error:', error);
-      res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL') + '/login?error=auth_failed');
+      throw error;
     }
   }
 

@@ -48,8 +48,24 @@ export class AuthController {
     @Body('code') code: string,
     @Res() res: Response,
   ): Promise<void> {
-    await this.authService.login(state, code, res);
-    res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
+    try {
+      const token = await this.authService.login(state, code);
+      
+      // 쿠키 설정
+      const cookieOptions = {
+        maxAge: 60 * 60 * 1000 * 24 * 7, // 7 days
+        secure: true,
+        sameSite: 'none' as const,
+        httpOnly: true,
+        path: '/',
+      };
+
+      res.cookie('scspacetoken', Buffer.from(token).toString('base64'), cookieOptions);
+      res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
+    } catch (error) {
+      Logger.error('Login failed:', error);
+      res.redirect('/login?error=auth_failed');
+    }
   }
 
   @Post('logout')
