@@ -58,8 +58,12 @@ export class AuthService {
       const user = await this.userPublicService.fetchByStudentNumber(
         payload.studentNumber,
       );
+      console.log("user", user);
       const createdUser = !user ? await this.userPublicService.insert(payload) : user;
+      console.log("createdUser", createdUser);
+      console.log("user", user);
       if (!user){
+        console.log('insert member');
         await this.organizationPublicService.insertMember(1, createdUser.id);
       }
 
