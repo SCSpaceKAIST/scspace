@@ -23,6 +23,8 @@ import { ReservationModule } from '../reservation/reservation.module';
       }),
     }),
     UserModule,
+    OrganizationModule,
+    ReservationModule,
   ],
   controllers: [AuthController],
   exports: [ManageGuard, UserGuard, DelegatorGuard, MemberGuard],
