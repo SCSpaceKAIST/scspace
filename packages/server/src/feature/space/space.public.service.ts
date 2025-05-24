@@ -9,8 +9,11 @@ export class SpacePublicService {
     private readonly spaceRepository: SpaceRepository,
   ) {}
 
-  async fetchById(id: number): Promise<ISpace> {
+  async fetchById(id: number): Promise<ISpace | null> {
     const space = await this.spaceRepository.fetch(id);
+    if (!space) {
+      return null;
+    }
     return space;
   }
 

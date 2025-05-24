@@ -102,10 +102,10 @@ export class OrganizationPublicService {
     return organizations.map(MOrganization.fromDB);
   }
 
-  async fetchById(id: number): Promise<IOrganization> {
+  async fetchById(id: number): Promise<IOrganization | null> {
     const organization = await this.organizationRepository.fetch({ id: id });
     if (organization.length === 0) {
-      throw new NotFoundException('Organization not found');
+      return null;
     }
     return MOrganization.fromDB(organization[0]);
   }

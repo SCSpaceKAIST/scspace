@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe, Post, Body, Delete, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Post, Body, Delete, Put, UseGuards, NotFoundException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { IUser, IUserCreate } from '@scspace-depot/types/user';
 import { ISuccessResponse } from '@scspace-depot/types/common';
@@ -16,7 +16,11 @@ export class UserController {
   @UseGuards(ManageGuard)
   @Get(':id')
   async getUserById(@Param('id', ParseIntPipe) id: number): Promise<IUser> {
-    return await this.userPublicService.fetchById(id);
+    const user = await this.userPublicService.fetchById(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
   @UseGuards(ManageGuard)
@@ -29,7 +33,12 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Get('studentNumber/:studentNumber')
   async getUserByStudentNumber(@Param('studentNumber', ParseIntPipe) studentNumber: number): Promise<IUser> {
-    return await this.userPublicService.fetchByStudentNumber(studentNumber);
+
+    const user = await this.userPublicService.fetchByStudentNumber(studentNumber);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
   @UseGuards(ManageGuard)

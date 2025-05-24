@@ -9,21 +9,21 @@ import { UserService } from './user.service';
 export class UserPublicService {
   constructor(private readonly userRepository: UserRepository, private readonly userService: UserService) {}
 
-  async fetchById(id: number): Promise<IUser> {
+  async fetchById(id: number): Promise<IUser | null> {
     if (id === 0) {
       throw new NotFoundException('User not found');
     }
     const user = await this.userRepository.fetch({ id: id });
     if (user.length === 0) {
-      throw new NotFoundException('User not found');
+      return null;
     }
     return MUser.fromDB(user[0]);
   }
 
-  async fetchByStudentNumber(studentNumber: number): Promise<IUser> {
+  async fetchByStudentNumber(studentNumber: number): Promise<IUser | null> {
     const user = await this.userRepository.fetch({ studentNumber: studentNumber });
     if (user.length === 0) { 
-      throw new BadRequestException(`User with student number ${studentNumber} not found.`);
+      return null;
     }
     return MUser.fromDB(user[0]);
   }

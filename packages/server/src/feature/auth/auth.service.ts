@@ -55,6 +55,7 @@ export class AuthService {
       }
 
       const payload = this.ssoToUser(userInfo);
+
       const user = await this.userPublicService.fetchByStudentNumber(
         payload.studentNumber,
       );
