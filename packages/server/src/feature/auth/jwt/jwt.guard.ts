@@ -40,9 +40,7 @@ export class UserGuard extends AuthGuard('jwt') {
     }
 
     const requestUserId = request.params.id;
-    console.log("REQUEST USER ID " + requestUserId);
-    console.log("USER ID " + user.id);
-    if (user.id === requestUserId) {
+    if (parseInt(requestUserId) === (user.id)) {
       return true;
     }
     return false;
@@ -68,12 +66,12 @@ export class MemberGuard extends AuthGuard('jwt') {
 
     let id = 0;
     if (request.params?.id) {
-      id = request.params.id;
+      id = parseInt(request.params.id);
       if (id === 1){
         return true;
       }
     } else if (request.body?.organizationId) {
-      id = request.body.organizationId;
+      id = parseInt(request.body.organizationId);
       if (id === 1){
         const individualUser = request.body.userId;
         if (individualUser === user.id) {
@@ -111,7 +109,7 @@ export class DelegatorGuard extends AuthGuard('jwt') {
       return true;
     }
 
-    const delegator = await this.organizationPublicService.fetchDelegatorById(request.params.id);
+    const delegator = await this.organizationPublicService.fetchDelegatorById(parseInt(request.params.id));
     if (delegator.id === user.id) {
       return true;
     }
