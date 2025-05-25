@@ -25,7 +25,7 @@ export class AppService {
     return 'Hello World!';
   }
 
-  async fillContent(): Promise<boolean> {
+  async fillContent(): Promise<void> {
     const spaceCount = await this.spacePublicService.count();
     const userCount = await this.userPublicService.count();
     const organizationCount = await this.organizationPublicService.count();
@@ -134,8 +134,6 @@ export class AppService {
       await this.db.transaction(async (tx) => {
         await tx.insert(schema.User).values(users);
       });
-
-      return true;
     }
 
     if (organizationCount == 0) {
