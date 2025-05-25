@@ -413,10 +413,10 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                           gap={0}
                           justifyContent="center"
                         >
-                          <Text margin={0} padding={0} fontSize="lg" fontWeight="semibold">
+                          <Text margin={0} padding={0} fontSize="lg" fontWeight="semibold" wordBreak="break-all">
                             {slot.title}
                           </Text>
-                          <Text margin={0} padding={0} fontSize="sm">
+                          <Text margin={0} padding={0} fontSize="sm" wordBreak="break-all">
                             {slot.name}
                           </Text>
                         </VStack>
