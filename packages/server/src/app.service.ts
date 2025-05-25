@@ -10,6 +10,7 @@ import { ISpace } from '@scspace-depot/types/space';
 import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 import { IOrganization, IOrganizationCreate } from '@scspace-depot/types/organization';
 import { OrganizationPublicService } from './feature/organization/organization.public.service';
+import { getNow } from '@scspace-server/common/util';
 
 @Injectable()
 export class AppService {
@@ -142,8 +143,8 @@ export class AppService {
         id: 0,
         name: 'individual',
         delegatorId: 1,
-        timeRegister: new Date().getTime(),
-        timeUpdate: new Date().getTime(),
+        timeRegister: getNow(),
+        timeUpdate: getNow(),
         }
 
       await this.db.transaction(async (tx) => {

@@ -4,6 +4,7 @@ import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema, OrganizationMember } from 'src/db/schema';
 import { and, eq, inArray, SQL, InferInsertModel } from 'drizzle-orm';
 import { MOrganizationMember } from './organization.member.model';
+import { getNow } from '@scspace-server/common/util';
 
 @Injectable()
 export class OrganizationMemberRepository {
@@ -40,7 +41,7 @@ export class OrganizationMemberRepository {
     const insertData = {
       organizationId,
       userId,
-      timeRegister: new Date().getTime(),
+      timeRegister: getNow(),
     } as InferInsertModel<typeof OrganizationMember>;
 
     await this.db.insert(OrganizationMember).values(insertData);

@@ -8,6 +8,7 @@ import { reservationMaxWeekTime } from '@scspace-depot/consts/reservation.const'
 import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
 import { timeRangeCheck } from '@scspace-server/common/util';
 import { IReservationContent } from '@scspace-depot/types/reservation';
+import { getDate } from 'date-fns';
 @Injectable()
 export class ReservationPublicService {
   constructor(
@@ -66,7 +67,7 @@ export class ReservationPublicService {
     startOfWeek.setHours(0, 0, 0, 0); // 시간 초기화
 
     const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(endOfWeek.getDate() + 7);
+    endOfWeek.setDate(getDate(endOfWeek) + 7);
 
     const weeklyReservations = await this.reservationRepository.fetch({
       userId: userId,

@@ -5,6 +5,7 @@ import { schema, Organization, OrganizationMember } from '@schema';
 import { and, eq, inArray, SQL, InferInsertModel } from 'drizzle-orm';
 import { IOrganization, IOrganizationCreate, IOrganizationUpdate } from '@scspace-depot/types/organization';
 import { MOrganization } from './organization.model';
+import { getNow } from '@scspace-server/common/util';
 
 @Injectable()
 export class OrganizationRepository {
@@ -49,8 +50,8 @@ export class OrganizationRepository {
     const insertData = {
       name: organization.name,
       delegatorId: organization.delegatorId,
-      timeRegister: new Date().getTime(),
-      timeUpdate: new Date().getTime(),
+      timeRegister: getNow(),
+      timeUpdate: getNow(),
     } as InferInsertModel<typeof Organization>;
 
     const [result] = await this.db.insert(Organization).values(insertData);
@@ -72,7 +73,7 @@ export class OrganizationRepository {
       id: organizationId,
       name: organization.name,
       delegatorId: organization.delegatorId,
-      timeUpdate: new Date().getTime(),
+      timeUpdate: getNow(),
     } as InferInsertModel<typeof Organization>;
 
     const [result] = await this.db.update(Organization).set(updateData).where(eq(Organization.id, organizationId));

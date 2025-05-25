@@ -31,6 +31,7 @@ import {
   ReservationStateEnum,
 } from '@scspace-depot/enums/reservation.enum';
 import { MReservation, MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
+import { getNow } from '@scspace-server/common/util';
 
 @Injectable()
 export class ReservationRepository {
@@ -135,8 +136,8 @@ export class ReservationRepository {
       title: reservationInput.title,
       timeFrom: reservationInput.timeFrom,
       timeTo: reservationInput.timeTo,
-      timePost: new Date().getTime(),
-      timeUpdate: new Date().getTime(),
+      timePost: getNow(),
+      timeUpdate: getNow(),
       state: ReservationStateEnum.GRANT,
     } as InferInsertModel<typeof Reservation>;
     
@@ -176,7 +177,7 @@ export class ReservationRepository {
       title: data.title,
       timeFrom: data.timeFrom,
       timeTo: data.timeTo,
-      timeUpdate: new Date().getTime(),
+      timeUpdate: getNow(),
     } as Partial<InferInsertModel<typeof Reservation>>;
 
     const [result] = await this.db

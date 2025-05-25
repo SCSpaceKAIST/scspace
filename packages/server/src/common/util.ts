@@ -67,3 +67,13 @@ export function getNow() {
 
   return minute;
 }
+
+export function getDate(date: Date) {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 12 * year;
+  const day = date.getDate() + 32 * month;
+  const hour = date.getHours() + day * 24;
+  const minute = date.getMinutes() + hour * 60;
+
+  return minute;
+}

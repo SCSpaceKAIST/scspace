@@ -44,7 +44,7 @@ export class AuthController {
 
   @Post('login')
   async login(
-    @Body('state') state: string,
+    @Body('state') state: number,
     @Body('code') code: string,
     @Res() res: Response,
   ): Promise<void> {

@@ -18,19 +18,22 @@ export class AuthService {
     private readonly organizationPublicService: OrganizationPublicService,
   ) {}
 
-  verifyCode(code: number){
-    const v1 = this.configService.get<number>("SSO_CODE1");
-    const v2 = this.configService.get<number>("SSO_CODE2");
+  verifyState(state: number){
+    const v1 = this.configService.get<number>("SSO_STATE1");
+    const v2 = this.configService.get<number>("SSO_STATE2");
 
-    if ((code ^ v1) === v2){
+    if ((state ^ v1) === v2){
       return true;
     }
     return false;
   }
 
-  async login(state: string, code: string): Promise<string> {
+  async login(state: number, code: string): Promise<string> {
     if (!code) {
       throw new Error('No code provided');
+    }
+    if (!this.verifyState(state)) {
+      throw new Error('Fucking csrf detected');
     }
 
     try {
@@ -70,7 +73,7 @@ export class AuthService {
         payload.studentNumber,
       );
       const createdUser = !user ? await this.userPublicService.insert(payload) : user;
-      if (!user){
+      if (!user && createdUser){
         await this.organizationPublicService.insertMember(1, createdUser.id);
       }
 
