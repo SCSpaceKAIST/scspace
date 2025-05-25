@@ -18,6 +18,16 @@ export class AuthService {
     private readonly organizationPublicService: OrganizationPublicService,
   ) {}
 
+  verifyCode(code: number){
+    const v1 = this.configService.get<number>("SSO_CODE1");
+    const v2 = this.configService.get<number>("SSO_CODE2");
+
+    if ((code ^ v1) === v2){
+      return true;
+    }
+    return false;
+  }
+
   async login(state: string, code: string): Promise<string> {
     if (!code) {
       throw new Error('No code provided');
@@ -59,12 +69,8 @@ export class AuthService {
       const user = await this.userPublicService.fetchByStudentNumber(
         payload.studentNumber,
       );
-      console.log("user", user);
       const createdUser = !user ? await this.userPublicService.insert(payload) : user;
-      console.log("createdUser", createdUser);
-      console.log("user", user);
       if (!user){
-        console.log('insert member');
         await this.organizationPublicService.insertMember(1, createdUser.id);
       }
 
