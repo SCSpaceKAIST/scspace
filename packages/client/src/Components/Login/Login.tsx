@@ -9,7 +9,7 @@ export default function SSOLogin() {
     const isWide = useBreakpointValue({ base: false, md: true });
 
     return (
-        <Dialog.Root size="cover">
+        <Dialog.Root size="full" scrollBehavior="inside">
             <Portal>
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
