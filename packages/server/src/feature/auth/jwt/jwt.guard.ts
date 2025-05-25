@@ -40,6 +40,8 @@ export class UserGuard extends AuthGuard('jwt') {
     }
 
     const requestUserId = request.params.id;
+    console.log("REQUEST USER ID " + requestUserId);
+    console.log("USER ID " + user.id);
     if (user.id === requestUserId) {
       return true;
     }
