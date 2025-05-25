@@ -21,7 +21,6 @@ import {
   IReservationAll
 } from '@scspace-depot/types/reservation';
 import { ISuccessResponse } from '@scspace-depot/types/common';
-import { AuthGuard } from '@nestjs/passport';
 import { MemberGuard, UserGuard } from '../auth/jwt/jwt.guard';
 import { IUser } from '@scspace-depot/types/user';
 @Controller('reservation')
@@ -30,7 +29,6 @@ export class ReservationController {
 
   //HOOK: useReservations
   //HOOK: useDateReservations
-  @UseGuards(AuthGuard('jwt'))
   @Get('space')
   async getReservationBySpaceID(
     @Query('spaceId', ParseIntPipe) spaceId: number,
