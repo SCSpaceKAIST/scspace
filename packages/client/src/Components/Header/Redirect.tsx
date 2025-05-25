@@ -6,15 +6,17 @@ import {
     Blockquote,
     Stack,
     StackSeparator,
-    Link,
     Button,
     Field,
     Collapsible,
 } from "@chakra-ui/react";
 import { HiPlus } from "react-icons/hi2";
 import { useAllSpace } from "@scspace-client/Hooks/space";
+import { useLinkPush } from "@scspace-client/Hooks/api";
 
 function RedirectLinks({ links }: { links: ILink[] }) {
+    const { linkPush } = useLinkPush();
+
     return (
         <Blockquote.Root
             width="100%"
@@ -33,8 +35,8 @@ function RedirectLinks({ links }: { links: ILink[] }) {
                             gap={0}
                         >
                             <Stack direction="row" >
-                                <Link
-                                    href={l.href}
+                                <Button
+                                    onClick={() => linkPush(l.href)}
                                     width="100%"
                                     margin={0}
                                     color={{ _hover: "blue.500" }}
@@ -59,7 +61,7 @@ function RedirectLinks({ links }: { links: ILink[] }) {
                                             </Field.HelperText>
                                         </Field.Root>
                                     </Button>
-                                </Link>
+                                </Button>
                                 <Collapsible.Trigger
                                     mx={1}
                                     rounded="sm"

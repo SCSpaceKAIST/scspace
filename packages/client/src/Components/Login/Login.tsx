@@ -1,12 +1,13 @@
 "use client";
 
 import { Button, Card, Center, CloseButton, Dialog, DialogPositioner, HStack, Portal, Separator, Stack, StackSeparator, useBreakpointValue } from "@chakra-ui/react";
-import Link from "next/link";
 import Scroll from "../_commons/Scroll";
 import PrivacyPolicy from "./PrivacyPolicy";
+import { useLinkPush } from "@scspace-client/Hooks/api";
 
 export default function SSOLogin() {
     const isWide = useBreakpointValue({ base: false, md: true });
+    const { linkPush } = useLinkPush();
 
     return (
         <Dialog.Root size="full" scrollBehavior="inside">
@@ -36,13 +37,13 @@ export default function SSOLogin() {
                                                 KAIST 학생문화공간위원회 사이트는 KAIST SSO (Pass-Ni) 로그인만을 지원합니다.
                                             </Card.Description>
                                             <Card.Description>
-                                                The KAIST Student Culture & Space Committee website only supports KAIST SSO (Pass-Ni) login.
+                                                The KAIST SCSpace website only supports KAIST SSO (Pass-Ni) login.
                                             </Card.Description>
                                         </Stack>
                                         <Button bg={{ base: "#01438F" }} fontWeight={{ base: "semibold", _hover: "bold" }} asChild>
-                                            <Link href="/login/sso" passHref>
+                                            <Button onClick={() => linkPush("/login/sso")}>
                                                 Login as a KAIST SSO
-                                            </Link>
+                                            </Button>
                                         </Button>
                                     </Card.Header>
                                     <Card.Body />
@@ -53,7 +54,7 @@ export default function SSOLogin() {
                                                     본 SSO 로그인을 통해 학생문화공간위원회의 개인정보처리방침에 동의하게 됩니다.
                                                 </Card.Description>
                                                 <Card.Description>
-                                                    By registering with this SSO, you agree to the Student Culture & Space Committee Privacy Policy.
+                                                    By registering with this SSO, you agree to the SCSpace Privacy Policy.
                                                 </Card.Description>
                                             </Stack>
                                             <Dialog.Trigger width='100%' asChild>
@@ -69,6 +70,6 @@ export default function SSOLogin() {
                     </Card.Body>
                 </Card.Root>
             </Scroll>
-        </Dialog.Root>
+        </Dialog.Root >
     )
 }

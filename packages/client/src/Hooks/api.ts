@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:33001/api";
 
@@ -8,6 +9,16 @@ const valueToString = (val: unknown) => {
   if (val instanceof Date) return val.toISOString();
   if (typeof val === "object") return JSON.stringify(val);
   return String(val);
+};
+
+export const useLinkPush = () => {
+  const router = useRouter();
+
+  const linkPush = (link: string) => {
+    router.push(link);
+  };
+
+  return { router, linkPush };
 };
 
 export const useQueryApi = <ResponseType>(

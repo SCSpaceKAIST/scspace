@@ -60,7 +60,6 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
 
     function apply() {
         for (const v of value) if (!v) {
-            setSid("");
             return;
         }
         setSid(value.join(""));
@@ -109,7 +108,6 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
                     onKeyDown={(e) => {
                         if ((e.key === "Enter") && student && !isSelected[student.studentNumber.toString()]) {
                             setSelected((s) => [...s, student]);
-                            console.log(selected, isSelected);
                             setIsSelected((s) => {
                                 const obj = { ...s, };
                                 obj[student.studentNumber.toString()] = true;
@@ -132,9 +130,18 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
                                             <Text margin={0} padding={0}>
                                                 Search Student (by Student Number)
                                             </Text>
-                                            <Text margin={0} padding={0}>
-                                                {'Press "ENTER" to select student'}
-                                            </Text>
+                                            <Button variant="outline" size="sm" onClick={() => {
+                                                if (student && !isSelected[student.studentNumber.toString()]) {
+                                                    setSelected((s) => [...s, student]);
+                                                    setIsSelected((s) => {
+                                                        const obj = { ...s, };
+                                                        obj[student.studentNumber.toString()] = true;
+                                                        return obj
+                                                    })
+                                                }
+                                            }}>
+                                                Select
+                                            </Button>
                                         </Flex>
                                     </Field.Label>
                                     <VStack width="100%" py={2} borderWidth="1px" rounded="sm" gap={4}>

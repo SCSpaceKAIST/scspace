@@ -1,23 +1,9 @@
 "use client";
 
-import { useQueryApi } from "@scspace-client/Hooks/api";
+import { useLinkPush, useQueryApi } from "@scspace-client/Hooks/api";
 import { IUser } from "@scspace-depot/types/user";
 import { IVerificationResponse } from "@scspace-depot/types/auth/auth.type";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
-
-import { useRouter } from "next/navigation";
-
-export const useLinkPush = () => {
-  // 라우터로 가져오는게 귀찮아서 하나로 만든 커스텀 훅
-
-  const router = useRouter();
-
-  const linkPush = (link: string) => {
-    router.push(link);
-  };
-
-  return { router, linkPush };
-};
 
 export const useAuth = () => {
   const { data, isLoading, refetch } = useQueryApi<IVerificationResponse>("/auth/verify");

@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { useLinkPush } from "@scspace-client/Hooks/auth";
+import { useLinkPush } from "@scspace-client/Hooks/api";
 import { randomBytes, createHash } from "crypto";
 import Scroll from "@scspace-client/Components/_commons/Scroll";
 import LoadingComponent from "@scspace-client/Components/Loading/Loading";
@@ -60,11 +60,11 @@ const LoginPage: React.FC = () => {
     inputNonce.value = nonce;
     form.appendChild(inputNonce);
 
-    // // 폼을 body에 추가하고 submit
+    // 폼을 body에 추가하고 submit
     document.body.appendChild(form);
     form.submit();
 
-    // For Dev
+    // // For Dev
     // const form = document.createElement('form');
     // form.method = 'GET';
     // form.action = 'http://localhost:33001/api/auth/login';

@@ -10,27 +10,30 @@ import {
     IconButton,
     HStack
 } from "@chakra-ui/react";
-import { useState, useEffect, useRef } from "react";
+import { useState, } from "react";
 import Scroll from "../_commons/Scroll";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useOrganization, } from "@scspace-client/Hooks/organization";
-import { IOrganization, IOrganizationDelegator, } from "@scspace-depot/types/organization";
+import { IOrganizationDelegator, } from "@scspace-depot/types/organization";
 import TooltipComponent from "../Tooltip/Tooptip";
 import LoadingComponent from "../Loading/Loading";
 import { HiOutlineRefresh } from "react-icons/hi";
 
 import OrganizationDetail from "./OrganizationDetail";
 import NewOrganizationBtn from "./NewOrganizationBtn";
+import { useDate } from "@scspace-client/Hooks/date";
 
 export default function Organization() {
     const { userInfo, needLogin } = useAuth();
-    const [selected, setSelected] = useState<number>(-1);
+    needLogin();
 
-    useEffect(() => needLogin());
+    const [selected, setSelected] = useState<number>(-1);
 
     const { organization, refetch } = useOrganization({ uid: userInfo?.id });
 
     const [open, setOpen] = useState<boolean>(false);
+
+    const { getString } = useDate();
 
     return (
         <Scroll>
@@ -112,10 +115,10 @@ export default function Organization() {
                                                 {org.delegator.nameKr}
                                             </Table.Cell>
                                             <Table.Cell>
-                                                {(new Date(org.timeRegister)).toLocaleString()}
+                                                {getString(org.timeRegister)}
                                             </Table.Cell>
                                             <Table.Cell>
-                                                {(new Date(org.timeUpdate)).toLocaleString()}
+                                                {getString(org.timeUpdate)}
                                             </Table.Cell>
                                         </Table.Row>
                                     ))}

@@ -95,7 +95,7 @@ export default function PageSelector({
                                 }}
                                 width={{
                                     base: "100%",
-                                    md: "32vh"
+                                    md: "calc(var(--screen-width) * 0.18)"
                                 }}
                                 padding={4}
                                 onClick={() => {
@@ -113,9 +113,11 @@ export default function PageSelector({
                     </Stack>
                 </Box>
             </Scroll>
-            <Scroll>
-                {pages[key].preview}
-            </Scroll>
+            {isMd && (
+                <Scroll>
+                    {pages[key].preview}
+                </Scroll>
+            )}
         </Grid>
     ));
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Stack,
   Separator,
@@ -30,6 +30,9 @@ import { toaster } from "../_commons/Toaster";
 import { useDate } from "@scspace-client/Hooks/date";
 
 export default function Reservation() {
+  const { userInfo, needLogin } = useAuth();
+  needLogin();
+
   const [dateFrom, setDateFrom] = useState<Date>(() => new Date());
   const [hourFrom, setHourFrom] = useState<number>(0);
   const [dateTo, setDateTo] = useState<Date>(() => new Date());
@@ -47,7 +50,6 @@ export default function Reservation() {
   const [check, setCheck] = useState<boolean>(false);
 
   const createReservation = useReservationAPI().createRes;
-  const { userInfo } = useAuth();
 
   const [e, setE] = useState<string>();
 

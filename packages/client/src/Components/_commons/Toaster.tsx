@@ -10,7 +10,7 @@ export default function ToasterComponent() {
     return (
         <Toaster toaster={toaster}>
             {(toast) => (
-                <Toast.Root asChild width="32vh">
+                <Toast.Root asChild width="calc(var(--screen-width) * 0.18)">
                     <HStack margin={0} padding={0} gap={3}>
                         <Toast.Indicator />
                         <Stack>
