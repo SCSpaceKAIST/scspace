@@ -55,3 +55,15 @@ export function takeExist<T>(name?: string): (array: T[]) => T[] {
     return array;
   };
 }
+
+export function getNow() {
+  const date = new Date();
+
+  const year = date.getFullYear();
+  const month = date.getMonth() + 12 * year;
+  const day = date.getDate() + 32 * month;
+  const hour = date.getHours() + day * 24;
+  const minute = date.getMinutes() + hour * 60;
+
+  return minute;
+}

@@ -9,7 +9,7 @@ import {
     IOrganizationUser,
 } from "@scspace-depot/types/organization";
 import { useEffect, useState } from "react";
-import { useMutationApi, useQueryApi } from "./useAPI";
+import { useMutationApi, useQueryApi } from "./api";
 import { ISuccessResponse } from "@scspace-depot/types/common/common.type";
 
 export function useAllOrganization() {

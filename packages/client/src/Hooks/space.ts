@@ -1,7 +1,7 @@
 "use client"
 
 import { ISpace } from "@scspace-depot/types/space";
-import { useQueryApi } from "./useAPI";
+import { useQueryApi } from "./api";
 import { useEffect, useState } from "react";
 
 export function useSpace({ id }: { id: number }) {

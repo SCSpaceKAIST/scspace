@@ -27,15 +27,7 @@ import { CalendarView } from "../Calendar/Calendar";
 import { HourForm } from "./forms/elements/Hour";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { toaster } from "../_commons/Toaster";
-
-function formatTime(date: Date, hour: number) {
-  const res = new Date(date.getTime());
-  res.setHours(hour);
-  res.setMinutes(0);
-  res.setSeconds(0);
-  res.setMilliseconds(0);
-  return res.getTime();
-}
+import { useDate } from "@scspace-client/Hooks/date";
 
 export default function Reservation() {
   const [dateFrom, setDateFrom] = useState<Date>(() => new Date());
@@ -58,6 +50,8 @@ export default function Reservation() {
   const { userInfo } = useAuth();
 
   const [e, setE] = useState<string>();
+
+  const { getTime } = useDate();
 
   function submit() {
     if (title === "") {
@@ -95,8 +89,8 @@ export default function Reservation() {
           organizationId: orgId,
           spaceId: spaceId,
           title: title,
-          timeFrom: formatTime(dateFrom, hourFrom),
-          timeTo: formatTime(dateTo, hourTo),
+          timeFrom: getTime(dateFrom) + getTime({ hour: hourFrom }),
+          timeTo: getTime(dateTo) + getTime({ hour: hourTo }),
         },
         {
           onSuccess: (res) => {

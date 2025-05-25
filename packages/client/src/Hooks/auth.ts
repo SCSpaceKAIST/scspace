@@ -1,6 +1,6 @@
 "use client";
 
-import { useQueryApi } from "@scspace-client/Hooks/useAPI";
+import { useQueryApi } from "@scspace-client/Hooks/api";
 import { IUser } from "@scspace-depot/types/user";
 import { IVerificationResponse } from "@scspace-depot/types/auth/auth.type";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";

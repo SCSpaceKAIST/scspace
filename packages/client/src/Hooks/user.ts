@@ -1,7 +1,7 @@
 "use client"
 
 import { IUser } from "@scspace-depot/types/user";
-import { useQueryApi } from "./useAPI"
+import { useQueryApi } from "./api"
 import { useEffect, useState } from "react";
 
 export function useUserInfo({ uid }: { uid: Number }) {

@@ -1,22 +1,20 @@
 "use client"
 
 import { ReservationStateEnum } from "@scspace-depot/enums/reservation.enum";
-import { useMutationApi, useQueryApi } from "./useAPI"
+import { useMutationApi, useQueryApi } from "./api"
 import { IReservation, IReservationAll, IReservationCreate, IReservationUpdate } from "@scspace-depot/types/reservation"
 import { useEffect, useState } from "react";
 import { ISuccessResponse } from "@scspace-depot/types/common/common.type";
-
-function formatDate(date: Date): number {
-    // return (new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours())).getTime();
-    return date.getTime()
-}
+import { useDate } from "./date";
 
 export function useReservations({ spaceId, dateFrom, dateTo }: {
     spaceId: number;
     dateFrom: Date;
     dateTo: Date;
 }) {
-    const { data, isLoading, refetch } = useQueryApi<IReservationAll[]>(`/reservation/space?spaceId=${spaceId}&timeFrom=${formatDate(dateFrom)}&timeTo=${formatDate(dateTo)}`);
+    const date2time = useDate().getTime
+
+    const { data, isLoading, refetch } = useQueryApi<IReservationAll[]>(`/reservation/space?spaceId=${spaceId}&timeFrom=${date2time(dateFrom)}&timeTo=${date2time(dateTo)}`);
 
     const [reservations, setReservations] = useState<IReservationAll[] | null>(null);
 
@@ -62,16 +60,9 @@ export function useDateReservations({ spaceId, dateFrom, dateTo, }: {
 }) {
     const { reservations, isLoading, refetch } = useReservations({ spaceId, dateFrom, dateTo });
 
-    useEffect(() => { refetch() }, [spaceId, dateFrom.getTime(), dateTo.getTime()]);
+    const { getDate, getDateString, getTime } = useDate();
 
-    useEffect(() => {
-        console.log(reservations?.map(r => {
-            const obj: any = { ...r }
-            obj.timeFrom = (new Date(r.timeFrom)).getHours();
-            obj.timeTo = new Date(r.timeTo)
-            return obj
-        }))
-    }, [reservations])
+    useEffect(() => { refetch() }, [spaceId, dateFrom.getTime(), dateTo.getTime()]);
 
     const [dateReservation, setReservation] = useState<IReservationHookRes>({});
 
@@ -83,37 +74,37 @@ export function useDateReservations({ spaceId, dateFrom, dateTo, }: {
 
         const _reservation: IReservationHookRes = {};
         for (
-            let temp = new Date(dateFrom.toDateString());
+            let temp = new Date(dateFrom);
             temp <= dateTo;
             temp.setDate(temp.getDate() + 1)
         ) {
-            _reservation[temp.toLocaleDateString()] = [];
+            _reservation[getDateString(getTime(temp))] = [];
         }
 
         reservations.map((d) => {
-            const tF = new Date(d.timeFrom);
-            const tT = new Date(d.timeTo);
+            const tF = getDate(d.timeFrom);
+            const tT = getDate(d.timeTo);
             // tF.setHours(tF.getHours() + 9);
             // tT.setHours(tT.getHours() + 9);
 
-            const dF = tF.toLocaleDateString();
-            const dT = tT.toLocaleDateString();
+            const dF = getDateString(d.timeFrom);
+            const dT = getDateString(d.timeTo);
 
             if (dF === dT) {
                 if (_reservation[dF]) _reservation[dF].push(format({ d: d, hF: tF.getHours(), hT: tT.getHours() }));
             } else {
-                if (tF.getDate() >= dateFrom.getDate()) {
+                if (tF >= dateFrom) {
                     if (_reservation[dF]) _reservation[dF].push(format({ d: d, hF: tF.getHours(), hT: 24 }));
                 }
-                if (tT.getDate() <= dateTo.getDate()) {
+                if (tT <= dateTo) {
                     if (_reservation[dT]) _reservation[dT].push(format({ d: d, hF: 0, hT: tT.getHours() }));
                 }
 
-                let _temp = new Date(tF.toDateString());
+                let _temp = new Date(tF);
                 _temp.setDate(_temp.getDate() + 1);
 
                 while (_temp < tT) {
-                    const midKey = _temp.toLocaleDateString();
+                    const midKey = getDateString(getTime(_temp));
                     if (_reservation[midKey]) _reservation[midKey].push(format({ d, hF: 0, hT: 24 }));
                     _temp.setDate(_temp.getDate() + 1);
                 }

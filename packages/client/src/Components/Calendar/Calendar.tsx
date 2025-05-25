@@ -28,6 +28,7 @@ import LoadingComponent from "../Loading/Loading";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import DeleteBtn from "./DeleteBtn";
 import { useAuth } from "@scspace-client/Hooks/auth";
+import { useDate } from "@scspace-client/Hooks/date";
 
 function SpaceSelect({ setSpaceId }: {
   setSpaceId: Dispatch<SetStateAction<number>>;
@@ -120,6 +121,8 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
 
   const { userInfo } = useAuth();
 
+  const { getString } = useDate();
+
   return (
     <>
       <Dialog.Root
@@ -144,7 +147,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                             Create Time
                           </DataList.ItemLabel>
                           <DataList.ItemValue margin={0}>
-                            {(new Date(selectedRes.timePost)).toLocaleString()}
+                            {getString(selectedRes.timePost)}
                           </DataList.ItemValue>
                         </DataList.Item>
                         <DataList.Item gap={0}>
@@ -152,7 +155,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                             Update Time
                           </DataList.ItemLabel>
                           <DataList.ItemValue margin={0}>
-                            {(new Date(selectedRes.timeUpdate)).toLocaleString()}
+                            {getString(selectedRes.timeUpdate)}
                           </DataList.ItemValue>
                         </DataList.Item>
                       </DataList.Root>
@@ -246,7 +249,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                           Time
                         </DataList.ItemLabel>
                         <DataList.ItemValue margin={0} >
-                          {(new Date(selectedRes.timeFrom)).toLocaleString()} - {(new Date(selectedRes.timeTo)).toLocaleString()}
+                          {getString(selectedRes.timeFrom)} - {getString(selectedRes.timeTo)}
                         </DataList.ItemValue>
                       </DataList.Item>
                       <DataList.Item gap={0}>
@@ -460,7 +463,6 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                   />
                 );
               }
-
 
               return null;
             })
