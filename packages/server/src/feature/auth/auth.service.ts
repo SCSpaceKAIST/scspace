@@ -23,6 +23,12 @@ export class AuthService {
     const v2 = this.configService.get<number>("SSO_STATE2");
     console.log("V1 " + v1);
     console.log("V2 " + v2);
+    console.log(state ^ v1)
+    console.log("typeof")
+    console.log(typeof state)
+    console.log(typeof v1)
+    console.log(typeof (state ^ v1))
+    console.log((state ^ v1) === v2)
 
     if ((state ^ v1) === v2){
       return true;
