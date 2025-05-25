@@ -9,6 +9,9 @@ import {
     Button,
     Field,
     Collapsible,
+    Grid,
+    GridItem,
+    IconButton,
 } from "@chakra-ui/react";
 import { HiPlus } from "react-icons/hi2";
 import { useAllSpace } from "@scspace-client/Hooks/space";
@@ -34,45 +37,43 @@ function RedirectLinks({ links }: { links: ILink[] }) {
                             as={Stack}
                             gap={0}
                         >
-                            <Stack direction="row" >
+                            <Grid templateColumns="1fr auto" width="100%" gap={1}>
                                 <Button
-                                    onClick={() => linkPush(l.href)}
                                     width="100%"
+                                    onClick={() => linkPush(l.href)}
                                     margin={0}
                                     color={{ _hover: "blue.500" }}
-                                >
-                                    <Button
-                                        variant="outline"
-                                        rounded="sm"
-                                        width="100%"
-                                        height="fit-content"
-                                        color="inherit"
-                                        disabled={l.disabled ?? false}
-                                    >
-                                        <Field.Root
-                                            margin={2}
-                                            gap={0}
-                                        >
-                                            <Field.Label>
-                                                {l.label}
-                                            </Field.Label>
-                                            <Field.HelperText>
-                                                {l.helperText}
-                                            </Field.HelperText>
-                                        </Field.Root>
-                                    </Button>
-                                </Button>
-                                <Collapsible.Trigger
-                                    mx={1}
+                                    variant="outline"
                                     rounded="sm"
-                                    height="inherit"
-                                    display={(l.subdomains && l.subdomains.length > 0) ? "block" : "none"}
+                                    height="fit-content"
+                                    disabled={l.disabled ?? false}
                                 >
-                                    <HiPlus />
-                                </Collapsible.Trigger>
-                            </Stack>
+                                    <Field.Root
+                                        margin={2}
+                                        gap={0}
+                                    >
+                                        <Field.Label>
+                                            {l.label}
+                                        </Field.Label>
+                                        <Field.HelperText>
+                                            {l.helperText}
+                                        </Field.HelperText>
+                                    </Field.Root>
+                                </Button>
+                                {(l.subdomains && l.subdomains.length > 0) && (
+                                    <Collapsible.Trigger
+                                        mx={1}
+                                        rounded="sm"
+                                        height="inherit"
+                                    >
+                                        <IconButton size="xs" variant="outline" height="100%">
+                                            <HiPlus />
+                                        </IconButton>
+                                    </Collapsible.Trigger>
+                                )}
+                            </Grid>
                             {(l.subdomains && l.subdomains.length > 0) &&
-                                <Collapsible.Content mt={2}>
+                                <Collapsible.Content mt={2} >
                                     <RedirectLinks links={l.subdomains} />
                                 </Collapsible.Content>
                             }

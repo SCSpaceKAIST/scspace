@@ -106,12 +106,13 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
       setSelectedRes(null);
       return;
     }
-    const filtered = reservations.filter(r => (r.id === selected));
-    if (filtered.length === 0) {
+    const filtered = reservations.find(r => (r.id === selected));
+    console.log(reservations, filtered);
+    if (!filtered) {
       setSelectedRes(null);
       return;
     }
-    setSelectedRes(filtered[0]);
+    setSelectedRes(filtered);
   }, [selected]);
 
   function onDeleteSuccess() {

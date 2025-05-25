@@ -1,13 +1,13 @@
 "uce client"
 
-import Link from "next/link";
-import { useAuth } from "@scspace-client/Hooks/auth";
+import { useAuth, useAuthAPI } from "@scspace-client/Hooks/auth";
 import { Button, Menu, Portal } from "@chakra-ui/react";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 
 export const LoginBtn: React.FC = () => {
   const { isLogined, userInfo, } = useAuth();
   const { linkPush } = useLinkPush();
+  const { logout } = useAuthAPI();
 
   return (
     <>
@@ -28,7 +28,7 @@ export const LoginBtn: React.FC = () => {
                   value="logout"
                   color="fg.error"
                   _hover={{ bg: "bg.error", color: "fg.error" }}
-                  onClick={() => linkPush('/logout')}
+                  onClick={logout}
                 >
                   Logout
                 </Menu.Item>

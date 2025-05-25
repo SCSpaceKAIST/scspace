@@ -1,6 +1,6 @@
 "use client";
 
-import { useLinkPush, useQueryApi } from "@scspace-client/Hooks/api";
+import { useLinkPush, useMutationApi, useQueryApi } from "@scspace-client/Hooks/api";
 import { IUser } from "@scspace-depot/types/user";
 import { IVerificationResponse } from "@scspace-depot/types/auth/auth.type";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
@@ -53,3 +53,15 @@ export const useAuth = () => {
     isSCS,
   };
 };
+
+export function useAuthAPI() {
+  async function logout() {
+    await fetch("/api/auth/logout", {
+      method: "POST"
+    });
+  }
+
+  return {
+    logout
+  }
+}

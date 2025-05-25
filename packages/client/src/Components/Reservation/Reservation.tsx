@@ -33,10 +33,13 @@ export default function Reservation() {
   const { userInfo, needLogin } = useAuth();
   needLogin();
 
-  const [dateFrom, setDateFrom] = useState<Date>(() => new Date());
+  const _init = new Date();
+  const [dateFrom, setDateFrom] = useState<Date>(() => new Date(_init.getFullYear(), _init.getMonth(), _init.getDate()));
+  const [dateTo, setDateTo] = useState<Date>(() => new Date(_init.getFullYear(), _init.getMonth(), _init.getDate()));
+
   const [hourFrom, setHourFrom] = useState<number>(0);
-  const [dateTo, setDateTo] = useState<Date>(() => new Date());
   const [hourTo, setHourTo] = useState<number>(0);
+
   const [spaceId, setSpaceId] = useState<number>(1);
   const [orgId, setOrgId] = useState<number>(1);
   const [title, setTitle] = useState<string>("");
