@@ -21,6 +21,8 @@ export class AuthService {
   verifyState(state: number){
     const v1 = this.configService.get<number>("SSO_STATE1");
     const v2 = this.configService.get<number>("SSO_STATE2");
+    console.log("V1 " + v1);
+    console.log("V2 " + v2);
 
     if ((state ^ v1) === v2){
       return true;
@@ -29,6 +31,8 @@ export class AuthService {
   }
 
   async login(state: number, code: string): Promise<string> {
+    console.log("STATE " + state);
+    console.log("CODE " + code);
     if (!code) {
       throw new Error('No code provided');
     }
