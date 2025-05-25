@@ -26,7 +26,6 @@ export function SpaceForm({ setSpaceId, setCheck }: {
         }
       })}
       checkboxLabel={{
-        "조수미홀": "use Lobby",
         "오픈스페이스": "use Busking Zone"
       }}
       onChange={onChange}

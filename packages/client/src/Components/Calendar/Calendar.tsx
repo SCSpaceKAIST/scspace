@@ -227,16 +227,6 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                                 {selectedRes.content.workerNeed}
                               </DataList.ItemValue>
                             </DataList.Item>
-                            {(selectedRes.spaceId === 11) && (
-                              <DataList.Item gap={0}>
-                                <DataList.ItemLabel>
-                                  Lobby
-                                </DataList.ItemLabel>
-                                <DataList.ItemValue margin={0} >
-                                  {selectedRes.content.lobby ? "Yes" : "No"}
-                                </DataList.ItemValue>
-                              </DataList.Item>
-                            )}
                             {(selectedRes.spaceId === 13) && (
                               <DataList.Item gap={0}>
                                 <DataList.ItemLabel>

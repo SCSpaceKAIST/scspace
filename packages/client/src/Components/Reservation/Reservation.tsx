@@ -88,7 +88,6 @@ export default function Reservation() {
             food: food,
             desk: desk,
             chair: chair,
-            lobby: check && (spaceId === 11),
             busking: check && (spaceId === 13),
             workerNeed: worker
           },
