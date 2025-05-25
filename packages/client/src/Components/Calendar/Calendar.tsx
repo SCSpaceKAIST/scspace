@@ -276,13 +276,13 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                     </DataList.Root>
                   </Dialog.Body>
                   <Dialog.Footer>
-                    <DeleteBtn rid={selectedRes.id} onSuccess={onDeleteSuccess} />
+                    {(userInfo?.id === selectedRes.userId) && (
+                      <DeleteBtn rid={selectedRes.id} onSuccess={onDeleteSuccess} />
+                    )}
                     <Dialog.ActionTrigger asChild>
-                      {(userInfo?.id === selectedRes.userId) && (
-                        <Button variant="outline" rounded="sm">
-                          Close
-                        </Button>
-                      )}
+                      <Button variant="outline" rounded="sm">
+                        Close
+                      </Button>
                     </Dialog.ActionTrigger>
                   </Dialog.Footer>
                 </>
