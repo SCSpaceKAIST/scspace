@@ -33,7 +33,7 @@ export class AuthService {
       throw new Error('No code provided');
     }
     if (!this.verifyState(state)) {
-      throw new Error('Fucking csrf detected');
+      throw new Error('Fucking STATE different detected');
     }
 
     try {
@@ -73,7 +73,9 @@ export class AuthService {
         payload.studentNumber,
       );
       const createdUser = !user ? await this.userPublicService.insert(payload) : user;
-      if (!user && createdUser){
+
+      const memberExist = await this.organizationPublicService.fetchMembersById(1);
+      if (!memberExist.some(member => member.userId === createdUser.id)){
         await this.organizationPublicService.insertMember(1, createdUser.id);
       }
 

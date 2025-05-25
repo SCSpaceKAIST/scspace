@@ -140,7 +140,7 @@ export class AppService {
 
     if (organizationCount == 0) {
       const organizations: IOrganization = {
-        id: 0,
+        id: 1,
         name: 'individual',
         delegatorId: 1,
         timeRegister: getNow(),
