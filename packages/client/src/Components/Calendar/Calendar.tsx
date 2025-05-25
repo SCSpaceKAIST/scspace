@@ -310,10 +310,11 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
         bg="white"
       >
         <Grid
-          templateColumns={`auto repeat(${Object.keys(dateReservation).length}, 1fr)`}
+          templateColumns={`80px repeat(${Object.keys(dateReservation).length}, minmax(150px, 1fr))`}
           templateRows="auto repeat(24, 1fr)"
           gap={0}
-          minW="max-content"
+          width="100%"
+          maxW="100%"
         >
           <GridItem
             rowStart={1}
@@ -340,6 +341,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
               borderBottomWidth="1px"
               borderRightWidth="1px"
               textAlign="center"
+              minW={0}
             >
               <Text fontWeight="semibold" mx={0} my={2} padding={0}>
                 {date}
@@ -359,6 +361,8 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
               zIndex={1}
               borderRightWidth="1px"
               borderBottomWidth={(hour === 23) ? "1px" : "0"}
+              width="80px"
+              minW="80px"
             >
               <Center height="100%" mx={3} color="bg.muted">
                 <Text fontSize="sm" margin={0} padding={0} visibility="hidden">
@@ -393,33 +397,58 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                       colStart={ci + 2}
                       rowSpan={slot.hourTo - slot.hourFrom}
                       bg={stringToColor(slot.title)}
-                      borderBottomWidth="1px"
-                      borderRightWidth="1px"
+                      minW={0}
+                      overflow="hidden"
                     >
                       <Button
                         asChild
                         rounded="0"
                         variant="ghost"
+                        width="100%"
+                        height="100%"
+                        minW={0}
+                        padding={1}
                         onClick={() => {
                           setSelected(slot.id);
                           setOpen(true)
                         }}
                       >
-                        <VStack
-                          height="100%"
+                        <Flex
+                          flexDir="column"
                           width="100%"
+                          height="100%"
                           margin={0}
-                          padding={0}
+                          padding={1}
                           gap={0}
                           justifyContent="center"
+                          overflow="hidden"
+                          minW={0}
                         >
-                          <Text margin={0} padding={0} fontSize="lg" fontWeight="semibold" wordBreak="break-all">
+                          <Text
+                            margin={0}
+                            padding={0}
+                            fontWeight="semibold"
+                            width="100%"
+                            textOverflow="ellipsis"
+                            whiteSpace="nowrap"
+                            overflow="hidden"
+                            textAlign="center"
+                          >
                             {slot.title}
                           </Text>
-                          <Text margin={0} padding={0} fontSize="sm" wordBreak="break-all">
+                          <Text
+                            margin={0}
+                            padding={0}
+                            fontSize="xs"
+                            width="100%"
+                            textOverflow="ellipsis"
+                            whiteSpace="nowrap"
+                            overflow="hidden"
+                            textAlign="center"
+                          >
                             {slot.name}
                           </Text>
-                        </VStack>
+                        </Flex>
                       </Button>
                     </GridItem>
                   );
@@ -431,8 +460,8 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                       colStart={ci + 2}
                       borderBottomWidth="1px"
                       borderRightWidth="1px"
-                      // minW="32vh"
                       height="64px"
+                      minW={0}
                     />
                   );
                 }
@@ -446,8 +475,8 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                     colStart={ci + 2}
                     borderBottomWidth="1px"
                     borderRightWidth="1px"
-                    // minW="32vh"
                     height="64px"
+                    minW={0}
                   />
                 );
               } else if (dateReservation[date][i - 1] && dateReservation[date][i - 1].hourTo <= hour) {
@@ -459,8 +488,8 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                     colStart={ci + 2}
                     borderBottomWidth="1px"
                     borderRightWidth="1px"
-                    // minW="32vh"
                     height="64px"
+                    minW={0}
                   />
                 );
               }
@@ -538,4 +567,4 @@ export default function Calendar() {
       </Grid>
     </Scroll >
   );
-};
+}
