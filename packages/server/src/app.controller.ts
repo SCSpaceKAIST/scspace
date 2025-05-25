@@ -11,7 +11,7 @@ export class AppController {
   }
 
   @Get('fillContent')
-  async fillContent(): Promise<boolean> {
-    return this.appService.fillContent();
+  async fillContent(): Promise<void> {
+    this.appService.fillContent();
   }
 }
