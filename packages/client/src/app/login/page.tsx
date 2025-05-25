@@ -1,5 +1,5 @@
 import PageTemplete from "@scspace-client/Components/_commons/PageTemplete";
-import SSOLogin from "@scspace-client/Components/PrivacyPolicy/PrivacyPolicy";
+import SSOLogin from "@scspace-client/Components/Login/Login";
 
 export default function LoginPage() {
   return (

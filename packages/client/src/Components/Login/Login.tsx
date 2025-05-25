@@ -3,6 +3,7 @@
 import { Button, Card, Center, CloseButton, Dialog, DialogPositioner, HStack, Portal, Separator, Stack, StackSeparator, useBreakpointValue } from "@chakra-ui/react";
 import Link from "next/link";
 import Scroll from "../_commons/Scroll";
+import PrivacyPolicy from "./PrivacyPolicy";
 
 export default function SSOLogin() {
     const isWide = useBreakpointValue({ base: false, md: true });
@@ -12,19 +13,7 @@ export default function SSOLogin() {
             <Portal>
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
-                    <Dialog.Content>
-                        <Dialog.Header>
-                            <Dialog.Title>
-                                Personal Information Handling Policy
-                            </Dialog.Title>
-                        </Dialog.Header>
-                        <Dialog.Body>
-                            Body
-                        </Dialog.Body>
-                        <Dialog.CloseTrigger>
-                            <CloseButton />
-                        </Dialog.CloseTrigger>
-                    </Dialog.Content>
+                    <PrivacyPolicy />
                 </Dialog.Positioner>
             </Portal>
             <Scroll>
