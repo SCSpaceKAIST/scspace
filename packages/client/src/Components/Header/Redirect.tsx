@@ -68,6 +68,7 @@ function RedirectLinks({ links, onClick }: { links: ILink[]; onClick: () => void
                                         mx={1}
                                         rounded="sm"
                                         height="inherit"
+                                        asChild
                                     >
                                         <IconButton size="xs" variant="outline" height="100%">
                                             <HiPlus />
@@ -91,12 +92,23 @@ function RedirectLinks({ links, onClick }: { links: ILink[]; onClick: () => void
 export default function Redirect({ onClick }: { onClick: () => void }) {
     const { spaces } = useAllSpace();
     const [spaceLinks, setSpaceLinks] = useState<ILink[]>([]);
+    const [calendarLinks, setCalendarLinks] = useState<ILink[]>([]);
     const [links, setLinks] = useState<ILink[]>([]);
 
     useEffect(() => {
         if (spaces) setSpaceLinks(spaces.map((s): ILink => {
             return {
                 href: `/space/${s.id}`,
+                helperText: s.nameEn,
+                label: s.nameKr,
+            }
+        }))
+    }, [spaces]);
+
+    useEffect(() => {
+        if (spaces) setCalendarLinks(spaces.map((s): ILink => {
+            return {
+                href: `/calendar/${s.id}`,
                 helperText: s.nameEn,
                 label: s.nameKr,
             }
@@ -126,6 +138,7 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 href: "/calendar",
                 label: "예약 확인하기",
                 helperText: "Calendar",
+                subdomains: calendarLinks,
             },
             {
                 href: "/space",

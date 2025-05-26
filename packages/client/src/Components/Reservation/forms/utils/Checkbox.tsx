@@ -6,17 +6,15 @@ export default function CheckComponent({ label, onChange = () => null }: {
 }) {
   return (
     <Checkbox.Root
-      bg="white"
       size="sm"
       onCheckedChange={e => onChange(!!e.checked)}
+      variant="outline"
     >
       <Checkbox.HiddenInput />
-      <Checkbox.Label
-        mr={2}
-      >
+      <Checkbox.Label>
         {label}
       </Checkbox.Label>
-      <Checkbox.Control />
+      <Checkbox.Control bg="white" />
     </Checkbox.Root>
   );
 }

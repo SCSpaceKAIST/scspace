@@ -12,15 +12,14 @@ import {
   Text,
   Float,
   Spinner,
-  VStack,
   Button,
   DataList,
   Separator,
   HStack,
+  VStack,
 } from "@chakra-ui/react";
 import Scroll from "../_commons/Scroll";
 import SelectComponent from "../Reservation/forms/utils/Select";
-import { DateForm } from "../Reservation/forms";
 import { useDateReservations, useReservations } from "@scspace-client/Hooks/reservation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAllSpace } from "@scspace-client/Hooks/space";
@@ -30,6 +29,8 @@ import DeleteBtn from "./DeleteBtn";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useDate } from "@scspace-client/Hooks/date";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
 
 function SpaceSelect({ setSpaceId }: {
   setSpaceId: Dispatch<SetStateAction<number>>;
@@ -130,7 +131,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
       <Dialog.Root
         open={open}
         onOpenChange={(e) => setOpen(e.open)}
-        size="xl"
+        size={{ base: "full", md: "xl" }}
       >
         <Portal>
           <Dialog.Backdrop />
@@ -311,11 +312,12 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
         bg="white"
       >
         <Grid
-          templateColumns={`80px repeat(${Object.keys(dateReservation).length}, minmax(150px, 1fr))`}
+          templateColumns={`60px repeat(${Object.keys(dateReservation).length}, 1fr)`}
           templateRows="auto repeat(24, 1fr)"
           gap={0}
-          width="100%"
-          maxW="100%"
+          minW="100%"
+          width="fit-content"
+          maxW="fit-content"
         >
           <GridItem
             rowStart={1}
@@ -342,7 +344,8 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
               borderBottomWidth="1px"
               borderRightWidth="1px"
               textAlign="center"
-              minW={0}
+              minW={{ base: "120px", md: 0 }}
+              width="100%"
             >
               <Text fontWeight="semibold" mx={0} my={2} padding={0}>
                 {date}
@@ -362,8 +365,6 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
               zIndex={1}
               borderRightWidth="1px"
               borderBottomWidth={(hour === 23) ? "1px" : "0"}
-              width="80px"
-              minW="80px"
             >
               <Center height="100%" mx={3} color="bg.muted">
                 <Text fontSize="sm" margin={0} padding={0} visibility="hidden">
@@ -504,9 +505,10 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
   );
 }
 
-export default function Calendar() {
+export default function Calendar({ spaceId }: { spaceId: number }) {
   const [date, setDate] = useState<Date>(() => new Date());
-  const [spaceId, setSpaceId] = useState<number>(1);
+  const [open, setOpen] = useState<boolean>(false);
+  const [text, setText] = useState<string>("")
 
   const [searchData, setSearchData] = useState<{
     spaceId: number;
@@ -522,6 +524,8 @@ export default function Calendar() {
     dS.setDate(dS.getDate() - d);
     dE.setDate(dS.getDate() + 6);
 
+    setText(dS.toLocaleDateString() + " - " + dE.toLocaleDateString());
+
     setSearchData({
       spaceId: spaceId,
       dateFrom: dS,
@@ -536,26 +540,40 @@ export default function Calendar() {
         templateRows="auto 1fr"
         gap={2}
       >
-        <Flex
-          justify="space-between"
-        >
-          <Stack width="24vh" minW="fit-content">
-            <SpaceSelect setSpaceId={setSpaceId} />
-          </Stack>
-          <Stack
-            direction="row"
-            width="24vh"
-            minW="fit-content"
-            gap={2}
-            alignItems="end"
-          >
-            <DateForm
-              label="select date"
-              date={date}
-              setDate={setDate}
-            />
-          </Stack>
-        </Flex>
+        <Dialog.Root size="xs" open={open} onOpenChange={(e) => setOpen(e.open)}>
+          <Dialog.Trigger asChild width="100%">
+            <Button variant="outline" width="100%" bg="white">
+              {text}
+            </Button>
+          </Dialog.Trigger>
+          <Portal>
+            <Dialog.Backdrop />
+            <Dialog.Positioner>
+              <Dialog.Content>
+                <Dialog.Header>
+                  <Dialog.Title>
+                    Pick Week
+                  </Dialog.Title>
+                </Dialog.Header>
+                <Dialog.Body>
+                  <Center>
+                    <DatePicker
+                      wrapperClassName="datepicker"
+                      showWeekNumbers
+                      showWeekPicker
+                      selected={date}
+                      onChange={(e) => {
+                        if (e) setDate(e);
+                        setOpen(false);
+                      }}
+                      inline
+                    />
+                  </Center>
+                </Dialog.Body>
+              </Dialog.Content>
+            </Dialog.Positioner>
+          </Portal>
+        </Dialog.Root>
         {searchData ? (
           <CalendarView
             spaceId={searchData.spaceId}

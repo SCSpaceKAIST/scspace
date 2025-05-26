@@ -11,6 +11,8 @@ export function FoodForm({ food, setFood }: {
       placeholder="explanation about food"
       value={food}
       setValue={setFood}
+      helpertext="Please explain what food you will eat in the space if you have."
     />
   );
 }
+

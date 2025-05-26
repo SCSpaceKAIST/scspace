@@ -104,8 +104,11 @@ export default function Reservation() {
           },
           onError(error, variables, context) {
             setE(error.message)
-            console.log("ERROR\n", error.message, "\n", variables, "\n", context)
+            console.log("ERROR\n", error.name, error.message, error.stack, error.cause, "\n", variables, "\n", context)
           },
+          onSettled(e) {
+            console.log(e)
+          }
         }
       ),
       {
@@ -156,7 +159,6 @@ export default function Reservation() {
               label="start date"
               date={dateFrom}
               setDate={setDateFrom}
-              maxDate={dateTo}
             />
           </GridItem>
           <GridItem colSpan={{ base: 6, md: 3 }}>
@@ -164,7 +166,6 @@ export default function Reservation() {
               label="end date"
               date={dateTo}
               setDate={setDateTo}
-              minDate={dateFrom}
             />
           </GridItem>
           <GridItem colSpan={{ base: 6, md: 3 }}>
@@ -181,8 +182,10 @@ export default function Reservation() {
           </GridItem>
           <GridItem colSpan={6} >
             <CalendarView
-              dateFrom={new Date(dateFrom.getFullYear(), dateFrom.getMonth(), dateFrom.getDate() - 1)}
-              dateTo={new Date(dateTo.getFullYear(), dateTo.getMonth(), dateTo.getDate() + 1)}
+              // dateFrom={new Date(dateFrom.getFullYear(), dateFrom.getMonth(), dateFrom.getDate() - 1)}
+              // dateTo={new Date(dateTo.getFullYear(), dateTo.getMonth(), dateTo.getDate() + 1)}
+              dateFrom={dateFrom}
+              dateTo={dateTo}
               spaceId={spaceId}
               refetchCounter={count}
             />

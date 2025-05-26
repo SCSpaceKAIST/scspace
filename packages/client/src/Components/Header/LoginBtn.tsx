@@ -25,12 +25,16 @@ export const LoginBtn: React.FC = () => {
             <Menu.Positioner>
               <Menu.Content>
                 <Menu.Item
+                  value="mypage"
+                  onClick={() => linkPush('/mypage')}
+                >
+                  Mypage
+                </Menu.Item>
+                <Menu.Item
                   value="logout"
                   color="fg.error"
                   _hover={{ bg: "bg.error", color: "fg.error" }}
-                  onClick={() => {
-                    logout(refetch);
-                  }}
+                  onClick={() => logout(refetch)}
                 >
                   Logout
                 </Menu.Item>

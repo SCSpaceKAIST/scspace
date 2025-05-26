@@ -1,6 +1,17 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+.datepicker {
+  width: 100%
+}
 
-/* + any other global styles you need */
+:focus {
+  outline: none;
+}
 
+.react-datepicker {
+  z-index: 9999 !important;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-y: hidden; /* 가로 스크롤 강제 제거 */
+}

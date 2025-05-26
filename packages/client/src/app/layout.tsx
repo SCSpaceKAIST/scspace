@@ -3,7 +3,7 @@ import "../../static/css/main.css";
 import Header from "@scspace-client/Components/Header";
 import { ReactNode } from "react";
 import Providers from "./providers";
-import { Box, Flex, } from "@chakra-ui/react";
+import { Box, Flex, Grid, } from "@chakra-ui/react";
 import ToasterComponent from "@scspace-client/Components/_commons/Toaster";
 
 export const metadata = {
@@ -41,26 +41,28 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           href="https://cdn3.devexpress.com/jslib/22.1.4/css/dx.light.css"
         />
       </head>
-      <body suppressHydrationWarning>
+      <body>
         <Providers>
           <ToasterComponent />
-          <Flex
+          <Grid
             width="100svw"
+            maxHeight="100svh"
             height="100svh"
             direction="column"
+            templateRows="auto 1fr"
           >
             <Header />
             <Box
               flexGrow={1}
               padding={8}
               scrollbar="hidden"
-              overflowY="auto"
+              overflowY="hidden"
               scrollBehavior="smooth"
               bg="bg.subtle"
             >
               {children}
             </Box>
-          </Flex>
+          </Grid>
         </Providers>
       </body>
     </html>

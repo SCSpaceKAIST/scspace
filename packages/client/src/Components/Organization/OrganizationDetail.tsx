@@ -20,6 +20,7 @@ import DeleteBtn from "./DeleteBtn";
 import AddMemberBtn from "./AddMemberBtn";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useEffect, useState } from "react";
+import { useDate } from "@scspace-client/Hooks/date";
 
 export default function OrganizationDetail({ id, onDelete }: {
     id: number;
@@ -28,6 +29,7 @@ export default function OrganizationDetail({ id, onDelete }: {
     const { organizationDetail, refetch } = useOrganizationDetail({ id: id });
     const { userInfo, needLogin } = useAuth();
     const [isDelegator, setIsDelegator] = useState<boolean>(false);
+    const { getString } = useDate();
 
     useEffect(() => {
         setIsDelegator((userInfo?.id ?? -1) === (organizationDetail?.delegatorId ?? -2));
@@ -58,7 +60,7 @@ export default function OrganizationDetail({ id, onDelete }: {
                                 Create Time
                             </DataList.ItemLabel>
                             <DataList.ItemValue margin={0}>
-                                {(new Date(organizationDetail.timeRegister)).toLocaleString()}
+                                {getString(organizationDetail.timeRegister)}
                             </DataList.ItemValue>
                         </DataList.Item>
                         <DataList.Item gap={0}>
@@ -66,7 +68,7 @@ export default function OrganizationDetail({ id, onDelete }: {
                                 Update Time
                             </DataList.ItemLabel>
                             <DataList.ItemValue margin={0}>
-                                {(new Date(organizationDetail.timeUpdate)).toLocaleString()}
+                                {getString(organizationDetail.timeUpdate)}
                             </DataList.ItemValue>
                         </DataList.Item>
                     </DataList.Root>

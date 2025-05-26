@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { Button, Box, } from "@chakra-ui/react";
+import { Button, Box, VStack, useBreakpointValue, Center, Dialog, Portal, } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -21,10 +21,13 @@ export function DateForm({
   minDate?: Date
 }) {
   const [text, setText] = useState("");
+  const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
     setText(date.toLocaleDateString());
   }, [date]);
+
+  const isMd = useBreakpointValue({ base: true, md: false });
 
   return (
     <FieldComponent
@@ -35,28 +38,40 @@ export function DateForm({
         disabled: false,
       }}
     >
-      <Box width="100%" zIndex={10}>
-        <DatePicker
-          popperProps={{ strategy: 'fixed' }}
-          selected={date}
-          onChange={(date) => {
-            if (date) setDate(date);
-          }}
-          wrapperClassName="datepicker"
-          customInput={
-            <Button
-              variant="outline"
-              rounded="sm"
-              width="100%"
-              bg="white"
-            >
-              {text}
-            </Button>
-          }
-          maxDate={maxDate}
-          minDate={minDate}
-        />
-      </Box>
+      <Dialog.Root size="xs" open={open} onOpenChange={(e) => setOpen(e.open)}>
+        <Dialog.Trigger asChild width="100%">
+          <Button variant="outline" width="100%" bg="white">
+            {text}
+          </Button>
+        </Dialog.Trigger>
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>
+                  Pick Date
+                </Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Body>
+                <Center>
+                  <DatePicker
+                    wrapperClassName="datepicker"
+                    selected={date}
+                    onChange={(e) => {
+                      if (e) setDate(e);
+                      setOpen(false);
+                    }}
+                    inline
+                    maxDate={maxDate}
+                    minDate={minDate}
+                  />
+                </Center>
+              </Dialog.Body>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
     </FieldComponent>
   );
 }

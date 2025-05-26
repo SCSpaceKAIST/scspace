@@ -143,6 +143,7 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
                                                         fontWeight="semibold"
                                                         key={i}
                                                         index={i}
+                                                        padding={0}
                                                     />
                                                 ))}
                                             </PinInput.Control>

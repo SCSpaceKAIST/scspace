@@ -4,7 +4,9 @@ import {
     Box,
     Stack,
     Link,
-    Text
+    Text,
+    Collapsible,
+    Button
 } from "@chakra-ui/react";
 import {
     IoMailOutline,
@@ -41,45 +43,55 @@ export default function Footer() {
         ];
 
     return (
-        <Stack
-            width="100%"
-            gap={2}
-        >
-            {footerText.map((box, i) => (
-                <Box
-                    borderWidth="1px"
-                    borderColor="border.disabled"
-                    key={i}
-                    padding={2}
-                    rounded="sm"
+        <Collapsible.Root width="100%">
+            <Collapsible.Trigger asChild>
+                <Button variant="outline" width="100%" height="fit-content" py={1}>
+                    Contact Us
+                </Button>
+            </Collapsible.Trigger>
+            <Collapsible.Content>
+                <Stack
+                    width="100%"
+                    gap={2}
+                    mt={2}
                 >
-                    {box.map((text) => (
-                        <Text
-                            key={text}
-                            margin={0}
+                    {footerText.map((box, i) => (
+                        <Box
+                            borderWidth="1px"
+                            borderColor="border.disabled"
+                            key={i}
+                            padding={2}
+                            rounded="sm"
                         >
-                            {text}
-                        </Text>
+                            {box.map((text) => (
+                                <Text
+                                    key={text}
+                                    margin={0}
+                                >
+                                    {text}
+                                </Text>
+                            ))}
+                        </Box>
                     ))}
-                </Box>
-            ))}
-            <Stack
-                borderWidth="1px"
-                borderColor="border.disabled"
-                padding={2}
-                rounded="sm"
-            >
-                {contact.map((c) => (
-                    <Link
-                        target='_blank'
-                        href={c.href}
-                        key={c.href}
-                        color={{ _hover: "blue.500" }}
+                    <Stack
+                        borderWidth="1px"
+                        borderColor="border.disabled"
+                        padding={2}
+                        rounded="sm"
                     >
-                        {c.icon}{c.label}
-                    </Link>
-                ))}
-            </Stack>
-        </Stack>
+                        {contact.map((c) => (
+                            <Link
+                                target='_blank'
+                                href={c.href}
+                                key={c.href}
+                                color={{ _hover: "blue.500" }}
+                            >
+                                {c.icon}{c.label}
+                            </Link>
+                        ))}
+                    </Stack>
+                </Stack>
+            </Collapsible.Content>
+        </Collapsible.Root>
     );
 }

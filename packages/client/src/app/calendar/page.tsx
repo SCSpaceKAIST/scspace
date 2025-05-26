@@ -1,4 +1,4 @@
-import Calendar from "@scspace-client/Components/Calendar/Calendar";
+import SpaceCalendar from "@scspace-client/Components/Calendar/SpaceCalendar";
 import PageTemplete from "@scspace-client/Components/_commons/PageTemplete";
 
 export default function SpacePage() {
@@ -7,7 +7,7 @@ export default function SpacePage() {
       title="예약 확인하기"
       subtitle="Reservation Calendar"
     >
-      <Calendar />
+      <SpaceCalendar />
     </PageTemplete>
   );
 }

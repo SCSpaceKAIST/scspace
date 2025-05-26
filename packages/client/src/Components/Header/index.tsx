@@ -7,14 +7,18 @@ import {
   Image,
   Text,
   HStack,
+  Button,
 } from "@chakra-ui/react";
 import { LoginBtn } from "./LoginBtn";
 
 import DrawerComponent from "./Drawer";
 import BreadcrumbComponent from "./Breadcrumb";
 import ChangeLog from "./ChangeLog";
+import { useLinkPush } from "@scspace-client/Hooks/api";
 
 export default function Header() {
+  const { linkPush } = useLinkPush();
+
   return (
     <Box
       top={0}
@@ -33,18 +37,20 @@ export default function Header() {
         <BreadcrumbComponent />
         <Spacer />
         <ChangeLog />
-        <HStack>
-          <Text margin={0} padding={0} fontSize="xl" fontWeight="semibold" display={{ base: "none", md: "block" }}>
-            학생문화공간위원회
-          </Text>
-          <Image
-            src="/img/logo.svg"
-            alt="LOGO"
-            height={10}
-            width={10}
-            objectFit="contain"
-          />
-        </HStack>
+        <Button variant="ghost" py={0} px={1}>
+          <HStack onClick={() => linkPush('/')} cursor="pointer">
+            <Text margin={0} padding={0} fontSize="xl" fontWeight="semibold" display={{ base: "none", md: "block" }}>
+              학생문화공간위원회
+            </Text>
+            <Image
+              src="/img/logo.svg"
+              alt="LOGO"
+              height={10}
+              width={10}
+              objectFit="contain"
+            />
+          </HStack>
+        </Button>
         <LoginBtn />
       </Flex>
     </Box>
