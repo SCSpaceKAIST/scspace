@@ -57,7 +57,7 @@ export const useAuth = () => {
 export function useAuthAPI() {
   async function logout() {
     await fetch("/api/auth/logout", {
-      method: "POST"
+      method: "GET"
     });
   }
 

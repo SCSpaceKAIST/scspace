@@ -70,9 +70,8 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard("jwt"))
-  @Post('logout')
+  @Get('logout')
   async logout(@Res() res: Response): Promise<void> {
-    console.log("LOGOUT");
     res.clearCookie('scspacetoken', {
       path: '/',
       secure: true,
