@@ -126,23 +126,9 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
                             <Fieldset.Root>
                                 <Field.Root>
                                     <Field.Label width="100%">
-                                        <Flex margin={0} padding={0} width="100%" justifyContent="space-between">
-                                            <Text margin={0} padding={0}>
-                                                Search Student (by Student Number)
-                                            </Text>
-                                            <Button variant="outline" size="sm" onClick={() => {
-                                                if (student && !isSelected[student.studentNumber.toString()]) {
-                                                    setSelected((s) => [...s, student]);
-                                                    setIsSelected((s) => {
-                                                        const obj = { ...s, };
-                                                        obj[student.studentNumber.toString()] = true;
-                                                        return obj
-                                                    })
-                                                }
-                                            }}>
-                                                Select
-                                            </Button>
-                                        </Flex>
+                                        <Text margin={0} padding={0}>
+                                            Search Student (by Student Number)
+                                        </Text>
                                     </Field.Label>
                                     <VStack width="100%" py={2} borderWidth="1px" rounded="sm" gap={4}>
                                         <PinInput.Root
@@ -162,9 +148,23 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
                                             </PinInput.Control>
                                         </PinInput.Root>
                                         {(student) && (
-                                            <NewMember
-                                                user={student}
-                                            />
+                                            <HStack>
+                                                <NewMember
+                                                    user={student}
+                                                />
+                                                <IconButton variant="outline" size="xs" height="100%" onClick={() => {
+                                                    if (student && !isSelected[student.studentNumber.toString()]) {
+                                                        setSelected((s) => [...s, student]);
+                                                        setIsSelected((s) => {
+                                                            const obj = { ...s, };
+                                                            obj[student.studentNumber.toString()] = true;
+                                                            return obj
+                                                        })
+                                                    }
+                                                }}>
+                                                    <HiPlus />
+                                                </IconButton>
+                                            </HStack>
                                         )}
                                     </VStack>
                                     <Field.HelperText>

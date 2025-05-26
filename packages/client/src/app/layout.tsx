@@ -45,8 +45,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Providers>
           <ToasterComponent />
           <Flex
-            width="100vw"
-            height="100vh"
+            width="100svw"
+            height="100svh"
             direction="column"
           >
             <Header />

@@ -5,8 +5,3 @@
 :focus {
   outline: none;
 }
-
-main {
-  height: 100svh !important;
-  width: 100svw !important;
-}
