@@ -249,18 +249,6 @@ export class ReservationPublicService {
   }
 
 
-  async checkReservationAvailability(
-    userId: number,
-    spaceId: number,
-    timeFrom: number,
-    timeTo: number,
-  ): Promise<boolean> {
-    return (
-      (await this.checkTimeAvailability(spaceId, timeFrom, timeTo)) &&
-      (await this.validateTimeConstraints(userId, spaceId, timeFrom, timeTo))
-    );
-  }
-
   async find(params: {
     userId?: number;
     spaceIds?: number[];

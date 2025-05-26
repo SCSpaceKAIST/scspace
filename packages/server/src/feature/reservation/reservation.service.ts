@@ -174,7 +174,7 @@ export class ReservationService {
       throw new NotFoundException('Reservation not found');
     }
 
-    await this.reservationPublicService.checkWholeTime(reservation[0].userId, reservation[0].spaceId, reservationInput.timeFrom, reservationInput.timeTo);
+    await this.reservationPublicService.checkWholeTime(reservation[0].userId, reservation[0].organizationId, reservation[0].spaceId, reservationInput.timeFrom, reservationInput.timeTo);
 
     const [reservationUpdated, reservationContentUpdated] = await this.reservationRepository.update(reservationInput);
     return MReservation.fromDB(
