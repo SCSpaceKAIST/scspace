@@ -57,10 +57,13 @@ export const useAuth = () => {
 export function useAuthAPI() {
   const { linkPush } = useLinkPush();
 
-  function logout() {
+  function logout(refetch: () => void) {
     fetch("/api/auth/logout", {
       method: "GET"
-    }).then(() => linkPush('/'));
+    }).then(() => {
+      linkPush('/');
+      refetch();
+    });
   }
 
   return {

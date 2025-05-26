@@ -29,8 +29,7 @@ export const LoginBtn: React.FC = () => {
                   color="fg.error"
                   _hover={{ bg: "bg.error", color: "fg.error" }}
                   onClick={() => {
-                    logout();
-                    refetch();
+                    logout(refetch);
                   }}
                 >
                   Logout
