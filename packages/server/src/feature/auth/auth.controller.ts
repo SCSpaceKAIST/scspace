@@ -73,7 +73,12 @@ export class AuthController {
   @Post('logout')
   async logout(@Res() res: Response): Promise<void> {
     console.log("LOGOUT");
-    res.clearCookie('scspacetoken', { path: '/' });
+    res.clearCookie('scspacetoken', {
+      path: '/',
+      secure: true,
+      sameSite: 'none',
+      httpOnly: true
+    });
 
     res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
   }
