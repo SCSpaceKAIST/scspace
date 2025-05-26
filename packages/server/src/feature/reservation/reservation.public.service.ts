@@ -277,8 +277,7 @@ export class ReservationPublicService {
       ].join('\n');
 
       // backup 디렉토리 생성
-      const backupDir = "~/scspace_backup";
-      console.log(backupDir);
+      const backupDir = path.join(__dirname, '../../../../../../../backup');
       const exists = fs.existsSync(backupDir);
       if (!exists) {
         await mkdir(backupDir, { recursive: true });
