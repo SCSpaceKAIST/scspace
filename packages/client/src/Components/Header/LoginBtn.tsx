@@ -28,7 +28,10 @@ export const LoginBtn: React.FC = () => {
                   value="logout"
                   color="fg.error"
                   _hover={{ bg: "bg.error", color: "fg.error" }}
-                  onClick={logout}
+                  onClick={() => {
+                    logout();
+                    refetch();
+                  }}
                 >
                   Logout
                 </Menu.Item>
@@ -37,10 +40,7 @@ export const LoginBtn: React.FC = () => {
           </Portal>
         </Menu.Root>
       ) : (
-        <Button variant="outline" rounded="sm" onClick={() => {
-          linkPush('/login');
-          refetch();
-        }}>
+        <Button variant="outline" rounded="sm" onClick={() => linkPush('/login')}>
           Login
         </Button>
       )}
