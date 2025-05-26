@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { schema } from './db/schema';
 import { SpacePublicService } from './feature/space/space.public.service';
 import { UserPublicService } from './feature/user/user.public.service';
@@ -11,6 +11,7 @@ import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 import { IOrganization, IOrganizationCreate } from '@scspace-depot/types/organization';
 import { OrganizationPublicService } from './feature/organization/organization.public.service';
 import { getNow } from '@scspace-server/common/util';
+import { ReservationPublicService } from './feature/reservation/reservation.public.service';
 
 @Injectable()
 export class AppService {
@@ -19,10 +20,11 @@ export class AppService {
     private readonly userPublicService: UserPublicService,
     private readonly spacePublicService: SpacePublicService,
     private readonly organizationPublicService: OrganizationPublicService,
+    private readonly reservationPublicService: ReservationPublicService,
   ) { }
 
   getHello(): string {
-    return 'Hello World!';
+    return 'Welcome to SCSpace Backend!';
   }
 
   async fillContent(): Promise<void> {
@@ -151,5 +153,11 @@ export class AppService {
 
       await this.organizationPublicService.insertMember(1, 1);
     }
+  }
+
+  async save(): Promise<string> {
+    const filename = await this.reservationPublicService.backupReservations();
+    Logger.log(filename);
+    return filename;
   }
 }

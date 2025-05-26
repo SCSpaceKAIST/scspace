@@ -40,7 +40,7 @@ export class ReservationService {
 
     if (timeFrom && timeTo) {
       if (timeFrom > timeTo) throw new BadRequestException('timeFrom must be before timeTo');
-      const oneDayInMs = BigInt(1000) * BigInt(60) * BigInt(60) * BigInt(24);
+      const oneDayInMs = BigInt(60) * BigInt(24);
       timeTo = Number(BigInt(timeTo) + oneDayInMs - BigInt(1));
     }
     // If either timeFrom or timeTo is missing, fetch all reservations for the space
