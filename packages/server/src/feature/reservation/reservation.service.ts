@@ -170,7 +170,7 @@ export class ReservationService {
       id: reservationInput.id,
     });
 
-    if (reservation.length === 0) {
+    if (reservation.length === 0) { 
       throw new NotFoundException('Reservation not found');
     }
 

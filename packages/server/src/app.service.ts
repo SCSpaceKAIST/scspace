@@ -148,6 +148,8 @@ export class AppService {
       await this.db.transaction(async (tx) => {
         await tx.insert(schema.Organization).values(organizations);
       });
+
+      await this.organizationPublicService.insertMember(1, 1);
     }
   }
 }

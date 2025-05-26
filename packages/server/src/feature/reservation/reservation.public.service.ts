@@ -108,6 +108,7 @@ export class ReservationPublicService {
   ): Promise<boolean> {
     // 공간위원이면 최대 시간 제한 없음
     if (await this.userPublicService.isManager(userId)) {
+      console.log("Manager");
       return true;
     }
 
@@ -128,8 +129,12 @@ export class ReservationPublicService {
     }
 
     const daily = await this.getDailyReservationTime(userId, spaceId, timeFrom);
+    console.log("Daily" + daily);
     const weekly = await this.getWeeklyReservationTime(userId, spaceId, timeFrom);
-
+    console.log("Weekly" +weekly);
+    console.log("New" +newReservationTime);
+    console.log("MaxDay" +maxDayTime);
+    console.log("MaxWeek" +maxWeekTime);
     const isWithinLimits = 
       daily + newReservationTime <= maxDayTime &&
       weekly + newReservationTime <= maxWeekTime;
@@ -149,6 +154,7 @@ export class ReservationPublicService {
     timeFrom: number,
     timeTo: number,
   ): Promise<boolean> {
+    console.log("checkTimeAvailability");
     const overlappingReservations = await this.reservationRepository.fetch({
       spaceId: spaceId,
       timeRange: {
@@ -156,6 +162,7 @@ export class ReservationPublicService {
         timeTo: timeTo,
       },
     });
+    console.log(overlappingReservations);
 
     return overlappingReservations.length === 0; // 겹치는 예약이 있으면 false
   }

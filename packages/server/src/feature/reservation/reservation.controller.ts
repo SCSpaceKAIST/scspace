@@ -21,11 +21,15 @@ import {
   IReservationAll
 } from '@scspace-depot/types/reservation';
 import { ISuccessResponse } from '@scspace-depot/types/common';
-import { MemberGuard, MemberGuardWithRervation, UserGuard } from '../auth/jwt/jwt.guard';
+import { AdminGuard, MemberGuard, MemberGuardWithRervation, UserGuard } from '../auth/jwt/jwt.guard';
 import { IUser } from '@scspace-depot/types/user';
+import { SpacePublicService } from '../space/space.public.service';
+
 @Controller('reservation')
 export class ReservationController {
-  constructor(private readonly reservationService: ReservationService) { }
+  constructor(private readonly reservationService: ReservationService,
+    private readonly spaceService: SpacePublicService,
+  ) { }
 
   //HOOK: useReservations
   //HOOK: useDateReservations
@@ -76,6 +80,21 @@ export class ReservationController {
     @Body() reservationInput: IReservationUpdate,
   ): Promise<IReservation> {
     return await this.reservationService.updateReservation(reservationInput);
+  }
+
+  @UseGuards(AdminGuard)
+  @Delete('all')
+  async deleteAllReservation(): Promise<ISuccessResponse> {
+    const spaces = await this.spaceService.fetchAll();
+    for (const space of spaces) {
+      const reservations = await this.reservationService.getReservationBySpaceIDBetweenTime(space.id);
+      for (const reservation of reservations) {
+        await this.reservationService.deleteReservation(reservation.id, reservation.user);
+      }
+    }
+    return {
+      success: true,
+    };
   }
 
   // AuthGuard - user
