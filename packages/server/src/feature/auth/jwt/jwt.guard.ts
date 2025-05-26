@@ -67,11 +67,13 @@ export class MemberGuard extends AuthGuard('jwt') {
     let id = 0;
     if (request.params?.id) {
       id = parseInt(request.params.id);
+      console.log("ID " + id);
       if (id === 1){
         return true;
       }
     } else if (request.body?.organizationId) {
       id = parseInt(request.body.organizationId);
+      console.log("ID " + id);
       if (id === 1){
         const individualUser = request.body.userId;
         if (individualUser === user.id) {
