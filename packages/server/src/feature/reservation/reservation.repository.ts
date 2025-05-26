@@ -82,9 +82,6 @@ export class ReservationRepository {
     if (param.timeRange) {
       const timeFrom = param.timeRange.timeFrom;
       const timeTo = param.timeRange.timeTo;
-      console.log("timeFrom " + timeFrom);
-      console.log("timeTo " + timeTo);
-
       if (timeFrom && timeTo) {
         whereClause.push(
           or(

@@ -26,7 +26,7 @@ export class ReservationPublicService {
   }
 
   private getDifferenceInMinutes(timeFrom: number, timeTo: number): number {
-    return (timeTo - timeFrom) / (60 * 1000);
+    return (timeTo - timeFrom);
   }
 
   // 일간 예약 시간을 계산하는 함수
@@ -108,7 +108,6 @@ export class ReservationPublicService {
   ): Promise<boolean> {
     // 공간위원이면 최대 시간 제한 없음
     if (await this.userPublicService.isManager(userId)) {
-      console.log("Manager");
       return true;
     }
 
@@ -129,12 +128,7 @@ export class ReservationPublicService {
     }
 
     const daily = await this.getDailyReservationTime(userId, spaceId, timeFrom);
-    console.log("Daily" + daily);
     const weekly = await this.getWeeklyReservationTime(userId, spaceId, timeFrom);
-    console.log("Weekly" +weekly);
-    console.log("New" +newReservationTime);
-    console.log("MaxDay" +maxDayTime);
-    console.log("MaxWeek" +maxWeekTime);
     const isWithinLimits = 
       daily + newReservationTime <= maxDayTime &&
       weekly + newReservationTime <= maxWeekTime;
@@ -154,7 +148,6 @@ export class ReservationPublicService {
     timeFrom: number,
     timeTo: number,
   ): Promise<boolean> {
-    console.log("checkTimeAvailability");
     const overlappingReservations = await this.reservationRepository.fetch({
       spaceId: spaceId,
       timeRange: {
@@ -162,7 +155,6 @@ export class ReservationPublicService {
         timeTo: timeTo,
       },
     });
-    console.log(overlappingReservations);
 
     return overlappingReservations.length === 0; // 겹치는 예약이 있으면 false
   }
@@ -197,7 +189,7 @@ export class ReservationPublicService {
       throw new BadRequestException('timeFrom must be before timeTo');
     }
     if (timeFrom === timeTo) {
-      timeTo = Number(BigInt(timeFrom) + BigInt(1000 * 60 * 60 * 24) - BigInt(1));
+      timeTo = Number(BigInt(timeFrom) + BigInt(60 * 24) - BigInt(1));
     }
 
     const isAvailable = await this.validateTimeConstraints(
@@ -230,5 +222,4 @@ export class ReservationPublicService {
     const reservationContents = await Promise.all(ids.map(async (id) => await this.reservationRepository.fetchContent(id)));
     return reservationContents.map(MReservationContent.fromDB);
   }
-
 }
