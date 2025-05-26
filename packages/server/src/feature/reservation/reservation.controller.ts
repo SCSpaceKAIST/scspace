@@ -21,7 +21,7 @@ import {
   IReservationAll
 } from '@scspace-depot/types/reservation';
 import { ISuccessResponse } from '@scspace-depot/types/common';
-import { MemberGuard, UserGuard } from '../auth/jwt/jwt.guard';
+import { MemberGuard, MemberGuardWithRervation, UserGuard } from '../auth/jwt/jwt.guard';
 import { IUser } from '@scspace-depot/types/user';
 @Controller('reservation')
 export class ReservationController {
@@ -79,7 +79,7 @@ export class ReservationController {
   }
 
   // AuthGuard - user
-  @UseGuards(MemberGuard)
+  @UseGuards(MemberGuardWithRervation)
   @Delete(':id')
   // 1인 경우를 고려하기 위해 추가
   // userid 비교 

@@ -35,11 +35,7 @@ export class OrganizationController {
   @Get(':id')
   async getOrganizationById(
     @Param('id', ParseIntPipe) id: number,
-    @Req() req: Request,
   ): Promise<IOrganizationAll> {
-    if (id === 1 && ((req as any).user.type !== UserTypeEnum.ADMIN && (req as any).user.type !== UserTypeEnum.MANAGER)) {
-      throw new BadRequestException('You cannot access the individual organization');
-    }
     return await this.organizationPublicService.fetchDeepById(id);
   }
 

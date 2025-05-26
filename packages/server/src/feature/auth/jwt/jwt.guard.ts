@@ -4,6 +4,7 @@ import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { IUser } from '@scspace-depot/types/user';
 import { OrganizationPublicService } from '@scspace-server/feature/organization/organization.public.service';
 import { OrganizationService } from '@scspace-server/feature/organization/organization.service';
+import { ReservationPublicService } from '@scspace-server/feature/reservation/reservation.public.service';
 
 function isManage(user: IUser): boolean {
   return user.type === UserTypeEnum.ADMIN
@@ -67,16 +68,18 @@ export class MemberGuard extends AuthGuard('jwt') {
     let id = 0;
     if (request.params?.id) {
       id = parseInt(request.params.id);
-      console.log("ID " + id);
       if (id === 1){
-        return true;
+        if (user.type === UserTypeEnum.ADMIN || user.type === UserTypeEnum.MANAGER) {
+          return true;
+        } else{
+          return false
+        }
       }
     } else if (request.body?.organizationId) {
       id = parseInt(request.body.organizationId);
-      console.log("ID " + id);
       if (id === 1){
         const individualUser = request.body.userId;
-        if (individualUser === user.id) {
+        if (parseInt(individualUser) === user.id) {
           return true;
         }
       }
@@ -87,6 +90,40 @@ export class MemberGuard extends AuthGuard('jwt') {
     if (id) {
       const organization = await this.organizationPublicService.fetchMembersById(id);
       if (organization.some(member => member.userId === user.id)) {
+        return true;
+      }
+    }
+    return false;
+  }
+}
+@Injectable()
+export class MemberGuardWithRervation extends AuthGuard('jwt') {
+  constructor(
+    private readonly organizationPublicService: OrganizationPublicService,
+    private readonly reservationPublicService: ReservationPublicService,
+  ) {
+    super();
+  }
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const can = await super.canActivate(context);
+    if (!can) return false;
+
+    const request = context.switchToHttp().getRequest();
+    const user = request.user as IUser;
+    if (isManage(user)) {
+      return true;
+    }
+
+    const id = parseInt(request.params.id);
+    const reservation = await this.reservationPublicService.fetchById(id);
+    if (reservation === null) {
+      return false;
+    }
+    if (reservation.userId === user.id) {
+      return true;
+    } else if (reservation.organizationId !== 1) {
+      const members = await this.organizationPublicService.fetchMembersById(reservation.organizationId);
+      if (members.some(member => member.userId === user.id)) {
         return true;
       }
     }

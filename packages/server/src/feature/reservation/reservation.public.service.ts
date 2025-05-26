@@ -7,7 +7,7 @@ import { SpacePublicService } from '@scspace-server/feature/space/space.public.s
 import { reservationMaxWeekTime } from '@scspace-depot/consts/reservation.const';
 import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
 import { timeRangeCheck } from '@scspace-server/common/util';
-import { IReservationContent } from '@scspace-depot/types/reservation';
+import { IReservation, IReservationAll, IReservationContent, IReservationSimple } from '@scspace-depot/types/reservation';
 import { getDate } from 'date-fns';
 @Injectable()
 export class ReservationPublicService {
@@ -16,6 +16,14 @@ export class ReservationPublicService {
     private readonly spacePublicService: SpacePublicService,
     private readonly userPublicService: UserPublicService,
   ) {}
+
+  async fetchById(id: number): Promise<IReservationSimple | null> {
+    const reservation = await this.reservationRepository.fetch({ id: id });
+    if (reservation.length === 0) {
+      return null;
+    }
+    return MReservationSimple.fromDB(reservation[0]);
+  }
 
   private getDifferenceInMinutes(timeFrom: number, timeTo: number): number {
     return (timeTo - timeFrom) / (60 * 1000);
