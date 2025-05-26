@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
+import { AdminGuard } from './feature/auth/jwt/jwt.guard';
 
 @Controller()
 export class AppController {
@@ -10,8 +11,15 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  @UseGuards(AdminGuard)
   @Get('fillContent')
   async fillContent(): Promise<void> {
     this.appService.fillContent();
+  }
+  
+  @UseGuards(AdminGuard)
+  @Get("save")
+  async save(): Promise<void> {
+    this.appService.save();
   }
 }

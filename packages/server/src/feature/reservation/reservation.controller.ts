@@ -11,6 +11,7 @@ import {
   UseGuards,
   Req
 } from '@nestjs/common';
+import { Request } from 'express';
 import { ReservationService } from './reservation.service';
 import {
   IReservation,
