@@ -12,6 +12,7 @@ import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
 import { IVerificationResponse } from '@scspace-depot/types/auth/auth.type';
 import { ConfigService } from '@nestjs/config';
+import { AuthGuard } from '@nestjs/passport';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -68,8 +69,10 @@ export class AuthController {
     }
   }
 
+  @UseGuards(AuthGuard("jwt"))
   @Post('logout')
   async logout(@Res() res: Response): Promise<void> {
+    console.log("LOGOUT");
     res.clearCookie('scspacetoken', { path: '/' });
 
     return res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
