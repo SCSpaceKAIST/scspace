@@ -29,6 +29,7 @@ import { IReservationAll } from "@scspace-depot/types/reservation";
 import DeleteBtn from "./DeleteBtn";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useDate } from "@scspace-client/Hooks/date";
+import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 function SpaceSelect({ setSpaceId }: {
   setSpaceId: Dispatch<SetStateAction<number>>;
@@ -276,7 +277,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                     </DataList.Root>
                   </Dialog.Body>
                   <Dialog.Footer>
-                    {(userInfo?.id === selectedRes.userId) && (
+                    {userInfo && ((userInfo.id === selectedRes.userId) || (userInfo.type === UserTypeEnum.MANAGER) || (userInfo.type === UserTypeEnum.ADMIN)) && (
                       <DeleteBtn rid={selectedRes.id} onSuccess={onDeleteSuccess} />
                     )}
                     <Dialog.ActionTrigger asChild>
