@@ -75,6 +75,6 @@ export class AuthController {
     console.log("LOGOUT");
     res.clearCookie('scspacetoken', { path: '/' });
 
-    return res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
+    res.redirect(this.configService.get<string>('NEXT_PUBLIC_APP_URL'));
   }
 }
