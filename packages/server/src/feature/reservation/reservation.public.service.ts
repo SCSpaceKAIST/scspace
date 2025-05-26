@@ -235,7 +235,7 @@ export class ReservationPublicService {
     return reservationContents.map(MReservationContent.fromDB);
   }
 
-  async backupReservations(): Promise<void> {
+  async backupReservations(): Promise<string> {
     try {
       // 모든 예약 데이터 가져오기
       const reservations = await this.reservationRepository.fetch({});
@@ -277,7 +277,8 @@ export class ReservationPublicService {
       ].join('\n');
 
       // backup 디렉토리 생성
-      const backupDir = path.join(process.cwd(), 'backup');
+      const backupDir = "~/scspace_backup";
+      console.log(backupDir);
       const exists = fs.existsSync(backupDir);
       if (!exists) {
         await mkdir(backupDir, { recursive: true });
@@ -291,6 +292,7 @@ export class ReservationPublicService {
 
       // CSV 파일 저장
       await writeFile(filepath, csvContent);
+      return filepath;
 
     } catch (error) {
       Logger.error('Failed to backup reservations:', error);

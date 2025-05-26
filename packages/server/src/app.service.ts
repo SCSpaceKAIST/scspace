@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { schema } from './db/schema';
 import { SpacePublicService } from './feature/space/space.public.service';
 import { UserPublicService } from './feature/user/user.public.service';
@@ -155,7 +155,9 @@ export class AppService {
     }
   }
 
-  async save(): Promise<void> {
-    await this.reservationPublicService.backupReservations();
+  async save(): Promise<string> {
+    const filename = await this.reservationPublicService.backupReservations();
+    Logger.log(filename);
+    return filename;
   }
 }

@@ -19,7 +19,7 @@ export class AppController {
   
   @UseGuards(AdminGuard)
   @Get("save")
-  async save(): Promise<void> {
-    this.appService.save();
+  async save(): Promise<string> {
+    return await this.appService.save();
   }
 }
