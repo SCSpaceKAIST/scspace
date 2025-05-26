@@ -1,3 +1,5 @@
+"use client"
+
 import { HiOutlineBars3 } from "react-icons/hi2";
 import {
     IconButton,
@@ -13,10 +15,15 @@ import {
 
 import Redirect from "./Redirect";
 import Footer from "./Footer";
+import { useState } from "react";
 
 export default function DrawerComponent() {
+    const [open, setOpen] = useState<boolean>(false);
+
     return (
         <Drawer.Root
+            open={open}
+            onOpenChange={(e) => setOpen(e.open)}
             placement="start"
             size="sm"
             initialFocusEl={() => null}
@@ -58,7 +65,7 @@ export default function DrawerComponent() {
                             >
                                 <Fieldset.Root>
                                     <Fieldset.Content pr={4} >
-                                        <Redirect />
+                                        <Redirect onClick={() => setOpen(false)} />
                                     </Fieldset.Content>
                                 </Fieldset.Root>
                             </Stack>

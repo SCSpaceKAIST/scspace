@@ -17,7 +17,7 @@ import { HiPlus } from "react-icons/hi2";
 import { useAllSpace } from "@scspace-client/Hooks/space";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 
-function RedirectLinks({ links }: { links: ILink[] }) {
+function RedirectLinks({ links, onClick }: { links: ILink[]; onClick: () => void }) {
     const { linkPush } = useLinkPush();
 
     return (
@@ -40,7 +40,10 @@ function RedirectLinks({ links }: { links: ILink[] }) {
                             <Grid templateColumns="1fr auto" width="100%" gap={1}>
                                 <Button
                                     width="100%"
-                                    onClick={() => linkPush(l.href)}
+                                    onClick={() => {
+                                        onClick();
+                                        linkPush(l.href);
+                                    }}
                                     margin={0}
                                     color={{ _hover: "blue.500" }}
                                     variant="outline"
@@ -74,7 +77,7 @@ function RedirectLinks({ links }: { links: ILink[] }) {
                             </Grid>
                             {(l.subdomains && l.subdomains.length > 0) &&
                                 <Collapsible.Content mt={2} >
-                                    <RedirectLinks links={l.subdomains} />
+                                    <RedirectLinks links={l.subdomains} onClick={onClick} />
                                 </Collapsible.Content>
                             }
                         </Collapsible.Root>
@@ -85,7 +88,7 @@ function RedirectLinks({ links }: { links: ILink[] }) {
     );
 }
 
-export default function Redirect() {
+export default function Redirect({ onClick }: { onClick: () => void }) {
     const { spaces } = useAllSpace();
     const [spaceLinks, setSpaceLinks] = useState<ILink[]>([]);
     const [links, setLinks] = useState<ILink[]>([]);
@@ -156,5 +159,5 @@ export default function Redirect() {
         ]);
     }, [spaceLinks]);
 
-    return (<RedirectLinks links={links} />);
+    return (<RedirectLinks links={links} onClick={onClick} />);
 }

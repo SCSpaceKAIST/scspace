@@ -1,4 +1,4 @@
-import { Dialog, DialogBackdrop, Button, IconButton, Portal, Fieldset, Field, HStack, PinInput, Stack, Text, Flex, VStack, Wrap } from "@chakra-ui/react";
+import { Dialog, DialogBackdrop, Button, IconButton, Portal, Fieldset, Field, HStack, PinInput, Stack, Text, Flex, VStack, Wrap, Grid } from "@chakra-ui/react";
 import { useStudent } from "@scspace-client/Hooks/user";
 import { useEffect, useState } from "react";
 import { HiPlus } from "react-icons/hi";
@@ -148,7 +148,7 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
                                             </PinInput.Control>
                                         </PinInput.Root>
                                         {(student) && (
-                                            <HStack>
+                                            <Grid templateColumns="auto auto" gap={2} width="fit-content">
                                                 <NewMember
                                                     user={student}
                                                 />
@@ -164,7 +164,7 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
                                                 }}>
                                                     <HiPlus />
                                                 </IconButton>
-                                            </HStack>
+                                            </Grid>
                                         )}
                                     </VStack>
                                     <Field.HelperText>

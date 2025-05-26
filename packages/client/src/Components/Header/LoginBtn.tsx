@@ -5,7 +5,7 @@ import { Button, Menu, Portal } from "@chakra-ui/react";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 
 export const LoginBtn: React.FC = () => {
-  const { isLogined, userInfo, } = useAuth();
+  const { isLogined, userInfo, refetch } = useAuth();
   const { linkPush } = useLinkPush();
   const { logout } = useAuthAPI();
 
@@ -37,7 +37,10 @@ export const LoginBtn: React.FC = () => {
           </Portal>
         </Menu.Root>
       ) : (
-        <Button variant="outline" rounded="sm" onClick={() => linkPush('/login')}>
+        <Button variant="outline" rounded="sm" onClick={() => {
+          linkPush('/login');
+          refetch();
+        }}>
           Login
         </Button>
       )}
