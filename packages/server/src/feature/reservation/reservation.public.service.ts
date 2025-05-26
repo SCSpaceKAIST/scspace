@@ -36,6 +36,72 @@ export class ReservationPublicService {
     return (timeTo - timeFrom);
   }
 
+  async getDailyReservationTimeByOrganization(
+    organizationId: number,
+    spaceId: number,
+    timeFrom: number,
+  ): Promise<number> {
+    if (!timeFrom) {
+      throw new BadRequestException('timeFrom is required');
+    }
+
+    const startOfDay = BigInt(~~(timeFrom / (60 * 24))) * BigInt(60 * 24);
+    const endOfDay = startOfDay + BigInt(60 * 24) - BigInt(1);
+
+    const todayReservations = await this.reservationRepository.fetch({
+      organizationId: organizationId,
+      spaceId: spaceId,
+      state: ReservationStateEnum.GRANT,
+      timeRange: {
+        timeFrom: Number(startOfDay),
+        timeTo: Number(endOfDay),
+      },
+    });
+
+    const totalReservedTime = todayReservations.reduce((acc, reservation) => {
+      return (
+        acc +
+        this.getDifferenceInMinutes(
+          reservation.timeFrom,
+          reservation.timeTo,
+        )
+      );
+    }, 0);
+    return totalReservedTime;
+  }
+
+  // 주간 예약 시간을 계산하는 함수
+  async getWeeklyReservationTimeByOrganization(
+    organizationId: number,
+    spaceId: number,
+    timeFrom: number,
+  ): Promise<number> {
+    const startOfWeek = BigInt(~~(timeFrom / (60 * 24 * 7))) * BigInt(60 * 24 * 7);
+    const endOfWeek = startOfWeek + BigInt(60 * 24 * 7) - BigInt(1);
+
+    const weeklyReservations = await this.reservationRepository.fetch({
+      organizationId: organizationId,
+      spaceId: spaceId,
+      state: ReservationStateEnum.GRANT,
+      timeRange: {
+        timeFrom: Number(startOfWeek),
+        timeTo: Number(endOfWeek),
+      },
+    });
+
+    const totalReservedTime = weeklyReservations.reduce((acc, reservation) => {
+      return (
+        acc +
+        this.getDifferenceInMinutes(
+          reservation.timeFrom,
+          reservation.timeTo,
+        )
+      );
+    }, 0);
+    return totalReservedTime;
+  }
+
+
   // 일간 예약 시간을 계산하는 함수
   async getDailyReservationTime(
     userId: number,
@@ -105,6 +171,7 @@ export class ReservationPublicService {
   // 시간 제한을 넘어섰는지 검사 (일일, 주간)
   async validateTimeConstraints(
     userId: number,
+    organizationId: number,
     spaceId: number,
     timeFrom: number,
     timeTo: number,
@@ -139,11 +206,21 @@ export class ReservationPublicService {
       );
     }
 
-    const daily = await this.getDailyReservationTime(userId, spaceId, timeFrom);
-    const weekly = await this.getWeeklyReservationTime(userId, spaceId, timeFrom);
-    const isWithinLimits = 
-      daily + newReservationTime <= maxDayTime &&
-      weekly + newReservationTime <= maxWeekTime;
+    let isWithinLimits = false;
+
+    if (organizationId === 1) {
+      const daily = await this.getDailyReservationTime(userId, spaceId, timeFrom);
+      const weekly = await this.getWeeklyReservationTime(userId, spaceId, timeFrom);
+      isWithinLimits = 
+        daily + newReservationTime <= maxDayTime &&
+        weekly + newReservationTime <= maxWeekTime;
+    }else{
+      const daily = await this.getDailyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
+      const weekly = await this.getWeeklyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
+      isWithinLimits = 
+        daily + newReservationTime <= maxDayTime &&
+        weekly + newReservationTime <= maxWeekTime;
+    }
 
     if (!isWithinLimits) {
       throw new BadRequestException(
@@ -192,7 +269,7 @@ export class ReservationPublicService {
     return this.reservationRepository.fetch(params);
   }
 
-  async checkWholeTime(userId: number, spaceId: number, timeFrom: number, timeTo: number): Promise<void> {
+  async checkWholeTime(userId: number, organizationId: number, spaceId: number, timeFrom: number, timeTo: number): Promise<void> {
     if (!timeFrom || !timeTo) {
       throw new BadRequestException('timeFrom and timeTo are required');
     }
@@ -204,8 +281,10 @@ export class ReservationPublicService {
       timeTo = Number(BigInt(timeFrom) + BigInt(60 * 24) - BigInt(1));
     }
 
+
     const isAvailable = await this.validateTimeConstraints(
       userId,
+      organizationId,
       spaceId,
       timeFrom,
       timeTo,

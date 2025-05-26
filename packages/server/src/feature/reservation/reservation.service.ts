@@ -130,7 +130,7 @@ export class ReservationService {
     reservationInput: IReservationCreate,
   ): Promise<IReservation> {
 
-    await this.reservationPublicService.checkWholeTime(reservationInput.userId, reservationInput.spaceId, reservationInput.timeFrom, reservationInput.timeTo);
+    await this.reservationPublicService.checkWholeTime(reservationInput.userId,reservationInput.organizationId, reservationInput.spaceId, reservationInput.timeFrom, reservationInput.timeTo);
 
     const [user, organizations, space] = await Promise.all([
       this.userPublicService.fetchById(reservationInput.userId),
