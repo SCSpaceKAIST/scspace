@@ -16,7 +16,7 @@ export default function SpacePage() {
                             Please report an error by clicking the button below.
                         </Text>
                         <Text>
-                            We'll make sure SCSpace is always evolving.
+                            We will make sure SCSpace is always evolving.
                         </Text>
                         <Link href="https://docs.google.com/forms/d/e/1FAIpQLSekj_wQX_t06J8jJfZXWq-Okkr2e2K3mtajnT3dS3wKy7PEsA/viewform?usp=dialog" target="_blank">
                             <IconButton variant="outline" size="2xl">
