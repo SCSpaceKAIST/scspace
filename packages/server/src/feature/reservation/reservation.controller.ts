@@ -16,8 +16,6 @@ import { ReservationService } from './reservation.service';
 import {
   IReservation,
   IReservationCreate,
-  ISpaceTimeCheckRequest,
-  IUserTimeCheckRequest,
   IReservationUpdate,
   IReservationAll
 } from '@scspace-depot/types/reservation';

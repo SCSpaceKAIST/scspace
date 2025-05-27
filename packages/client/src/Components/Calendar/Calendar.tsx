@@ -17,6 +17,7 @@ import {
   HStack,
   useBreakpointValue,
   CloseButton,
+  IconButton,
 } from "@chakra-ui/react";
 import Scroll from "../_commons/Scroll";
 import SelectComponent from "../Reservation/forms/utils/Select";
@@ -31,6 +32,7 @@ import { useDate } from "@scspace-client/Hooks/utils";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 
 function SpaceSelect({ setSpaceId }: {
   setSpaceId: Dispatch<SetStateAction<number>>;
@@ -560,7 +562,10 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
                   </Dialog.Title>
                 </Dialog.Header>
                 <Dialog.Body>
-                  <Center>
+                  <Grid templateColumns="auto 1fr auto">
+                    <IconButton variant="outline" onClick={() => date.setDate(date.getDate() - 7)}>
+                      <HiChevronLeft />
+                    </IconButton>
                     <DatePicker
                       wrapperClassName="datepicker"
                       showWeekPicker
@@ -571,7 +576,10 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
                       }}
                       inline
                     />
-                  </Center>
+                    <IconButton variant="outline" onClick={() => date.setDate(date.getDate() + 7)}>
+                      <HiChevronRight />
+                    </IconButton>
+                  </Grid>
                 </Dialog.Body>
                 <Dialog.CloseTrigger asChild>
                   <CloseButton />
