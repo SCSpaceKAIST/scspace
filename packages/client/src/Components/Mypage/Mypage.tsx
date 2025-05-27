@@ -2,7 +2,7 @@
 
 import PageSelector, { IPage } from "../PageSelector/PageSelector";
 import Organization from "../Organization/Organization";
-import UserReservation from "../Reservation/UserRevervation/UserReservation";
+import UserReservation from "./UserRevervation/UserReservation";
 
 export default function Mypage() {
   const pages: IPage[] = [
@@ -10,7 +10,7 @@ export default function Mypage() {
       kor: "예약 목록",
       eng: "Reservation List",
       preview: (<UserReservation />),
-      href: "/mypage"
+      href: "/mypage/reservation"
     },
     {
       kor: "조직 관리",

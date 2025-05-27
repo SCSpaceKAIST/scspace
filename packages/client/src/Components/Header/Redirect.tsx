@@ -121,7 +121,6 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 href: "/introduction",
                 label: "공간위에 대해",
                 helperText: "About SCSpace",
-                disabled: true
             },
             {
                 href: "/notice",
