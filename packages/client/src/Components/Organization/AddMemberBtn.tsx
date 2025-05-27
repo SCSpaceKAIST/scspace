@@ -1,4 +1,4 @@
-import { Dialog, DialogBackdrop, Button, IconButton, Portal, Fieldset, Field, HStack, PinInput, Stack, Text, Flex, VStack, Wrap, Grid } from "@chakra-ui/react";
+import { Dialog, DialogBackdrop, Button, IconButton, Portal, Fieldset, Field, HStack, PinInput, Stack, Text, Flex, VStack, Wrap, Grid, useBreakpointValue } from "@chakra-ui/react";
 import { useStudent } from "@scspace-client/Hooks/user";
 import { useEffect, useState } from "react";
 import { HiPlus } from "react-icons/hi";
@@ -84,8 +84,10 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
         }
     }
 
+    const dialogSize = useBreakpointValue<"full" | "md">({ base: "full", md: "md" });
+
     return (
-        <Dialog.Root size="xl"
+        <Dialog.Root size={dialogSize} placement="center"
             onOpenChange={() => {
                 console.log(1)
                 setvalue(["", "", "", "", "", "", "", "",]);
@@ -196,7 +198,7 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
                             </Fieldset.Root>
                         </Dialog.Body>
                         <Dialog.Footer>
-                            <Dialog.ActionTrigger>
+                            <Dialog.ActionTrigger asChild>
                                 <Button
                                     rounded="sm"
                                     onClick={save}

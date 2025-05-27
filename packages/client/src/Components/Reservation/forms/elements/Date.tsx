@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { Button, Box, VStack, useBreakpointValue, Center, Dialog, Portal, } from "@chakra-ui/react";
+import { Button, Box, VStack, useBreakpointValue, Center, Dialog, Portal, CloseButton, } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -27,7 +27,7 @@ export function DateForm({
     setText(date.toLocaleDateString());
   }, [date]);
 
-  const isMd = useBreakpointValue({ base: true, md: false });
+  const isWide = useBreakpointValue({ base: false, md: true });
 
   return (
     <FieldComponent
@@ -38,7 +38,7 @@ export function DateForm({
         disabled: false,
       }}
     >
-      <Dialog.Root size="xs" open={open} onOpenChange={(e) => setOpen(e.open)}>
+      <Dialog.Root size={isWide ? "xs" : "full"} open={open} onOpenChange={(e) => setOpen(e.open)}>
         <Dialog.Trigger asChild width="100%">
           <Button variant="outline" width="100%" bg="white">
             {text}
@@ -68,6 +68,9 @@ export function DateForm({
                   />
                 </Center>
               </Dialog.Body>
+              <Dialog.CloseTrigger asChild>
+                <CloseButton />
+              </Dialog.CloseTrigger>
             </Dialog.Content>
           </Dialog.Positioner>
         </Portal>

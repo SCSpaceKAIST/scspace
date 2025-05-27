@@ -71,7 +71,21 @@ export const useMutationApi = <ResponseType, RequestParamType extends object>(
           const res = await fetch(`${baseUrl}${endpoint}${queryString}`, {
             credentials: "include",
           });
-          if (!res.ok) throw new Error(res.statusText);
+
+          if (!res.ok) {
+            let errorMessage = res.statusText;
+
+            try {
+              const errorData = await res.json();
+              errorMessage = errorData.message || errorData.error || res.statusText;
+              console.log(errorData, errorMessage);
+            } catch (parseError) {
+              console.log("JSON parsing fail");
+            }
+
+            throw new Error(errorMessage);
+          }
+
           return res.json();
         }
         : async (content?: RequestParamType) => {
@@ -81,7 +95,21 @@ export const useMutationApi = <ResponseType, RequestParamType extends object>(
             credentials: "include",
             body: JSON.stringify(content ?? {}),
           });
-          if (!res.ok) throw new Error(res.statusText);
+
+          if (!res.ok) {
+            let errorMessage = res.statusText;
+
+            try {
+              const errorData = await res.json();
+              errorMessage = errorData.message || errorData.error || res.statusText;
+              console.log(errorData, errorMessage);
+            } catch (parseError) {
+              console.log("JSON parsing fail");
+            }
+
+            throw new Error(errorMessage);
+          }
+
           return res.json();
         },
     onSuccess: () => {

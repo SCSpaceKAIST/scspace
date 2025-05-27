@@ -14,7 +14,7 @@ export default function SpacePage() {
 
     return (space ? (
         <PageTemplete
-            title={["예약 확인하기", space.nameKr]}
+            title={["예약 현황", space.nameKr]}
             subtitle={["Calendar", space.nameEn]}
         >
             <Calendar spaceId={space.id} />

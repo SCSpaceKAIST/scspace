@@ -9,7 +9,8 @@ import {
     DataList,
     HStack,
     Text,
-    Stack
+    Stack,
+    useBreakpointValue
 } from "@chakra-ui/react";
 import { useOrganizationDetail } from "@scspace-client/Hooks/organization";
 import LoadingComponent from "../Loading/Loading";
@@ -37,6 +38,8 @@ export default function OrganizationDetail({ id, onDelete }: {
 
     useEffect(() => { needLogin() }, []);
 
+    const isWide = useBreakpointValue({ base: false, md: true });
+
     return (organizationDetail ? (
         <>
             <Dialog.Header>
@@ -54,15 +57,20 @@ export default function OrganizationDetail({ id, onDelete }: {
                             </Dialog.Title>
                         </Stack>
                     </HStack>
-                    <DataList.Root orientation="horizontal" gap={1} color="fg.muted">
-                        <DataList.Item gap={0}>
-                            <DataList.ItemLabel>
-                                Create Time
-                            </DataList.ItemLabel>
-                            <DataList.ItemValue margin={0}>
-                                {getString(organizationDetail.timeRegister)}
-                            </DataList.ItemValue>
-                        </DataList.Item>
+                    <DataList.Root
+                        orientation={isWide ? "horizontal" : "vertical"}
+                        gap={1} color="fg.muted"
+                    >
+                        {isWide && (
+                            <DataList.Item gap={0}>
+                                <DataList.ItemLabel>
+                                    Create Time
+                                </DataList.ItemLabel>
+                                <DataList.ItemValue margin={0}>
+                                    {getString(organizationDetail.timeRegister)}
+                                </DataList.ItemValue>
+                            </DataList.Item>
+                        )}
                         <DataList.Item gap={0}>
                             <DataList.ItemLabel>
                                 Update Time

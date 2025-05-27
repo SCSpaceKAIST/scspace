@@ -8,7 +8,8 @@ import {
     Dialog,
     Portal,
     IconButton,
-    HStack
+    HStack,
+    useBreakpointValue
 } from "@chakra-ui/react";
 import { useState, } from "react";
 import Scroll from "../_commons/Scroll";
@@ -35,13 +36,15 @@ export default function Organization() {
 
     const { getString } = useDate();
 
+    const isWide = useBreakpointValue({ base: false, md: true });
+
     return (
         <Scroll>
             {organization ? (
                 <Dialog.Root
                     open={open}
                     onOpenChange={(e) => setOpen(e.open)}
-                    size="xl"
+                    size={isWide ? "cover" : "full"}
                 >
                     <Grid
                         height="100%"
@@ -50,12 +53,14 @@ export default function Organization() {
                     >
                         <Flex
                             width="100%"
-                            justify="space-between"
+                            justify={isWide ? "space-between" : "end"}
                             alignItems="end"
                         >
-                            <Text margin={0} color="gray.focusRing">
-                                Click each row to see detail of organization
-                            </Text>
+                            {isWide && (
+                                <Text margin={0} color="gray.focusRing">
+                                    Click each row to see detail of organization
+                                </Text>
+                            )}
                             <HStack>
                                 <TooltipComponent content="Refresh">
                                     <IconButton
@@ -90,12 +95,16 @@ export default function Organization() {
                                         <Table.ColumnHeader>
                                             Delegator
                                         </Table.ColumnHeader>
-                                        <Table.ColumnHeader>
-                                            Create Time
-                                        </Table.ColumnHeader>
-                                        <Table.ColumnHeader>
-                                            Update Time
-                                        </Table.ColumnHeader>
+                                        {isWide && (
+                                            <>
+                                                <Table.ColumnHeader>
+                                                    Create Time
+                                                </Table.ColumnHeader>
+                                                <Table.ColumnHeader>
+                                                    Update Time
+                                                </Table.ColumnHeader>
+                                            </>
+                                        )}
                                     </Table.Row>
                                 </Table.Header>
                                 <Table.Body>
@@ -114,12 +123,16 @@ export default function Organization() {
                                             <Table.Cell>
                                                 {org.delegator.nameKr}
                                             </Table.Cell>
-                                            <Table.Cell>
-                                                {getString(org.timeRegister)}
-                                            </Table.Cell>
-                                            <Table.Cell>
-                                                {getString(org.timeUpdate)}
-                                            </Table.Cell>
+                                            {isWide && (
+                                                <>
+                                                    <Table.Cell>
+                                                        {getString(org.timeRegister)}
+                                                    </Table.Cell>
+                                                    <Table.Cell>
+                                                        {getString(org.timeUpdate)}
+                                                    </Table.Cell>
+                                                </>
+                                            )}
                                         </Table.Row>
                                     ))}
                                 </Table.Body>

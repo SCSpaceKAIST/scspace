@@ -8,7 +8,6 @@ import {
   Grid,
   GridItem,
   Portal,
-  Stack,
   Text,
   Float,
   Spinner,
@@ -16,7 +15,8 @@ import {
   DataList,
   Separator,
   HStack,
-  VStack,
+  useBreakpointValue,
+  CloseButton,
 } from "@chakra-ui/react";
 import Scroll from "../_commons/Scroll";
 import SelectComponent from "../Reservation/forms/utils/Select";
@@ -131,7 +131,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
       <Dialog.Root
         open={open}
         onOpenChange={(e) => setOpen(e.open)}
-        size={{ base: "full", md: "xl" }}
+        size="full"
       >
         <Portal>
           <Dialog.Backdrop />
@@ -522,7 +522,7 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
     const d = date.getDay();
 
     dS.setDate(dS.getDate() - d);
-    dE.setDate(dS.getDate() + 6);
+    dE.setDate(dE.getDate() - d + 6);
 
     setText(dS.toLocaleDateString() + " - " + dE.toLocaleDateString());
 
@@ -533,6 +533,8 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
     });
   }, [spaceId, date.getTime()]);
 
+  const isWide = useBreakpointValue({ base: false, md: true });
+
   return (
     <Scroll>
       <Grid
@@ -540,7 +542,7 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
         templateRows="auto 1fr"
         gap={2}
       >
-        <Dialog.Root size="xs" open={open} onOpenChange={(e) => setOpen(e.open)}>
+        <Dialog.Root size={isWide ? "xs" : "full"} open={open} onOpenChange={(e) => setOpen(e.open)}>
           <Dialog.Trigger asChild width="100%">
             <Button variant="outline" width="100%" bg="white">
               {text}
@@ -559,7 +561,6 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
                   <Center>
                     <DatePicker
                       wrapperClassName="datepicker"
-                      showWeekNumbers
                       showWeekPicker
                       selected={date}
                       onChange={(e) => {
@@ -570,6 +571,9 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
                     />
                   </Center>
                 </Dialog.Body>
+                <Dialog.CloseTrigger asChild>
+                  <CloseButton />
+                </Dialog.CloseTrigger>
               </Dialog.Content>
             </Dialog.Positioner>
           </Portal>

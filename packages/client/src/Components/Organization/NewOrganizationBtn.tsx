@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, Dialog, Portal, IconButton, } from "@chakra-ui/react";
+import { Button, Dialog, Portal, IconButton, useBreakpointValue, } from "@chakra-ui/react";
 import { useState, useRef } from "react";
 import { useOrganizationAPI, } from "@scspace-client/Hooks/organization";
 import InputComponent from "../Reservation/forms/utils/Input";
@@ -15,12 +15,15 @@ export default function NewOrganizationBtn({ uid, onSuccess }: {
     const [open, setOpen] = useState<boolean>(false);
     const generateOrganization = useOrganizationAPI().createOrg;
 
+    const isWide = useBreakpointValue({ base: false, md: true });
+
     return (
         <Dialog.Root
             initialFocusEl={() => inputRef.current}
             open={open}
             onOpenChange={(e) => setOpen(e.open)}
             onExitComplete={() => setName("")}
+            size={isWide ? "md" : "full"}
         >
             <Dialog.Trigger asChild>
                 <IconButton

@@ -136,7 +136,7 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
             },
             {
                 href: "/calendar",
-                label: "예약 확인하기",
+                label: "예약 현황",
                 helperText: "Calendar",
                 subdomains: calendarLinks,
             },

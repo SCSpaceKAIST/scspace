@@ -4,7 +4,7 @@ import PageTemplete from "@scspace-client/Components/_commons/PageTemplete";
 export default function SpacePage() {
   return (
     <PageTemplete
-      title="예약 확인하기"
+      title="예약 현황"
       subtitle="Reservation Calendar"
     >
       <SpaceCalendar />
