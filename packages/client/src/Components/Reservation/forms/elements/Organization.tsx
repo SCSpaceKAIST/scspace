@@ -28,7 +28,7 @@ export function OrganizationForm({ id, setOrgId }: {
           return {
             label: o.name,
             value: o.id.toString(),
-            description: "Delegator: " + o.delegatorId.toString()
+            description: "Delegator: " + o.delegator.nameKr
           }
         })
       ]) : (organizations)}

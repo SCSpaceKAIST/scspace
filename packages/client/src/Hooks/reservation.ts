@@ -5,7 +5,7 @@ import { useMutationApi, useQueryApi } from "./api"
 import { IReservation, IReservationAll, IReservationCreate, IReservationUpdate } from "@scspace-depot/types/reservation"
 import { useEffect, useState } from "react";
 import { ISuccessResponse } from "@scspace-depot/types/common/common.type";
-import { useDate } from "./date";
+import { useDate } from "./utils";
 
 export function useReservations({ spaceId, dateFrom, dateTo }: {
     spaceId: number;

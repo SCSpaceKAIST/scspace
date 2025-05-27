@@ -27,7 +27,7 @@ import LoadingComponent from "../Loading/Loading";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import DeleteBtn from "./DeleteBtn";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { useDate } from "@scspace-client/Hooks/date";
+import { useDate } from "@scspace-client/Hooks/utils";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";

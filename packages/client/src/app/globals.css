@@ -15,3 +15,7 @@ html, body {
   padding: 0;
   overflow-y: hidden; /* 가로 스크롤 강제 제거 */
 }
+
+.chakra-dialog__content {
+  max-height: 100svh;
+}

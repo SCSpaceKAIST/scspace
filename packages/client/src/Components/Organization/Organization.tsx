@@ -22,7 +22,7 @@ import { HiOutlineRefresh } from "react-icons/hi";
 
 import OrganizationDetail from "./OrganizationDetail";
 import NewOrganizationBtn from "./NewOrganizationBtn";
-import { useDate } from "@scspace-client/Hooks/date";
+import { useDate } from "@scspace-client/Hooks/utils";
 
 export default function Organization() {
     const { userInfo, needLogin } = useAuth();

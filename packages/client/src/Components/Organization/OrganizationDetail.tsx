@@ -21,7 +21,7 @@ import DeleteBtn from "./DeleteBtn";
 import AddMemberBtn from "./AddMemberBtn";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useEffect, useState } from "react";
-import { useDate } from "@scspace-client/Hooks/date";
+import { useDate } from "@scspace-client/Hooks/utils";
 
 export default function OrganizationDetail({ id, onDelete }: {
     id: number;

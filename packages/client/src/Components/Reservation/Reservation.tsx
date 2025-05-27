@@ -6,6 +6,7 @@ import {
   Separator,
   Grid, GridItem,
   Button,
+  Text,
 } from "@chakra-ui/react";
 import {
   SpaceForm,
@@ -27,7 +28,7 @@ import { CalendarView } from "../Calendar/Calendar";
 import { HourForm } from "./forms/elements/Hour";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { toaster } from "../_commons/Toaster";
-import { useDate } from "@scspace-client/Hooks/date";
+import { useDate } from "@scspace-client/Hooks/utils";
 
 export default function Reservation() {
   const { userInfo, needLogin } = useAuth();
@@ -130,6 +131,9 @@ export default function Reservation() {
   return (
     <Scroll>
       <Stack>
+        <Text color="fg.subtle">
+          {'Before making a reservation, please register your organization under "My Page > Organization."'}
+        </Text>
         <Grid
           templateColumns="repeat(6, 1fr)"
           gap={8}
