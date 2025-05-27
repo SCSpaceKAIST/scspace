@@ -5,6 +5,7 @@ import Scspace from "./Scspace";
 import Business from "./Business";
 import Rule from "./Rule";
 import Scroll from "../_commons/Scroll";
+import { Tabs } from "@chakra-ui/react";
 
 const Introduction: React.FC = () => {
   const [info, setInfo] = useState([
@@ -22,23 +23,28 @@ const Introduction: React.FC = () => {
     setInfo(copiedInfo);
   };
 
+  const [tabs, setTabs] = useState<{ value: string; page: React.ReactNode }[]>([
+    { value: "Introduction", page: <Scspace /> },
+    { value: "Business", page: <Business /> },
+    { value: "Rules", page: <Rule /> },
+  ]);
+
   return (
     <Scroll>
-      <div className="container">
-        <div id="portfolio" className="portfolio">
-          <div className="container-fluid">
-            <ul className="portfolio-flters">
-              {info.map((contents, idx) => (
-                <li key={idx} onClick={() => onClickEvent(idx)}>
-                  {contents.which}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {info.find(contents => contents.clicked)?.text}
-      </div>
+      <Tabs.Root defaultValue={tabs[0].value}>
+        <Tabs.List>
+          {tabs.map((tab) => (
+            <Tabs.Trigger value={tab.value} key={"trigger" + tab.value}>
+              {tab.value}
+            </Tabs.Trigger>
+          ))}
+        </Tabs.List>
+        {tabs.map((tab) => (
+          <Tabs.Content value={tab.value} key={"content" + tab.value}>
+            {tab.page}
+          </Tabs.Content>
+        ))}
+      </Tabs.Root>
     </Scroll>
   );
 };
