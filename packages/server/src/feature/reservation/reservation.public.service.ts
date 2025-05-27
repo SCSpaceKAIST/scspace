@@ -22,7 +22,7 @@ export class ReservationPublicService {
     private readonly reservationRepository: ReservationRepository,
     private readonly spacePublicService: SpacePublicService,
     private readonly userPublicService: UserPublicService,
-  ) {}
+  ) { }
 
   async fetchById(id: number): Promise<IReservationSimple | null> {
     const reservation = await this.reservationRepository.fetch({ id: id });
@@ -187,12 +187,12 @@ export class ReservationPublicService {
     }
 
     // check min / max time
-    const nowDay = (~~((getNow()/(60*24))))
-    if (reservationMinDate[space.spaceType] > (~~(timeFrom/(60*24)) - nowDay)) {
-      throw new BadRequestException('Check min time');
+    const nowDay = (~~((getNow() / (60 * 24))))
+    if (reservationMinDate[space.spaceType] > (~~(timeFrom / (60 * 24)) - nowDay)) {
+      throw new BadRequestException('Date is too close');
     }
-    if (reservationMaxDate[space.spaceType] < (~~(timeFrom/(60*24)) - nowDay)) {
-      throw new BadRequestException('Check max time');
+    if (reservationMaxDate[space.spaceType] < (~~(timeFrom / (60 * 24)) - nowDay)) {
+      throw new BadRequestException('Date is too far');
     }
 
     const newReservationTime = this.getDifferenceInMinutes(timeFrom, timeTo);
@@ -211,13 +211,13 @@ export class ReservationPublicService {
     if (organizationId === 1) {
       const daily = await this.getDailyReservationTime(userId, spaceId, timeFrom);
       const weekly = await this.getWeeklyReservationTime(userId, spaceId, timeFrom);
-      isWithinLimits = 
+      isWithinLimits =
         daily + newReservationTime <= maxDayTime &&
         weekly + newReservationTime <= maxWeekTime;
-    }else{
+    } else {
       const daily = await this.getDailyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
       const weekly = await this.getWeeklyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
-      isWithinLimits = 
+      isWithinLimits =
         daily + newReservationTime <= maxDayTime &&
         weekly + newReservationTime <= maxWeekTime;
     }
@@ -307,9 +307,9 @@ export class ReservationPublicService {
       // 모든 예약 데이터 가져오기
       const reservations = await this.reservationRepository.fetch({});
       const reservationContents = await Promise.all(reservations.map(reservation => this.reservationRepository.fetchContent(reservation.id)));
-      
+
       // CSV 헤더와 데이터 생성
-      const headers = ['id', 'userId', 'organizationId', 'spaceId', 'title', 
+      const headers = ['id', 'userId', 'organizationId', 'spaceId', 'title',
         'timeFrom', 'timeTo', 'timePost', 'timeUpdate', 'state',
         'description', 'innerParticipantNumber', 'outerParticipantNumber', 'food', 'desk', 'chair', 'busking', 'workerNeed'
       ];
@@ -337,7 +337,7 @@ export class ReservationPublicService {
           content?.workerNeed || false
         ];
       });
-      
+
       const csvContent = [
         headers.join(','),
         ...csvRows.map(row => row.join(','))

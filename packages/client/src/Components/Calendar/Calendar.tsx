@@ -126,12 +126,14 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
 
   const { getString } = useDate();
 
+  const isWide = useBreakpointValue({ base: false, md: true });
+
   return (
     <>
       <Dialog.Root
         open={open}
         onOpenChange={(e) => setOpen(e.open)}
-        size="full"
+        size={isWide ? "cover" : "full"}
       >
         <Portal>
           <Dialog.Backdrop />

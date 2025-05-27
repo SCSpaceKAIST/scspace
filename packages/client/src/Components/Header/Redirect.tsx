@@ -123,9 +123,21 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 helperText: "Reporting Error",
             },
             {
-                href: "/introduction",
-                label: "공간위에 대해",
+                href: "/about",
+                label: "찾아보기",
                 helperText: "About SCSpace",
+                subdomains: [
+                    {
+                        href: '/about/scspace',
+                        label: "공간위",
+                        helperText: "SCSpace"
+                    },
+                    {
+                        href: '/about/rules',
+                        label: "세칙",
+                        helperText: "Rules"
+                    }
+                ]
             },
             {
                 href: "/notice",
@@ -143,6 +155,12 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 label: "예약 현황",
                 helperText: "Calendar",
                 subdomains: calendarLinks,
+            },
+            {
+                href: "/",
+                label: "물품 대여하기",
+                helperText: "Rental",
+                disabled: true
             },
             {
                 href: "/space",
