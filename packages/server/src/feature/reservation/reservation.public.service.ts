@@ -22,7 +22,7 @@ export class ReservationPublicService {
     private readonly reservationRepository: ReservationRepository,
     private readonly spacePublicService: SpacePublicService,
     private readonly userPublicService: UserPublicService,
-  ) { }
+  ) {}
 
   async fetchById(id: number): Promise<IReservationSimple | null> {
     const reservation = await this.reservationRepository.fetch({ id: id });
@@ -185,14 +185,13 @@ export class ReservationPublicService {
     if (!space) {
       throw new BadRequestException('Space not found');
     }
-
     // check min / max time
-    const nowDay = (~~((getNow() / (60 * 24))))
-    if (reservationMinDate[space.spaceType] > (~~(timeFrom / (60 * 24)) - nowDay)) {
-      throw new BadRequestException('Date is too close');
+    const nowDay = (~~((getNow()/(60*24))))
+    if (reservationMinDate[space.spaceType] > (~~(timeFrom/(60*24)) - nowDay)) {
+      throw new BadRequestException(`Check the minimum reservation date. ${space.nameEn} can be reserved at least ${reservationMinDate[space.spaceType]} days in advance.`);
     }
-    if (reservationMaxDate[space.spaceType] < (~~(timeFrom / (60 * 24)) - nowDay)) {
-      throw new BadRequestException('Date is too far');
+    if (reservationMaxDate[space.spaceType] < (~~(timeFrom/(60*24)) - nowDay)) {
+      throw new BadRequestException(`Check the maximum reservation date. ${space.nameEn} can be reserved at most ${reservationMaxDate[space.spaceType]} days in advance.`);
     }
 
     const newReservationTime = this.getDifferenceInMinutes(timeFrom, timeTo);
@@ -202,29 +201,32 @@ export class ReservationPublicService {
     // Check if the new reservation itself exceeds daily limit
     if (newReservationTime > maxDayTime) {
       throw new BadRequestException(
-        `Reservation duration exceeds daily limit of ${maxDayTime} minutes for ${space.spaceType}`
+        `Reservation duration exceeds daily limit : ${newReservationTime} / ${maxDayTime} minutes for ${space.nameEn}`
       );
     }
 
     let isWithinLimits = false;
 
+    let daily = 0;
+    let weekly = 0;
+
     if (organizationId === 1) {
-      const daily = await this.getDailyReservationTime(userId, spaceId, timeFrom);
-      const weekly = await this.getWeeklyReservationTime(userId, spaceId, timeFrom);
-      isWithinLimits =
+      daily = await this.getDailyReservationTime(userId, spaceId, timeFrom);
+      weekly = await this.getWeeklyReservationTime(userId, spaceId, timeFrom);
+      isWithinLimits = 
         daily + newReservationTime <= maxDayTime &&
         weekly + newReservationTime <= maxWeekTime;
-    } else {
-      const daily = await this.getDailyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
-      const weekly = await this.getWeeklyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
-      isWithinLimits =
+    }else{
+      daily = await this.getDailyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
+      weekly = await this.getWeeklyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
+      isWithinLimits = 
         daily + newReservationTime <= maxDayTime &&
         weekly + newReservationTime <= maxWeekTime;
     }
 
     if (!isWithinLimits) {
       throw new BadRequestException(
-        `Total reservation time would exceed limits (daily: ${maxDayTime}, weekly: ${maxWeekTime}) for ${space.spaceType}`
+        `Reservation duration exceeds limits\n(daily: ${daily+newReservationTime} / ${maxDayTime} minutes, weekly: ${weekly+newReservationTime} / ${maxWeekTime} minutes) for ${space.nameEn}`
       );
     }
 
@@ -247,7 +249,6 @@ export class ReservationPublicService {
 
     return overlappingReservations.length === 0; // 겹치는 예약이 있으면 false
   }
-
 
   async find(params: {
     userId?: number;
@@ -307,9 +308,9 @@ export class ReservationPublicService {
       // 모든 예약 데이터 가져오기
       const reservations = await this.reservationRepository.fetch({});
       const reservationContents = await Promise.all(reservations.map(reservation => this.reservationRepository.fetchContent(reservation.id)));
-
+      
       // CSV 헤더와 데이터 생성
-      const headers = ['id', 'userId', 'organizationId', 'spaceId', 'title',
+      const headers = ['id', 'userId', 'organizationId', 'spaceId', 'title', 
         'timeFrom', 'timeTo', 'timePost', 'timeUpdate', 'state',
         'description', 'innerParticipantNumber', 'outerParticipantNumber', 'food', 'desk', 'chair', 'busking', 'workerNeed'
       ];
@@ -337,7 +338,7 @@ export class ReservationPublicService {
           content?.workerNeed || false
         ];
       });
-
+      
       const csvContent = [
         headers.join(','),
         ...csvRows.map(row => row.join(','))
