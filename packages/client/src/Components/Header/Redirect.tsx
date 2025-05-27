@@ -118,6 +118,11 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
     useEffect(() => {
         setLinks([
             {
+                href: "/report",
+                label: "오류 제보하기",
+                helperText: "Reporting Error",
+            },
+            {
                 href: "/introduction",
                 label: "공간위에 대해",
                 helperText: "About SCSpace",
@@ -162,12 +167,12 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                     }
                 ]
             },
-            {
-                href: "/manage",
-                label: "관리",
-                helperText: "Management",
-                disabled: true
-            }
+            // {
+            //     href: "/manage",
+            //     label: "관리",
+            //     helperText: "Management",
+            //     disabled: true
+            // }
         ]);
     }, [spaceLinks]);
 

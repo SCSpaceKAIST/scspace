@@ -8,25 +8,13 @@ import Scroll from "../_commons/Scroll";
 import { Tabs } from "@chakra-ui/react";
 
 const Introduction: React.FC = () => {
-  const [info, setInfo] = useState([
-    { which: "소개", text: <Scspace />, clicked: true },
-    { which: "사업소개", text: <Business />, clicked: false },
-    { which: "회칙", text: <Rule />, clicked: false },
-  ]);
-
-  const onClickEvent = (idx: number) => {
-    const copiedInfo = info.map((item, i) => ({
-      ...item,
-      clicked: i === idx,
-    }));
-
-    setInfo(copiedInfo);
-  };
-
-  const [tabs, setTabs] = useState<{ value: string; page: React.ReactNode }[]>([
+  const [tabs, setTabs] = useState<{
+    value: string;
+    page: React.ReactNode;
+  }[]>([
     { value: "Introduction", page: <Scspace /> },
-    { value: "Business", page: <Business /> },
-    { value: "Rules", page: <Rule /> },
+    // { value: "Business", page: <Business /> },
+    // { value: "Rules", page: <Rule /> },
   ]);
 
   return (

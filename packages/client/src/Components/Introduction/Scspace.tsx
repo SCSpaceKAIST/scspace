@@ -112,13 +112,13 @@ export default function Scspace() {
           <Field.Label>
             CI 소개
           </Field.Label>
-          <Blockquote.Root width="100%">
-            <Blockquote.Content width="100%">
-              <Stack width="100%">
+          <Blockquote.Root>
+            <Blockquote.Content>
+              <Stack>
                 <Text>
                   학생문화공간위원회 CI는 학생, 문화, 그리고 공간의 세 가치를 담았습니다.
                 </Text>
-                <Grid templateColumns="1fr 1fr" width="100%">
+                <Grid templateColumns="1fr 1fr" width="fit-content" gap={4}>
                   <Box position="relative" height="100%">
                     <Image
                       fill
@@ -127,16 +127,18 @@ export default function Scspace() {
                       alt="Logo"
                     />
                   </Box>
-                  <Stack>
-                    {colors.map((c) => (
-                      <ColorPicker.Root defaultValue={parseColor(c)} key={c} readOnly>
-                        <ColorPicker.Control>
-                          <ColorPicker.ValueSwatch boxSize={5} />
-                          <ColorPicker.ValueText />
-                        </ColorPicker.Control>
-                      </ColorPicker.Root>
-                    ))}
-                  </Stack>
+                  <Center>
+                    <Stack>
+                      {colors.map((c) => (
+                        <ColorPicker.Root defaultValue={parseColor(c)} key={c} readOnly>
+                          <ColorPicker.Control>
+                            <ColorPicker.ValueSwatch boxSize={5} />
+                            <ColorPicker.ValueText />
+                          </ColorPicker.Control>
+                        </ColorPicker.Root>
+                      ))}
+                    </Stack>
+                  </Center>
                 </Grid>
                 <Text>
                   학생, 문화, 그리고 공간. 저희 단체가 항상 노력하는 세 가지를 각각 푸르른 청춘, 붉은 장영신학생회관, 그리고 깨끗한 푸른빛 백색에 담아 제작하였습니다.
