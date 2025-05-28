@@ -549,7 +549,7 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
       >
         <Dialog.Root size={isWide ? "xs" : "full"} open={open} onOpenChange={(e) => setOpen(e.open)}>
           <Grid templateColumns="auto 1fr auto" gap={2}>
-            <IconButton variant="outline" bg="white" onClick={() => setDate((d) => {
+            <IconButton variant="outline" bg={{ base: "bg", _hover: "bg.muted" }} onClick={() => setDate((d) => {
               const _d = new Date(d);
               _d.setDate(d.getDate() - 7);
               return _d;
@@ -561,7 +561,7 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
                 {text}
               </Button>
             </Dialog.Trigger>
-            <IconButton variant="outline" bg="white" onClick={() => setDate((d) => {
+            <IconButton variant="outline" bg={{ base: "bg", _hover: "bg.muted" }} onClick={() => setDate((d) => {
               const _d = new Date(d);
               _d.setDate(d.getDate() + 7);
               return _d;
