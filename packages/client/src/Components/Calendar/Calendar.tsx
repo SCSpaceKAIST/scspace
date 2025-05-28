@@ -369,6 +369,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
               zIndex={1}
               borderRightWidth="1px"
               borderBottomWidth={(hour === 23) ? "1px" : "0"}
+              height="64px"
             >
               <Center height="100%" mx={3} color="bg.muted">
                 <Text fontSize="sm" margin={0} padding={0} visibility="hidden">
@@ -578,16 +579,18 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
                   </Dialog.Title>
                 </Dialog.Header>
                 <Dialog.Body>
-                  <DatePicker
-                    wrapperClassName="datepicker"
-                    showWeekPicker
-                    selected={date}
-                    onChange={(e) => {
-                      if (e) setDate(e);
-                      setOpen(false);
-                    }}
-                    inline
-                  />
+                  <Center>
+                    <DatePicker
+                      wrapperClassName="datepicker"
+                      showWeekPicker
+                      selected={date}
+                      onChange={(e) => {
+                        if (e) setDate(e);
+                        setOpen(false);
+                      }}
+                      inline
+                    />
+                  </Center>
                 </Dialog.Body>
                 <Dialog.CloseTrigger asChild>
                   <CloseButton />

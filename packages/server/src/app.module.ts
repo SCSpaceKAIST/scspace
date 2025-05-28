@@ -9,6 +9,7 @@ import { SpaceModule } from './feature/space/space.module';
 import { ReservationModule } from './feature/reservation/reservation.module';
 import { OrganizationModule } from './feature/organization/organization.module';
 import { join } from 'path';
+import { MailModule } from './tools/mailer/mail.module';
 
 @Module({
   imports: [
@@ -22,8 +23,9 @@ import { join } from 'path';
     SpaceModule,
     ReservationModule,
     OrganizationModule,
+    MailModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

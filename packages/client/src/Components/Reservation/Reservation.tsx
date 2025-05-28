@@ -38,6 +38,14 @@ export default function Reservation() {
   const [dateFrom, setDateFrom] = useState<Date>(() => new Date(_init.getFullYear(), _init.getMonth(), _init.getDate()));
   const [dateTo, setDateTo] = useState<Date>(() => new Date(_init.getFullYear(), _init.getMonth(), _init.getDate()));
 
+  useEffect(() => {
+    if (dateFrom > dateTo) setDateTo(dateFrom);
+  }, [dateFrom.getTime()]);
+
+  useEffect(() => {
+    if (dateFrom > dateTo) setDateFrom(dateTo);
+  }, [dateTo.getTime()]);
+
   const [hourFrom, setHourFrom] = useState<number>(0);
   const [hourTo, setHourTo] = useState<number>(0);
 

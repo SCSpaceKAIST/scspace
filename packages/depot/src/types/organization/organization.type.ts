@@ -8,7 +8,7 @@ export interface IOrganization {
   delegatorId: number;
   timeRegister: number;
   timeUpdate: number;
-}
+};
 
 export type IOrganizationAll = IOrganization & {
   delegator: IUser;

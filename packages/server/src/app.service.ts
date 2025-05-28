@@ -145,7 +145,7 @@ export class AppService {
         delegatorId: 1,
         timeRegister: getNow(),
         timeUpdate: getNow(),
-        }
+      }
 
       await this.db.transaction(async (tx) => {
         await tx.insert(schema.Organization).values(organizations);

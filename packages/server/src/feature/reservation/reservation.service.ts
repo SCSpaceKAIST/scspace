@@ -30,7 +30,7 @@ export class ReservationService {
     private readonly spacePublicService: SpacePublicService,
     private readonly userPublicService: UserPublicService,
     private readonly organizationPublicService: OrganizationPublicService,
-  ) {}
+  ) { }
 
   async getReservationBySpaceIDBetweenTime(
     spaceId: number,
@@ -44,8 +44,8 @@ export class ReservationService {
       timeTo = Number(BigInt(timeTo) + oneDayInMs - BigInt(1));
     }
     // If either timeFrom or timeTo is missing, fetch all reservations for the space
-    const reservations = await this.reservationRepository.fetch({ 
-      spaceId, 
+    const reservations = await this.reservationRepository.fetch({
+      spaceId,
       ...(timeFrom && timeTo ? { timeRange: { timeFrom: timeFrom, timeTo: timeTo } } : {})
     });
     if (reservations.length === 0) {
@@ -130,7 +130,7 @@ export class ReservationService {
     reservationInput: IReservationCreate,
   ): Promise<IReservation> {
 
-    await this.reservationPublicService.checkWholeTime(reservationInput.userId,reservationInput.organizationId, reservationInput.spaceId, reservationInput.timeFrom, reservationInput.timeTo);
+    await this.reservationPublicService.checkWholeTime(reservationInput.userId, reservationInput.organizationId, reservationInput.spaceId, reservationInput.timeFrom, reservationInput.timeTo);
 
     const [user, organizations, space] = await Promise.all([
       this.userPublicService.fetchById(reservationInput.userId),
@@ -138,17 +138,9 @@ export class ReservationService {
       this.spacePublicService.fetchById(reservationInput.spaceId),
     ]);
 
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
-
-    if (!organizations) {
-      throw new BadRequestException('Organization not found');
-    }
-
-    if (!space) {
-      throw new BadRequestException('Space not found');
-    }
+    if (!user) throw new BadRequestException('User not found');
+    if (!organizations) throw new BadRequestException('Organization not found');
+    if (!space) throw new BadRequestException('Space not found');
 
     const userOrganizations = await this.organizationPublicService.fetchByUserId(reservationInput.userId);
     if (!userOrganizations.some(org => org.id === reservationInput.organizationId)) {
@@ -170,7 +162,7 @@ export class ReservationService {
       id: reservationInput.id,
     });
 
-    if (reservation.length === 0) { 
+    if (reservation.length === 0) {
       throw new NotFoundException('Reservation not found');
     }
 
@@ -184,12 +176,12 @@ export class ReservationService {
   }
 
   async deleteReservation(id: number, user: IUser): Promise<ISuccessResponse> {
-      const reservation = await this.reservationRepository.fetch({
-        id: id,
-      });
-      if (reservation.length === 0) {
-        throw new NotFoundException('Reservation not found');
-      }
+    const reservation = await this.reservationRepository.fetch({
+      id: id,
+    });
+    if (reservation.length === 0) {
+      throw new NotFoundException('Reservation not found');
+    }
     // individual
     if (id === 1) {
       if (reservation[0].userId !== user.id) {
