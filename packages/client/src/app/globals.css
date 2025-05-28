@@ -21,6 +21,5 @@ html, body {
 }
 
 .chakra-dialog__content {
-  min-height: inherit !important;
   max-height: 100svh !important;
 }
