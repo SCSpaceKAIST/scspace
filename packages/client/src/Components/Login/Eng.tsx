@@ -2,15 +2,15 @@ import { Heading, DataList, Stack, Text, Link } from "@chakra-ui/react";
 import React from "react";
 
 function H1({ children }: { children: React.ReactNode | string }) {
-    return <Heading size="7xl">{children}</Heading>
+    return <Heading size="4xl">{children}</Heading>
 }
 
 function H2({ children }: { children: React.ReactNode | string }) {
-    return <Heading size="5xl">{children}</Heading>
+    return <Heading size="3xl">{children}</Heading>
 }
 
 function H3({ children }: { children: React.ReactNode | string }) {
-    return <Heading size="3xl">{children}</Heading>
+    return <Heading size="2xl">{children}</Heading>
 }
 
 function H4({ children }: { children: React.ReactNode | string }) {

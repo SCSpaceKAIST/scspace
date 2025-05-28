@@ -17,5 +17,5 @@ html, body {
 }
 
 .chakra-dialog__content {
-  max-height: 100svh;
+  max-height: 100svh !important;
 }
