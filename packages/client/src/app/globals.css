@@ -20,8 +20,6 @@ html, body {
   max-height: 100svh !important;
 }
 
-.chakra-dialog__content{
-  .full {
-    max-height: 100svh !important;
-  }
+.full {
+  max-height: 100svh !important;
 }
