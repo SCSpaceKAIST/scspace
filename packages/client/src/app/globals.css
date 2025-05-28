@@ -16,6 +16,6 @@ html, body {
   overflow-y: hidden; /* 가로 스크롤 강제 제거 */
 }
 
-.chakra-dialog__content {
+.chakra-dialog__positioner {
   max-height: 100svh !important;
 }

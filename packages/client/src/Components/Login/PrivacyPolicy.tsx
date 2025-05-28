@@ -8,7 +8,7 @@ export default function PrivacyPolicy({ onRead }: { onRead: () => void }) {
     const [lng, setLng] = useState<string>("Eng");
 
     return (
-        <Dialog.Content>
+        <Dialog.Content minH="100svh">
             <Dialog.Header gap={4}>
                 <SegmentGroup.Root value={lng} onValueChange={(e) => setLng(e.value ?? "Eng")} size="sm">
                     <SegmentGroup.Indicator />
