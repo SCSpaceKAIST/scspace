@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Center, CloseButton, Dialog, DialogPositioner, HStack, Portal, Separator, Stack, StackSeparator, Text, useBreakpointValue } from "@chakra-ui/react";
+import { Button, Card, Center, CloseButton, Dialog, DialogPositioner, HStack, Portal, Separator, Stack, StackSeparator, Tabs, Text, useBreakpointValue } from "@chakra-ui/react";
 import Scroll from "../_commons/Scroll";
 import PrivacyPolicy from "./PrivacyPolicy";
 import { useLinkPush } from "@scspace-client/Hooks/api";
@@ -17,9 +17,11 @@ export default function SSOLogin() {
         <Dialog.Root size="full" scrollBehavior="inside">
             <Portal>
                 <Dialog.Backdrop />
-                <Dialog.Positioner>
-                    <PrivacyPolicy onRead={() => setRead(true)} />
-                </Dialog.Positioner>
+                <Tabs.Root defaultValue="Eng">
+                    <Dialog.Positioner>
+                        <PrivacyPolicy onRead={() => setRead(true)} />
+                    </Dialog.Positioner>
+                </Tabs.Root>
             </Portal>
             <Scroll>
                 <Card.Root height="100%">

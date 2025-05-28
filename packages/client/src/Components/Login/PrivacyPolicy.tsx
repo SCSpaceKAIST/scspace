@@ -1,27 +1,31 @@
 "use client";
 
-import { Button, CloseButton, Dialog, HStack, SegmentGroup, StackSeparator, VStack } from "@chakra-ui/react";
-import { useState } from "react";
+import { Button, CloseButton, Dialog, SegmentGroup, Tabs, useBreakpointValue, VStack } from "@chakra-ui/react";
 import { ENG } from "./Eng";
 
 export default function PrivacyPolicy({ onRead }: { onRead: () => void }) {
-    const [lng, setLng] = useState<string>("Eng");
+    const isWide = useBreakpointValue({ base: false, md: true });
 
     return (
         <Dialog.Content minH="100svh">
             <Dialog.Header gap={4}>
-                <SegmentGroup.Root value={lng} onValueChange={(e) => setLng(e.value ?? "Eng")} size="sm">
-                    <SegmentGroup.Indicator />
-                    <SegmentGroup.Items items={["Eng", "Kor"]} />
-                </SegmentGroup.Root>
+                <Tabs.List width="100%">
+                    <Tabs.Trigger value="Eng">
+                        English
+                    </Tabs.Trigger>
+                    <Tabs.Trigger value="Kor" disabled>
+                        한국어
+                    </Tabs.Trigger>
+                </Tabs.List>
             </Dialog.Header>
             <Dialog.Body>
                 <VStack>
-                    {(lng === "Kor") ? (
-                        "개인정보처리방침 / 영문 버젼 참고 바람"
-                    ) : (
+                    <Tabs.Content value="Eng">
                         <ENG />
-                    )}
+                    </Tabs.Content>
+                    <Tabs.Content value="Kor">
+                        한국어
+                    </Tabs.Content>
                     <Dialog.ActionTrigger asChild>
                         <Button colorPalette="blue" onClick={onRead}>
                             Accept
@@ -31,11 +35,16 @@ export default function PrivacyPolicy({ onRead }: { onRead: () => void }) {
             </Dialog.Body>
             <Dialog.Footer>
                 <Dialog.Title>
-                    {(lng === "Kor") ? (
-                        "KAIST 학생문화공간위원회"
-                    ) : (
-                        "KAIST Student Culture & Space Committee"
-                    )}
+                    <Tabs.Content value="Eng">
+                        {isWide ? (
+                            "KAIST Student Culture & Space Committee"
+                        ) : (
+                            "KAIST SCSpace"
+                        )}
+                    </Tabs.Content>
+                    <Tabs.Content value="Kor">
+                        KAIST 학생문화공간위원회
+                    </Tabs.Content>
                 </Dialog.Title>
             </Dialog.Footer>
             <Dialog.CloseTrigger>
