@@ -1,13 +1,11 @@
 "use client";
 
-import { CloseButton, Dialog, HStack, SegmentGroup, StackSeparator } from "@chakra-ui/react";
+import { Button, CloseButton, Dialog, HStack, SegmentGroup, StackSeparator, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { ENG } from "./Eng";
 
-export default function PrivacyPolicy() {
+export default function PrivacyPolicy({ onRead }: { onRead: () => void }) {
     const [lng, setLng] = useState<string>("Eng");
-
-    // const 
 
     return (
         <Dialog.Content>
@@ -18,11 +16,18 @@ export default function PrivacyPolicy() {
                 </SegmentGroup.Root>
             </Dialog.Header>
             <Dialog.Body>
-                {(lng === "Kor") ? (
-                    "개인정보처리방침 / 영문 버젼 참고 바람"
-                ) : (
-                    <ENG />
-                )}
+                <VStack>
+                    {(lng === "Kor") ? (
+                        "개인정보처리방침 / 영문 버젼 참고 바람"
+                    ) : (
+                        <ENG />
+                    )}
+                    <Dialog.ActionTrigger asChild>
+                        <Button colorPalette="blue" onClick={onRead}>
+                            Accept
+                        </Button>
+                    </Dialog.ActionTrigger>
+                </VStack>
             </Dialog.Body>
             <Dialog.Footer>
                 <Dialog.Title>
