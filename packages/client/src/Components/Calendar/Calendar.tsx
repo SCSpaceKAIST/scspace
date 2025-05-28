@@ -547,11 +547,27 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
         gap={2}
       >
         <Dialog.Root size={isWide ? "xs" : "full"} open={open} onOpenChange={(e) => setOpen(e.open)}>
-          <Dialog.Trigger asChild width="100%">
-            <Button variant="outline" width="100%" bg="white">
-              {text}
-            </Button>
-          </Dialog.Trigger>
+          <Grid templateColumns="auto 1fr auto" gap={2}>
+            <IconButton variant="outline" onClick={() => setDate((d) => {
+              const _d = new Date(d);
+              _d.setDate(d.getDate() - 7);
+              return _d;
+            })}>
+              <HiChevronLeft />
+            </IconButton>
+            <Dialog.Trigger asChild width="100%">
+              <Button variant="outline" width="100%" bg="white">
+                {text}
+              </Button>
+            </Dialog.Trigger>
+            <IconButton variant="outline" onClick={() => setDate((d) => {
+              const _d = new Date(d);
+              _d.setDate(d.getDate() + 7);
+              return _d;
+            })}>
+              <HiChevronRight />
+            </IconButton>
+          </Grid>
           <Portal>
             <Dialog.Backdrop />
             <Dialog.Positioner>
@@ -562,24 +578,16 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
                   </Dialog.Title>
                 </Dialog.Header>
                 <Dialog.Body>
-                  <Grid templateColumns="auto 1fr auto">
-                    <IconButton variant="outline" onClick={() => date.setDate(date.getDate() - 7)}>
-                      <HiChevronLeft />
-                    </IconButton>
-                    <DatePicker
-                      wrapperClassName="datepicker"
-                      showWeekPicker
-                      selected={date}
-                      onChange={(e) => {
-                        if (e) setDate(e);
-                        setOpen(false);
-                      }}
-                      inline
-                    />
-                    <IconButton variant="outline" onClick={() => date.setDate(date.getDate() + 7)}>
-                      <HiChevronRight />
-                    </IconButton>
-                  </Grid>
+                  <DatePicker
+                    wrapperClassName="datepicker"
+                    showWeekPicker
+                    selected={date}
+                    onChange={(e) => {
+                      if (e) setDate(e);
+                      setOpen(false);
+                    }}
+                    inline
+                  />
                 </Dialog.Body>
                 <Dialog.CloseTrigger asChild>
                   <CloseButton />
