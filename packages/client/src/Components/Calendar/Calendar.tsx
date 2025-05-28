@@ -522,8 +522,8 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
   } | null>(null);
 
   useEffect(() => {
-    const dS = new Date(date);
-    const dE = new Date(date);
+    const dS = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const dE = new Date(dS);
     const d = date.getDay();
 
     dS.setDate(dS.getDate() - d);

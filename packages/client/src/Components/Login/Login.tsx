@@ -1,11 +1,12 @@
 "use client";
 
-import { Button, Card, Center, CloseButton, Dialog, DialogPositioner, HStack, Portal, Separator, Stack, StackSeparator, Tabs, Text, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Button, Card, Center, CloseButton, Dialog, DialogPositioner, HStack, Portal, Separator, Stack, StackSeparator, Tabs, Text, useBreakpointValue } from "@chakra-ui/react";
 import Scroll from "../_commons/Scroll";
 import PrivacyPolicy from "./PrivacyPolicy";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useState } from "react";
 import TooltipComponent from "../Tooltip/Tooptip";
+import Image from "next/image";
 
 export default function SSOLogin() {
     const isWide = useBreakpointValue({ base: false, md: true });
@@ -26,11 +27,16 @@ export default function SSOLogin() {
             <Scroll>
                 <Card.Root height="100%">
                     <Card.Body>
-                        <HStack separator={<StackSeparator />} width="100%" height="100%">
+                        <HStack separator={<StackSeparator />} width="100%" height="100%" gap={6}>
                             {isWide && (
-                                <Center width="100%" height="100%">
-                                    신학관 사진?
-                                </Center>
+                                <Box width="100%" height="100%" position="relative">
+                                    <Image
+                                        fill
+                                        style={{ objectFit: "cover" }}
+                                        src="/img/testimonials-bg.jpg"
+                                        alt="Business"
+                                    />
+                                </Box>
                             )}
                             <Center width="100%" height="100%">
                                 <Card.Root borderColor="fg.success">
@@ -54,7 +60,7 @@ export default function SSOLogin() {
                                                     {read ? (
                                                         "Click to login with KAIST SSO"
                                                     ) : (
-                                                        "Please read Privary Policy before login with KAIST SSO"
+                                                        "Please read Privacy Policy before login with KAIST SSO"
                                                     )}
                                                 </Text>
                                             )}

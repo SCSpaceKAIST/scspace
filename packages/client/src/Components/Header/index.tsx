@@ -13,7 +13,7 @@ import { LoginBtn } from "./LoginBtn";
 
 import DrawerComponent from "./Drawer";
 import BreadcrumbComponent from "./Breadcrumb";
-import ChangeLog from "./ChangeLog";
+import Information from "./Information";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 
 export default function Header() {
@@ -36,7 +36,7 @@ export default function Header() {
         <DrawerComponent />
         <BreadcrumbComponent />
         <Spacer />
-        <ChangeLog />
+        <Information />
         <Button variant="ghost" py={0} px={1}>
           <HStack onClick={() => linkPush('/')} cursor="pointer">
             <Text margin={0} padding={0} fontSize="xl" fontWeight="semibold" display={{ base: "none", md: "block" }}>

@@ -1,8 +1,8 @@
 import { DataList, Dialog, IconButton, Portal, Stack } from "@chakra-ui/react";
 import { HiOutlineInformationCircle } from "react-icons/hi2";
-import changeLog from "../../../static/changeLog.json";
+import InformationList from "../../../static/InformationList.json";
 
-export default function ChangeLog() {
+export default function Information() {
     return (
         <Dialog.Root placement="center">
             <Dialog.Trigger asChild>
@@ -16,18 +16,18 @@ export default function ChangeLog() {
                         <Dialog.Content>
                             <Dialog.Header>
                                 <Dialog.Title>
-                                    Change Log
+                                    Simple Information
                                 </Dialog.Title>
                             </Dialog.Header>
                             <Dialog.Body>
-                                <DataList.Root orientation="horizontal">
-                                    {changeLog.toReversed().map((log) => (
-                                        <DataList.Item key={log.date} gap={0}>
+                                <DataList.Root>
+                                    {InformationList.toReversed().map((info) => (
+                                        <DataList.Item key={info.title} gap={0}>
                                             <DataList.ItemLabel>
-                                                {log.date}
+                                                {info.title}
                                             </DataList.ItemLabel>
                                             <DataList.ItemValue margin={0}>
-                                                {log.content}
+                                                {info.content}
                                             </DataList.ItemValue>
                                         </DataList.Item>
                                     ))}
