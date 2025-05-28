@@ -142,7 +142,7 @@ export default function Organization() {
                     <Portal>
                         <Dialog.Backdrop />
                         <Dialog.Positioner>
-                            <Dialog.Content>
+                            <Dialog.Content className={isWide ? "" : "full"}>
                                 <OrganizationDetail
                                     id={selected}
                                     onDelete={() => {

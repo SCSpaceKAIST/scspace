@@ -47,7 +47,7 @@ export function DateForm({
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
-            <Dialog.Content>
+            <Dialog.Content className={isWide ? "" : "full"}>
               <Dialog.Header>
                 <Dialog.Title>
                   Pick Date

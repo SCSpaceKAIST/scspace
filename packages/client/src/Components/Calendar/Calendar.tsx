@@ -140,7 +140,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
-            <Dialog.Content>
+            <Dialog.Content className={isWide ? "" : "full"}>
               {selectedRes ? (
                 <>
                   <Dialog.Header>
@@ -572,7 +572,7 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
           <Portal>
             <Dialog.Backdrop />
             <Dialog.Positioner>
-              <Dialog.Content>
+              <Dialog.Content className={isWide ? "" : "full"}>
                 <Dialog.Header>
                   <Dialog.Title>
                     Pick Week
