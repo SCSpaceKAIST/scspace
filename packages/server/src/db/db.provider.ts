@@ -12,7 +12,7 @@ export const DBProvider = [
       const { DB_HOST, DB_PORT, DB_USER, DB_PWD, DB_NAME } = process.env;
       // const DB_URL = `mysql://${DB_USER}:${DB_PWD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`;
       // Logger.log(DB_URL);;
-      const connection = await mysql.createConnection({
+      const pool = await mysql.createPool({
         host: DB_HOST,
         port: Number(DB_PORT), // 포트를 숫자로 변환
         user: DB_USER,
@@ -25,7 +25,7 @@ export const DBProvider = [
         keepAliveInitialDelay: 10000,
         enableKeepAlive: true,
       });
-      const db = drizzle(connection, { schema, mode: 'default' });
+      const db = drizzle(pool, { schema, mode: 'default' });
       return db;
     },
     exports: [DBAsyncProvider],

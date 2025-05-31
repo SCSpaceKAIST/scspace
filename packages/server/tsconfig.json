@@ -16,11 +16,22 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@scspace-server/*": ["./src/*"],
-      "@schema": ["./src/db/schema"],
-      "@scspace-depot/*": ["../depot/src/*"],
-    },
+      "@scspace-server/*": [
+        "./src/*"
+      ],
+      "@schema": [
+        "./src/db/schema"
+      ],
+      "@scspace-depot/*": [
+        "../depot/src/*"
+      ]
+    }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
