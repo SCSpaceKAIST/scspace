@@ -37,7 +37,7 @@ export default function Header() {
         <BreadcrumbComponent />
         <Spacer />
         <Information />
-        <Button variant="ghost" py={0} px={1}>
+        {/* <Button variant="ghost" py={0} px={1}>
           <HStack onClick={() => linkPush('/')} cursor="pointer">
             <Text margin={0} padding={0} fontSize="xl" fontWeight="semibold" display={{ base: "none", md: "block" }}>
               학생문화공간위원회
@@ -50,7 +50,7 @@ export default function Header() {
               objectFit="contain"
             />
           </HStack>
-        </Button>
+        </Button> */}
         <LoginBtn />
       </Flex>
     </Box>
