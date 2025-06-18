@@ -5,7 +5,7 @@ import { reservationMaxDate, reservationMaxDayTime, reservationMaxWeekTime, rese
 import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
 import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
 import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
-import { getNow, timeRangeCheck } from '@scspace-server/common/util';
+import { getDateDiff, getNow, timeRangeCheck } from '@scspace-server/common/util';
 import { IReservation, IReservationAll, IReservationContent, IReservationSimple } from '@scspace-depot/types/reservation';
 import { getDate } from 'date-fns';
 import * as fs from 'fs';
@@ -186,15 +186,14 @@ export class ReservationPublicService {
       throw new BadRequestException('Space not found');
     }
     // check min / max time
-    const nowDay = (~~((getNow()/(60*24))))
-    if (reservationMinDate[space.spaceType] > (~~(timeFrom/(60*24)) - nowDay)) {
+    if (reservationMinDate[space.spaceType] > getDateDiff(getNow(), timeFrom)) {
       throw new BadRequestException(`Check the minimum reservation date. ${space.nameEn} can be reserved at least ${reservationMinDate[space.spaceType]} days in advance.`);
     }
-    if (reservationMaxDate[space.spaceType] < (~~(timeFrom/(60*24)) - nowDay)) {
+    if (reservationMaxDate[space.spaceType] < getDateDiff(getNow(), timeFrom)) {
       throw new BadRequestException(`Check the maximum reservation date. ${space.nameEn} can be reserved at most ${reservationMaxDate[space.spaceType]} days in advance.`);
     }
 
-    const newReservationTime = this.getDifferenceInMinutes(timeFrom, timeTo);
+    const newReservationTime = getDateDiff(timeFrom, timeTo);
     const maxDayTime = reservationMaxDayTime[space.spaceType];
     const maxWeekTime = reservationMaxWeekTime[space.spaceType];
 
