@@ -186,6 +186,7 @@ export class ReservationPublicService {
       throw new BadRequestException('Space not found');
     }
     // check min / max time
+    console.log(reservationMinDate[space.spaceType], getDateDiff(getNow(), timeFrom));
     if (reservationMinDate[space.spaceType] > getDateDiff(getNow(), timeFrom)) {
       throw new BadRequestException(`Check the minimum reservation date. ${space.nameEn} can be reserved at least ${reservationMinDate[space.spaceType]} days in advance.`);
     }
