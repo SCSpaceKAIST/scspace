@@ -100,5 +100,6 @@ export function getDateDiff(timeBefore: number, timeAfter: number) {
   const dateBefore = getDate(timeBefore);
   const dateAfter = getDate(timeAfter);
   console.log(dateBefore, dateAfter);
+  console.log(new Date(dateAfter.getTime() - dateBefore.getTime()));
   return getTime(new Date(dateAfter.getTime() - dateBefore.getTime()));
 }
