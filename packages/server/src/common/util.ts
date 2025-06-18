@@ -99,7 +99,5 @@ export function getDate(time: number): Date {
 export function getDateDiff(timeBefore: number, timeAfter: number) {
   const dateBefore = getDate(timeBefore);
   const dateAfter = getDate(timeAfter);
-  console.log(dateBefore, dateAfter);
-  console.log(dateAfter.getTime() - dateBefore.getTime());
-  return dateAfter.getTime() - dateBefore.getTime();
+  return ~~(dateAfter.getTime() - dateBefore.getTime())/(60*1000);
 }
