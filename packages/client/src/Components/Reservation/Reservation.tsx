@@ -24,7 +24,7 @@ import {
 import Scroll from "../_commons/Scroll";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { SmallLoading } from "../Loading/Loading";
-import { CalendarView } from "../Calendar/Calendar";
+import { CalendarView } from "../Calendar/CalendarView";
 import { HourForm } from "./forms/elements/Hour";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { toaster } from "../_commons/Toaster";
