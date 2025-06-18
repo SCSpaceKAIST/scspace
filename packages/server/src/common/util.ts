@@ -68,7 +68,7 @@ export function getNow() {
   return minute;
 }
 
-export function getDate(date: Date) {
+export function getTime(date: Date) {
   const year = date.getFullYear();
   const month = date.getMonth() + 12 * year;
   const day = date.getDate() + 32 * month;
@@ -76,4 +76,28 @@ export function getDate(date: Date) {
   const minute = date.getMinutes() + hour * 60;
 
   return minute;
+}
+
+export function getDateUnit(time: number) {
+  const minute = time % 60;
+  time = Math.floor(time / 60);
+  const hour = time % 24;
+  time = Math.floor(time / 24);
+  const day = time % 32;
+  time = Math.floor(time / 32);
+  const month = time % 12;
+  const year = Math.floor(time / 12);
+
+  return { year, month, day, hour, minute };
+}
+
+export function getDate(time: number): Date {
+  const { year, month, day, hour, minute } = getDateUnit(time);
+  return new Date(year, month, day, hour, minute);
+}
+
+export function getDateDiff(timeBefore: number, timeAfter: number) {
+  const dateBefore = getDate(timeBefore);
+  const dateAfter = getDate(timeAfter);
+  return getTime(new Date(dateAfter.getTime() - dateBefore.getTime()));
 }
