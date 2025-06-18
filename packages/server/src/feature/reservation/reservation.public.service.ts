@@ -186,11 +186,10 @@ export class ReservationPublicService {
       throw new BadRequestException('Space not found');
     }
     // check min / max time
-    console.log(reservationMinDate[space.spaceType], ~~(getDateDiff(~~((getNow()/(60*24))*60*24), ~~((timeFrom/(60*24))*60*24))/(60*24)))
-    if (reservationMinDate[space.spaceType] > ~~(getDateDiff(~~((getNow()/(60*24))*60*24), ~~((timeFrom/(60*24))*60*24))/(60*24))) {
+    if (reservationMinDate[space.spaceType] > ~~(getDateDiff((~~(getNow()/(60*24))*60*24), (~~(timeFrom/(60*24))*60*24))/(60*24))) {
       throw new BadRequestException(`Check the minimum reservation date. ${space.nameEn} can be reserved at least ${reservationMinDate[space.spaceType]} days in advance.`);
     }
-    if (reservationMaxDate[space.spaceType] < ~~(getDateDiff(~~((getNow()/(60*24))*60*24), ~~((timeFrom/(60*24))*60*24))/(60*24))) {
+    if (reservationMaxDate[space.spaceType] < ~~(getDateDiff((~~(getNow()/(60*24))*60*24), (~~(timeFrom/(60*24))*60*24))/(60*24))) {
       throw new BadRequestException(`Check the maximum reservation date. ${space.nameEn} can be reserved at most ${reservationMaxDate[space.spaceType]} days in advance.`);
     }
 
