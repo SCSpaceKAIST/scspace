@@ -76,7 +76,7 @@ export class ReservationPublicService {
     spaceId: number,
     timeFrom: number,
   ): Promise<number> {
-    const startOfWeek = BigInt(~~(timeFrom / (60 * 24 * 7))) * BigInt(60 * 24 * 7);
+    const startOfWeek = BigInt(~~((timeFrom - 3 * 60 * 24) / (60 * 24 * 7))) * BigInt(60 * 24 * 7) + BigInt(3 * 60 * 24);
     const endOfWeek = startOfWeek + BigInt(60 * 24 * 7) - BigInt(1);
 
     const weeklyReservations = await this.reservationRepository.fetch({
@@ -143,7 +143,7 @@ export class ReservationPublicService {
     spaceId: number,
     timeFrom: number,
   ): Promise<number> {
-    const startOfWeek = BigInt(~~(timeFrom / (60 * 24 * 7))) * BigInt(60 * 24 * 7);
+    const startOfWeek = BigInt(~~((timeFrom - 3 * 60 * 24) / (60 * 24 * 7))) * BigInt(60 * 24 * 7) + BigInt(3 * 60 * 24);
     const endOfWeek = startOfWeek + BigInt(60 * 24 * 7) - BigInt(1);
 
     const weeklyReservations = await this.reservationRepository.fetch({
