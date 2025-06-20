@@ -1,6 +1,4 @@
 import {
-  ISpaceTimeCheckRequest,
-  IUserTimeCheckRequest,
   IReservationCreate,
   IReservationUpdate,
   IReservationAll,
@@ -77,10 +75,12 @@ export class ReservationService {
   async getReservationListByUserId(
     userId: number,
     limit: number,
+    offset: number,
   ): Promise<IReservationAll[]> {
     const reservations = await this.reservationRepository.fetch({
-      userId: userId,
-      limit: limit,
+      userId,
+      limit,
+      offset,
     });
 
     const userIds = reservations.map((reservation) => reservation.userId);

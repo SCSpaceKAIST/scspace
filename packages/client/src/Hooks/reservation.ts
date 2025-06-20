@@ -117,8 +117,14 @@ export function useDateReservations({ spaceId, dateFrom, dateTo, }: {
     return { dateReservation, isLoading, refetch };
 };
 
-export function useUserReservation({ uid }: { uid: number; }) {
-    const { data, isLoading, refetch } = useQueryApi<IReservationAll[]>(`/reservation/user/${uid}`);
+export function useUserReservation({ uid, limit, offset }: {
+    uid: number;
+    limit: number;
+    offset: number;
+}) {
+    const { data, isLoading, refetch } = useQueryApi<IReservationAll[]>(
+        `/reservation/user/${uid}?limit=${limit}&offset=${offset}`
+    );
     const [userReservation, setUserReservation] = useState<IReservationAll[]>([]);
 
     useEffect(() => {
@@ -133,7 +139,9 @@ export function useUserReservation({ uid }: { uid: number; }) {
 };
 
 export function useWaitReservations() {
-    const { data, isLoading, refetch } = useQueryApi<IReservationAll[]>(`/reservation/manage`);
+    const { data, isLoading, refetch } = useQueryApi<IReservationAll[]>(
+        `/reservation/manage`
+    );
     const [waitReservation, setWaitReservation] = useState<IReservationAll[]>([]);
 
     useEffect(() => {

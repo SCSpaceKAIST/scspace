@@ -52,8 +52,13 @@ export class ReservationController {
   async getReservationListByUserId(
     @Param('id') userId: number,
     @Query('limit', ParseIntPipe) limit: number,
+    @Query('offset', ParseIntPipe) offset: number,
   ): Promise<IReservationAll[]> {
-    return await this.reservationService.getReservationListByUserId(userId, limit);
+    return await this.reservationService.getReservationListByUserId(
+      userId,
+      limit,
+      offset,
+    );
   }
 
   //HOOK: useWaitReservations

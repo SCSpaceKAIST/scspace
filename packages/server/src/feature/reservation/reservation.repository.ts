@@ -39,7 +39,7 @@ import { getNow } from '@scspace-server/common/util';
 export class ReservationRepository {
   constructor(
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>
-  ) {}
+  ) { }
 
   async fetch(param: {
     id?: number;
@@ -50,6 +50,7 @@ export class ReservationRepository {
     state?: ReservationStateEnum;
     states?: ReservationStateEnum[];
     limit?: number;
+    offset?: number;
     timeRange?: {
       timeFrom?: number;
       timeTo?: number;
@@ -102,25 +103,20 @@ export class ReservationRepository {
       }
     }
 
-    if (param.limit) {
-      const reservations = await this.db
-        .select(
-        )
-        .from(Reservation)
-        .where(and(...whereClause))
-        .orderBy(desc(Reservation.id))
-        .limit(param.limit);
+    const reservations = this.db
+      .select()
+      .from(Reservation)
+      .where(and(...whereClause))
+      .orderBy(desc(Reservation.id));
 
-      return reservations;
-    }else{
-      const reservations = await this.db
-        .select(
-        )
-        .from(Reservation)
-        .where(and(...whereClause));
-
-      return reservations;
-    }
+    if (param.limit && param.offset)
+      return await reservations.limit(param.limit).offset(param.offset);
+    else if (param.limit)
+      return await reservations.limit(param.limit);
+    else if (param.offset)
+      return await reservations.offset(param.offset);
+    else
+      return await reservations;
   }
 
   async fetchContent(id: number): Promise<MReservationContent> {
@@ -145,7 +141,7 @@ export class ReservationRepository {
       timeUpdate: getNow(),
       state: ReservationStateEnum.GRANT,
     } as InferInsertModel<typeof Reservation>;
-    
+
     const [result] = await this.db.insert(Reservation).values(insertData);
     if (!result.insertId) {
       throw new Error('Failed to get inserted ID');
@@ -208,7 +204,7 @@ export class ReservationRepository {
       workerNeed: data.content.workerNeed,
     } as InferInsertModel<typeof ReservationContent>;
 
-    const [ resultContent ] =  await this.db.update(ReservationContent).set(updateContentData).where(eq(ReservationContent.id, data.id!));
+    const [resultContent] = await this.db.update(ReservationContent).set(updateContentData).where(eq(ReservationContent.id, data.id!));
     if (!resultContent.affectedRows) {
       throw new Error('Failed to update reservation content');
     }
