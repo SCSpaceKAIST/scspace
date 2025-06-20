@@ -78,6 +78,7 @@ export default function UserReservation() {
                                 <NumberInput.Root
                                     value={String(limit)}
                                     onValueChange={(e) => setLimit(parseInt(e.value))}
+                                    min={1}
                                 >
                                     <NumberInput.Control />
                                     <NumberInput.Input />
