@@ -4,6 +4,7 @@ import {
     Dialog,
     Flex,
     Grid,
+    HStack,
     IconButton,
     NumberInput,
     Portal,
@@ -74,25 +75,27 @@ export default function UserReservation() {
                                     Click each row to see detail of reservation
                                 </Text>
                             )}
-                            <TooltipComponent content="One-page limit">
+                            <HStack gap={2}>
                                 <NumberInput.Root
                                     value={String(limit)}
                                     onValueChange={(e) => setLimit(parseInt(e.value))}
-                                    min={1}
+                                    min={10}
                                 >
                                     <NumberInput.Control />
-                                    <NumberInput.Input />
+                                    <TooltipComponent content="One-page limit">
+                                        <NumberInput.Input />
+                                    </TooltipComponent>
                                 </NumberInput.Root>
-                            </TooltipComponent>
-                            <TooltipComponent content="Refresh">
-                                <IconButton
-                                    rounded="sm"
-                                    variant="ghost"
-                                    onClick={() => refetch()}
-                                >
-                                    <HiOutlineRefresh color="gray" />
-                                </IconButton>
-                            </TooltipComponent>
+                                <TooltipComponent content="Refresh">
+                                    <IconButton
+                                        rounded="sm"
+                                        variant="ghost"
+                                        onClick={() => refetch()}
+                                    >
+                                        <HiOutlineRefresh color="gray" />
+                                    </IconButton>
+                                </TooltipComponent>
+                            </HStack>
                         </Flex>
                         <Scroll>
                             <Table.Root
