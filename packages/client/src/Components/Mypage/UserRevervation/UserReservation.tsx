@@ -5,6 +5,7 @@ import {
     Flex,
     Grid,
     IconButton,
+    NumberInput,
     Portal,
     Table,
     Text,
@@ -70,9 +71,18 @@ export default function UserReservation() {
                         >
                             {isWide && (
                                 <Text margin={0} color="gray.focusRing">
-                                    Click each row to see detail of organization
+                                    Click each row to see detail of reservation
                                 </Text>
                             )}
+                            <TooltipComponent content="One-page limit">
+                                <NumberInput.Root
+                                    value={String(limit)}
+                                    onValueChange={(e) => setLimit(parseInt(e.value))}
+                                >
+                                    <NumberInput.Control />
+                                    <NumberInput.Input />
+                                </NumberInput.Root>
+                            </TooltipComponent>
                             <TooltipComponent content="Refresh">
                                 <IconButton
                                     rounded="sm"
