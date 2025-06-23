@@ -88,12 +88,12 @@ export default function UserReservation() {
                                 <NumberInput.Root
                                     value={_limit}
                                     onValueChange={(e) => _setLimit(e.value)}
-                                // min={10}
+                                    min={1}
                                 >
                                     <NumberInput.Control />
-                                    <TooltipComponent content="One-page limit">
-                                        <NumberInput.Input />
-                                    </TooltipComponent>
+                                    {/* <TooltipComponent content="One-page limit"> */}
+                                    <NumberInput.Input />
+                                    {/* </TooltipComponent> */}
                                 </NumberInput.Root>
                                 <TooltipComponent content="Refresh">
                                     <IconButton
