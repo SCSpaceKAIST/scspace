@@ -53,7 +53,6 @@ export default function UserReservation() {
     useEffect(() => { refetch(); }, [page, limit, userInfo?.id || 0]);
 
     useEffect(() => {
-        console.log(userReservation);
         setSelected(userReservation[0] || null);
     }, [userReservation]);
 
@@ -85,16 +84,18 @@ export default function UserReservation() {
                                 </Text>
                             )}
                             <HStack gap={2}>
-                                <NumberInput.Root
-                                    value={_limit}
-                                    onValueChange={(e) => _setLimit(e.value)}
-                                    min={1}
-                                >
-                                    <NumberInput.Control />
-                                    {/* <TooltipComponent content="One-page limit"> */}
-                                    <NumberInput.Input />
-                                    {/* </TooltipComponent> */}
-                                </NumberInput.Root>
+                                {isWide && (
+                                    <NumberInput.Root
+                                        value={_limit}
+                                        onValueChange={(e) => _setLimit(e.value)}
+                                        min={10}
+                                    >
+                                        <NumberInput.Control />
+                                        <TooltipComponent content="One-page limit">
+                                            <NumberInput.Input />
+                                        </TooltipComponent>
+                                    </NumberInput.Root>
+                                )}
                                 <TooltipComponent content="Refresh">
                                     <IconButton
                                         rounded="sm"
