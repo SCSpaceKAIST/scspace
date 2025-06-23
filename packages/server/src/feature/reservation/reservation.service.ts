@@ -107,6 +107,15 @@ export class ReservationService {
     }));
   }
 
+  async getReservationCount(
+    userId: number,
+  ): Promise<{ count: number }> {
+    const count = await this.reservationRepository.fetchCount({
+      userId,
+    });
+    return { count: count };
+  }
+
   private getDefaultStatus(spaceType: SpaceTypeEnum): ReservationStateEnum {
     switch (spaceType) {
       // 기본적으로 GRANT 상태로 예약

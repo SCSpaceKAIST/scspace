@@ -61,6 +61,16 @@ export class ReservationController {
     );
   }
 
+  @UseGuards(UserGuard)
+  @Get('count')
+  async getReservationCount(
+    @Query('uid', ParseIntPipe) userId: number,
+  ): Promise<{ count: number }> {
+    return await this.reservationService.getReservationCount(
+      userId,
+    );
+  }
+
   //HOOK: useWaitReservations
   // @Get('manage')
   // async getManageReservation(): Promise<IReservationAll[]> {

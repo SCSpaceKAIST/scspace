@@ -122,20 +122,49 @@ export function useUserReservation({ uid, limit, offset }: {
     limit: number;
     offset: number;
 }) {
-    const { data, isLoading, refetch } = useQueryApi<IReservationAll[]>(
+    const {
+        data: resData,
+        isLoading: isResLoading,
+        refetch: refetchRes
+    } = useQueryApi<IReservationAll[]>(
         `/reservation/user/${uid}?limit=${limit}&offset=${offset}`
     );
     const [userReservation, setUserReservation] = useState<IReservationAll[]>([]);
 
+    const {
+        data: countData,
+        isLoading: isCountLoading,
+        refetch: refetchCount
+    } = useQueryApi<{ count: number }>(
+        `/reservation/count?uid=${uid}`
+    );
+    const [count, setCount] = useState<number>(0);
+
     useEffect(() => {
-        if (!data) {
+        if (!resData) {
             setUserReservation([]);
             return;
         }
-        setUserReservation(data);
-    }, [data, uid]);
+        setUserReservation(resData);
+    }, [resData, uid]);
 
-    return { userReservation, isLoading, refetch };
+    useEffect(() => {
+        if (!countData) {
+            setCount(0);
+            return;
+        }
+        setCount(countData.count);
+    }, [countData, uid]);
+
+    return {
+        userReservation,
+        count,
+        isLoading: isResLoading || isCountLoading,
+        refetch: () => {
+            refetchRes();
+            refetchCount();
+        }
+    };
 };
 
 export function useWaitReservations() {

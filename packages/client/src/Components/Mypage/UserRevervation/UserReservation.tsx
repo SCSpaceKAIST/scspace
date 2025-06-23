@@ -1,12 +1,15 @@
 "use client"
 
 import {
+    ButtonGroup,
+    Center,
     Dialog,
     Flex,
     Grid,
     HStack,
     IconButton,
     NumberInput,
+    Pagination,
     Portal,
     Table,
     Text,
@@ -22,6 +25,7 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import { useDate } from "@scspace-client/Hooks/utils";
 import CalendarDialog from "@scspace-client/Components/Calendar/CalendarDialog";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 
 export default function UserReservation() {
     const { userInfo, needLogin } = useAuth();
@@ -35,7 +39,7 @@ export default function UserReservation() {
     const [open, setOpen] = useState<boolean>(false);
     const isWide = useBreakpointValue({ base: false, md: true });
 
-    const { userReservation, refetch } = useUserReservation({
+    const { userReservation, count, refetch } = useUserReservation({
         uid: userInfo?.id || 0,
         limit,
         offset: limit * (page - 1)
@@ -62,7 +66,7 @@ export default function UserReservation() {
                 ) : (
                     <Grid
                         height="100%"
-                        templateRows="auto 1fr"
+                        templateRows="auto 1fr auto"
                         gap={2}
                     >
                         <Flex
@@ -79,7 +83,7 @@ export default function UserReservation() {
                                 <NumberInput.Root
                                     value={String(limit)}
                                     onValueChange={(e) => setLimit(parseInt(e.value))}
-                                    min={10}
+                                // min={10}
                                 >
                                     <NumberInput.Control />
                                     <TooltipComponent content="One-page limit">
@@ -154,6 +158,40 @@ export default function UserReservation() {
                                 </Table.Body>
                             </Table.Root>
                         </Scroll>
+                        <Center width="100%">
+                            <Pagination.Root
+                                count={count}
+                                pageSize={limit}
+                                // siblingCount={2}
+                                page={page}
+                                onPageChange={(e) => setPage(e.page)}
+                            >
+                                <ButtonGroup variant="ghost">
+                                    <Pagination.PrevTrigger asChild>
+                                        <IconButton>
+                                            <HiChevronLeft />
+                                        </IconButton>
+                                    </Pagination.PrevTrigger>
+                                    <Pagination.Items
+                                        render={(p) => (
+                                            <IconButton
+                                                variant={{
+                                                    base: "ghost",
+                                                    _selected: "outline"
+                                                }}
+                                            >
+                                                {p.value}
+                                            </IconButton>
+                                        )}
+                                    />
+                                    <Pagination.NextTrigger asChild>
+                                        <IconButton>
+                                            <HiChevronRight />
+                                        </IconButton>
+                                    </Pagination.NextTrigger>
+                                </ButtonGroup>
+                            </Pagination.Root>
+                        </Center>
                     </Grid>
                 )}
             </Scroll>
