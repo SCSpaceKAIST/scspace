@@ -33,7 +33,12 @@ export default function UserReservation() {
 
     const [page, setPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(10);
+    const [_limit, _setLimit] = useState<string>("10");
     const { getString } = useDate();
+
+    useEffect(() => {
+        if (parseInt(_limit) != limit) setLimit(parseInt(_limit));
+    }, [_limit]);
 
     const [selected, setSelected] = useState<IReservationAll | null>(null);
     const [open, setOpen] = useState<boolean>(false);
@@ -81,8 +86,8 @@ export default function UserReservation() {
                             )}
                             <HStack gap={2}>
                                 <NumberInput.Root
-                                    value={String(limit)}
-                                    onValueChange={(e) => setLimit(parseInt(e.value))}
+                                    value={_limit}
+                                    onValueChange={(e) => _setLimit(e.value)}
                                 // min={10}
                                 >
                                     <NumberInput.Control />
