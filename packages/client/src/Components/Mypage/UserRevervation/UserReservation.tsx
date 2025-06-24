@@ -120,38 +120,38 @@ export default function UserReservation() {
                                 width={isWide ? "fit-content" : "100%"}
                                 justify={isWide ? "space-between" : "end"}
                             >
-                                <TooltipComponent content="Organization">
-                                    <Select.Root
-                                        collection={optionList}
-                                        value={_oid}
-                                        onValueChange={(e) => _setOid(e.value)}
-                                    >
-                                        <Select.HiddenSelect />
-                                        <Select.Control>
-                                            <Select.Trigger>
-                                                <Select.ValueText />
-                                            </Select.Trigger>
-                                            <Select.IndicatorGroup>
-                                                <Select.Indicator />
-                                            </Select.IndicatorGroup>
-                                        </Select.Control>
-                                        <Portal>
-                                            <Select.Positioner>
-                                                <Select.Content>
-                                                    {optionList.items.map((option) => (
-                                                        <Select.Item
-                                                            item={option}
-                                                            key={option.value}
-                                                        >
-                                                            {option.label}
-                                                            <Select.ItemIndicator />
-                                                        </Select.Item>
-                                                    ))}
-                                                </Select.Content>
-                                            </Select.Positioner>
-                                        </Portal>
-                                    </Select.Root>
-                                </TooltipComponent>
+                                <Select.Root
+                                    collection={optionList}
+                                    value={_oid}
+                                    onValueChange={(e) => _setOid(e.value)}
+                                >
+                                    <Select.HiddenSelect />
+                                    <Select.Control>
+                                        <Select.Trigger>
+                                            <TooltipComponent content="Organization">
+                                                <Select.ValueText minWidth="fit-content" />
+                                            </TooltipComponent>
+                                        </Select.Trigger>
+                                        <Select.IndicatorGroup>
+                                            <Select.Indicator />
+                                        </Select.IndicatorGroup>
+                                    </Select.Control>
+                                    <Portal>
+                                        <Select.Positioner>
+                                            <Select.Content>
+                                                {optionList.items.map((option) => (
+                                                    <Select.Item
+                                                        item={option}
+                                                        key={option.value}
+                                                    >
+                                                        {option.label}
+                                                        <Select.ItemIndicator />
+                                                    </Select.Item>
+                                                ))}
+                                            </Select.Content>
+                                        </Select.Positioner>
+                                    </Portal>
+                                </Select.Root>
                                 {isWide && (
                                     <NumberInput.Root
                                         value={_limit}
