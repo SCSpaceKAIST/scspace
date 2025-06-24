@@ -71,7 +71,7 @@ export class ReservationRepository {
     if (param.spaceIds) {
       whereClause.push(inArray(Reservation.spaceId, param.spaceIds));
     }
-    if ((param.organizationId ?? -1) > -1) {
+    if (param.organizationId) {
       whereClause.push(eq(Reservation.organizationId, param.organizationId));
     }
     if (param.state) {

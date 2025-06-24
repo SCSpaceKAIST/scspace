@@ -34,30 +34,27 @@ export default function UserReservation() {
     const { userInfo, needLogin } = useAuth();
     needLogin();
 
-    const [oid, setOid] = useState<number>(-1);
-    const [_oid, _setOid] = useState<string[]>(["-1"]);
+    const [oid, setOid] = useState<number>(0);
+    const [_oid, _setOid] = useState<string[]>(["0"]);
     useEffect(() => {
         const _t = parseInt(_oid[0]);
         if (_t != oid) setOid(_t);
     }, [_oid]);
 
     const { organization } = useOrganization({ uid: userInfo?.id ?? -1 });
-    const [options, setOptions] = useState<{ label: string; value: string }[]>([
-        { label: "All", value: "-1" },
-        { label: "Individual", value: "0" }
-    ]);
+    const initOpt = [
+        { label: "All", value: "0" },
+        { label: "Individual", value: "1" }
+    ];
+    const [options, setOptions] = useState<{ label: string; value: string }[]>(initOpt);
     const optionList = createListCollection({ items: options });
     useEffect(() => {
         if (!organization) {
-            setOptions([
-                { label: "All", value: "-1" },
-                { label: "Individual", value: "0" },
-            ]);
+            setOptions(initOpt);
             return;
         }
         setOptions([
-            { label: "All", value: "-1" },
-            { label: "Individual", value: "0" },
+            ...initOpt,
             ...organization.map((o) => ({
                 label: o.name,
                 value: o.id.toString()
