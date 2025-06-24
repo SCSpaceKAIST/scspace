@@ -34,8 +34,8 @@ export default function UserReservation() {
     const { userInfo, needLogin } = useAuth();
     needLogin();
 
-    const [oid, setOid] = useState<number>(0);
-    const [_oid, _setOid] = useState<string[]>(["0"]);
+    const [oid, setOid] = useState<number>(-1);
+    const [_oid, _setOid] = useState<string[]>(["-1"]);
     useEffect(() => {
         const _t = parseInt(_oid[0]);
         if (_t != oid) setOid(_t);
@@ -43,15 +43,20 @@ export default function UserReservation() {
 
     const { organization } = useOrganization({ uid: userInfo?.id ?? -1 });
     const [options, setOptions] = useState<{ label: string; value: string }[]>([
+        { label: "All", value: "-1" },
         { label: "Individual", value: "0" }
     ]);
     const optionList = createListCollection({ items: options });
     useEffect(() => {
         if (!organization) {
-            setOptions([{ label: "Individual", value: "0" },]);
+            setOptions([
+                { label: "All", value: "-1" },
+                { label: "Individual", value: "0" },
+            ]);
             return;
         }
         setOptions([
+            { label: "All", value: "-1" },
             { label: "Individual", value: "0" },
             ...organization.map((o) => ({
                 label: o.name,
@@ -153,6 +158,7 @@ export default function UserReservation() {
                                         value={_limit}
                                         onValueChange={(e) => _setLimit(e.value)}
                                         min={10}
+                                        width="fit-content"
                                     >
                                         <NumberInput.Control />
                                         <TooltipComponent content="One-page limit">
