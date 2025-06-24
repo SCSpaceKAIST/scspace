@@ -30,7 +30,9 @@ export function useAllOrganization() {
 
 export function useOrganization({ uid }: { uid?: number }) {
     const [organization, setOrganization] = useState<IOrganizationDelegator[] | null>(null);
-    const { data, isLoading, refetch } = useQueryApi<IOrganizationDelegator[]>(`/organization/user/${uid}`);
+    const { data, isLoading, refetch } = useQueryApi<IOrganizationDelegator[]>(
+        `/organization/user/${uid}`
+    );
 
     useEffect(() => {
         if (!data) {

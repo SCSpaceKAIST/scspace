@@ -3,6 +3,7 @@
 import {
     ButtonGroup,
     Center,
+    createListCollection,
     Dialog,
     Flex,
     Grid,
@@ -11,6 +12,7 @@ import {
     NumberInput,
     Pagination,
     Portal,
+    Select,
     Table,
     Text,
     useBreakpointValue,
@@ -26,10 +28,37 @@ import { IReservationAll } from "@scspace-depot/types/reservation";
 import { useDate } from "@scspace-client/Hooks/utils";
 import CalendarDialog from "@scspace-client/Components/Calendar/CalendarDialog";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
+import { useOrganization } from "@scspace-client/Hooks/organization";
 
 export default function UserReservation() {
     const { userInfo, needLogin } = useAuth();
     needLogin();
+
+    const [oid, setOid] = useState<number>(0);
+    const [_oid, _setOid] = useState<string[]>([]);
+    useEffect(() => {
+        const _t = parseInt(_oid[0]);
+        if (_t != oid) setOid(_t);
+    }, [_oid]);
+
+    const { organization } = useOrganization({ uid: userInfo?.id ?? -1 });
+    const [options, setOptions] = useState<{ label: string; value: string }[]>([
+        { label: "Individual", value: "0" }
+    ]);
+    const optionList = createListCollection({ items: options });
+    useEffect(() => {
+        if (!organization) {
+            setOptions([{ label: "Individual", value: "0" },]);
+            return;
+        }
+        setOptions([
+            { label: "Individual", value: "0" },
+            ...organization.map((o) => ({
+                label: o.name,
+                value: o.id.toString()
+            }))
+        ])
+    }, [organization]);
 
     const [page, setPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(10);
@@ -46,6 +75,7 @@ export default function UserReservation() {
 
     const { userReservation, count, refetch } = useUserReservation({
         uid: userInfo?.id || 0,
+        oid,
         limit,
         offset: limit * (page - 1)
     });
@@ -84,6 +114,37 @@ export default function UserReservation() {
                                 </Text>
                             )}
                             <HStack gap={2}>
+                                <Select.Root
+                                    collection={optionList}
+                                    value={_oid}
+                                    onValueChange={(e) => _setOid(e.value)}
+                                    defaultValue={["0"]}
+                                >
+                                    <Select.HiddenSelect />
+                                    <Select.Control>
+                                        <Select.Trigger>
+                                            <Select.ValueText />
+                                        </Select.Trigger>
+                                        <Select.IndicatorGroup>
+                                            <Select.Indicator />
+                                        </Select.IndicatorGroup>
+                                    </Select.Control>
+                                    <Portal>
+                                        <Select.Positioner>
+                                            <Select.Content>
+                                                {optionList.items.map((option) => (
+                                                    <Select.Item
+                                                        item={option}
+                                                        key={option.value}
+                                                    >
+                                                        {option.label}
+                                                        <Select.ItemIndicator />
+                                                    </Select.Item>
+                                                ))}
+                                            </Select.Content>
+                                        </Select.Positioner>
+                                    </Portal>
+                                </Select.Root>
                                 {isWide && (
                                     <NumberInput.Root
                                         value={_limit}
@@ -113,6 +174,16 @@ export default function UserReservation() {
                                 interactive
                                 colorPalette="blue"
                             >
+                                <Table.ColumnGroup>
+                                    <Table.Column htmlWidth={isWide ? "25%" : "50%"} />
+                                    <Table.Column htmlWidth={isWide ? "25%" : "50%"} />
+                                    {isWide && (
+                                        <>
+                                            <Table.Column htmlWidth="25%" />
+                                            <Table.Column htmlWidth="25%" />
+                                        </>
+                                    )}
+                                </Table.ColumnGroup>
                                 <Table.Header>
                                     <Table.Row bg="bg.muted">
                                         <Table.ColumnHeader>

@@ -117,8 +117,9 @@ export function useDateReservations({ spaceId, dateFrom, dateTo, }: {
     return { dateReservation, isLoading, refetch };
 };
 
-export function useUserReservation({ uid, limit, offset }: {
+export function useUserReservation({ uid, oid, limit, offset }: {
     uid: number;
+    oid: number;
     limit: number;
     offset: number;
 }) {
@@ -127,7 +128,13 @@ export function useUserReservation({ uid, limit, offset }: {
         isLoading: isResLoading,
         refetch: refetchRes
     } = useQueryApi<IReservationAll[]>(
-        `/reservation/user/${uid}?limit=${limit}&offset=${offset}`
+        `
+        /reservation/user
+        ?uid=${uid}
+        &oid=${oid}
+        &limit=${limit}
+        &offset=${offset}
+        `
     );
     const [userReservation, setUserReservation] = useState<IReservationAll[]>([]);
 

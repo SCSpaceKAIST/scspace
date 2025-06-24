@@ -48,14 +48,16 @@ export class ReservationController {
   // AuthGuard - user
   //HOOK: useUserReservation
   @UseGuards(UserGuard)
-  @Get('user/:id')
+  @Get('user')
   async getReservationListByUserId(
-    @Param('id') userId: number,
+    @Query('uid', ParseIntPipe) userId: number,
+    @Query('oid', ParseIntPipe) organizationId: number,
     @Query('limit', ParseIntPipe) limit: number,
     @Query('offset', ParseIntPipe) offset: number,
   ): Promise<IReservationAll[]> {
     return await this.reservationService.getReservationListByUserId(
       userId,
+      organizationId,
       limit,
       offset,
     );
@@ -65,9 +67,11 @@ export class ReservationController {
   @Get('count')
   async getReservationCount(
     @Query('uid', ParseIntPipe) userId: number,
+    @Query('oid', ParseIntPipe) organizationId: number,
   ): Promise<{ count: number }> {
     return await this.reservationService.getReservationCount(
       userId,
+      organizationId
     );
   }
 

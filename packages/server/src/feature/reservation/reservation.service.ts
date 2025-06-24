@@ -74,11 +74,13 @@ export class ReservationService {
 
   async getReservationListByUserId(
     userId: number,
+    organizationId: number,
     limit: number,
     offset: number,
   ): Promise<IReservationAll[]> {
     const reservations = await this.reservationRepository.fetch({
       userId,
+      organizationId,
       limit,
       offset,
     });
@@ -109,9 +111,11 @@ export class ReservationService {
 
   async getReservationCount(
     userId: number,
+    organizationId: number,
   ): Promise<{ count: number }> {
     const count = await this.reservationRepository.fetchCount({
       userId,
+      organizationId
     });
     return { count: count };
   }
