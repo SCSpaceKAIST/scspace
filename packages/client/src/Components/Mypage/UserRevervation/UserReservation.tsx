@@ -129,16 +129,16 @@ export default function UserReservation() {
                                     onValueChange={(e) => _setOid(e.value)}
                                 >
                                     <Select.HiddenSelect />
-                                    <Select.Control>
-                                        <Select.Trigger>
-                                            <TooltipComponent content="One-page limit">
+                                    <TooltipComponent content="Organization">
+                                        <Select.Control>
+                                            <Select.Trigger>
                                                 <Select.ValueText />
-                                            </TooltipComponent>
-                                        </Select.Trigger>
-                                        <Select.IndicatorGroup>
-                                            <Select.Indicator />
-                                        </Select.IndicatorGroup>
-                                    </Select.Control>
+                                            </Select.Trigger>
+                                            <Select.IndicatorGroup>
+                                                <Select.Indicator />
+                                            </Select.IndicatorGroup>
+                                        </Select.Control>
+                                    </TooltipComponent>
                                     <Portal>
                                         <Select.Positioner>
                                             <Select.Content>
