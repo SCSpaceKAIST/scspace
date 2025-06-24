@@ -126,16 +126,16 @@ export default function UserReservation() {
                                     width="180px"
                                 >
                                     <Select.HiddenSelect />
-                                    <Select.Control>
-                                        <TooltipComponent content="Organization">
+                                    <TooltipComponent content="Organization">
+                                        <Select.Control>
                                             <Select.Trigger>
                                                 <Select.ValueText />
                                             </Select.Trigger>
-                                        </TooltipComponent>
-                                        <Select.IndicatorGroup>
-                                            <Select.Indicator />
-                                        </Select.IndicatorGroup>
-                                    </Select.Control>
+                                            <Select.IndicatorGroup>
+                                                <Select.Indicator />
+                                            </Select.IndicatorGroup>
+                                        </Select.Control>
+                                    </TooltipComponent>
                                     <Portal>
                                         <Select.Positioner>
                                             <Select.Content minW="fit-content">
