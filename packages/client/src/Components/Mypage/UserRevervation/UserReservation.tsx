@@ -93,6 +93,21 @@ export default function UserReservation() {
 
     return (
         <>
+            <Portal>
+                <Select.Positioner>
+                    <Select.Content>
+                        {optionList.items.map((option) => (
+                            <Select.Item
+                                item={option}
+                                key={option.value}
+                            >
+                                {option.label}
+                                <Select.ItemIndicator />
+                            </Select.Item>
+                        ))}
+                    </Select.Content>
+                </Select.Positioner>
+            </Portal>
             <CalendarDialog
                 open={open}
                 setOpen={setOpen}
@@ -123,13 +138,13 @@ export default function UserReservation() {
                                 width={isWide ? "fit-content" : "100%"}
                                 justify={isWide ? "space-between" : "end"}
                             >
-                                <Select.Root
-                                    collection={optionList}
-                                    value={_oid}
-                                    onValueChange={(e) => _setOid(e.value)}
-                                >
-                                    <Select.HiddenSelect />
-                                    <TooltipComponent content="Organization">
+                                <TooltipComponent content="Organization">
+                                    <Select.Root
+                                        collection={optionList}
+                                        value={_oid}
+                                        onValueChange={(e) => _setOid(e.value)}
+                                    >
+                                        <Select.HiddenSelect />
                                         <Select.Control>
                                             <Select.Trigger>
                                                 <Select.ValueText />
@@ -138,23 +153,8 @@ export default function UserReservation() {
                                                 <Select.Indicator />
                                             </Select.IndicatorGroup>
                                         </Select.Control>
-                                    </TooltipComponent>
-                                    <Portal>
-                                        <Select.Positioner>
-                                            <Select.Content>
-                                                {optionList.items.map((option) => (
-                                                    <Select.Item
-                                                        item={option}
-                                                        key={option.value}
-                                                    >
-                                                        {option.label}
-                                                        <Select.ItemIndicator />
-                                                    </Select.Item>
-                                                ))}
-                                            </Select.Content>
-                                        </Select.Positioner>
-                                    </Portal>
-                                </Select.Root>
+                                    </Select.Root>
+                                </TooltipComponent>
                                 {isWide && (
                                     <NumberInput.Root
                                         value={_limit}

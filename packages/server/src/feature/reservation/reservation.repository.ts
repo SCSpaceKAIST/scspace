@@ -42,7 +42,7 @@ export class ReservationRepository {
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>
   ) { }
 
-  async fetch(param: {
+  sqlGenerator(param: {
     id?: number;
     userId?: number;
     spaceId?: number;
@@ -56,7 +56,7 @@ export class ReservationRepository {
       timeFrom?: number;
       timeTo?: number;
     };
-  }): Promise<MReservationSimple[]> {
+  }): SQL[] {
     const whereClause: SQL[] = [];
 
     if (param.id) {
@@ -71,7 +71,7 @@ export class ReservationRepository {
     if (param.spaceIds) {
       whereClause.push(inArray(Reservation.spaceId, param.spaceIds));
     }
-    if (param.organizationId ?? 0 > -1) {
+    if ((param.organizationId ?? -1) > -1) {
       whereClause.push(eq(Reservation.organizationId, param.organizationId));
     }
     if (param.state) {
@@ -104,6 +104,26 @@ export class ReservationRepository {
       }
     }
 
+    return whereClause;
+  }
+
+  async fetch(param: {
+    id?: number;
+    userId?: number;
+    spaceId?: number;
+    spaceIds?: number[];
+    organizationId?: number;
+    state?: ReservationStateEnum;
+    states?: ReservationStateEnum[];
+    limit?: number;
+    offset?: number;
+    timeRange?: {
+      timeFrom?: number;
+      timeTo?: number;
+    };
+  }): Promise<MReservationSimple[]> {
+    const whereClause: SQL[] = this.sqlGenerator(param);
+
     const reservations = this.db
       .select()
       .from(Reservation)
@@ -133,52 +153,7 @@ export class ReservationRepository {
       timeTo?: number;
     };
   }): Promise<number> {
-    const whereClause: SQL[] = [];
-
-    if (param.id) {
-      whereClause.push(eq(Reservation.id, param.id));
-    }
-    if (param.userId) {
-      whereClause.push(eq(Reservation.userId, param.userId));
-    }
-    if (param.spaceId) {
-      whereClause.push(eq(Reservation.spaceId, param.spaceId));
-    }
-    if (param.spaceIds) {
-      whereClause.push(inArray(Reservation.spaceId, param.spaceIds));
-    }
-    if (param.organizationId ?? 0 > -1) {
-      whereClause.push(eq(Reservation.organizationId, param.organizationId));
-    }
-    if (param.state) {
-      whereClause.push(eq(Reservation.state, param.state));
-    }
-    if (param.states) {
-      if (param.states.length === 0) return 0;
-      whereClause.push(inArray(Reservation.state, param.states));
-    }
-    if (param.timeRange) {
-      const timeFrom = param.timeRange.timeFrom;
-      const timeTo = param.timeRange.timeTo;
-      if (timeFrom && timeTo) {
-        whereClause.push(
-          or(
-            and(
-              gt(Reservation.timeFrom, timeFrom),
-              lt(Reservation.timeFrom, timeTo)
-            ),
-            and(
-              gt(Reservation.timeTo, timeFrom),
-              lt(Reservation.timeTo, timeTo)
-            ),
-            and(
-              lte(Reservation.timeFrom, timeFrom),
-              gte(Reservation.timeTo, timeTo)
-            )
-          )
-        );
-      }
-    }
+    const whereClause: SQL[] = this.sqlGenerator(param);
 
     const reservationCount = await this.db
       .select({

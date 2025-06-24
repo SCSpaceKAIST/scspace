@@ -137,7 +137,7 @@ export function useUserReservation({ uid, oid, limit, offset }: {
         isLoading: isCountLoading,
         refetch: refetchCount
     } = useQueryApi<{ count: number }>(
-        `/reservation/count?uid=${uid}`
+        `/reservation/count?uid=${uid}&oid=${oid}`
     );
     const [count, setCount] = useState<number>(0);
 
