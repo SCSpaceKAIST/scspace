@@ -138,22 +138,22 @@ export default function UserReservation() {
                                                 <Select.Indicator />
                                             </Select.IndicatorGroup>
                                         </Select.Control>
+                                        <Portal>
+                                            <Select.Positioner>
+                                                <Select.Content>
+                                                    {optionList.items.map((option) => (
+                                                        <Select.Item
+                                                            item={option}
+                                                            key={option.value}
+                                                        >
+                                                            {option.label}
+                                                            <Select.ItemIndicator />
+                                                        </Select.Item>
+                                                    ))}
+                                                </Select.Content>
+                                            </Select.Positioner>
+                                        </Portal>
                                     </Select.Root>
-                                    <Portal>
-                                        <Select.Positioner>
-                                            <Select.Content>
-                                                {optionList.items.map((option) => (
-                                                    <Select.Item
-                                                        item={option}
-                                                        key={option.value}
-                                                    >
-                                                        {option.label}
-                                                        <Select.ItemIndicator />
-                                                    </Select.Item>
-                                                ))}
-                                            </Select.Content>
-                                        </Select.Positioner>
-                                    </Portal>
                                 </TooltipComponent>
                                 {isWide && (
                                     <NumberInput.Root
