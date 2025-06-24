@@ -128,13 +128,7 @@ export function useUserReservation({ uid, oid, limit, offset }: {
         isLoading: isResLoading,
         refetch: refetchRes
     } = useQueryApi<IReservationAll[]>(
-        `
-        /reservation/user
-        ?uid=${uid}
-        &oid=${oid}
-        &limit=${limit}
-        &offset=${offset}
-        `
+        `/reservation/user?uid=${uid}&oid=${oid}&limit=${limit}&offset=${offset}`
     );
     const [userReservation, setUserReservation] = useState<IReservationAll[]>([]);
 

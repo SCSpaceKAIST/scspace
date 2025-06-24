@@ -35,7 +35,7 @@ export default function UserReservation() {
     needLogin();
 
     const [oid, setOid] = useState<number>(0);
-    const [_oid, _setOid] = useState<string[]>([]);
+    const [_oid, _setOid] = useState<string[]>(["0"]);
     useEffect(() => {
         const _t = parseInt(_oid[0]);
         if (_t != oid) setOid(_t);
@@ -113,12 +113,15 @@ export default function UserReservation() {
                                     Click each row to see detail of reservation
                                 </Text>
                             )}
-                            <HStack gap={2}>
+                            <HStack
+                                gap={2}
+                                width={isWide ? "fit-content" : "100%"}
+                                justify={isWide ? "space-between" : "end"}
+                            >
                                 <Select.Root
                                     collection={optionList}
                                     value={_oid}
                                     onValueChange={(e) => _setOid(e.value)}
-                                    defaultValue={["0"]}
                                 >
                                     <Select.HiddenSelect />
                                     <Select.Control>
