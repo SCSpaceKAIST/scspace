@@ -4,7 +4,6 @@ import {
     ButtonGroup,
     Center,
     createListCollection,
-    Dialog,
     Flex,
     Grid,
     HStack,
@@ -32,7 +31,7 @@ import { useOrganization } from "@scspace-client/Hooks/organization";
 
 export default function UserReservation() {
     const { userInfo, needLogin } = useAuth();
-    needLogin();
+    // needLogin();
 
     const [oid, setOid] = useState<number>(0);
     const [_oid, _setOid] = useState<string[]>(["0"]);
@@ -118,27 +117,28 @@ export default function UserReservation() {
                             <HStack
                                 gap={2}
                                 width={isWide ? "fit-content" : "100%"}
-                                justify={isWide ? "space-between" : "end"}
+                                justify="space-between"
                             >
                                 <Select.Root
                                     collection={optionList}
                                     value={_oid}
                                     onValueChange={(e) => _setOid(e.value)}
+                                    width="180px"
                                 >
                                     <Select.HiddenSelect />
                                     <Select.Control>
-                                        <Select.Trigger>
-                                            <TooltipComponent content="Organization">
-                                                <Select.ValueText minWidth="fit-content" />
-                                            </TooltipComponent>
-                                        </Select.Trigger>
+                                        <TooltipComponent content="Organization">
+                                            <Select.Trigger>
+                                                <Select.ValueText />
+                                            </Select.Trigger>
+                                        </TooltipComponent>
                                         <Select.IndicatorGroup>
                                             <Select.Indicator />
                                         </Select.IndicatorGroup>
                                     </Select.Control>
                                     <Portal>
                                         <Select.Positioner>
-                                            <Select.Content>
+                                            <Select.Content minW="fit-content">
                                                 {optionList.items.map((option) => (
                                                     <Select.Item
                                                         item={option}
@@ -157,12 +157,11 @@ export default function UserReservation() {
                                         value={_limit}
                                         onValueChange={(e) => _setLimit(e.value)}
                                         min={10}
+                                        width="90px"
                                     >
                                         <NumberInput.Control />
                                         <TooltipComponent content="One-page limit">
-                                            <NumberInput.Input
-                                                width="fit-content"
-                                            />
+                                            <NumberInput.Input />
                                         </TooltipComponent>
                                     </NumberInput.Root>
                                 )}
