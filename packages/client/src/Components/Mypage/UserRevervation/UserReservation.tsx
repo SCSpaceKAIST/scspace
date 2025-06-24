@@ -130,9 +130,12 @@ export default function UserReservation() {
                                 >
                                     <Select.HiddenSelect />
                                     <Select.Control>
-                                        <Select.Trigger>
-                                            <Select.ValueText />
-                                        </Select.Trigger>
+
+                                        <TooltipComponent content="One-page limit">
+                                            <Select.Trigger>
+                                                <Select.ValueText />
+                                            </Select.Trigger>
+                                        </TooltipComponent>
                                         <Select.IndicatorGroup>
                                             <Select.Indicator />
                                         </Select.IndicatorGroup>
@@ -158,11 +161,12 @@ export default function UserReservation() {
                                         value={_limit}
                                         onValueChange={(e) => _setLimit(e.value)}
                                         min={10}
-                                        width="fit-content"
                                     >
                                         <NumberInput.Control />
                                         <TooltipComponent content="One-page limit">
-                                            <NumberInput.Input />
+                                            <NumberInput.Input
+                                                width="fit-content"
+                                            />
                                         </TooltipComponent>
                                     </NumberInput.Root>
                                 )}
