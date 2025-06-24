@@ -93,21 +93,6 @@ export default function UserReservation() {
 
     return (
         <>
-            <Portal>
-                <Select.Positioner>
-                    <Select.Content>
-                        {optionList.items.map((option) => (
-                            <Select.Item
-                                item={option}
-                                key={option.value}
-                            >
-                                {option.label}
-                                <Select.ItemIndicator />
-                            </Select.Item>
-                        ))}
-                    </Select.Content>
-                </Select.Positioner>
-            </Portal>
             <CalendarDialog
                 open={open}
                 setOpen={setOpen}
@@ -154,6 +139,21 @@ export default function UserReservation() {
                                             </Select.IndicatorGroup>
                                         </Select.Control>
                                     </Select.Root>
+                                    <Portal>
+                                        <Select.Positioner>
+                                            <Select.Content>
+                                                {optionList.items.map((option) => (
+                                                    <Select.Item
+                                                        item={option}
+                                                        key={option.value}
+                                                    >
+                                                        {option.label}
+                                                        <Select.ItemIndicator />
+                                                    </Select.Item>
+                                                ))}
+                                            </Select.Content>
+                                        </Select.Positioner>
+                                    </Portal>
                                 </TooltipComponent>
                                 {isWide && (
                                     <NumberInput.Root
