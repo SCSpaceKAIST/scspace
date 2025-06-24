@@ -130,12 +130,11 @@ export default function UserReservation() {
                                 >
                                     <Select.HiddenSelect />
                                     <Select.Control>
-
-                                        <TooltipComponent content="One-page limit">
-                                            <Select.Trigger>
+                                        <Select.Trigger>
+                                            <TooltipComponent content="One-page limit">
                                                 <Select.ValueText />
-                                            </Select.Trigger>
-                                        </TooltipComponent>
+                                            </TooltipComponent>
+                                        </Select.Trigger>
                                         <Select.IndicatorGroup>
                                             <Select.Indicator />
                                         </Select.IndicatorGroup>
