@@ -5,13 +5,12 @@ import { reservationMaxDate, reservationMaxDayTime, reservationMaxWeekTime, rese
 import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
 import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
 import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
-import { getDateDiff, getNow, timeRangeCheck } from '@scspace-server/common/util';
-import {
-  IReservationContent,
-  IReservationSimple
-} from '@scspace-depot/types/reservation';
+import { getNow, timeRangeCheck } from '@scspace-server/common/util';
+import { IReservation, IReservationAll, IReservationContent, IReservationSimple } from '@scspace-depot/types/reservation';
+import { getDate } from 'date-fns';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as zlib from 'zlib';
 import { promisify } from 'util';
 
 const writeFile = promisify(fs.writeFile);
@@ -23,7 +22,7 @@ export class ReservationPublicService {
     private readonly reservationRepository: ReservationRepository,
     private readonly spacePublicService: SpacePublicService,
     private readonly userPublicService: UserPublicService,
-  ) { }
+  ) {}
 
   async fetchById(id: number): Promise<IReservationSimple | null> {
     const reservation = await this.reservationRepository.fetch({ id: id });
@@ -34,7 +33,7 @@ export class ReservationPublicService {
   }
 
   private getDifferenceInMinutes(timeFrom: number, timeTo: number): number {
-    return getDateDiff(timeFrom, timeTo);
+    return (timeTo - timeFrom);
   }
 
   async getDailyReservationTimeByOrganization(
@@ -77,7 +76,7 @@ export class ReservationPublicService {
     spaceId: number,
     timeFrom: number,
   ): Promise<number> {
-    const startOfWeek = BigInt(~~((timeFrom - 3 * 60 * 24) / (60 * 24 * 7))) * BigInt(60 * 24 * 7) + BigInt(3 * 60 * 24);
+    const startOfWeek = BigInt(~~(timeFrom / (60 * 24 * 7))) * BigInt(60 * 24 * 7);
     const endOfWeek = startOfWeek + BigInt(60 * 24 * 7) - BigInt(1);
 
     const weeklyReservations = await this.reservationRepository.fetch({
@@ -144,8 +143,8 @@ export class ReservationPublicService {
     spaceId: number,
     timeFrom: number,
   ): Promise<number> {
-    const startOfWeek = BigInt(~~((timeFrom - 3 * 60 * 24) / (60 * 24 * 7))) * BigInt(60 * 24 * 7) + BigInt(3 * 60 * 24);
-    const endOfWeek = startOfWeek + BigInt(60 * 24 * 7 - 1);
+    const startOfWeek = BigInt(~~(timeFrom / (60 * 24 * 7))) * BigInt(60 * 24 * 7);
+    const endOfWeek = startOfWeek + BigInt(60 * 24 * 7) - BigInt(1);
 
     const weeklyReservations = await this.reservationRepository.fetch({
       userId: userId,
@@ -186,16 +185,16 @@ export class ReservationPublicService {
     if (!space) {
       throw new BadRequestException('Space not found');
     }
-
     // check min / max time
-    if (reservationMinDate[space.spaceType] > ~~(getDateDiff((~~(getNow() / (60 * 24)) * 60 * 24), (~~(timeFrom / (60 * 24)) * 60 * 24)) / (60 * 24))) {
+    const nowDay = (~~((getNow()/(60*24))))
+    if (reservationMinDate[space.spaceType] > (~~(timeFrom/(60*24)) - nowDay)) {
       throw new BadRequestException(`Check the minimum reservation date. ${space.nameEn} can be reserved at least ${reservationMinDate[space.spaceType]} days in advance.`);
     }
-    if (reservationMaxDate[space.spaceType] < ~~(getDateDiff((~~(getNow() / (60 * 24)) * 60 * 24), (~~(timeFrom / (60 * 24)) * 60 * 24)) / (60 * 24))) {
+    if (reservationMaxDate[space.spaceType] < (~~(timeFrom/(60*24)) - nowDay)) {
       throw new BadRequestException(`Check the maximum reservation date. ${space.nameEn} can be reserved at most ${reservationMaxDate[space.spaceType]} days in advance.`);
     }
 
-    const newReservationTime = getDateDiff(timeFrom, timeTo);
+    const newReservationTime = this.getDifferenceInMinutes(timeFrom, timeTo);
     const maxDayTime = reservationMaxDayTime[space.spaceType];
     const maxWeekTime = reservationMaxWeekTime[space.spaceType];
 
@@ -214,20 +213,20 @@ export class ReservationPublicService {
     if (organizationId === 1) {
       daily = await this.getDailyReservationTime(userId, spaceId, timeFrom);
       weekly = await this.getWeeklyReservationTime(userId, spaceId, timeFrom);
-      isWithinLimits =
+      isWithinLimits = 
         daily + newReservationTime <= maxDayTime &&
         weekly + newReservationTime <= maxWeekTime;
-    } else {
+    }else{
       daily = await this.getDailyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
       weekly = await this.getWeeklyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
-      isWithinLimits =
+      isWithinLimits = 
         daily + newReservationTime <= maxDayTime &&
         weekly + newReservationTime <= maxWeekTime;
     }
 
     if (!isWithinLimits) {
       throw new BadRequestException(
-        `Reservation duration exceeds limits\n(daily: ${daily + newReservationTime} / ${maxDayTime} minutes, weekly: ${weekly + newReservationTime} / ${maxWeekTime} minutes) for ${space.nameEn}`
+        `Reservation duration exceeds limits\n(daily: ${daily+newReservationTime} / ${maxDayTime} minutes, weekly: ${weekly+newReservationTime} / ${maxWeekTime} minutes) for ${space.nameEn}`
       );
     }
 
@@ -309,9 +308,9 @@ export class ReservationPublicService {
       // 모든 예약 데이터 가져오기
       const reservations = await this.reservationRepository.fetch({});
       const reservationContents = await Promise.all(reservations.map(reservation => this.reservationRepository.fetchContent(reservation.id)));
-
+      
       // CSV 헤더와 데이터 생성
-      const headers = ['id', 'userId', 'organizationId', 'spaceId', 'title',
+      const headers = ['id', 'userId', 'organizationId', 'spaceId', 'title', 
         'timeFrom', 'timeTo', 'timePost', 'timeUpdate', 'state',
         'description', 'innerParticipantNumber', 'outerParticipantNumber', 'food', 'desk', 'chair', 'busking', 'workerNeed'
       ];
@@ -339,7 +338,7 @@ export class ReservationPublicService {
           content?.workerNeed || false
         ];
       });
-
+      
       const csvContent = [
         headers.join(','),
         ...csvRows.map(row => row.join(','))
