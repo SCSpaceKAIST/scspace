@@ -12,7 +12,7 @@ import { sql } from 'drizzle-orm';
 // Organization Table
 export const Organization = mysqlTable('organization', {
   id: int('id').primaryKey().autoincrement().unique(),
-  name: varchar('name', { length: 127 }).notNull(),
+  name: varchar('name', { length: 128 }).notNull(),
   verificationStatus: int('verification_status').notNull().default(1),
   hasRoom: boolean('has_room').notNull().default(false),
   delegatorId: int('delegator_id')
