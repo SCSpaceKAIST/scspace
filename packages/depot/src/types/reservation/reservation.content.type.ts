@@ -7,7 +7,7 @@ export interface IReservationContent {
   desk: number;
   chair: number;
   busking: boolean;
-  workerNeed: number;
+  worker: number;
 }
 
 export type IReservationContentCreate = Omit<IReservationContent, "id">;

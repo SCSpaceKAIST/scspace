@@ -16,7 +16,7 @@ export class MReservationContent implements IReservationContent {
   desk: IReservationContent['desk'];
   chair: IReservationContent['chair'];
   busking: IReservationContent['busking'];
-  workerNeed: IReservationContent['workerNeed'];
+  worker: IReservationContent['worker'];
 
   constructor(data: IReservationContent) {
     this.id = data.id;
@@ -27,7 +27,7 @@ export class MReservationContent implements IReservationContent {
     this.desk = data.desk ?? 0;
     this.chair = data.chair ?? 0;
     this.busking = data.busking ?? false;
-    this.workerNeed = data.workerNeed ?? 1;
+    this.worker = data.worker ?? 1;
   }
 
   static fromDB(reservationContent: typeof ReservationContent.$inferSelect): IReservationContent {
@@ -40,7 +40,7 @@ export class MReservationContent implements IReservationContent {
       desk: reservationContent.desk,
       chair: reservationContent.chair,
       busking: reservationContent.busking,
-      workerNeed: reservationContent.workerNeed,
+      worker: reservationContent.worker,
     };
   }
 }
@@ -78,7 +78,7 @@ export class MReservation implements IReservation {
       desk: 0,
       chair: 0,
       busking: false,
-      workerNeed: 1,
+      worker: 1,
     });
   }
 
@@ -103,7 +103,7 @@ export class MReservation implements IReservation {
         desk: 0,
         chair: 0,
         busking: false,
-        workerNeed: 1,
+        worker: 1,
       }),
     };
   }

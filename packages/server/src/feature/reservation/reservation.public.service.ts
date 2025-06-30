@@ -6,11 +6,9 @@ import { UserPublicService } from '@scspace-server/feature/user/user.public.serv
 import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
 import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
 import { getNow, timeRangeCheck } from '@scspace-server/common/util';
-import { IReservation, IReservationAll, IReservationContent, IReservationSimple } from '@scspace-depot/types/reservation';
-import { getDate } from 'date-fns';
+import { IReservationContent, IReservationSimple } from '@scspace-depot/types/reservation';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as zlib from 'zlib';
 import { promisify } from 'util';
 
 const writeFile = promisify(fs.writeFile);
@@ -22,7 +20,7 @@ export class ReservationPublicService {
     private readonly reservationRepository: ReservationRepository,
     private readonly spacePublicService: SpacePublicService,
     private readonly userPublicService: UserPublicService,
-  ) {}
+  ) { }
 
   async fetchById(id: number): Promise<IReservationSimple | null> {
     const reservation = await this.reservationRepository.fetch({ id: id });
@@ -186,11 +184,11 @@ export class ReservationPublicService {
       throw new BadRequestException('Space not found');
     }
     // check min / max time
-    const nowDay = (~~((getNow()/(60*24))))
-    if (reservationMinDate[space.spaceType] > (~~(timeFrom/(60*24)) - nowDay)) {
+    const nowDay = (~~((getNow() / (60 * 24))))
+    if (reservationMinDate[space.spaceType] > (~~(timeFrom / (60 * 24)) - nowDay)) {
       throw new BadRequestException(`Check the minimum reservation date. ${space.nameEn} can be reserved at least ${reservationMinDate[space.spaceType]} days in advance.`);
     }
-    if (reservationMaxDate[space.spaceType] < (~~(timeFrom/(60*24)) - nowDay)) {
+    if (reservationMaxDate[space.spaceType] < (~~(timeFrom / (60 * 24)) - nowDay)) {
       throw new BadRequestException(`Check the maximum reservation date. ${space.nameEn} can be reserved at most ${reservationMaxDate[space.spaceType]} days in advance.`);
     }
 
@@ -213,20 +211,20 @@ export class ReservationPublicService {
     if (organizationId === 1) {
       daily = await this.getDailyReservationTime(userId, spaceId, timeFrom);
       weekly = await this.getWeeklyReservationTime(userId, spaceId, timeFrom);
-      isWithinLimits = 
+      isWithinLimits =
         daily + newReservationTime <= maxDayTime &&
         weekly + newReservationTime <= maxWeekTime;
-    }else{
+    } else {
       daily = await this.getDailyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
       weekly = await this.getWeeklyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
-      isWithinLimits = 
+      isWithinLimits =
         daily + newReservationTime <= maxDayTime &&
         weekly + newReservationTime <= maxWeekTime;
     }
 
     if (!isWithinLimits) {
       throw new BadRequestException(
-        `Reservation duration exceeds limits\n(daily: ${daily+newReservationTime} / ${maxDayTime} minutes, weekly: ${weekly+newReservationTime} / ${maxWeekTime} minutes) for ${space.nameEn}`
+        `Reservation duration exceeds limits\n(daily: ${daily + newReservationTime} / ${maxDayTime} minutes, weekly: ${weekly + newReservationTime} / ${maxWeekTime} minutes) for ${space.nameEn}`
       );
     }
 
@@ -308,9 +306,9 @@ export class ReservationPublicService {
       // 모든 예약 데이터 가져오기
       const reservations = await this.reservationRepository.fetch({});
       const reservationContents = await Promise.all(reservations.map(reservation => this.reservationRepository.fetchContent(reservation.id)));
-      
+
       // CSV 헤더와 데이터 생성
-      const headers = ['id', 'userId', 'organizationId', 'spaceId', 'title', 
+      const headers = ['id', 'userId', 'organizationId', 'spaceId', 'title',
         'timeFrom', 'timeTo', 'timePost', 'timeUpdate', 'state',
         'description', 'innerParticipantNumber', 'outerParticipantNumber', 'food', 'desk', 'chair', 'busking', 'workerNeed'
       ];
@@ -335,10 +333,10 @@ export class ReservationPublicService {
           content?.desk || false,
           content?.chair || false,
           content?.busking || false,
-          content?.workerNeed || false
+          content?.worker || false
         ];
       });
-      
+
       const csvContent = [
         headers.join(','),
         ...csvRows.map(row => row.join(','))

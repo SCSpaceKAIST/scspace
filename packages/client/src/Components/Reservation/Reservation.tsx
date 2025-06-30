@@ -97,7 +97,7 @@ export default function Reservation() {
             desk: desk,
             chair: chair,
             busking: check && (spaceId === 13),
-            workerNeed: worker
+            worker: worker
           },
           userId: userInfo.id,
           organizationId: orgId,

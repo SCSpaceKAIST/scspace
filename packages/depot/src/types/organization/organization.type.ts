@@ -5,6 +5,8 @@ import { IOrganizationMemberResponse } from "./organization.member.type";
 export interface IOrganization {
   id: number;
   name: string;
+  verificationStatus: number;
+  hasRoom: boolean;
   delegatorId: number;
   timeRegister: number;
   timeUpdate: number;

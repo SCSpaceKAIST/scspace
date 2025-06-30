@@ -7,6 +7,8 @@ type OrganizationDBResult = InferSelectModel<typeof Organization>;
 export class MOrganization implements IOrganization {
   id: IOrganization['id'];
   name: IOrganization['name'];
+  verificationStatus: IOrganization['verificationStatus'];
+  hasRoom: IOrganization['hasRoom'];
   delegatorId: IOrganization['delegatorId'];
   timeRegister: IOrganization['timeRegister'];
   timeUpdate: IOrganization['timeUpdate'];
@@ -14,6 +16,8 @@ export class MOrganization implements IOrganization {
   constructor(organization: IOrganization) {
     this.id = organization.id;
     this.name = organization.name;
+    this.verificationStatus = organization.verificationStatus;
+    this.hasRoom = organization.hasRoom;
     this.delegatorId = organization.delegatorId;
     this.timeRegister = organization.timeRegister;
     this.timeUpdate = organization.timeUpdate;
@@ -23,6 +27,8 @@ export class MOrganization implements IOrganization {
     return {
       id: organization.id,
       name: organization.name,
+      verificationStatus: organization.verificationStatus,
+      hasRoom: organization.hasRoom,
       delegatorId: organization.delegatorId,
       timeRegister: organization.timeRegister,
       timeUpdate: organization.timeUpdate,

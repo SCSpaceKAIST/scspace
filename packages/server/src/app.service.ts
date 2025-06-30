@@ -142,6 +142,8 @@ export class AppService {
       const organizations: IOrganization = {
         id: 1,
         name: 'individual',
+        verificationStatus: 1,
+        hasRoom: false,
         delegatorId: 1,
         timeRegister: getNow(),
         timeUpdate: getNow(),

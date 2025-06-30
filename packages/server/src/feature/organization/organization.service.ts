@@ -51,6 +51,8 @@ export class OrganizationService {
     const updateData: IOrganization = {
       id: organizationId,
       name: organizationNew.name,
+      verificationStatus: organizationNew.verificationStatus,
+      hasRoom: organizationNew.hasRoom,
       delegatorId: organizationNew.delegatorId,
       timeRegister: organization.timeRegister,
       timeUpdate: organization.timeUpdate,

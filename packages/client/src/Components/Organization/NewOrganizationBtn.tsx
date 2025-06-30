@@ -64,6 +64,8 @@ export default function NewOrganizationBtn({ uid, onSuccess }: {
                                         if (name && uid) {
                                             setOpen(false);
                                             generateOrganization({
+                                                verificationStatus: 1,
+                                                hasRoom: false,
                                                 name: name,
                                                 delegatorId: uid
                                             }, {

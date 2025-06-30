@@ -206,7 +206,7 @@ export class ReservationRepository {
       desk: reservationInput.content.desk,
       chair: reservationInput.content.chair,
       busking: reservationInput.content.busking,
-      workerNeed: reservationInput.content.workerNeed,
+      workerNeed: reservationInput.content.worker,
     } as InferInsertModel<typeof ReservationContent>;
 
     await this.db.insert(ReservationContent).values(insertContentData);
@@ -247,7 +247,7 @@ export class ReservationRepository {
       desk: data.content.desk,
       chair: data.content.chair,
       busking: data.content.busking,
-      workerNeed: data.content.workerNeed,
+      workerNeed: data.content.worker,
     } as InferInsertModel<typeof ReservationContent>;
 
     const [resultContent] = await this.db.update(ReservationContent).set(updateContentData).where(eq(ReservationContent.id, data.id!));

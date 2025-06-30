@@ -126,7 +126,7 @@ export default function CalendarDialog({ open, setOpen, selectedRes, refetch }: 
                                                             # of Worker
                                                         </DataList.ItemLabel>
                                                         <DataList.ItemValue margin={0} >
-                                                            {selectedRes.content.workerNeed}
+                                                            {selectedRes.content.worker}
                                                         </DataList.ItemValue>
                                                     </DataList.Item>
                                                     {(selectedRes.spaceId === 13) && (
