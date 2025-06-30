@@ -12,7 +12,7 @@ export const Rule = mysqlTable('rule', {
     keyId: int('keyId').notNull().default(0),
     order: int('order').notNull().default(0),
     title: varchar('title', { length: 255 }).notNull(),
-    content: varchar('path', { length: 16383 }).notNull(),
+    content: varchar('path', { length: 4095 }).notNull(),
     timeUpdate: bigint('time_post', { mode: 'number' }).notNull(),
     state: int('state').notNull().default(1), // ['hide', 'show']
     // Foreign keys
