@@ -1,0 +1,19 @@
+import {
+  mysqlTable,
+  int,
+  varchar,
+  boolean,
+  bigint,
+} from 'drizzle-orm/mysql-core';
+
+import { User } from './user';
+import { sql } from 'drizzle-orm';
+import { Space } from './space';
+
+// Passpin Table
+export const Passpin = mysqlTable('passpin', {
+  id: int('id').primaryKey().autoincrement().unique(),
+  spaceId: int('space_id').notNull().references(() => Space.id, { onDelete: 'cascade' }),
+  pin: varchar('pin', { length: 128 }).notNull(),
+  timeCreated: bigint('time_created', { mode: 'number' }).notNull(),
+});

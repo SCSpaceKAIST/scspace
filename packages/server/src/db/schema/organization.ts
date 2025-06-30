@@ -2,7 +2,7 @@ import {
   mysqlTable,
   int,
   varchar,
-  timestamp,
+  boolean,
   bigint,
 } from 'drizzle-orm/mysql-core';
 
@@ -13,6 +13,8 @@ import { sql } from 'drizzle-orm';
 export const Organization = mysqlTable('organization', {
   id: int('id').primaryKey().autoincrement().unique(),
   name: varchar('name', { length: 128 }).notNull(),
+  verificationStatus: int('verification_status').notNull().default(1),
+  hasRoom: boolean('has_room').notNull().default(false),
   delegatorId: int('delegator_id')
     .notNull()
     .references(() => User.id, { onDelete: 'cascade' }),

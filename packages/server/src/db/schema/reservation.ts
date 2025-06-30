@@ -42,7 +42,7 @@ export const ReservationContent = mysqlTable('reservation_content', {
   desk: int('desk').notNull().default(0), // For Sumi
   chair: int('chair').notNull().default(0), // For Sumi
   busking: boolean('busking').notNull().default(false),
-  workerNeed: int('worker_need').notNull().default(1), // ['unnecessary', 'required', 'completed', 'failed']
+  worker: int('worker').notNull().default(0), // -2 -> 필요 없음 -1 -> 필요 / 배정 시 UID
 });
 
 export const ReservationRelations = relations(Reservation, ({ one }) => ({
