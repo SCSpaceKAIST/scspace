@@ -11,6 +11,6 @@ import { Space } from './space';
 export const Passpin = mysqlTable('passpin', {
   id: int('id').primaryKey().autoincrement().unique(),
   spaceId: int('space_id').notNull().references(() => Space.id, { onDelete: 'cascade' }),
-  pin: varchar('pin', { length: 128 }).notNull(),
+  pin: varchar('pin', { length: 127 }).notNull(),
   timeCreated: bigint('time_created', { mode: 'number' }).notNull(),
 });

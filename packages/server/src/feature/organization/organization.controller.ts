@@ -6,7 +6,6 @@ import { ISuccessResponse } from '@scspace-depot/types/common';
 import { OrganizationPublicService } from './organization.public.service';
 import { ManageGuard, UserGuard, MemberGuard, DelegatorGuard } from '../auth/jwt/jwt.guard';
 import { AuthGuard } from '@nestjs/passport';
-import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 
 @Controller('organization')
 export class OrganizationController {
