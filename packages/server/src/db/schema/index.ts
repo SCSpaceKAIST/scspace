@@ -5,6 +5,7 @@ import {
 import { Space } from './space';
 import { Organization, OrganizationMember } from './organization';
 import { User } from './user';
+import { Goods, Rental } from './rental';
 
 export {
   Reservation,
@@ -17,10 +18,9 @@ export { User } from './user';
 
 // 스키마에 정의된 모든 테이블을 모아 내보냅니다.
 export const schema = {
-  Reservation,
-  ReservationContent,
+  Reservation, ReservationContent,
   Space,
   User,
-  Organization,
-  OrganizationMember,
+  Organization, OrganizationMember,
+  Goods, Rental,
 };
