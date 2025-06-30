@@ -2,12 +2,9 @@ import {
   mysqlTable,
   int,
   varchar,
-  boolean,
   bigint,
 } from 'drizzle-orm/mysql-core';
 
-import { User } from './user';
-import { sql } from 'drizzle-orm';
 import { Space } from './space';
 
 // Passpin Table
