@@ -17,7 +17,8 @@
     "prod:docker-down": "docker-compose -f docker-compose.prod.yml down",
     "prod:docker-clear": "docker-compose -f docker-compose.prod.yml down -v",
     "migrate": "drizzle-kit migrate --config packages/server/src/db/drizzle.config.ts",
-    "generate": "drizzle-kit generate --config packages/server/src/db/drizzle.config.ts"
+    "generate": "drizzle-kit generate --config packages/server/src/db/drizzle.config.ts",
+    "push": "drizzle-kit push --config packages/server/src/db/drizzle.config.ts"
   },
   "keywords": [],
   "author": "",

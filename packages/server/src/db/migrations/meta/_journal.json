@@ -15,6 +15,13 @@
       "when": 1747670951859,
       "tag": "0001_cute_warpath",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1751299711482,
+      "tag": "0002_round_polaris",
+      "breakpoints": true
     }
   ]
 }
