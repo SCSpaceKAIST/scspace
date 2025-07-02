@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { IPage } from "../PageSelector/PageSelector";

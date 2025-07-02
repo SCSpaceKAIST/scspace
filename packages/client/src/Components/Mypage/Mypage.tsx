@@ -1,3 +1,5 @@
+"use client"
+
 import PageSelector, { IPage } from "../PageSelector/PageSelector";
 import Organization from "../Organization/Organization";
 import UserReservation from "../UserRevervation/UserReservation";
