@@ -35,7 +35,7 @@ function RedirectLinks({ links, onClick }: {
                 margin={0}
             >
                 <Stack separator={<StackSeparator />} >
-                    {links.filter(l => !l.invisible).map((l) => (
+                    {links.filter(l => l.visible ?? true).map((l) => (
                         <Collapsible.Root
                             key={l.href}
                             as={Stack}
@@ -194,13 +194,13 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 href: "/manage",
                 label: "관리",
                 helperText: "Management",
-                invisible: (userInfo?.type != UserTypeEnum.MANAGER) && (userInfo?.type != UserTypeEnum.ADMIN) || true,
+                visible: (userInfo?.type == UserTypeEnum.MANAGER) || (userInfo?.type == UserTypeEnum.ADMIN),
             },
             {
                 href: "/admin",
                 label: "For Dev",
                 helperText: "Developent",
-                invisible: (userInfo?.type != UserTypeEnum.ADMIN) || true,
+                visible: userInfo?.type == UserTypeEnum.ADMIN,
             }
         ]);
     }, [spaceLinks, userInfo]);

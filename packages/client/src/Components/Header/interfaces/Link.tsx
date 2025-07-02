@@ -4,5 +4,5 @@ export default interface ILink {
     label: string;
     subdomains?: ILink[];
     disabled?: boolean;
-    invisible?: boolean;
+    visible?: boolean;
 };
