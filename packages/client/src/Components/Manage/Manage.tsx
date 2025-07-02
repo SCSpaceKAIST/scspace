@@ -1,10 +1,21 @@
 import React from "react";
-// import AskManageList from "@scspace-client/Components/Ask/AskManageList";
 import { useAuth } from "@scspace-client/Hooks/auth";
+import { IPage } from "../PageSelector/PageSelector";
+import ManageUser from "./ManageUser";
 
 export default function Manage() {
-  const { userInfo } = useAuth();
-  if (!userInfo) return <div>로그인이 필요합니다.</div>;
+  const { needManager } = useAuth();
+  needManager();
+
+  const pages: IPage[] = [
+    {
+      kor: "유저 관리",
+      eng: "Manage user",
+      preview: <ManageUser />,
+      href: "/manage/user"
+    }
+  ]
+
   return (
     <div>Management</div>
   );

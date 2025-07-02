@@ -1,8 +1,12 @@
 import PageSelector, { IPage } from "../PageSelector/PageSelector";
 import Organization from "../Organization/Organization";
 import UserReservation from "../UserRevervation/UserReservation";
+import { useAuth } from "@scspace-client/Hooks/auth";
 
 export default function Mypage() {
+  const { needLogin } = useAuth();
+  needLogin();
+
   const pages: IPage[] = [
     {
       kor: "예약 목록",

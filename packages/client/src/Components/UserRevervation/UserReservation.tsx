@@ -31,7 +31,7 @@ import { useOrganization } from "@scspace-client/Hooks/organization";
 
 export default function UserReservation() {
     const { userInfo, needLogin } = useAuth();
-    // needLogin();
+    needLogin();
 
     const [oid, setOid] = useState<number>(0);
     const [_oid, _setOid] = useState<string[]>(["0"]);

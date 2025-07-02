@@ -98,7 +98,7 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
     const [spaceLinks, setSpaceLinks] = useState<ILink[]>([]);
     const [calendarLinks, setCalendarLinks] = useState<ILink[]>([]);
     const [links, setLinks] = useState<ILink[]>([]);
-    const { userInfo } = useAuth();
+    const { userInfo, isAdmin, isManager, isLogined } = useAuth();
 
     useEffect(() => {
         if (spaces) setSpaceLinks(spaces.map((s): ILink => {
@@ -177,6 +177,7 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 href: "/mypage",
                 label: "마이페이지",
                 helperText: "Mypage",
+                visible: isLogined,
                 subdomains: [
                     {
                         href: "/mypage/reservation",
@@ -194,16 +195,23 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 href: "/manage",
                 label: "관리",
                 helperText: "Management",
-                visible: (userInfo?.type == UserTypeEnum.MANAGER) || (userInfo?.type == UserTypeEnum.ADMIN),
+                visible: isManager,
+                subdomains: [
+                    {
+                        href: "/manage/user",
+                        label: "유저 관리",
+                        helperText: "Manage User"
+                    }
+                ]
             },
             {
                 href: "/admin",
                 label: "For Dev",
                 helperText: "Developent",
-                visible: userInfo?.type == UserTypeEnum.ADMIN,
+                visible: isAdmin,
             }
         ]);
-    }, [spaceLinks, userInfo]);
+    }, [spaceLinks, isLogined]);
 
     return (<RedirectLinks links={links} onClick={onClick} />);
 }
