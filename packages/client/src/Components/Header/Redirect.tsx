@@ -194,13 +194,13 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 href: "/manage",
                 label: "관리",
                 helperText: "Management",
-                invisible: (userInfo?.type == UserTypeEnum.MANAGER) || (userInfo?.type == UserTypeEnum.ADMIN) || true,
+                invisible: (userInfo?.type != UserTypeEnum.MANAGER) && (userInfo?.type != UserTypeEnum.ADMIN) || true,
             },
             {
                 href: "/admin",
                 label: "For Dev",
                 helperText: "Developent",
-                invisible: (userInfo?.type == UserTypeEnum.ADMIN) || true,
+                invisible: (userInfo?.type != UserTypeEnum.ADMIN) || true,
             }
         ]);
     }, [spaceLinks, userInfo]);
