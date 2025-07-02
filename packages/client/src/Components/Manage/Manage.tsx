@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { IPage } from "../PageSelector/PageSelector";
+import PageSelector, { IPage } from "../PageSelector/PageSelector";
 import ManageUser from "./ManageUser";
 
 export default function Manage() {
@@ -19,6 +19,8 @@ export default function Manage() {
   ]
 
   return (
-    <div>Management</div>
+    <PageSelector
+      pages={pages}
+    />
   );
 };
