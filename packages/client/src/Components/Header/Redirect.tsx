@@ -10,14 +10,18 @@ import {
     Field,
     Collapsible,
     Grid,
-    GridItem,
     IconButton,
 } from "@chakra-ui/react";
 import { HiPlus } from "react-icons/hi2";
 import { useAllSpace } from "@scspace-client/Hooks/space";
 import { useLinkPush } from "@scspace-client/Hooks/api";
+import { useAuth } from "@scspace-client/Hooks/auth";
+import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
-function RedirectLinks({ links, onClick }: { links: ILink[]; onClick: () => void }) {
+function RedirectLinks({ links, onClick }: {
+    links: ILink[];
+    onClick: () => void
+}) {
     const { linkPush } = useLinkPush();
 
     return (
@@ -31,7 +35,7 @@ function RedirectLinks({ links, onClick }: { links: ILink[]; onClick: () => void
                 margin={0}
             >
                 <Stack separator={<StackSeparator />} >
-                    {links.map((l) => (
+                    {links.filter(l => !l.invisible).map((l) => (
                         <Collapsible.Root
                             key={l.href}
                             as={Stack}
@@ -94,6 +98,7 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
     const [spaceLinks, setSpaceLinks] = useState<ILink[]>([]);
     const [calendarLinks, setCalendarLinks] = useState<ILink[]>([]);
     const [links, setLinks] = useState<ILink[]>([]);
+    const { userInfo } = useAuth();
 
     useEffect(() => {
         if (spaces) setSpaceLinks(spaces.map((s): ILink => {
@@ -106,13 +111,13 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
     }, [spaces]);
 
     useEffect(() => {
-        if (spaces) setCalendarLinks(spaces.map((s): ILink => {
-            return {
+        if (spaces) setCalendarLinks(
+            spaces.map((s): ILink => ({
                 href: `/calendar/${s.id}`,
                 helperText: s.nameEn,
                 label: s.nameKr,
-            }
-        }))
+            }))
+        )
     }, [spaces]);
 
     useEffect(() => {
@@ -185,14 +190,20 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                     }
                 ]
             },
-            // {
-            //     href: "/manage",
-            //     label: "관리",
-            //     helperText: "Management",
-            //     disabled: true
-            // }
+            {
+                href: "/manage",
+                label: "관리",
+                helperText: "Management",
+                invisible: (userInfo?.type == UserTypeEnum.MANAGER) || (userInfo?.type == UserTypeEnum.ADMIN) || true,
+            },
+            {
+                href: "/admin",
+                label: "For Dev",
+                helperText: "Developent",
+                invisible: (userInfo?.type == UserTypeEnum.ADMIN) || true,
+            }
         ]);
-    }, [spaceLinks]);
+    }, [spaceLinks, userInfo]);
 
     return (<RedirectLinks links={links} onClick={onClick} />);
 }

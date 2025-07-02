@@ -5,6 +5,7 @@ import { useState, useRef } from "react";
 import { useOrganizationAPI, } from "@scspace-client/Hooks/organization";
 import InputComponent from "../Reservation/forms/utils/Input";
 import { HiPlus } from "react-icons/hi2";
+import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
 
 export default function NewOrganizationBtn({ uid, onSuccess }: {
     uid: number | null;
@@ -64,7 +65,7 @@ export default function NewOrganizationBtn({ uid, onSuccess }: {
                                         if (name && uid) {
                                             setOpen(false);
                                             generateOrganization({
-                                                verificationStatus: 1,
+                                                verificationStatus: OrganizationStatusEnum.REGISTER_REQUEST,
                                                 hasRoom: false,
                                                 name: name,
                                                 delegatorId: uid

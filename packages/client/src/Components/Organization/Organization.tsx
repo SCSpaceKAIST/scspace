@@ -87,6 +87,16 @@ export default function Organization() {
                                 interactive
                                 colorPalette="blue"
                             >
+                                <Table.ColumnGroup>
+                                    <Table.Column htmlWidth={isWide ? "25%" : "50%"} />
+                                    <Table.Column htmlWidth={isWide ? "25%" : "50%"} />
+                                    {isWide && (
+                                        <>
+                                            <Table.Column htmlWidth="25%" />
+                                            <Table.Column htmlWidth="25%" />
+                                        </>
+                                    )}
+                                </Table.ColumnGroup>
                                 <Table.Header >
                                     <Table.Row bg="bg.muted">
                                         <Table.ColumnHeader>

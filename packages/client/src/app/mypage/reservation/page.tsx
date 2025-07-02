@@ -1,5 +1,5 @@
 import PageTemplete from "@scspace-client/Components/_commons/PageTemplete";
-import UserReservation from "@scspace-client/Components/Mypage/UserRevervation/UserReservation";
+import UserReservation from "@scspace-client/Components/UserRevervation/UserReservation";
 
 export default function SpacePage() {
   return (

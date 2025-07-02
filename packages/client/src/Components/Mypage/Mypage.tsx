@@ -1,6 +1,6 @@
 import PageSelector, { IPage } from "../PageSelector/PageSelector";
 import Organization from "../Organization/Organization";
-import UserReservation from "./UserRevervation/UserReservation";
+import UserReservation from "../UserRevervation/UserReservation";
 
 export default function Mypage() {
   const pages: IPage[] = [
