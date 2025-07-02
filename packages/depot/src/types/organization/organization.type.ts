@@ -1,4 +1,4 @@
-import { OrganizationStatusEnum } from "enums/organization.enum";
+import { OrganizationStatusEnum } from "../../enums/organization.enum";
 import { IUser } from "../user";
 import { IOrganizationMemberResponse } from "./organization.member.type";
 
