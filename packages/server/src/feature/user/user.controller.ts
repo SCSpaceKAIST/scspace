@@ -1,10 +1,11 @@
-import { Controller, Get, Param, ParseIntPipe, Post, Body, Delete, Put, UseGuards, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Post, Body, Delete, Put, UseGuards, NotFoundException, Patch, Query } from '@nestjs/common';
 import { UserService } from './user.service';
-import { IUser, IUserCreate } from '@scspace-depot/types/user';
+import { IUser, IUserCreate, IUserUpdate } from '@scspace-depot/types/user';
 import { ISuccessResponse } from '@scspace-depot/types/common';
 import { UserPublicService } from './user.public.service';
-import { ManageGuard } from '../auth/jwt/jwt.guard';
+import { AdminGuard, ManageGuard } from '../auth/jwt/jwt.guard';
 import { AuthGuard } from '@nestjs/passport';
+import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 @Controller('user')
 export class UserController {
   constructor(
@@ -15,7 +16,9 @@ export class UserController {
   //HOOK: useUserInfo
   @UseGuards(ManageGuard)
   @Get(':id')
-  async getUserById(@Param('id', ParseIntPipe) id: number): Promise<IUser> {
+  async getUserById(
+    @Param('id', ParseIntPipe) id: number
+  ): Promise<IUser> {
     const user = await this.userPublicService.fetchById(id);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -24,15 +27,19 @@ export class UserController {
   }
 
   @UseGuards(ManageGuard)
-  @Get()
-  async getUsers(): Promise<IUser[]> {
-    return await this.userPublicService.fetchAll();
+  @Get('all')
+  async getUsers(
+    @Query('studentNumberPrefix', ParseIntPipe) studentNumber?: number,
+  ): Promise<IUser[]> {
+    return await this.userPublicService.fetchAll(studentNumber ?? 0);
   }
 
   //HOOK: useUserInfo
   @UseGuards(AuthGuard('jwt'))
   @Get('studentNumber/:studentNumber')
-  async getUserByStudentNumber(@Param('studentNumber', ParseIntPipe) studentNumber: number): Promise<IUser> {
+  async getUserByStudentNumber(
+    @Param('studentNumber', ParseIntPipe) studentNumber: number
+  ): Promise<IUser> {
 
     const user = await this.userPublicService.fetchByStudentNumber(studentNumber);
     if (!user) {
@@ -49,10 +56,21 @@ export class UserController {
     return await this.userService.insert(body);
   }
 
+  @UseGuards(AdminGuard)
+  @Patch(':id')
+  async patchUserType(
+    @Param('id', ParseIntPipe) uid: number,
+    @Body() body: IUserUpdate
+  ): Promise<IUser> {
+    return await this.userService.updateType(uid, body);
+  }
+
   //HOOK: useUserInfo
   @UseGuards(ManageGuard)
   @Delete(':id')
-  async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<ISuccessResponse> {
+  async deleteUser(
+    @Param('id', ParseIntPipe) id: number
+  ): Promise<ISuccessResponse> {
     return await this.userService.delete(id);
   }
 }

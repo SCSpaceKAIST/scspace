@@ -3,7 +3,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { IUser } from '@scspace-depot/types/user';
 import { OrganizationPublicService } from '@scspace-server/feature/organization/organization.public.service';
-import { OrganizationService } from '@scspace-server/feature/organization/organization.service';
 import { ReservationPublicService } from '@scspace-server/feature/reservation/reservation.public.service';
 
 function isManage(user: IUser): boolean {
@@ -16,10 +15,10 @@ export class ManageGuard extends AuthGuard('jwt') {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const can = await super.canActivate(context);
     if (!can) return false;
-    
+
     const request = context.switchToHttp().getRequest();
     const user = request.user as IUser;
-    
+
     if (isManage(user)) {
       return true;
     }
@@ -32,10 +31,10 @@ export class AdminGuard extends AuthGuard('jwt') {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const can = await super.canActivate(context);
     if (!can) return false;
-    
+
     const request = context.switchToHttp().getRequest();
     const user = request.user as IUser;
-    
+
     if (user.type === UserTypeEnum.ADMIN) {
       return true;
     }
@@ -84,16 +83,16 @@ export class MemberGuard extends AuthGuard('jwt') {
     let id = 0;
     if (request.params?.id) {
       id = parseInt(request.params.id);
-      if (id === 1){
+      if (id === 1) {
         if (user.type === UserTypeEnum.ADMIN || user.type === UserTypeEnum.MANAGER) {
           return true;
-        } else{
+        } else {
           return false
         }
       }
     } else if (request.body?.organizationId) {
       id = parseInt(request.body.organizationId);
-      if (id === 1){
+      if (id === 1) {
         const individualUser = request.body.userId;
         if (parseInt(individualUser) === user.id) {
           return true;

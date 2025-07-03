@@ -51,7 +51,7 @@ export const useQueryApi = <ResponseType>(
 
 export const useMutationApi = <ResponseType, RequestParamType extends object>(
   endpoint: string,
-  method: "POST" | "PUT" | "DELETE" | "GET",
+  method: "POST" | "PUT" | "DELETE" | "GET" | "PATCH",
 ) => {
   const queryClient = useQueryClient();
 

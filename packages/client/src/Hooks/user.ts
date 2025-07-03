@@ -1,8 +1,9 @@
 "use client"
 
-import { IUser } from "@scspace-depot/types/user";
-import { useQueryApi } from "./api"
+import { IUser, IUserUpdate } from "@scspace-depot/types/user";
+import { useQueryApi, useMutationApi } from "./api"
 import { useEffect, useState } from "react";
+import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 export function useUserInfo({ uid }: { uid: Number }) {
     const { data, isLoading, refetch } = useQueryApi<IUser>(`/user/profile/${uid}`);
@@ -20,8 +21,15 @@ export function useUserInfo({ uid }: { uid: Number }) {
     return { userInfo, isLoading, refetch };
 }
 
-export function useAllUser() {
-    const { data, isLoading, refetch } = useQueryApi<IUser[]>(`/user/`);
+export function useAllUser(options: { studentNumber?: number } = {}) {
+    useEffect(() => {
+
+    }, [options]);
+
+    const { data, isLoading, refetch } = useQueryApi<IUser[]>(
+        "/user/all?" +
+            options.studentNumber ? `studentNumberPrefix=${options.studentNumber}` : ""
+    );
     const [users, setUsers] = useState<IUser[] | null>(null);
 
     useEffect(() => {
@@ -50,5 +58,15 @@ export function useStudent({ studentNumber }: { studentNumber: string }) {
     }, [studentNumber, data]);
 
     return { student, isLoading, refetch };
+}
 
+export function useUserAPI({ uid }: { uid: number }) {
+    const updateUserType = useMutationApi<IUser, IUserUpdate>(
+        `/user/${uid}`,
+        "PATCH"
+    ).mutate;
+
+    return {
+        updateUserType
+    }
 }

@@ -1,17 +1,17 @@
-import { Injectable, Inject, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, Inject, Logger, NotFoundException } from '@nestjs/common';
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema, User } from 'src/db/schema';
-import { and, eq, inArray, InferInsertModel, SQL } from 'drizzle-orm';
-import { IUserCreate } from '@scspace-depot/types/user';
+import { and, asc, desc, eq, gt, inArray, InferInsertModel, like, SQL } from 'drizzle-orm';
+import { IUserCreate, IUserUpdate } from '@scspace-depot/types/user';
 import { MUser } from './user.model';
-import { takeOne } from 'src/common/util';
+import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 
 @Injectable()
 export class UserRepository {
   constructor(
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
-  ) {}
+  ) { }
 
   async fetch(params: {
     id?: number;
@@ -19,7 +19,7 @@ export class UserRepository {
     studentNumber?: number;
   }): Promise<MUser[]> {
     const whereConditions: SQL[] = [];
-    
+
     if (params.id) {
       whereConditions.push(eq(User.id, params.id));
     }
@@ -38,8 +38,22 @@ export class UserRepository {
     return users;
   }
 
-  async fetchAll(): Promise<MUser[]> {
-    const users = await this.db.select().from(User);
+  async fetchAll(
+    studentNumber: number
+  ): Promise<MUser[]> {
+    const whereConditions: SQL[] = [];
+
+    if (studentNumber != 0)
+      whereConditions.push(like(User.studentNumber, `${studentNumber}%`))
+
+    const users = await this.db
+      .select()
+      .from(User)
+      .where(and(...whereConditions))
+      .orderBy(
+        desc(User.type),
+        asc(User.studentNumber)
+      );
     return users;
   }
 
@@ -62,6 +76,20 @@ export class UserRepository {
     }
     Logger.log('ADD USER ' + JSON.stringify(user));
     return userCreated[0];
+  }
+
+  async updateType(id: number, user: IUserUpdate): Promise<MUser> {
+    await this.db
+      .update(User)
+      .set({ type: user.type })
+      .where(eq(User.id, id));
+
+    const updatedUser = await this.fetch({ id: id });
+    if (updatedUser.length === 0) {
+      throw new NotFoundException(`User ID ${id} not found after update.`);
+    }
+    Logger.log('UPDATE USER ' + JSON.stringify(user));
+    return updatedUser[0];
   }
 
   async delete(id: number): Promise<void> {

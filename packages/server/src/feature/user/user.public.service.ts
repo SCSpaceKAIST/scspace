@@ -7,7 +7,7 @@ import { UserService } from './user.service';
 
 @Injectable()
 export class UserPublicService {
-  constructor(private readonly userRepository: UserRepository, private readonly userService: UserService) {}
+  constructor(private readonly userRepository: UserRepository, private readonly userService: UserService) { }
 
   async fetchById(id: number): Promise<IUser | null> {
     if (id === 0) {
@@ -22,7 +22,7 @@ export class UserPublicService {
 
   async fetchByStudentNumber(studentNumber: number): Promise<IUser | null> {
     const user = await this.userRepository.fetch({ studentNumber: studentNumber });
-    if (user.length === 0) { 
+    if (user.length === 0) {
       return null;
     }
     return MUser.fromDB(user[0]);
@@ -37,8 +37,8 @@ export class UserPublicService {
     return users.map(MUser.fromDB);
   }
 
-  async fetchAll(): Promise<IUser[]> {
-    return (await this.userRepository.fetchAll()).map(MUser.fromDB);
+  async fetchAll(studentNumber: number): Promise<IUser[]> {
+    return (await this.userRepository.fetchAll(studentNumber)).map(MUser.fromDB);
   }
 
   async insert(user: IUserCreate): Promise<IUser> {
@@ -46,7 +46,7 @@ export class UserPublicService {
   }
 
   async count(): Promise<number> {
-    return (await this.userRepository.fetchAll()).length;
+    return (await this.userRepository.fetchAll(0)).length;
   }
 
   async isManager(userId: number): Promise<boolean> {
