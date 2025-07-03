@@ -1,5 +1,5 @@
-import SpaceCalendar from "@scspace-client/Components/Calendar/SpaceCalendar";
-import PageTemplete from "@scspace-client/Components/_commons/PageTemplete";
+import SpaceCalendar from "@scspace-client/Components/organisms/Calendar/SpaceCalendar";
+import PageTemplete from "@scspace-client/Components/atoms/PageTemplete";
 
 export default function SpacePage() {
   return (

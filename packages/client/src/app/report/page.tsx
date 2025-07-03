@@ -1,6 +1,6 @@
 import { Center, IconButton, Link, Text, VStack } from "@chakra-ui/react";
-import PageTemplete from "@scspace-client/Components/_commons/PageTemplete";
-import Scroll from "@scspace-client/Components/_commons/Scroll";
+import PageTemplete from "@scspace-client/Components/atoms/PageTemplete";
+import Scroll from "@scspace-client/Components/atoms/Scroll";
 import { HiEnvelope } from "react-icons/hi2";
 
 export default function SpacePage() {

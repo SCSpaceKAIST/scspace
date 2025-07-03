@@ -1,10 +1,10 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import PageTemplete from "@scspace-client/Components/_commons/PageTemplete";
+import PageTemplete from "@scspace-client/Components/atoms/PageTemplete";
 import { useSpace } from "@scspace-client/Hooks/space";
-import LoadingComponent from "@scspace-client/Components/Loading/Loading";
-import Calendar from "@scspace-client/Components/Calendar/Calendar";
+import LoadingComponent from "@scspace-client/Components/atoms/Loading";
+import Calendar from "@scspace-client/Components/templates/Calendar";
 
 export default function SpacePage() {
     const params = useParams();

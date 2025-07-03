@@ -1,19 +1,20 @@
 import "./globals.css";
 import "../../static/css/main.css";
-import Header from "@scspace-client/Components/Header";
+import Header from "@scspace-client/Components/organisms/Header/Header";
 import { ReactNode } from "react";
 import Providers from "./providers";
 import { Box, Flex, Grid, } from "@chakra-ui/react";
-import ToasterComponent from "@scspace-client/Components/_commons/Toaster";
+import ToasterComponent from "@scspace-client/Components/atoms/Toaster";
 
 export const metadata = {
-  title: "학생문화공간위원회",
-  description: "학생문화공간위원회 웹사이트",
-  viewport: {
-    width: "device-width",
-    initialScale: 1.0,
-    maximumScale: 1.0,
-  },
+  title: "KAIST SCSpace",
+  description: "Website for KAIST Student Curture and Space Commitee",
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1.0,
+  maximumScale: 1.0,
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
