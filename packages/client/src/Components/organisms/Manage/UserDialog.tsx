@@ -2,7 +2,7 @@
 
 import { Dialog, Portal, HStack, useBreakpointValue, DataList, Separator, Text, Button, Center, VStack } from "@chakra-ui/react";
 import { Dispatch, SetStateAction } from "react";
-import LoadingComponent from "@scspace-client/Components/atoms/Loading";
+import LoadingComponent from "@scspace-client/Components/templates/Loading";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 import { IUser } from "@scspace-depot/types/user";
 import { useUserAPI } from "@scspace-client/Hooks/user";

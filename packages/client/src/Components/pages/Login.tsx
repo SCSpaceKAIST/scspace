@@ -1,12 +1,12 @@
 "use client";
 
 import { Box, Button, Card, Center, CloseButton, Dialog, DialogPositioner, HStack, Portal, Separator, Stack, StackSeparator, Tabs, Text, useBreakpointValue } from "@chakra-ui/react";
-import Scroll from "../atoms/Scroll";
+import Scroll from "../templates/Scroll";
 import PrivacyPolicy from "../organisms/Login/PrivacyPolicy";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useState } from "react";
 import Image from "next/image";
-import TooltipComponent from "../atoms/Tooptip";
+import TooltipComponent from "../templates/Tooptip";
 
 export default function SSOLogin() {
     const isWide = useBreakpointValue({ base: false, md: true });

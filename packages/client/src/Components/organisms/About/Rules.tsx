@@ -1,5 +1,5 @@
 import { Blockquote, Field, Fieldset, Heading, Stack, Text } from "@chakra-ui/react";
-import Scroll from "@scspace-client/Components/atoms/Scroll";
+import Scroll from "@scspace-client/Components/templates/Scroll";
 
 export default function Rules() {
     return (

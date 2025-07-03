@@ -4,7 +4,7 @@ import Header from "@scspace-client/Components/organisms/Header/Header";
 import { ReactNode } from "react";
 import Providers from "./providers";
 import { Box, Flex, Grid, } from "@chakra-ui/react";
-import ToasterComponent from "@scspace-client/Components/atoms/Toaster";
+import ToasterComponent from "@scspace-client/Components/templates/Toaster";
 
 export const metadata = {
   title: "KAIST SCSpace",

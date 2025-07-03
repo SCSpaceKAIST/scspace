@@ -21,13 +21,13 @@ import {
   WorkerForm,
   DateForm,
 } from "../organisms/Reservation/index";
-import Scroll from "../atoms/Scroll";
+import Scroll from "../templates/Scroll";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { SmallLoading } from "../atoms/Loading";
+import { SmallLoading } from "../templates/Loading";
 import { CalendarView } from "../organisms/Calendar/CalendarView";
 import { HourForm } from "../organisms/Reservation/elements/Hour";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
-import { toaster } from "../atoms/Toaster";
+import { toaster } from "../templates/Toaster";
 import { useDate } from "@scspace-client/Hooks/utils";
 
 export default function Reservation() {

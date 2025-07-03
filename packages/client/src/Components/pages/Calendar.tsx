@@ -10,9 +10,9 @@ import {
   CloseButton,
   IconButton,
 } from "@chakra-ui/react";
-import Scroll from "../atoms/Scroll";
+import Scroll from "../templates/Scroll";
 import { useEffect, useState } from "react";
-import LoadingComponent from "../atoms/Loading";
+import LoadingComponent from "../templates/Loading";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";

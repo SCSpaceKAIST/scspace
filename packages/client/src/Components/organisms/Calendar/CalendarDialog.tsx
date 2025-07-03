@@ -6,7 +6,7 @@ import { useDate } from "@scspace-client/Hooks/utils";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import { Dispatch, SetStateAction } from "react";
 import DeleteBtn from "./DeleteBtn";
-import LoadingComponent from "../../atoms/Loading";
+import LoadingComponent from "../../templates/Loading";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 export default function CalendarDialog({ open, setOpen, selectedRes, refetch }: {

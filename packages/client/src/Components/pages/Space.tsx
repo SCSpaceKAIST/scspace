@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import PageSelector, { IPage, } from "../atoms/PageSelector";
+import PageSelector, { IPage, } from "../templates/PageSelector";
 import { useAllSpace } from "@scspace-client/Hooks/space";
 import SpaceIntro from "../organisms/Space/SpaceIntro";
 
