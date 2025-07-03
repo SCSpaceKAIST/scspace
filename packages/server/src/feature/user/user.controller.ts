@@ -29,7 +29,7 @@ export class UserController {
   @UseGuards(AdminGuard)
   @Get('all')
   async getUsers(
-    @Query('studentNumberPrefix', ParseIntPipe) studentNumberPrefix: number,
+    @Query('studentNumberPrefix') studentNumberPrefix: number,
   ): Promise<IUser[]> {
     return await this.userPublicService.fetchAll(studentNumberPrefix);
   }
