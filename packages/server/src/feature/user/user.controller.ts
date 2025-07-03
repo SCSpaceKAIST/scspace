@@ -13,19 +13,6 @@ export class UserController {
     private readonly userPublicService: UserPublicService,
   ) { }
 
-  //HOOK: useUserInfo
-  @UseGuards(ManageGuard)
-  @Get(':id')
-  async getUserById(
-    @Param('id', ParseIntPipe) id: number
-  ): Promise<IUser> {
-    const user = await this.userPublicService.fetchById(id);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-    return user;
-  }
-
   @UseGuards(AdminGuard)
   @Get('all')
   async getUsers(
@@ -42,6 +29,19 @@ export class UserController {
   ): Promise<IUser> {
 
     const user = await this.userPublicService.fetchByStudentNumber(studentNumber);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+
+  //HOOK: useUserInfo
+  @UseGuards(ManageGuard)
+  @Get(':id')
+  async getUserById(
+    @Param('id', ParseIntPipe) id: number
+  ): Promise<IUser> {
+    const user = await this.userPublicService.fetchById(id);
     if (!user) {
       throw new NotFoundException('User not found');
     }
