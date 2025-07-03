@@ -5,7 +5,6 @@ config();
 const { DB_HOST, DB_PORT, DB_USER, DB_PWD, DB_NAME } = process.env;
 const DB_URL = `mysql://${DB_USER}:${DB_PWD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`;
 
-console.log('##############');
 console.log(path.resolve(__dirname, './schema'));
 console.log(path.resolve(__dirname, './migrations'));
 

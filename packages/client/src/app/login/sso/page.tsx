@@ -70,12 +70,9 @@ const LoginPage: React.FC = () => {
     // form.action = 'http://localhost:33001/api/auth/login';
 
     // document.body.appendChild(form);
-    // console.log(form);
     // form.submit();
 
   }, [isLogined, linkPush]);
-  console.log("isLogined", isLogined);
-  console.log("test");
 
   return (
     <Scroll>

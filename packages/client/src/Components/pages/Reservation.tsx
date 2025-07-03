@@ -109,11 +109,9 @@ export default function Reservation() {
         {
           onSuccess: (res) => {
             setCount(c => c + 1);
-            console.log("SUCCESS", res)
           },
           onError: (error) => {
             setE(error.message);
-            console.log("ERROR\n", error.message);
           },
         }
       ),

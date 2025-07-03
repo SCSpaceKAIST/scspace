@@ -19,7 +19,6 @@ export class MailService {
             context, // 템플릿에 전달할 데이터
             replyTo: "no-reply.scspace@kaist.ac.kr"
         }).then((res) => {
-            console.log(res);
             return { success: true };
         }
         ).catch((error) => {

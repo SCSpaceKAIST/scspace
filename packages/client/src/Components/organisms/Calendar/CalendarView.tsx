@@ -37,7 +37,6 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
             return;
         }
         const filtered = reservations.find(r => (r.id === selected));
-        console.log(reservations, filtered);
         if (!filtered) {
             setSelectedRes(null);
             return;

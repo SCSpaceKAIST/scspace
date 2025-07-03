@@ -79,9 +79,8 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
     const addOrganizationMember = useOrganizationAPI({ id: oid }).addMember;
 
     function save() {
-        for (const s of selected) {
-            console.log(addOrganizationMember({ userId: s.id, }));
-        }
+        for (const s of selected)
+            addOrganizationMember({ userId: s.id, });
     }
 
     const dialogSize = useBreakpointValue<"full" | "md">({ base: "full", md: "md" });
@@ -89,7 +88,6 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
     return (
         <Dialog.Root size={dialogSize} placement="center"
             onOpenChange={() => {
-                console.log(1)
                 setvalue(["", "", "", "", "", "", "", "",]);
                 setSid("");
                 setSelected([]);
