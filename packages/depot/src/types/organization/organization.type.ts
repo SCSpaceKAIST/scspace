@@ -6,7 +6,7 @@ import { IOrganizationMemberResponse } from "./organization.member.type";
 export interface IOrganization {
   id: number;
   name: string;
-  verificationStatus: OrganizationStatusEnum;
+  status: OrganizationStatusEnum;
   hasRoom: boolean;
   delegatorId: number;
   timeRegister: number;
@@ -24,7 +24,7 @@ export type IOrganizationDelegator = IOrganization & {
 
 export type IOrganizationCreate = Omit<
   IOrganization,
-  "id" | "timeRegister" | "timeUpdate"
+  "id" | "timeRegister" | "timeUpdate" | "status"
 >;
 
 export type IOrganizationUpdate = Omit<

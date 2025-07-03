@@ -17,7 +17,7 @@ export const Organization = mysqlTable('organization', {
     .unique(),
   name: varchar('name', { length: 128 })
     .notNull(),
-  verificationStatus: int('verification_status')
+  status: int('status')
     .notNull()
     .default(OrganizationStatusEnum.REGISTER_REQUEST),
   hasRoom: boolean('has_room')
