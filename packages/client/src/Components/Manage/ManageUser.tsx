@@ -18,6 +18,7 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { useAllUser } from "@scspace-client/Hooks/user";
 import { IUser } from "@scspace-depot/types/user";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
+import UserDialog from "./UserDialog";
 
 function classify(type: UserTypeEnum): string {
     switch (type) {
@@ -38,18 +39,18 @@ export default function ManageUser() {
 
     const { users, refetch } = useAllUser();
 
-    const [selected, setSelected] = useState<number>(0);
+    const [selected, setSelected] = useState<IUser | null>(null);
     const [open, setOpen] = useState<boolean>(false);
     const isWide = useBreakpointValue({ base: false, md: true });
 
     return (
         <>
-            {/* <CalendarDialog
+            <UserDialog
                 open={open}
                 setOpen={setOpen}
-                selectedRes={selected}
+                user={selected}
                 refetch={refetch}
-            /> */}
+            />
             <Scroll>
                 {!users ? (
                     <LoadingComponent />
@@ -126,7 +127,7 @@ export default function ManageUser() {
                                         <Table.Row
                                             key={u.id}
                                             onClick={() => {
-                                                setSelected(u.id);
+                                                setSelected(u);
                                                 setOpen(true);
                                             }}
                                             cursor="pointer"
