@@ -1,13 +1,13 @@
+import NumberInputComponent from "@scspace-client/Components/molecules/NumberInput";
 import { Dispatch, SetStateAction } from "react";
-import NumberInputComponent from "../utils/NumberInput";
 
-export function InnerPeopleForm({ count, setCount }: {
+export function ChairForm({ count, setCount }: {
   count: number;
   setCount: Dispatch<SetStateAction<number>>;
 }) {
   return (
     <NumberInputComponent
-      label="Inner Participant Number"
+      label="Chair"
       value={count.toString()}
       onChange={v => setCount(parseInt(v))}
     />

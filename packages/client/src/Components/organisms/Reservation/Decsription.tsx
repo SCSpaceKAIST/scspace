@@ -1,5 +1,5 @@
+import TextareaComponent from "@scspace-client/Components/atoms/Textarea";
 import { Dispatch, SetStateAction } from "react";
-import TextareaComponent from "../utils/Textarea";
 
 export function DescriptionForm({ description, setDescription }: {
   description: string;

@@ -20,14 +20,14 @@ import {
   ChairForm,
   WorkerForm,
   DateForm,
-} from "../organisms/Reservation/index";
-import Scroll from "../templates/Scroll";
+  HourForm
+} from "@scspace-client/Components/organisms/Reservation/index";
+import Scroll from "@scspace-client/Components/templates/Scroll";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { SmallLoading } from "../templates/Loading";
-import { CalendarView } from "../organisms/Calendar/CalendarView";
-import { HourForm } from "../organisms/Reservation/elements/Hour";
+import { SmallLoading } from "@scspace-client/Components/templates/Loading";
+import { CalendarView } from "@scspace-client/Components/organisms/Calendar/CalendarView";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
-import { toaster } from "../templates/Toaster";
+import { toaster } from "@scspace-client/Components/templates/Toaster";
 import { useDate } from "@scspace-client/Hooks/utils";
 
 export default function Reservation() {

@@ -1,6 +1,6 @@
 "use client"
 
-import SelectComponent, { ISelectOption } from "../utils/Select";
+import SelectComponent, { ISelectOption } from "@scspace-client/Components/atoms/Select";
 import { useAllSpace } from "@scspace-client/Hooks/space";
 import { SmallLoading } from "@scspace-client/Components/templates/Loading";
 import { Dispatch, SetStateAction } from "react";

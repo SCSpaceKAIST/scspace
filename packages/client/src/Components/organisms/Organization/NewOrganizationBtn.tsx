@@ -3,7 +3,7 @@
 import { Button, Dialog, Portal, IconButton, useBreakpointValue, } from "@chakra-ui/react";
 import { useState, useRef } from "react";
 import { useOrganizationAPI, } from "@scspace-client/Hooks/organization";
-import InputComponent from "../Reservation/utils/Input";
+import InputComponent from "../../atoms/Input";
 import { HiPlus } from "react-icons/hi2";
 
 export default function NewOrganizationBtn({ uid, onSuccess }: {

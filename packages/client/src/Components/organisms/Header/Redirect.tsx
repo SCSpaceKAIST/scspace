@@ -204,7 +204,7 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 visible: isAdmin,
                 subdomains: [
                     {
-                        href: "/manage/user",
+                        href: "/admin/user",
                         label: "유저 관리",
                         helperText: "Manage User"
                     }

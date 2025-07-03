@@ -21,38 +21,48 @@ export const useAuth = () => {
       alert(message);
   }
 
-  const _forceRedirectToLogin = () => {
-    alertMessage("Sign in is needed");
-    linkPush("/login");
+  interface AuthCheckOptions {
+    hasPermission?: boolean;
+    notAllowedMessage?: string;
+    redirectPath?: string;
+  };
+
+  function checkAuth({
+    hasPermission = true,
+    notAllowedMessage = "",
+    redirectPath = "/",
+  }: AuthCheckOptions) {
+    if (isLoading) return;
+    if (!isLogined) {
+      alertMessage("Sign in is needed");
+      linkPush("/login");
+      return;
+    }
+    if (!hasPermission) {
+      alertMessage(notAllowedMessage);
+      linkPush(redirectPath);
+      return;
+    }
   }
 
-  const needLogin = () => {
-    if (!isLoading && !isLogined) _forceRedirectToLogin();
-  };
+  const needLogin = () => checkAuth({
+    redirectPath: "/login"
+  });
 
-  const needWorker = () => {
-    if (!isLoading && !isLogined) _forceRedirectToLogin();
-    else if (!isWorker) {
-      alertMessage("The page only for worker; in Korean, 근로장학생.");
-      linkPush("/");
-    }
-  };
+  const needWorker = () => checkAuth({
+    hasPermission: isWorker,
+    notAllowedMessage: "The page only for worker; in Korean, 근로장학생.",
+  });
 
-  const needManager = () => {
-    if (!isLoading && !isLogined) _forceRedirectToLogin();
-    else if (!isManager) {
-      alertMessage("The page only for manager, a member of SCSpace.");
-      linkPush("/");
-    }
-  };
+  const needManager = () => checkAuth({
+    hasPermission: isManager,
+    notAllowedMessage: "The page only for manager, a member of SCSpace.",
+  });
 
-  const needAdmin = () => {
-    if (!isLoading && !isLogined) _forceRedirectToLogin();
-    else if (!isAdmin) {
-      alertMessage("The page only for administrator, a executive of SCSpace.");
-      linkPush("/");
-    }
-  };
+  const needAdmin = () => checkAuth({
+    hasPermission: isAdmin,
+    notAllowedMessage: "The page only for administrator, a executive of SCSpace.",
+  });
 
   return {
     refetch,

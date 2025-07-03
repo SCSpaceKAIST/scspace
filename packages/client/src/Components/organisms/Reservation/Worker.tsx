@@ -1,4 +1,4 @@
-import NumberInputComponent from "../utils/NumberInput";
+import NumberInputComponent from "@scspace-client/Components/molecules/NumberInput";
 import { Dispatch, SetStateAction } from "react";
 
 export function WorkerForm({ count, setCount }: {

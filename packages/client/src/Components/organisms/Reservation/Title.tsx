@@ -1,5 +1,5 @@
+import InputComponent from "@scspace-client/Components/atoms/Input";
 import { Dispatch, SetStateAction } from "react";
-import InputComponent from "../utils/Input";
 
 export function TitleForm({ title, setTitle }: {
   title: string;
