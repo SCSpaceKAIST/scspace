@@ -61,7 +61,7 @@ export default function UserDialog({ open, setOpen, user, refetch }: {
                                                 Update Type
                                             </DataList.ItemLabel>
                                             <DataList.ItemValue margin={0}>
-                                                <VStack>
+                                                <HStack>
                                                     <Button onClick={() => updateUserType({ type: UserTypeEnum.USER })}>
                                                         User
                                                     </Button>
@@ -74,7 +74,7 @@ export default function UserDialog({ open, setOpen, user, refetch }: {
                                                     <Button onClick={() => updateUserType({ type: UserTypeEnum.ADMIN })}>
                                                         Admin
                                                     </Button>
-                                                </VStack>
+                                                </HStack>
                                             </DataList.ItemValue>
                                         </DataList.Item>
                                     </DataList.Root>

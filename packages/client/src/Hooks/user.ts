@@ -3,7 +3,6 @@
 import { IUser, IUserUpdate } from "@scspace-depot/types/user";
 import { useQueryApi, useMutationApi } from "./api"
 import { useEffect, useState } from "react";
-import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 export function useUserInfo({ uid }: { uid: Number }) {
     const { data, isLoading, refetch } = useQueryApi<IUser>(`/user/profile/${uid}`);

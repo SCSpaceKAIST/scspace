@@ -16,34 +16,46 @@ export const useAuth = () => {
   const isManager = isLogined && userInfo.type === UserTypeEnum.MANAGER || isAdmin;
   const isWorker = isLogined && userInfo.type === UserTypeEnum.WORKER || isManager;
 
-  // 로그인 필수 페이지에서 사용
   const needLogin = () => {
     if (!isLoading && !isLogined) {
-      alert("로그인이 필요합니다.");
+      alert("Sign in is needed");
       linkPush("/login");
     }
   };
 
-  // 관리자만 접근 가능 페이지에서 사용
-  const needManager = () => {
-    if (isLoading) return;
-    if (!isLogined) {
-      needLogin();
-      return;
+  const needWorker = () => {
+    needLogin();
+    if (!isWorker) {
+      alert("The page only for worker; in Korean, 근로장학생.");
+      linkPush("/");
     }
+  };
+
+  const needManager = () => {
+    needLogin();
     if (!isManager) {
       alert("The page only for manager, a member of SCSpace.");
       linkPush("/");
     }
   };
 
+  const needAdmin = () => {
+    needLogin();
+    if (!isAdmin) {
+      alert("The page only for administrator, a executive of SCSpace.");
+      linkPush("/");
+    }
+  };
+
   return {
+    refetch,
     userInfo,
     isLogined,
     isLoading,
-    refetch,
     needLogin,
+    needWorker,
     needManager,
+    needAdmin,
     isAdmin,
     isManager,
     isWorker,

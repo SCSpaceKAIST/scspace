@@ -206,12 +206,12 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
             },
             {
                 href: "/admin",
-                label: "For Dev",
-                helperText: "Developent",
+                label: "운영",
+                helperText: "Administration",
                 visible: isAdmin,
             }
         ]);
-    }, [spaceLinks, isLogined]);
+    }, [spaceLinks, isLogined, isAdmin, userInfo]);
 
     return (<RedirectLinks links={links} onClick={onClick} />);
 }
