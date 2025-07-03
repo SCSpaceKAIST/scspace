@@ -13,7 +13,7 @@ export class UserController {
     private readonly userPublicService: UserPublicService,
   ) { }
 
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @Get('all')
   async getUsers(
     @Query('studentNumberPrefix', ParseIntPipe) studentNumberPrefix?: number,
@@ -56,7 +56,7 @@ export class UserController {
     return await this.userService.insert(body);
   }
 
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @Patch(':id')
   async patchUserType(
     @Param('id', ParseIntPipe) uid: number,
