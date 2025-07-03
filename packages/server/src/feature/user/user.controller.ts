@@ -29,9 +29,9 @@ export class UserController {
   @UseGuards(AdminGuard)
   @Get('all')
   async getUsers(
-    @Query('studentNumberPrefix') studentNumberPrefix: number,
+    @Query('studentNumberPrefix') studentNumberPrefix?: number,
   ): Promise<IUser[]> {
-    return await this.userPublicService.fetchAll(studentNumberPrefix);
+    return await this.userPublicService.fetchAll(studentNumberPrefix ?? 0);
   }
 
   //HOOK: useUserInfo
