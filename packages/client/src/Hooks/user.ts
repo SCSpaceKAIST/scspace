@@ -21,14 +21,9 @@ export function useUserInfo({ uid }: { uid: Number }) {
     return { userInfo, isLoading, refetch };
 }
 
-export function useAllUser(options: { studentNumber?: number } = {}) {
-    useEffect(() => {
-
-    }, [options]);
-
+export function useAllUser(options: { studentNumberPrefix?: number } = {}) {
     const { data, isLoading, refetch } = useQueryApi<IUser[]>(
-        "/user/all?" +
-            options.studentNumber ? `studentNumberPrefix=${options.studentNumber}` : ""
+        `/user/all?studentNumberPrefix=${options.studentNumberPrefix ?? 0}`
     );
     const [users, setUsers] = useState<IUser[] | null>(null);
 
