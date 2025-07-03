@@ -16,33 +16,40 @@ export const useAuth = () => {
   const isManager = isLogined && userInfo.type === UserTypeEnum.MANAGER || isAdmin;
   const isWorker = isLogined && userInfo.type === UserTypeEnum.WORKER || isManager;
 
+  function alertMessage(message: string) {
+    if (typeof window !== "undefined")
+      alert(message);
+  }
+
+  const _forceRedirectToLogin = () => {
+    alertMessage("Sign in is needed");
+    linkPush("/login");
+  }
+
   const needLogin = () => {
-    if (!isLoading && !isLogined) {
-      alert("Sign in is needed");
-      linkPush("/login");
-    }
+    if (!isLoading && !isLogined) _forceRedirectToLogin();
   };
 
   const needWorker = () => {
-    needLogin();
-    if (!isWorker) {
-      alert("The page only for worker; in Korean, 근로장학생.");
+    if (!isLoading && !isLogined) _forceRedirectToLogin();
+    else if (!isWorker) {
+      alertMessage("The page only for worker; in Korean, 근로장학생.");
       linkPush("/");
     }
   };
 
   const needManager = () => {
-    needLogin();
-    if (!isManager) {
-      alert("The page only for manager, a member of SCSpace.");
+    if (!isLoading && !isLogined) _forceRedirectToLogin();
+    else if (!isManager) {
+      alertMessage("The page only for manager, a member of SCSpace.");
       linkPush("/");
     }
   };
 
   const needAdmin = () => {
-    needLogin();
-    if (!isAdmin) {
-      alert("The page only for administrator, a executive of SCSpace.");
+    if (!isLoading && !isLogined) _forceRedirectToLogin();
+    else if (!isAdmin) {
+      alertMessage("The page only for administrator, a executive of SCSpace.");
       linkPush("/");
     }
   };

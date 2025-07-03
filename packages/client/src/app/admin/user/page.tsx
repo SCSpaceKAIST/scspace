@@ -10,8 +10,8 @@ export default function SpacePage() {
 
     return (
         <PageTemplete
-            title={["관리", "유저"]}
-            subtitle={["Management", "User"]}
+            title={["운영", "유저"]}
+            subtitle={["Administration", "User"]}
         >
             <ManageUser />
         </PageTemplete>
