@@ -1,14 +1,13 @@
+// atoms/DeleteBtn.tsx
+
 "use client"
 
 import { Button, Dialog, Portal, } from "@chakra-ui/react";
-import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { useState, } from "react";
 
-export default function DeleteBtn({ rid, onSuccess }: {
-    rid: number;
-    onSuccess: () => any;
+export default function DeleteBtn({ onDelete }: {
+    onDelete: () => any
 }) {
-    const deleteReservation = useReservationAPI({ rid }).deleteRes
     const [open, setOpen] = useState<boolean>(false);
 
     return (
@@ -38,12 +37,10 @@ export default function DeleteBtn({ rid, onSuccess }: {
                             <Button
                                 colorPalette="red"
                                 rounded="sm"
-                                onClick={() => deleteReservation({}, {
-                                    onSuccess: () => {
-                                        onSuccess();
-                                        setOpen(false);
-                                    }
-                                })}
+                                onClick={() => {
+                                    onDelete();
+                                    setOpen(false);
+                                }}
                             >
                                 Delete
                             </Button>

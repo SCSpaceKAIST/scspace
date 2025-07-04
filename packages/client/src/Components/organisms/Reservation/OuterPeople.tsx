@@ -1,4 +1,4 @@
-import NumberInputComponent from "@scspace-client/Components/molecules/NumberInput";
+import NumberInputComponent from "@scspace-client/Components/atoms/NumberInput";
 import { Dispatch, SetStateAction } from "react";
 
 export function OuterPeopleForm({ count, setCount }: {

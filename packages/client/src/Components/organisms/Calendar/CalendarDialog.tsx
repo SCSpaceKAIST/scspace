@@ -5,9 +5,10 @@ import { useAuth } from "@scspace-client/Hooks/auth";
 import { useDate } from "@scspace-client/Hooks/utils";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import { Dispatch, SetStateAction } from "react";
-import DeleteBtn from "./DeleteBtn";
 import LoadingComponent from "../../templates/Loading";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
+import { useReservationAPI } from "@scspace-client/Hooks/reservation";
+import DeleteBtn from "@scspace-client/Components/atoms/DeleteBtn";
 
 export default function CalendarDialog({ open, setOpen, selectedRes, refetch }: {
     open: boolean;
@@ -18,9 +19,15 @@ export default function CalendarDialog({ open, setOpen, selectedRes, refetch }: 
     const isWide = useBreakpointValue({ base: false, md: true });
     const { getString } = useDate();
     const { userInfo } = useAuth();
-    function onDeleteSuccess() {
-        refetch();
-        setOpen(false);
+
+    const deleteReservation = useReservationAPI({ rid: selectedRes?.id ?? 0 }).deleteRes;
+    function onDelete() {
+        deleteReservation({}, {
+            onSuccess: () => {
+                refetch();
+                setOpen(false);
+            }
+        });
     }
 
     return (
@@ -175,7 +182,7 @@ export default function CalendarDialog({ open, setOpen, selectedRes, refetch }: 
                                 </Dialog.Body>
                                 <Dialog.Footer>
                                     {userInfo && ((userInfo.id === selectedRes.userId) || (userInfo.type === UserTypeEnum.MANAGER) || (userInfo.type === UserTypeEnum.ADMIN)) && (
-                                        <DeleteBtn rid={selectedRes.id} onSuccess={onDeleteSuccess} />
+                                        <DeleteBtn onDelete={onDelete} />
                                     )}
                                     <Dialog.ActionTrigger asChild>
                                         <Button variant="outline" rounded="sm">

@@ -1,6 +1,5 @@
 import { NumberInput, } from "@chakra-ui/react";
-import FieldComponent from "../atoms/Field";
-import { Dispatch, SetStateAction } from "react";
+import FieldComponent from "./Field";
 
 export default function NumberInputComponent({
   label,

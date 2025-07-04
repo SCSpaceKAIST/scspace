@@ -5,10 +5,10 @@ import Link from "next/link";
 import { BsBuilding } from "react-icons/bs";
 import { MdPeopleOutline, MdOutlineFestival } from "react-icons/md";
 import { FaGuitar } from "react-icons/fa";
-import Shinhak from "./Shinhak";
-import Student from "./Student";
-import Culture from "./Culture";
-import Guitar from "./Guitar";
+import Shinhak from "./_Shinhak";
+import Student from "./_Student";
+import Culture from "./_Culture";
+import Guitar from "./_Guitar";
 
 const Business: React.FC = () => {
   const [menu, setMenu] = useState<number>(0);
