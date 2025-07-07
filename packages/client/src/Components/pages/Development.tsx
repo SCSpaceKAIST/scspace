@@ -21,7 +21,7 @@ export default function Development() {
             kor: "Molecules",
             eng: "Components",
             preview: <Molecules />,
-            href: "/dev/Molecules"
+            href: "/dev/molecules"
         }
     ]
 

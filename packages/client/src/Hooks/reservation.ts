@@ -14,7 +14,9 @@ export function useReservations({ spaceId, dateFrom, dateTo }: {
 }) {
     const date2time = useDate().getTime
 
-    const { data, isLoading, refetch } = useQueryApi<IReservationAll[]>(`/reservation/space?spaceId=${spaceId}&timeFrom=${date2time(dateFrom)}&timeTo=${date2time(dateTo)}`);
+    const { data, isLoading, refetch } = useQueryApi<IReservationAll[]>(
+        `/reservation/space?spaceId=${spaceId}&timeFrom=${date2time(dateFrom)}&timeTo=${date2time(dateTo)}`
+    );
 
     const [reservations, setReservations] = useState<IReservationAll[] | null>(null);
 
@@ -60,7 +62,7 @@ export function useDateReservations({ spaceId, dateFrom, dateTo, }: {
 }) {
     const { reservations, isLoading, refetch } = useReservations({ spaceId, dateFrom, dateTo });
 
-    const { getDate, getDateString, getTime } = useDate();
+    const { getDate, getDateString, getTime, getMidnightTime, timeUnit } = useDate();
 
     useEffect(() => { refetch() }, [spaceId, dateFrom.getTime(), dateTo.getTime()]);
 
@@ -93,10 +95,10 @@ export function useDateReservations({ spaceId, dateFrom, dateTo, }: {
             if (dF === dT) {
                 if (_reservation[dF]) _reservation[dF].push(format({ d: d, hF: tF.getHours(), hT: tT.getHours() }));
             } else {
-                if (tF >= dateFrom) {
+                if (d.timeFrom >= getMidnightTime(getTime(dateFrom))) {
                     if (_reservation[dF]) _reservation[dF].push(format({ d: d, hF: tF.getHours(), hT: 24 }));
                 }
-                if (tT <= dateTo) {
+                if (d.timeTo <= getMidnightTime(getTime(dateTo)) + timeUnit.day - 1) {
                     if (_reservation[dT]) _reservation[dT].push(format({ d: d, hF: 0, hT: tT.getHours() }));
                 }
 

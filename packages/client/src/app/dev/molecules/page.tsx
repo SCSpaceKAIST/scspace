@@ -2,7 +2,7 @@
 
 import { useAuth } from "@scspace-client/Hooks/auth";
 import PageTemplete from "@scspace-client/Components/templates/PageTemplete";
-import Atoms from "@scspace-client/Components/pages/Atoms";
+import Molecules from "@scspace-client/Components/pages/Molecules";
 
 export default function SpacePage() {
     const { needAdmin } = useAuth();
@@ -13,7 +13,7 @@ export default function SpacePage() {
             title={["개발", "Molecules"]}
             subtitle={["Development", "Components"]}
         >
-            <Atoms />
+            <Molecules />
         </PageTemplete>
     );
 }

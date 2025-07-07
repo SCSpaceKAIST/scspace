@@ -21,6 +21,10 @@ export function useDate() {
         return (((year * 12 + month) * 32 + day) * 24 + hour) * 60 + minute;
     }
 
+    function getMidnightTime(time: number) {
+        return Math.floor(time / timeUnit.day) * timeUnit.day;
+    }
+
     function getDateUnit(time: number) {
         const minute = time % 60;
         time = Math.floor(time / 60);
@@ -50,12 +54,22 @@ export function useDate() {
         return new Date(year, month, day, hour, minute, 0, 0);
     }
 
+    const timeUnit = {
+        minute: 1,
+        hour: 60,
+        day: 60 * 24,
+        month: 60 * 24 * 32,
+        year: 60 * 24 * 32 * 12
+    }
+
     return {
         getTime,
+        getMidnightTime,
         getDateUnit,
         getDateString,
         getDate,
         getString,
+        timeUnit,
     };
 }
 
