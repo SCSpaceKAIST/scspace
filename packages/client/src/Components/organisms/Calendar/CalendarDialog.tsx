@@ -8,7 +8,7 @@ import { Dispatch, SetStateAction } from "react";
 import LoadingComponent from "../../templates/Loading";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
-import DeleteBtn from "@scspace-client/Components/atoms/DeleteBtn";
+import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 
 export default function CalendarDialog({ open, setOpen, selectedRes, refetch }: {
     open: boolean;

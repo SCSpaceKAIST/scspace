@@ -16,7 +16,6 @@ import { HiPlus } from "react-icons/hi2";
 import { useAllSpace } from "@scspace-client/Hooks/space";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 function RedirectLinks({ links, onClick }: {
     links: ILink[];
@@ -209,6 +208,12 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                         helperText: "Manage User"
                     }
                 ]
+            },
+            {
+                href: "/dev",
+                label: "개발",
+                helperText: "Development",
+                visible: isAdmin,
             }
         ]);
     }, [spaceLinks, isLogined, isAdmin, userInfo]);

@@ -1,5 +1,5 @@
 import { useOrganization } from "@scspace-client/Hooks/organization";
-import SelectComponent, { ISelectOption } from "@scspace-client/Components/atoms/Select";
+import SelectComponent, { ISelectOption } from "@scspace-client/Components/molecules/forms/Select";
 import { Dispatch, SetStateAction } from "react";
 
 export function OrganizationForm({ id, setOrgId }: {

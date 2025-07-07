@@ -1,4 +1,4 @@
-import InputComponent from "@scspace-client/Components/atoms/Input";
+import InputComponent from "@scspace-client/Components/molecules/forms/Input";
 import { Dispatch, SetStateAction } from "react";
 
 export function FoodForm({ food, setFood }: {
@@ -10,7 +10,7 @@ export function FoodForm({ food, setFood }: {
       label="Food"
       placeholder="explanation about food"
       value={food}
-      setValue={setFood}
+      onChange={setFood}
       helpertext="Please explain what food you will eat in the space if you have."
     />
   );

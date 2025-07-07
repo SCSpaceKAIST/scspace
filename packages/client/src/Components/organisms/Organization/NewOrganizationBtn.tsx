@@ -3,7 +3,7 @@
 import { Button, Dialog, Portal, IconButton, useBreakpointValue, } from "@chakra-ui/react";
 import { useState, useRef } from "react";
 import { useOrganizationAPI, } from "@scspace-client/Hooks/organization";
-import InputComponent from "../../atoms/Input";
+import InputComponent from "../../molecules/forms/Input";
 import { HiPlus } from "react-icons/hi2";
 
 export default function NewOrganizationBtn({ uid, onSuccess }: {
@@ -48,7 +48,7 @@ export default function NewOrganizationBtn({ uid, onSuccess }: {
                                 placeholder="Input Name"
                                 ref={inputRef}
                                 value={name}
-                                setValue={setName}
+                                onChange={setName}
                             />
                         </Dialog.Body>
                         <Dialog.Footer>

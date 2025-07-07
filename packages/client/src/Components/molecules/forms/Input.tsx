@@ -1,12 +1,12 @@
 import { Input, } from "@chakra-ui/react";
-import FieldComponent from "./Field";
+import FieldComponent from "../../atoms/Field";
 import { Dispatch, RefObject, SetStateAction } from "react";
 
 export default function InputComponent({
   label,
   placeholder,
   value,
-  setValue,
+  onChange,
   helpertext,
   errortext,
   disabled,
@@ -14,9 +14,9 @@ export default function InputComponent({
   required = false
 }: {
   label: string;
-  placeholder: string;
+  placeholder?: string;
   value: string;
-  setValue: Dispatch<SetStateAction<string>>;
+  onChange: (s: string) => any;
   helpertext?: string;
   errortext?: string;
   disabled?: boolean;
@@ -35,10 +35,10 @@ export default function InputComponent({
     >
       <Input
         bg="white"
-        placeholder={placeholder}
+        placeholder={placeholder ?? ""}
         ref={ref ?? null}
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
       />
     </FieldComponent>
   );

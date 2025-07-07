@@ -1,6 +1,6 @@
 "use client"
 
-import SelectComponent, { ISelectOption } from "@scspace-client/Components/atoms/Select";
+import SelectComponent, { ISelectOption } from "@scspace-client/Components/molecules/forms/Select";
 import { Dispatch, SetStateAction } from "react";
 
 export function HourForm({ label, setHour }: {

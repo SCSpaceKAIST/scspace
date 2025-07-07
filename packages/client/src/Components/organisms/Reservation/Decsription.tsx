@@ -1,4 +1,4 @@
-import TextareaComponent from "@scspace-client/Components/atoms/Textarea";
+import TextareaComponent from "@scspace-client/Components/molecules/forms/Textarea";
 import { Dispatch, SetStateAction } from "react";
 
 export function DescriptionForm({ description, setDescription }: {
@@ -10,7 +10,8 @@ export function DescriptionForm({ description, setDescription }: {
       label="Description"
       placeholder="Enter Description"
       value={description}
-      setValue={setDescription}
+      onChange={setDescription}
+      required
     />
   );
 }

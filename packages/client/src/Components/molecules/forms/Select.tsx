@@ -5,6 +5,7 @@ import {
   Flex,
   Stack,
   Span,
+  Text,
 } from "@chakra-ui/react";
 import CheckComponent from "./Checkbox";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -73,14 +74,16 @@ export default function SelectComponent({
           bg="white"
           cursor="pointer"
         >
-          <Stack gap={0} width="100%">
-            <Select.ValueText>
-              {_label}
-            </Select.ValueText>
-            <Span color="fg.muted" textStyle="xs">
-              {_dscrp}
-            </Span>
-          </Stack>
+          <Select.ValueText>
+            <Stack gap={0} m={0} p={0}>
+              <Text>
+                {_label}
+              </Text>
+              <Span color="fg.muted" textStyle="xs">
+                {_dscrp}
+              </Span>
+            </Stack>
+          </Select.ValueText>
         </Select.Trigger>
         <Select.IndicatorGroup>
           <Select.Indicator />
@@ -88,14 +91,14 @@ export default function SelectComponent({
       </Select.Control>
       <Portal>
         <Select.Positioner>
-          <Select.Content cursor="pointer">
+          <Select.Content cursor="pointer" minW="fit-content">
             {options.items.map((o) => (
               <Select.Item
                 item={o}
                 key={o.value}
               >
                 <Stack gap={0}>
-                  <Select.ItemText>
+                  <Select.ItemText whiteSpace="nowrap">
                     {o.label}
                   </Select.ItemText>
                   <Span color="fg.muted" textStyle="xs">

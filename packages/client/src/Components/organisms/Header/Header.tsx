@@ -9,7 +9,7 @@ import {
   HStack,
   Button,
 } from "@chakra-ui/react";
-import { LoginBtn } from "./LoginBtn";
+import LoginBtn from "@scspace-client/Components/molecules/buttons/LoginBtn";
 
 import DrawerComponent from "./Drawer";
 import BreadcrumbComponent from "./Breadcrumb";

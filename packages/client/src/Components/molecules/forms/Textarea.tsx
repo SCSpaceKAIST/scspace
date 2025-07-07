@@ -1,7 +1,6 @@
 import { Textarea, } from "@chakra-ui/react";
 import "react-datepicker/dist/react-datepicker.css";
-import FieldComponent from "./Field";
-import { Dispatch, SetStateAction } from "react";
+import FieldComponent from "../../atoms/Field";
 
 export default function TextareaComponent({
   label,
@@ -10,15 +9,17 @@ export default function TextareaComponent({
   errortext,
   disabled,
   value,
-  setValue
+  required,
+  onChange
 }: {
   label: string;
-  placeholder: string;
+  placeholder?: string;
   helpertext?: string;
   errortext?: string;
   disabled?: boolean;
+  required?: boolean;
   value: string;
-  setValue: Dispatch<SetStateAction<string>>;
+  onChange: (s: string) => any;
 }) {
   return (
     <FieldComponent
@@ -27,7 +28,7 @@ export default function TextareaComponent({
         helpertext: helpertext || null,
         errortext: errortext || null,
         disabled: disabled || false,
-        required: true
+        required: required || false
       }}
     >
       <Textarea
@@ -36,7 +37,7 @@ export default function TextareaComponent({
         resize="none"
         placeholder={placeholder}
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
       />
     </FieldComponent>
   );

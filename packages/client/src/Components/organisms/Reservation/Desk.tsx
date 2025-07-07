@@ -1,4 +1,4 @@
-import NumberInputComponent from "@scspace-client/Components/atoms/NumberInput";
+import NumberInputComponent from "@scspace-client/Components/molecules/forms/NumberInput";
 import { Dispatch, SetStateAction } from "react";
 
 export function DeskForm({ count, setCount }: {

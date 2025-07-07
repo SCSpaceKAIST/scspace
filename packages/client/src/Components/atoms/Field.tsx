@@ -6,18 +6,18 @@ export default function FieldComponent({
 }: {
   options: {
     label: string,
-    helpertext: string | null,
-    errortext: string | null,
-    disabled: boolean | false
-    required?: boolean | false
+    helpertext?: string | null,
+    errortext?: string | null,
+    disabled?: boolean
+    required?: boolean
   },
   children: React.ReactNode,
 }) {
   return (
     <Field.Root
       invalid={options?.errortext !== null}
-      disabled={options?.disabled}
-      required={options.required}
+      disabled={options?.disabled ?? false}
+      required={options.required ?? false}
     >
       <Field.Label>
         {options.label} <Field.RequiredIndicator />

@@ -1,4 +1,4 @@
-import InputComponent from "@scspace-client/Components/atoms/Input";
+import InputComponent from "@scspace-client/Components/molecules/forms/Input";
 import { Dispatch, SetStateAction } from "react";
 
 export function TitleForm({ title, setTitle }: {
@@ -10,7 +10,7 @@ export function TitleForm({ title, setTitle }: {
       label="Title"
       placeholder="Enter Title"
       value={title}
-      setValue={setTitle}
+      onChange={setTitle}
       required={true}
     />
   );
