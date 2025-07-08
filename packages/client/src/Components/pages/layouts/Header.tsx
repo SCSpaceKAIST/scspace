@@ -5,10 +5,10 @@ import {
   Flex,
   Spacer,
 } from "@chakra-ui/react";
-import LoginBtn from "@scspace-client/Components/molecules/buttons/LoginBtn";
+import LoginBtn from "@scspace-client/Components/organisms/Header/LoginBtn";
 import BreadcrumbComponent from "@scspace-client/Components/organisms/Header/Breadcrumb";
 import Information from "@scspace-client/Components/organisms/Header/Information";
-import Sidebar from "@scspace-client/Components/organisms/Header/SIdebar";
+import Sidebar from "@scspace-client/Components/organisms/Header/Sidebar";
 
 
 export default function Header() {

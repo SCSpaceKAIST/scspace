@@ -30,8 +30,8 @@ export default function DeleteBtn({ onDelete }: {
                             <Dialog.Title>Are you sure?</Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
-                            This action cannot be undone.
-                            This will permanently delete this reservation and remove data from our systems.
+                            This action is permanent and cannot be undone.
+                            The data will be completely removed from our systems.
                         </Dialog.Body>
                         <Dialog.Footer>
                             <Button

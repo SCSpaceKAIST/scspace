@@ -2,7 +2,6 @@
 
 import { DataList } from "@chakra-ui/react";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
-import LoginBtn from "@scspace-client/Components/molecules/buttons/LoginBtn";
 import CheckComponent from "@scspace-client/Components/molecules/forms/Checkbox";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import Scroll from "@scspace-client/Components/pages/layouts/Scroll";
@@ -25,9 +24,6 @@ export default function Molecules() {
                     <DataList.Root>
                         <DataListItem label="Delete Button">
                             <DeleteBtn onDelete={() => alert("Delete")} />
-                        </DataListItem>
-                        <DataListItem label="Login Button">
-                            <LoginBtn />
                         </DataListItem>
                     </DataList.Root>
                 </DataListItem>

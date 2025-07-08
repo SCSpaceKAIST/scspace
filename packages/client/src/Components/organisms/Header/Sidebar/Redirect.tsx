@@ -130,11 +130,6 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
     useEffect(() => {
         setLinks([
             {
-                href: "/report",
-                label: "오류 제보하기",
-                helperText: "Reporting Error",
-            },
-            {
                 href: "/about",
                 label: "찾아보기",
                 helperText: "About SCSpace",
