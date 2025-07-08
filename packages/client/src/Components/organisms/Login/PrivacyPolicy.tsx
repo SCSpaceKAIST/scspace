@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, CloseButton, Dialog, SegmentGroup, Tabs, useBreakpointValue, VStack } from "@chakra-ui/react";
+import { Button, CloseButton, Dialog, Tabs, useBreakpointValue, VStack } from "@chakra-ui/react";
 import { ENG } from "./Eng";
 
 export default function PrivacyPolicy({ onRead }: { onRead: () => void }) {

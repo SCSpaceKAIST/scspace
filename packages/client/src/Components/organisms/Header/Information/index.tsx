@@ -1,6 +1,6 @@
 import { DataList, Dialog, IconButton, Portal, Stack } from "@chakra-ui/react";
 import { HiOutlineInformationCircle } from "react-icons/hi2";
-import InformationList from "../../../../../static/InformationList.json";
+import InformationList from "./InformationList.json";
 
 export default function Information() {
     return (
