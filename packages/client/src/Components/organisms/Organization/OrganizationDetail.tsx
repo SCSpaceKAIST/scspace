@@ -40,6 +40,15 @@ export default function OrganizationDetail({ id, onDelete }: {
 
     const isWide = useBreakpointValue({ base: false, md: true });
 
+    const { deleteOrg } = useOrganizationAPI({ id });
+    function deleteAction() {
+        deleteOrg({}, {
+            onSuccess: () => {
+                onDelete();
+            }
+        })
+    }
+
     return (organizationDetail ? (
         <>
             <Dialog.Header>
@@ -131,13 +140,7 @@ export default function OrganizationDetail({ id, onDelete }: {
             <Dialog.Footer>
                 {(isDelegator) && (
                     <DeleteBtn
-                        onDelete={() => {
-                            useOrganizationAPI({ id }).deleteOrg({}, {
-                                onSuccess: () => {
-                                    onDelete();
-                                }
-                            })
-                        }}
+                        onDelete={deleteAction}
                     />
                 )}
                 <Dialog.ActionTrigger asChild>
