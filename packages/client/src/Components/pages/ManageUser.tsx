@@ -17,7 +17,7 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { useAllUser } from "@scspace-client/Hooks/user";
 import { IUser } from "@scspace-depot/types/user";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
-import UserDialog from "./UserDialog";
+import UserDialog from "../organisms/Manage/UserDialog";
 import TooltipComponent from "@scspace-client/Components/templates/Tooptip";
 
 function classify(type: UserTypeEnum): string {
@@ -116,7 +116,7 @@ export default function ManageUser() {
                                                     email
                                                 </Table.ColumnHeader>
                                                 <Table.ColumnHeader>
-                                                    Class
+                                                    type
                                                 </Table.ColumnHeader>
                                             </>
                                         )}
