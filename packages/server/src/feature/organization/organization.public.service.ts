@@ -13,14 +13,14 @@ export class OrganizationPublicService {
     private readonly organizationRepository: OrganizationRepository,
     private readonly userPublicService: UserPublicService,
     private readonly organizationMemberRepository: OrganizationMemberRepository,
-  ) {}
+  ) { }
 
   async fetchDeepById(organizationId: number): Promise<IOrganizationAll> {
     const organization = await this.fetchById(organizationId);
     const delegator = await this.userPublicService.fetchById(organization.delegatorId);
     const members = await this.organizationMemberRepository.fetch({ organizationId: organizationId });
 
-    const memberDetails = members.length > 0 
+    const memberDetails = members.length > 0
       ? await this.fetchMemberDetails(members)
       : [];
 
@@ -37,13 +37,17 @@ export class OrganizationPublicService {
       memberModels.map(member => member.userId)
     );
 
-    return memberModels.map(member => {
+    const memberDetailedModels = memberModels.map(member => {
       const user = memberUsers.find(user => user.id === member.userId);
       if (!user) {
         throw new NotFoundException(`User not found for member ${member.id}`);
       }
       return { ...member, user };
     });
+
+    memberDetailedModels.sort((a, b) => (a.user.studentNumber - b.user.studentNumber));
+
+    return memberDetailedModels;
   }
 
   async fetchAll(): Promise<IOrganizationDelegator[]> {
