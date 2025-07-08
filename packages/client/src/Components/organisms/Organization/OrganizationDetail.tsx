@@ -13,7 +13,7 @@ import {
     useBreakpointValue
 } from "@chakra-ui/react";
 import { useOrganizationDetail } from "@scspace-client/Hooks/organization";
-import LoadingComponent from "@scspace-client/Components/templates/Loading";
+import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { HiOutlineRefresh } from "react-icons/hi";
 
 import Member from "./Member";

@@ -5,7 +5,7 @@ import { useAuth } from "@scspace-client/Hooks/auth";
 import { useDate } from "@scspace-client/Hooks/utils";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import { Dispatch, SetStateAction } from "react";
-import LoadingComponent from "@scspace-client/Components/templates/Loading";
+import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";

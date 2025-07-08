@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import PageSelector, { IPage } from "../templates/PageSelector";
+import PageSelector, { IPage } from "./layouts/PageSelector";
 import ManageUser from "./ManageUser";
 
 export default function Admin() {

@@ -22,12 +22,12 @@ import {
   DateForm,
   HourForm
 } from "@scspace-client/Components/organisms/Reservation/index";
-import Scroll from "@scspace-client/Components/templates/Scroll";
+import Scroll from "@scspace-client/Components/pages/layouts/Scroll";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { SmallLoading } from "@scspace-client/Components/templates/Loading";
+import { SmallLoading } from "@scspace-client/Components/atoms/Loading";
 import { CalendarView } from "@scspace-client/Components/organisms/Calendar/CalendarView";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
-import { toaster } from "@scspace-client/Components/templates/Toaster";
+import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useDate } from "@scspace-client/Hooks/utils";
 
 export default function Reservation() {

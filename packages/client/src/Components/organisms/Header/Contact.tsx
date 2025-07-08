@@ -14,7 +14,7 @@ import {
 } from "react-icons/io5"
 
 
-export default function Footer() {
+export default function Contact() {
     const footerText: string[][] = [
         [
             "대전광역시 유성구 대학로 291 한국과학기술원",

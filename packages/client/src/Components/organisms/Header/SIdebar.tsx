@@ -14,10 +14,10 @@ import {
 } from "@chakra-ui/react";
 
 import Redirect from "./Redirect";
-import Footer from "./Footer";
+import Contact from "./Contact";
 import { useState } from "react";
 
-export default function DrawerComponent() {
+export default function Sidebar() {
     const [open, setOpen] = useState<boolean>(false);
 
     return (
@@ -76,7 +76,7 @@ export default function DrawerComponent() {
                             px={4}
                             py={2}
                         >
-                            <Footer />
+                            <Contact />
                         </Drawer.Footer>
                         <Drawer.CloseTrigger asChild>
                             <CloseButton size="sm" />

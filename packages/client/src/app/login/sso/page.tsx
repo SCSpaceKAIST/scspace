@@ -4,8 +4,8 @@ import React, { useEffect } from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { randomBytes, createHash } from "crypto";
-import Scroll from "@scspace-client/Components/templates/Scroll";
-import LoadingComponent from "@scspace-client/Components/templates/Loading";
+import Scroll from "@scspace-client/Components/pages/layouts/Scroll";
+import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 
 const LoginPage: React.FC = () => {
   const { linkPush } = useLinkPush();

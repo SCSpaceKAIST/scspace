@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import ILink from "./interfaces/Link";
 import {
     Blockquote,
     Stack,
@@ -16,6 +15,15 @@ import { HiPlus } from "react-icons/hi2";
 import { useAllSpace } from "@scspace-client/Hooks/space";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useAuth } from "@scspace-client/Hooks/auth";
+
+interface ILink {
+    href: string;
+    helperText: string;
+    label: string;
+    subdomains?: ILink[];
+    disabled?: boolean;
+    visible?: boolean;
+}
 
 function RedirectLinks({ links, onClick }: {
     links: ILink[];

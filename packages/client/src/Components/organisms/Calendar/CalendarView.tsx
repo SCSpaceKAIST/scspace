@@ -25,7 +25,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
     const times = Array.from({ length: 24 }, (_, i) => i);
     const [open, setOpen] = useState<boolean>(false);
 
-    useEffect(() => { refetch() }, [refetchCounter]);
+    useEffect(() => { refetch() }, [refetchCounter, refetch]);
 
     const [selected, setSelected] = useState<number>(0);
     const { reservations, refetch: refetchDetail } = useReservations({ spaceId, dateFrom, dateTo });
@@ -145,100 +145,75 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                             );
                             const slot = _slot?.slot ?? null;
                             const i = _slot?.i ?? -1;
-                            if (slot) {
-                                if (slot.hourFrom === hour) {
-                                    // span multi-hour bookings
-                                    return (
-                                        <GridItem
-                                            key={`${date}-${hour}`}
-                                            rowStart={hour + 2}
-                                            colStart={ci + 2}
-                                            rowSpan={slot.hourTo - slot.hourFrom}
-                                            bg={stringToColor(slot.title)}
-                                            minW={0}
-                                            overflow="hidden"
-                                        >
-                                            <Button
-                                                asChild
-                                                rounded="0"
-                                                variant="ghost"
-                                                width="100%"
-                                                height="100%"
-                                                minW={0}
-                                                padding={1}
-                                                onClick={() => {
-                                                    setSelected(slot.id);
-                                                    setOpen(true)
-                                                }}
-                                            >
-                                                <Flex
-                                                    flexDir="column"
-                                                    width="100%"
-                                                    height="100%"
-                                                    margin={0}
-                                                    padding={1}
-                                                    gap={0}
-                                                    justifyContent="center"
-                                                    overflow="hidden"
-                                                    minW={0}
-                                                >
-                                                    <Text
-                                                        margin={0}
-                                                        padding={0}
-                                                        fontWeight="semibold"
-                                                        width="100%"
-                                                        textOverflow="ellipsis"
-                                                        whiteSpace="nowrap"
-                                                        overflow="hidden"
-                                                        textAlign="center"
-                                                    >
-                                                        {slot.title}
-                                                    </Text>
-                                                    <Text
-                                                        margin={0}
-                                                        padding={0}
-                                                        fontSize="xs"
-                                                        width="100%"
-                                                        textOverflow="ellipsis"
-                                                        whiteSpace="nowrap"
-                                                        overflow="hidden"
-                                                        textAlign="center"
-                                                    >
-                                                        {slot.name}
-                                                    </Text>
-                                                </Flex>
-                                            </Button>
-                                        </GridItem>
-                                    );
-                                } else if (slot.hourFrom === 0 && slot.hourTo === 24 && i > 0) {
-                                    return (
-                                        <GridItem
-                                            key={`${date}-${hour}`}
-                                            rowStart={hour + 2}
-                                            colStart={ci + 2}
-                                            borderBottomWidth="1px"
-                                            borderRightWidth="1px"
-                                            height="64px"
-                                            minW={0}
-                                        />
-                                    );
-                                }
-                                // return null;
-                            } else if (!slot) {
-                                // we skip rendering rows that are covered by a span
+                            if (slot && slot.hourFrom === hour) {
+                                // span multi-hour bookings
                                 return (
                                     <GridItem
                                         key={`${date}-${hour}`}
                                         rowStart={hour + 2}
                                         colStart={ci + 2}
-                                        borderBottomWidth="1px"
-                                        borderRightWidth="1px"
-                                        height="64px"
+                                        rowSpan={slot.hourTo - slot.hourFrom}
+                                        bg={stringToColor(slot.title)}
                                         minW={0}
-                                    />
+                                        overflow="hidden"
+                                    >
+                                        <Button
+                                            asChild
+                                            rounded="0"
+                                            variant="ghost"
+                                            width="100%"
+                                            height="100%"
+                                            minW={0}
+                                            padding={1}
+                                            onClick={() => {
+                                                setSelected(slot.id);
+                                                setOpen(true)
+                                            }}
+                                        >
+                                            <Flex
+                                                flexDir="column"
+                                                width="100%"
+                                                height="100%"
+                                                margin={0}
+                                                padding={1}
+                                                gap={0}
+                                                justifyContent="center"
+                                                overflow="hidden"
+                                                minW={0}
+                                            >
+                                                <Text
+                                                    margin={0}
+                                                    padding={0}
+                                                    fontWeight="semibold"
+                                                    width="100%"
+                                                    textOverflow="ellipsis"
+                                                    whiteSpace="nowrap"
+                                                    overflow="hidden"
+                                                    textAlign="center"
+                                                >
+                                                    {slot.title}
+                                                </Text>
+                                                <Text
+                                                    margin={0}
+                                                    padding={0}
+                                                    fontSize="xs"
+                                                    width="100%"
+                                                    textOverflow="ellipsis"
+                                                    whiteSpace="nowrap"
+                                                    overflow="hidden"
+                                                    textAlign="center"
+                                                >
+                                                    {slot.name}
+                                                </Text>
+                                            </Flex>
+                                        </Button>
+                                    </GridItem>
                                 );
-                            } else if (dateReservation[date][i - 1] && dateReservation[date][i - 1].hourTo <= hour) {
-                                // we skip rendering rows that are covered by a span
+                            } else if (
+                                !slot ||
+                                slot.hourFrom === 0 && slot.hourTo === 24 && i > 0 ||
+                                dateReservation[date][i - 1] && dateReservation[date][i - 1].hourTo <= hour
+                            ) {
                                 return (
                                     <GridItem
                                         key={`${date}-${hour}`}

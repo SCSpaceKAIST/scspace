@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@scspace-client/Hooks/auth";
-import PageTemplete from "@scspace-client/Components/templates/PageTemplete";
+import PageTemplete from "@scspace-client/Components/pages/layouts/PageTemplete";
 import Development from "@scspace-client/Components/pages/Development";
 
 export default function SpacePage() {

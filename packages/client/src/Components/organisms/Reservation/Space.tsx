@@ -2,7 +2,7 @@
 
 import SelectComponent, { ISelectOption } from "@scspace-client/Components/molecules/forms/Select";
 import { useAllSpace } from "@scspace-client/Hooks/space";
-import { SmallLoading } from "@scspace-client/Components/templates/Loading";
+import { SmallLoading } from "@scspace-client/Components/atoms/Loading";
 import { Dispatch, SetStateAction } from "react";
 
 export function SpaceForm({ setSpaceId, setCheck }: {

@@ -1,9 +1,9 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import PageTemplete from "@scspace-client/Components/templates/PageTemplete";
+import PageTemplete from "@scspace-client/Components/pages/layouts/PageTemplete";
 import { useSpace } from "@scspace-client/Hooks/space";
-import LoadingComponent from "@scspace-client/Components/templates/Loading";
+import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import Calendar from "@scspace-client/Components/pages/Calendar";
 
 export default function SpacePage() {

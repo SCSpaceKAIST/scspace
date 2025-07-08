@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import Scroll from "./Scroll";
 import { useRouter } from "next/navigation";
-import LoadingComponent from "./Loading";
+import LoadingComponent from "../../atoms/Loading";
 
 export interface IPage {
     kor: string;

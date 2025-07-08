@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import PageSelector, { IPage } from "../templates/PageSelector";
+import PageSelector, { IPage } from "./layouts/PageSelector";
 
 export default function Manage() {
   const { needManager } = useAuth();

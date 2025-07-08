@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import PageSelector, { IPage, } from "../../templates/PageSelector";
+import PageSelector, { IPage, } from "@scspace-client/Components/pages/layouts/PageSelector";
 import { useAllSpace } from "@scspace-client/Hooks/space";
-import Calendar from "../../pages/Calendar";
+import Calendar from "./Calendar";
 
 export default function SpaceCalendar() {
     const { spaces } = useAllSpace();

@@ -1,4 +1,4 @@
-import PageTemplete from "@scspace-client/Components/templates/PageTemplete";
+import PageTemplete from "@scspace-client/Components/pages/layouts/PageTemplete";
 import Organization from "@scspace-client/Components/pages/Organization";
 
 export default function SpacePage() {
