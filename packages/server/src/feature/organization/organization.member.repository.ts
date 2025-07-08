@@ -10,7 +10,7 @@ import { getNow } from '@scspace-server/common/util';
 export class OrganizationMemberRepository {
   constructor(
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
-  ) {}
+  ) { }
 
   async fetch(params: {
     organizationId?: number;

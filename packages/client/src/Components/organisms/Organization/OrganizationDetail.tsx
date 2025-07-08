@@ -12,16 +12,16 @@ import {
     Stack,
     useBreakpointValue
 } from "@chakra-ui/react";
-import { useOrganizationDetail } from "@scspace-client/Hooks/organization";
+import { useOrganizationAPI, useOrganizationDetail } from "@scspace-client/Hooks/organization";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { HiOutlineRefresh } from "react-icons/hi";
 
 import Member from "./Member";
-import DeleteBtn from "./DeleteBtn";
 import AddMemberBtn from "./AddMemberBtn";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useEffect, useState } from "react";
 import { useDate } from "@scspace-client/Hooks/utils";
+import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 
 export default function OrganizationDetail({ id, onDelete }: {
     id: number;
@@ -131,8 +131,13 @@ export default function OrganizationDetail({ id, onDelete }: {
             <Dialog.Footer>
                 {(isDelegator) && (
                     <DeleteBtn
-                        id={id}
-                        onSuccess={() => onDelete()}
+                        onDelete={() => {
+                            useOrganizationAPI({ id }).deleteOrg({}, {
+                                onSuccess: () => {
+                                    onDelete();
+                                }
+                            })
+                        }}
                     />
                 )}
                 <Dialog.ActionTrigger asChild>

@@ -33,7 +33,10 @@ export class UserRepository {
     const users = await this.db
       .select()
       .from(User)
-      .where(and(...whereConditions));
+      .where(and(...whereConditions))
+      .orderBy(
+        asc(User.studentNumber)
+      );
 
     return users;
   }
