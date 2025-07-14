@@ -72,9 +72,7 @@ export default function Organization() {
                                         <HiOutlineRefresh color="gray" />
                                     </IconButton>
                                 </TooltipComponent>
-                                <TooltipComponent
-                                    content="Make New Organization"
-                                >
+                                <TooltipComponent content="Make New Organization">
                                     <NewOrganizationBtn
                                         uid={userInfo?.id ?? 0}
                                         onSuccess={refetch}

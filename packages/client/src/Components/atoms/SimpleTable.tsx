@@ -10,11 +10,12 @@ export interface TableContent {
 interface SimpleTableProps {
     header: [string, string, string, string];
     content: TableContent[];
-    setId: (id: number) => any;
+    onIdChange: (id: number) => any;
 }
 
-export default function SimpleTable({ setId, header, content }: SimpleTableProps) {
+export default function SimpleTable({ onIdChange, header, content }: SimpleTableProps) {
     const isWide = useBreakpointValue({ base: false, md: true });
+
     return (
         <Table.Root
             stickyHeader
@@ -55,7 +56,7 @@ export default function SimpleTable({ setId, header, content }: SimpleTableProps
                 {content.map((c) => (
                     <Table.Row
                         key={c.id}
-                        onClick={setId(c.id)}
+                        onClick={() => onIdChange(c.id)}
                         cursor="pointer"
                     >
                         <Table.Cell>
