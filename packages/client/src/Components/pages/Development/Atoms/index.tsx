@@ -10,6 +10,7 @@ import { useState } from "react";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
+import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 
 export default function Atoms() {
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -99,6 +100,48 @@ export default function Atoms() {
                                 </Center>
                             </BorderBox>
                         </TooltipComponent>
+                    </DataListItem>
+                    <DataListItem label="Table">
+                        <SimpleTable
+                            onIdChange={(id: number) => {
+                                alert(`Selected ID: ${id}`);
+                            }}
+                            header={[
+                                "Column 1",
+                                "Column 2",
+                                "Column 3",
+                                "Column 4"
+                            ]}
+                            content={[
+                                {
+                                    id: 1,
+                                    row: [
+                                        "Row 1 Col 1",
+                                        "Row 1 Col 2",
+                                        "Row 1 Col 3",
+                                        "Row 1 Col 4"
+                                    ]
+                                },
+                                {
+                                    id: 2,
+                                    row: [
+                                        "Row 2 Col 1",
+                                        "Row 2 Col 2",
+                                        "Row 2 Col 3",
+                                        "Row 2 Col 4"
+                                    ]
+                                },
+                                {
+                                    id: 3,
+                                    row: [
+                                        "Row 3 Col 1",
+                                        "Row 3 Col 2",
+                                        "Row 3 Col 3",
+                                        "Row 3 Col 4"
+                                    ]
+                                }
+                            ]}
+                        />
                     </DataListItem>
                 </DataList.Root>
             </Scroll>

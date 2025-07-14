@@ -12,7 +12,6 @@ import {
     Pagination,
     Portal,
     Select,
-    Table,
     Text,
     useBreakpointValue,
 } from "@chakra-ui/react";
@@ -28,6 +27,7 @@ import CalendarDialog from "@scspace-client/Components/organisms/Calendar/Calend
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { useOrganization } from "@scspace-client/Hooks/organization";
 import TooltipComponent from "../../../atoms/Tooptip";
+import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 
 export default function UserReservation() {
     const { userInfo, needLogin } = useAuth();
@@ -177,71 +177,25 @@ export default function UserReservation() {
                             </HStack>
                         </Flex>
                         <Scroll>
-                            <Table.Root
-                                stickyHeader
-                                interactive
-                                colorPalette="blue"
-                            >
-                                <Table.ColumnGroup>
-                                    <Table.Column htmlWidth={isWide ? "25%" : "50%"} />
-                                    <Table.Column htmlWidth={isWide ? "25%" : "50%"} />
-                                    {isWide && (
-                                        <>
-                                            <Table.Column htmlWidth="25%" />
-                                            <Table.Column htmlWidth="25%" />
-                                        </>
-                                    )}
-                                </Table.ColumnGroup>
-                                <Table.Header>
-                                    <Table.Row bg="bg.muted">
-                                        <Table.ColumnHeader>
-                                            Title
-                                        </Table.ColumnHeader>
-                                        <Table.ColumnHeader>
-                                            Booker
-                                        </Table.ColumnHeader>
-                                        {isWide && (
-                                            <>
-                                                <Table.ColumnHeader>
-                                                    From
-                                                </Table.ColumnHeader>
-                                                <Table.ColumnHeader>
-                                                    To
-                                                </Table.ColumnHeader>
-                                            </>
-                                        )}
-                                    </Table.Row>
-                                </Table.Header>
-                                <Table.Body>
-                                    {userReservation.map((r: IReservationAll) => (
-                                        <Table.Row
-                                            key={r.id}
-                                            onClick={() => {
-                                                setSelected(r);
-                                                setOpen(true);
-                                            }}
-                                            cursor="pointer"
-                                        >
-                                            <Table.Cell>
-                                                {r.title}
-                                            </Table.Cell>
-                                            <Table.Cell>
-                                                {r.organization.name}
-                                            </Table.Cell>
-                                            {isWide && (
-                                                <>
-                                                    <Table.Cell>
-                                                        {getString(r.timeFrom)}
-                                                    </Table.Cell>
-                                                    <Table.Cell>
-                                                        {getString(r.timeTo)}
-                                                    </Table.Cell>
-                                                </>
-                                            )}
-                                        </Table.Row>
-                                    ))}
-                                </Table.Body>
-                            </Table.Root>
+                            <SimpleTable
+                                onIdChange={(id) => {
+                                    const res = userReservation.find((r) => r.id === id);
+                                    if (res) {
+                                        setSelected(res);
+                                        setOpen(true);
+                                    }
+                                }}
+                                header={["Title", "Booker", "From", "To"]}
+                                content={userReservation.map((r) => ({
+                                    id: r.id,
+                                    row: [
+                                        r.title,
+                                        r.organization.name,
+                                        getString(r.timeFrom),
+                                        getString(r.timeTo)
+                                    ]
+                                }))}
+                            />
                         </Scroll>
                         <Center width="100%">
                             <Pagination.Root

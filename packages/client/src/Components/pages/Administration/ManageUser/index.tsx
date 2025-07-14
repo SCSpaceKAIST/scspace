@@ -5,20 +5,20 @@ import {
     Grid,
     HStack,
     IconButton,
-    Table,
     Text,
     useBreakpointValue,
 } from "@chakra-ui/react";
 import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { useAllUser } from "@scspace-client/Hooks/user";
 import { IUser } from "@scspace-depot/types/user";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 import UserDialog from "../../../organisms/Manage/UserDialog";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
+import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 
 function classify(type: UserTypeEnum): string {
     switch (type) {
@@ -87,71 +87,25 @@ export default function ManageUser() {
                             </HStack>
                         </Flex>
                         <Scroll>
-                            <Table.Root
-                                stickyHeader
-                                interactive
-                                colorPalette="blue"
-                            >
-                                <Table.ColumnGroup>
-                                    <Table.Column htmlWidth={isWide ? "25%" : "50%"} />
-                                    <Table.Column htmlWidth={isWide ? "25%" : "50%"} />
-                                    {isWide && (
-                                        <>
-                                            <Table.Column htmlWidth="25%" />
-                                            <Table.Column htmlWidth="25%" />
-                                        </>
-                                    )}
-                                </Table.ColumnGroup>
-                                <Table.Header>
-                                    <Table.Row bg="bg.muted">
-                                        <Table.ColumnHeader>
-                                            StudentNumber
-                                        </Table.ColumnHeader>
-                                        <Table.ColumnHeader>
-                                            Name
-                                        </Table.ColumnHeader>
-                                        {isWide && (
-                                            <>
-                                                <Table.ColumnHeader>
-                                                    email
-                                                </Table.ColumnHeader>
-                                                <Table.ColumnHeader>
-                                                    type
-                                                </Table.ColumnHeader>
-                                            </>
-                                        )}
-                                    </Table.Row>
-                                </Table.Header>
-                                <Table.Body>
-                                    {users.map((u: IUser) => (
-                                        <Table.Row
-                                            key={u.id}
-                                            onClick={() => {
-                                                setSelected(u);
-                                                setOpen(true);
-                                            }}
-                                            cursor="pointer"
-                                        >
-                                            <Table.Cell>
-                                                {u.studentNumber}
-                                            </Table.Cell>
-                                            <Table.Cell>
-                                                {u.nameKr}
-                                            </Table.Cell>
-                                            {isWide && (
-                                                <>
-                                                    <Table.Cell>
-                                                        {u.email}
-                                                    </Table.Cell>
-                                                    <Table.Cell>
-                                                        {classify(u.type)}
-                                                    </Table.Cell>
-                                                </>
-                                            )}
-                                        </Table.Row>
-                                    ))}
-                                </Table.Body>
-                            </Table.Root>
+                            <SimpleTable
+                                onIdChange={(id: number) => {
+                                    const user = users.find((u) => u.id === id);
+                                    if (user) {
+                                        setSelected(user);
+                                        setOpen(true);
+                                    }
+                                }}
+                                header={["StudentNumber", "Name", "email", "type"]}
+                                content={users.map((u: IUser) => ({
+                                    id: u.id,
+                                    row: [
+                                        u.studentNumber,
+                                        u.nameKr,
+                                        u.email,
+                                        classify(u.type),
+                                    ],
+                                }))}
+                            />
                         </Scroll>
                     </Grid>
                 )}

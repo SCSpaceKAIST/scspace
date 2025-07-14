@@ -1,14 +1,15 @@
 "use client";
 
 import { Table, useBreakpointValue } from "@chakra-ui/react";
+import { ReactNode } from "react";
 
 export interface TableContent {
     id: number;
-    row: [string, string, string, string];
+    row: [ReactNode, ReactNode, ReactNode, ReactNode];
 }
 
 interface SimpleTableProps {
-    header: [string, string, string, string];
+    header: [ReactNode, ReactNode, ReactNode, ReactNode];
     content: TableContent[];
     onIdChange: (id: number) => any;
 }

@@ -1,7 +1,6 @@
 "use client"
 
 import {
-    Table,
     Flex,
     Text,
     Grid,
@@ -82,7 +81,7 @@ export default function Organization() {
                         </Flex>
                         <Scroll>
                             <SimpleTable
-                                setId={(id: number) => {
+                                onIdChange={(id: number) => {
                                     setSelected(id);
                                     setOpen(true);
                                 }}
