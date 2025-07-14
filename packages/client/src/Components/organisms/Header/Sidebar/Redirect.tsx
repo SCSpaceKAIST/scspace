@@ -170,7 +170,7 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 helperText: "Reservation",
                 subdomains: [
                     {
-                        href: "/reservation/apply",
+                        href: "/reservation/application",
                         label: "신청",
                         helperText: "Application"
                     },
