@@ -1,8 +1,8 @@
-import Scspace from "../organisms/About/Scspace";
-import PageSelector, { IPage } from "./layouts/PageSelector";
-import Rules from "../organisms/About/Rules";
+import Scspace from "../../organisms/About/Scspace";
+import PageSelector, { IPage } from "../layouts/PageSelector";
+import Rules from "../../organisms/About/Rules";
 
-export default function Introduction() {
+export default function Browse() {
   const pages: IPage[] = [
     {
       kor: "공간위",

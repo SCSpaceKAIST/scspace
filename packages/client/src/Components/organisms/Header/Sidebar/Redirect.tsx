@@ -130,9 +130,9 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
     useEffect(() => {
         setLinks([
             {
-                href: "/about",
+                href: "/browse",
                 label: "찾아보기",
-                helperText: "About SCSpace",
+                helperText: "Browse",
                 subdomains: [
                     {
                         href: '/about/scspace',
@@ -153,9 +153,27 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 disabled: true
             },
             {
+                href: "/business",
+                label: "사업 안내",
+                helperText: "Business",
+                disabled: true
+            },
+            {
                 href: "/reservation",
-                label: "공간 예약하기",
+                label: "예약",
                 helperText: "Reservation",
+                subdomains: [
+                    {
+                        href: "/reservation/apply",
+                        label: "신청",
+                        helperText: "Application"
+                    },
+                    {
+                        href: "/reservation/status",
+                        label: "현황",
+                        helperText: "Status"
+                    },
+                ]
             },
             {
                 href: "/calendar",

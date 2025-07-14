@@ -56,7 +56,6 @@ export default function UserDialog({ open, setOpen, user, refetch }: {
                                     </Button>
                                 </Wrap>
                             </DataListItem>
-
                         </DataList.Root>
                     </Dialog.Body>
                     <Dialog.Footer>

@@ -1,13 +1,13 @@
-import Introduction from "@scspace-client/Components/pages/Introduction";
+import Browse from "@scspace-client/Components/pages/Browse";
 import PageTemplete from "@scspace-client/Components/pages/layouts/PageTemplete";
 
 export default function IntroPage() {
   return (
     <PageTemplete
       title="찾아보기"
-      subtitle="About"
+      subtitle="Browse"
     >
-      <Introduction />
+      <Browse />
     </PageTemplete>
   );
 }

@@ -10,13 +10,13 @@ import {
   CloseButton,
   IconButton,
 } from "@chakra-ui/react";
-import Scroll from "./layouts/Scroll";
+import Scroll from "../../../layouts/Scroll";
 import { useEffect, useState } from "react";
-import LoadingComponent from "../atoms/Loading";
+import LoadingComponent from "../../../../atoms/Loading";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
-import { CalendarView } from "../organisms/Calendar/CalendarView";
+import { CalendarView } from "../../../../organisms/Calendar/CalendarView";
 
 export default function Calendar({ spaceId }: { spaceId: number }) {
   const [date, setDate] = useState<Date>(() => new Date());
