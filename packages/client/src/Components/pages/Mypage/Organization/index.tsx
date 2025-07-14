@@ -45,7 +45,6 @@ export default function Organization() {
                     open={open}
                     onOpenChange={(e) => setOpen(e.open)}
                     size={isWide ? "cover" : "full"}
-                    scrollBehavior="inside"
                 >
                     <Grid
                         height="100%"
