@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import PageSelector, { IPage, } from "./layouts/PageSelector";
+import PageSelector, { IPage, } from "../../Layout/PageSelector";
 import { useAllSpace } from "@scspace-client/Hooks/space";
-import SpaceIntro from "../organisms/Space/SpaceIntro";
+import SpaceIntro from "../../../organisms/Space/SpaceIntro";
 
 export default function Space() {
   const { spaces } = useAllSpace();
@@ -13,7 +13,7 @@ export default function Space() {
     if (spaces) setSpacePages(
       spaces.map((s): IPage => {
         return {
-          href: `/space/${s.id}`,
+          href: `/browse/space/${s.id}`,
           kor: s.nameKr,
           eng: s.nameEn,
           preview: (<SpaceIntro space={s} />)

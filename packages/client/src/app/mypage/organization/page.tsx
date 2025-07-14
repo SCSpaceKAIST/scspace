@@ -1,5 +1,5 @@
-import PageTemplete from "@scspace-client/Components/pages/layouts/PageTemplete";
-import Organization from "@scspace-client/Components/pages/Organization";
+import PageTemplete from "@scspace-client/Components/pages/Layout/PageTemplete";
+import Organization from "@scspace-client/Components/pages/Mypage/Organization";
 
 export default function SpacePage() {
     return (

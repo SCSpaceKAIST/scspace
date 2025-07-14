@@ -1,8 +1,8 @@
 "use client"
 
-import PageSelector, { IPage } from "./layouts/PageSelector";
+import PageSelector, { IPage } from "../Layout/PageSelector";
 import Organization from "./Organization";
-import UserReservation from "../organisms/UserRevervation/UserReservation";
+import UserReservation from "./UserReservation";
 import { useAuth } from "@scspace-client/Hooks/auth";
 
 export default function Mypage() {

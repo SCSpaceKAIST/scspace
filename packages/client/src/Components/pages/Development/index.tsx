@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import PageSelector, { IPage } from "./layouts/PageSelector";
+import PageSelector, { IPage } from "../Layout/PageSelector";
 import Atoms from "./Atoms";
 import Molecules from "./Molecules";
 

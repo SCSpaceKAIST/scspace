@@ -22,7 +22,7 @@ import {
   DateForm,
   HourForm
 } from "@scspace-client/Components/organisms/Reservation/index";
-import Scroll from "@scspace-client/Components/pages/layouts/Scroll";
+import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { SmallLoading } from "@scspace-client/Components/atoms/Loading";
 import { CalendarView } from "@scspace-client/Components/organisms/Calendar/CalendarView";

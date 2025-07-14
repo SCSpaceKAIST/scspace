@@ -2,7 +2,7 @@
 
 import { Blockquote, Box, Center, ColorPicker, DataList, Field, Fieldset, Grid, Heading, HStack, parseColor, Separator, Stack, Text } from "@chakra-ui/react";
 import Image from "next/image";
-import Scroll from "@scspace-client/Components/pages/layouts/Scroll";
+import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
 
 export default function Scspace() {
   const colors: string[] = [

@@ -1,8 +1,8 @@
 "use client";
 
 import { useAuth } from "@scspace-client/Hooks/auth";
-import PageTemplete from "@scspace-client/Components/pages/layouts/PageTemplete";
-import Atoms from "@scspace-client/Components/pages/Atoms";
+import PageTemplete from "@scspace-client/Components/pages/Layout/PageTemplete";
+import Atoms from "@scspace-client/Components/pages/Development/Atoms";
 
 export default function SpacePage() {
     const { needAdmin } = useAuth();

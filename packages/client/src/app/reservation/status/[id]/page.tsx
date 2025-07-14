@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import PageTemplete from "@scspace-client/Components/pages/layouts/PageTemplete";
+import PageTemplete from "@scspace-client/Components/pages/Layout/PageTemplete";
 import { useSpace } from "@scspace-client/Hooks/space";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import Calendar from "@scspace-client/Components/pages/Reservation/Status/Calendar";

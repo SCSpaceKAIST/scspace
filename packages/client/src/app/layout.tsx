@@ -1,6 +1,6 @@
 import "./globals.css";
 import "../../static/css/main.css";
-import Header from "@scspace-client/Components/pages/layouts/Header";
+import Header from "@scspace-client/Components/pages/Layout/Header";
 import { ReactNode } from "react";
 import Providers from "./providers";
 import { Box, Flex, Grid, } from "@chakra-ui/react";

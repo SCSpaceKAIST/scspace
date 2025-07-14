@@ -1,6 +1,6 @@
 "use client"
 
-import PageSelector, { IPage } from "@scspace-client/Components/pages/layouts/PageSelector";
+import PageSelector, { IPage } from "@scspace-client/Components/pages/Layout/PageSelector";
 import Application from "./Application";
 import ResStatus from "./Status";
 

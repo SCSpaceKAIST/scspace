@@ -1,4 +1,4 @@
-import PageTemplete from "@scspace-client/Components/pages/layouts/PageTemplete";
+import PageTemplete from "@scspace-client/Components/pages/Layout/PageTemplete";
 import SSOLogin from "@scspace-client/Components/pages/Login";
 
 export default function LoginPage() {

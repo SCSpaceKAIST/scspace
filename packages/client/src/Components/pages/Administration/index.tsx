@@ -2,10 +2,10 @@
 
 import React from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import PageSelector, { IPage } from "./layouts/PageSelector";
+import PageSelector, { IPage } from "../Layout/PageSelector";
 import ManageUser from "./ManageUser";
 
-export default function Admin() {
+export default function Administration() {
     const { needAdmin } = useAuth();
     needAdmin();
 

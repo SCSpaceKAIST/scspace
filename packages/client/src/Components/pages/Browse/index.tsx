@@ -1,5 +1,5 @@
 import Scspace from "../../organisms/About/Scspace";
-import PageSelector, { IPage } from "../layouts/PageSelector";
+import PageSelector, { IPage } from "../Layout/PageSelector";
 import Rules from "../../organisms/About/Rules";
 
 export default function Browse() {

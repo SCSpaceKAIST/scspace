@@ -1,8 +1,8 @@
 "use client";
 
 import { useAuth } from "@scspace-client/Hooks/auth";
-import PageTemplete from "@scspace-client/Components/pages/layouts/PageTemplete";
-import ManageUser from "@scspace-client/Components/pages/ManageUser";
+import PageTemplete from "@scspace-client/Components/pages/Layout/PageTemplete";
+import ManageUser from "@scspace-client/Components/pages/Administration/ManageUser";
 
 export default function SpacePage() {
     const { needManager } = useAuth();

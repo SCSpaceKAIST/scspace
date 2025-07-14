@@ -4,7 +4,7 @@ import { DataList } from "@chakra-ui/react";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import CheckComponent from "@scspace-client/Components/molecules/forms/Checkbox";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
-import Scroll from "@scspace-client/Components/pages/layouts/Scroll";
+import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
 import InputComponent from "@scspace-client/Components/molecules/forms/Input";
 import { useState } from "react";
 import NumberInputComponent from "@scspace-client/Components/molecules/forms/NumberInput";

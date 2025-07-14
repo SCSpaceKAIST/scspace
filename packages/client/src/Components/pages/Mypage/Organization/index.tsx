@@ -12,17 +12,17 @@ import {
     useBreakpointValue
 } from "@chakra-ui/react";
 import { useState, } from "react";
-import Scroll from "./layouts/Scroll";
+import Scroll from "../../Layout/Scroll";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useOrganization, } from "@scspace-client/Hooks/organization";
 import { IOrganizationDelegator, } from "@scspace-depot/types/organization";
-import LoadingComponent from "../atoms/Loading";
+import LoadingComponent from "../../../atoms/Loading";
 import { HiOutlineRefresh } from "react-icons/hi";
 
-import OrganizationDetail from "../organisms/Organization/OrganizationDetail";
-import NewOrganizationBtn from "../organisms/Organization/NewOrganizationBtn";
+import OrganizationDetail from "../../../organisms/Organization/OrganizationDetail";
+import NewOrganizationBtn from "../../../organisms/Organization/NewOrganizationBtn";
 import { useDate } from "@scspace-client/Hooks/utils";
-import TooltipComponent from "../atoms/Tooptip";
+import TooltipComponent from "../../../atoms/Tooptip";
 
 export default function Organization() {
     const { userInfo, needLogin } = useAuth();

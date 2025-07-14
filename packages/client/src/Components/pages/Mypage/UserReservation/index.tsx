@@ -16,7 +16,7 @@ import {
     Text,
     useBreakpointValue,
 } from "@chakra-ui/react";
-import Scroll from "@scspace-client/Components/pages/layouts/Scroll";
+import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useUserReservation } from "@scspace-client/Hooks/reservation";
@@ -27,7 +27,7 @@ import { useDate } from "@scspace-client/Hooks/utils";
 import CalendarDialog from "@scspace-client/Components/organisms/Calendar/CalendarDialog";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { useOrganization } from "@scspace-client/Hooks/organization";
-import TooltipComponent from "../../atoms/Tooptip";
+import TooltipComponent from "../../../atoms/Tooptip";
 
 export default function UserReservation() {
     const { userInfo, needLogin } = useAuth();

@@ -1,5 +1,5 @@
 import Browse from "@scspace-client/Components/pages/Browse";
-import PageTemplete from "@scspace-client/Components/pages/layouts/PageTemplete";
+import PageTemplete from "@scspace-client/Components/pages/Layout/PageTemplete";
 
 export default function IntroPage() {
   return (

@@ -1,8 +1,8 @@
 "use client";
 
-import Manage from "@scspace-client/Components/pages/Manage";
+import Management from "@scspace-client/Components/pages/Management";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import PageTemplete from "@scspace-client/Components/pages/layouts/PageTemplete";
+import PageTemplete from "@scspace-client/Components/pages/Layout/PageTemplete";
 
 export default function SpacePage() {
   const { needManager: needAdmin } = useAuth();
@@ -13,7 +13,7 @@ export default function SpacePage() {
       title="관리"
       subtitle="Management"
     >
-      <Manage />
+      <Management />
     </PageTemplete>
   );
 }

@@ -110,7 +110,7 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
     useEffect(() => {
         if (spaces) setSpaceLinks(spaces.map((s): ILink => {
             return {
-                href: `/space/${s.id}`,
+                href: `/browse/space/${s.id}`,
                 helperText: s.nameEn,
                 label: s.nameKr,
             }
@@ -120,7 +120,7 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
     useEffect(() => {
         if (spaces) setCalendarLinks(
             spaces.map((s): ILink => ({
-                href: `/calendar/${s.id}`,
+                href: `/reservation/status/${s.id}`,
                 helperText: s.nameEn,
                 label: s.nameKr,
             }))
@@ -135,12 +135,18 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 helperText: "Browse",
                 subdomains: [
                     {
-                        href: '/about/scspace',
+                        href: '/browse/scspace',
                         label: "공간위",
                         helperText: "SCSpace"
                     },
                     {
-                        href: '/about/rules',
+                        href: "/browse/space",
+                        label: "공간",
+                        helperText: "Spaces",
+                        subdomains: spaceLinks,
+                    },
+                    {
+                        href: '/browse/rules',
                         label: "세칙",
                         helperText: "Rules"
                     }
@@ -171,27 +177,16 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                     {
                         href: "/reservation/status",
                         label: "현황",
-                        helperText: "Status"
+                        helperText: "Status",
+                        subdomains: calendarLinks
                     },
                 ]
-            },
-            {
-                href: "/calendar",
-                label: "예약 현황",
-                helperText: "Calendar",
-                subdomains: calendarLinks,
             },
             {
                 href: "/",
                 label: "물품 대여하기",
                 helperText: "Rental",
                 disabled: true
-            },
-            {
-                href: "/space",
-                label: "공간위 관리 공간",
-                helperText: "Spaces",
-                subdomains: spaceLinks,
             },
             {
                 href: "/mypage",

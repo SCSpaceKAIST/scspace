@@ -9,7 +9,7 @@ import {
     Text,
     useBreakpointValue,
 } from "@chakra-ui/react";
-import Scroll from "@scspace-client/Components/pages/layouts/Scroll";
+import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useEffect, useState } from "react";
@@ -17,7 +17,7 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { useAllUser } from "@scspace-client/Hooks/user";
 import { IUser } from "@scspace-depot/types/user";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
-import UserDialog from "../organisms/Manage/UserDialog";
+import UserDialog from "../../../organisms/Manage/UserDialog";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 
 function classify(type: UserTypeEnum): string {

@@ -10,7 +10,7 @@ import {
   CloseButton,
   IconButton,
 } from "@chakra-ui/react";
-import Scroll from "../../../layouts/Scroll";
+import Scroll from "../../../Layout/Scroll";
 import { useEffect, useState } from "react";
 import LoadingComponent from "../../../../atoms/Loading";
 import "react-datepicker/dist/react-datepicker.css";
