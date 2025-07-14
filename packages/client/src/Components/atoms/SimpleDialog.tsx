@@ -24,7 +24,7 @@ export default function SimpleDialog({ open, setOpen, children }: {
             <Portal>
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
-                    <Dialog.Content className={isWide ? "" : "full"}>
+                    <Dialog.Content className={isWide ? "" : "full"} minH="full">
                         {children}
                     </Dialog.Content>
                 </Dialog.Positioner>
