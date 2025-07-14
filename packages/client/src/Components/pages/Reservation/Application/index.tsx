@@ -32,7 +32,7 @@ import { useDate } from "@scspace-client/Hooks/utils";
 
 export default function Application() {
   const { userInfo, needLogin } = useAuth();
-  // needLogin();
+  needLogin();
 
   const _init = new Date();
   const [dateFrom, setDateFrom] = useState<Date>(() => new Date(_init.getFullYear(), _init.getMonth(), _init.getDate()));

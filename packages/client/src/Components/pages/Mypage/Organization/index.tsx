@@ -23,6 +23,7 @@ import OrganizationDetail from "../../../organisms/Organization/OrganizationDeta
 import NewOrganizationBtn from "../../../organisms/Organization/NewOrganizationBtn";
 import { useDate } from "@scspace-client/Hooks/utils";
 import TooltipComponent from "../../../atoms/Tooptip";
+import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 
 export default function Organization() {
     const { userInfo, needLogin } = useAuth();
@@ -82,71 +83,27 @@ export default function Organization() {
                             </HStack>
                         </Flex>
                         <Scroll>
-                            <Table.Root
-                                stickyHeader
-                                interactive
-                                colorPalette="blue"
-                            >
-                                <Table.ColumnGroup>
-                                    <Table.Column htmlWidth={isWide ? "25%" : "50%"} />
-                                    <Table.Column htmlWidth={isWide ? "25%" : "50%"} />
-                                    {isWide && (
-                                        <>
-                                            <Table.Column htmlWidth="25%" />
-                                            <Table.Column htmlWidth="25%" />
-                                        </>
-                                    )}
-                                </Table.ColumnGroup>
-                                <Table.Header >
-                                    <Table.Row bg="bg.muted">
-                                        <Table.ColumnHeader>
-                                            Name
-                                        </Table.ColumnHeader>
-                                        <Table.ColumnHeader>
-                                            Delegator
-                                        </Table.ColumnHeader>
-                                        {isWide && (
-                                            <>
-                                                <Table.ColumnHeader>
-                                                    Create Time
-                                                </Table.ColumnHeader>
-                                                <Table.ColumnHeader>
-                                                    Update Time
-                                                </Table.ColumnHeader>
-                                            </>
-                                        )}
-                                    </Table.Row>
-                                </Table.Header>
-                                <Table.Body>
-                                    {organization.map((org: IOrganizationDelegator) => (
-                                        <Table.Row
-                                            key={org.id}
-                                            onClick={() => {
-                                                setSelected(org.id);
-                                                setOpen(true);
-                                            }}
-                                            cursor="pointer"
-                                        >
-                                            <Table.Cell>
-                                                {org.name}
-                                            </Table.Cell>
-                                            <Table.Cell>
-                                                {org.delegator.nameKr}
-                                            </Table.Cell>
-                                            {isWide && (
-                                                <>
-                                                    <Table.Cell>
-                                                        {getString(org.timeRegister)}
-                                                    </Table.Cell>
-                                                    <Table.Cell>
-                                                        {getString(org.timeUpdate)}
-                                                    </Table.Cell>
-                                                </>
-                                            )}
-                                        </Table.Row>
-                                    ))}
-                                </Table.Body>
-                            </Table.Root>
+                            <SimpleTable
+                                setId={(id: number) => {
+                                    setSelected(id);
+                                    setOpen(true);
+                                }}
+                                header={[
+                                    "Name",
+                                    "Delegator",
+                                    "Create Time",
+                                    "Update Time"
+                                ]}
+                                content={organization.map((org: IOrganizationDelegator) => ({
+                                    id: org.id,
+                                    row: [
+                                        org.name,
+                                        org.delegator.nameKr,
+                                        getString(org.timeRegister),
+                                        getString(org.timeUpdate)
+                                    ]
+                                }))}
+                            />
                         </Scroll>
                     </Grid>
                     <Portal>
