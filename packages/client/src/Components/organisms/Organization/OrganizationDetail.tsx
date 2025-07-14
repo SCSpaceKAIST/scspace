@@ -4,7 +4,6 @@ import {
     Button,
     Dialog,
     Separator,
-    Wrap,
     IconButton,
     DataList,
     HStack,
@@ -16,7 +15,6 @@ import { useOrganizationAPI, useOrganizationDetail } from "@scspace-client/Hooks
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { HiOutlineRefresh } from "react-icons/hi";
 
-import Member from "./Member";
 import AddMemberBtn from "./AddMemberBtn";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useEffect, useState } from "react";
@@ -24,7 +22,6 @@ import { useDate } from "@scspace-client/Hooks/utils";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
-import { classify } from "@scspace-client/Hooks/user";
 
 export default function OrganizationDetail({ id, onDelete }: {
     id: number;
@@ -86,7 +83,7 @@ export default function OrganizationDetail({ id, onDelete }: {
             </Dialog.Header>
             <Separator />
             <Dialog.Body px={8} py={4}>
-                <DataList.Root orientation="horizontal">
+                <DataList.Root orientation={isWide ? "horizontal" : "vertical"}>
                     <DataListItem label="Delegator">
                         <DataList.Root>
                             <DataListItem label="Name">
@@ -103,22 +100,29 @@ export default function OrganizationDetail({ id, onDelete }: {
                             <Text margin={0} padding={0}>
                                 Members
                             </Text>
-                            <AddMemberBtn
-                                oid={organizationDetail.id}
-                                refetch={refetch}
-                                disabled={!isDelegator}
-                            />
+                            {isWide && (
+                                <AddMemberBtn
+                                    oid={organizationDetail.id}
+                                    refetch={refetch}
+                                    disabled={!isDelegator}
+                                />
+                            )}
                         </HStack>
                     }>
                         <SimpleTable
-                            header={["StudentNumber", "Name", "email", "type"]}
+                            header={[
+                                "StudentNumber",
+                                "Name (Kor)",
+                                "Name (Eng)",
+                                "email"
+                            ]}
                             content={organizationDetail.members.map((u) => ({
                                 id: u.id,
                                 row: [
                                     u.user.studentNumber,
                                     u.user.nameKr,
-                                    u.user.email,
-                                    classify(u.user.type),
+                                    u.user.nameEn,
+                                    u.user.email
                                 ],
                             }))}
                         />
