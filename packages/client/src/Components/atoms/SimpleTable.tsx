@@ -11,7 +11,7 @@ export interface TableContent {
 interface SimpleTableProps {
     header: [ReactNode, ReactNode, ReactNode, ReactNode];
     content: TableContent[];
-    onIdChange: (id: number) => any;
+    onIdChange?: (id: number) => any;
 }
 
 export default function SimpleTable({ onIdChange, header, content }: SimpleTableProps) {
@@ -57,7 +57,7 @@ export default function SimpleTable({ onIdChange, header, content }: SimpleTable
                 {content.map((c) => (
                     <Table.Row
                         key={c.id}
-                        onClick={() => onIdChange(c.id)}
+                        onClick={onIdChange && (() => onIdChange(c.id))}
                         cursor="pointer"
                     >
                         <Table.Cell>

@@ -13,25 +13,11 @@ import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useState } from "react";
 import { HiOutlineRefresh } from "react-icons/hi";
-import { useAllUser } from "@scspace-client/Hooks/user";
+import { classify, useAllUser } from "@scspace-client/Hooks/user";
 import { IUser } from "@scspace-depot/types/user";
-import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 import UserDialog from "../../../organisms/Manage/UserDialog";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
-
-function classify(type: UserTypeEnum): string {
-    switch (type) {
-        case UserTypeEnum.ADMIN:
-            return "Admin"
-        case UserTypeEnum.MANAGER:
-            return "Manager"
-        case UserTypeEnum.WORKER:
-            return "Worker"
-        default:
-            return "User"
-    }
-}
 
 export default function ManageUser() {
     const { needManager } = useAuth();

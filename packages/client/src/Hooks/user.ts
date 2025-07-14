@@ -3,6 +3,7 @@
 import { IUser, IUserUpdate } from "@scspace-depot/types/user";
 import { useQueryApi, useMutationApi } from "./api"
 import { useEffect, useState } from "react";
+import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 export function useUserInfo({ uid }: { uid: Number }) {
     const { data, isLoading, refetch } = useQueryApi<IUser>(`/user/profile/${uid}`);
@@ -62,5 +63,18 @@ export function useUserAPI({ uid }: { uid: number }) {
 
     return {
         updateUserType
+    }
+}
+
+export function classify(type: UserTypeEnum): string {
+    switch (type) {
+        case UserTypeEnum.ADMIN:
+            return "Admin"
+        case UserTypeEnum.MANAGER:
+            return "Manager"
+        case UserTypeEnum.WORKER:
+            return "Worker"
+        default:
+            return "User"
     }
 }

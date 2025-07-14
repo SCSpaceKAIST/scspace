@@ -22,6 +22,9 @@ import { useAuth } from "@scspace-client/Hooks/auth";
 import { useEffect, useState } from "react";
 import { useDate } from "@scspace-client/Hooks/utils";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
+import DataListItem from "@scspace-client/Components/atoms/DataListItem";
+import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
+import { classify } from "@scspace-client/Hooks/user";
 
 export default function OrganizationDetail({ id, onDelete }: {
     id: number;
@@ -71,69 +74,55 @@ export default function OrganizationDetail({ id, onDelete }: {
                         gap={1} color="fg.muted"
                     >
                         {isWide && (
-                            <DataList.Item gap={0}>
-                                <DataList.ItemLabel>
-                                    Create Time
-                                </DataList.ItemLabel>
-                                <DataList.ItemValue margin={0}>
-                                    {getString(organizationDetail.timeRegister)}
-                                </DataList.ItemValue>
-                            </DataList.Item>
+                            <DataListItem label="Create Time">
+                                {getString(organizationDetail.timeRegister)}
+                            </DataListItem>
                         )}
-                        <DataList.Item gap={0}>
-                            <DataList.ItemLabel>
-                                Update Time
-                            </DataList.ItemLabel>
-                            <DataList.ItemValue margin={0}>
-                                {getString(organizationDetail.timeUpdate)}
-                            </DataList.ItemValue>
-                        </DataList.Item>
+                        <DataListItem label="Update Time">
+                            {getString(organizationDetail.timeUpdate)}
+                        </DataListItem>
                     </DataList.Root>
                 </HStack>
             </Dialog.Header>
             <Separator />
             <Dialog.Body px={8} py={4}>
                 <DataList.Root orientation="horizontal">
-                    <DataList.Item>
-                        <DataList.ItemLabel>
-                            Delegator
-                        </DataList.ItemLabel>
-                        <DataList.ItemValue margin={0}>
-                            <Member
-                                refetch={refetch}
-                                oid={id}
-                                user={organizationDetail.delegator}
-                                showDeleteButton={false}
-                            />
-                        </DataList.ItemValue>
-                    </DataList.Item>
+                    <DataListItem label="Delegator">
+                        <DataList.Root>
+                            <DataListItem label="Name">
+                                {organizationDetail.delegator.nameKr}
+                            </DataListItem>
+                            <DataListItem label="Email">
+                                {organizationDetail.delegator.email}
+                            </DataListItem>
+                        </DataList.Root>
+                    </DataListItem>
                     <Separator />
-                    <DataList.Item alignItems="start">
-                        <DataList.ItemLabel>
-                            <HStack gap={2}>
-                                <Text margin={0} padding={0}>
-                                    Members
-                                </Text>
-                                <AddMemberBtn
-                                    oid={organizationDetail.id}
-                                    refetch={refetch}
-                                    disabled={!isDelegator}
-                                />
-                            </HStack>
-                        </DataList.ItemLabel>
-                        <DataList.ItemValue margin={0}>
-                            <Wrap>
-                                {organizationDetail.members.map((m) => (
-                                    <Member
-                                        refetch={refetch}
-                                        oid={id}
-                                        key={m.user.email} user={m.user}
-                                        deletable={isDelegator && (m.user.id !== organizationDetail.delegator.id)}
-                                    />
-                                ))}
-                            </Wrap>
-                        </DataList.ItemValue>
-                    </DataList.Item>
+                    <DataListItem label={
+                        <HStack gap={2}>
+                            <Text margin={0} padding={0}>
+                                Members
+                            </Text>
+                            <AddMemberBtn
+                                oid={organizationDetail.id}
+                                refetch={refetch}
+                                disabled={!isDelegator}
+                            />
+                        </HStack>
+                    }>
+                        <SimpleTable
+                            header={["StudentNumber", "Name", "email", "type"]}
+                            content={organizationDetail.members.map((u) => ({
+                                id: u.id,
+                                row: [
+                                    u.user.studentNumber,
+                                    u.user.nameKr,
+                                    u.user.email,
+                                    classify(u.user.type),
+                                ],
+                            }))}
+                        />
+                    </DataListItem>
                 </DataList.Root>
             </Dialog.Body >
             <Separator />
