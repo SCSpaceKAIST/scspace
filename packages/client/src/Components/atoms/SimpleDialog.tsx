@@ -19,6 +19,7 @@ export default function SimpleDialog({ open, setOpen, children }: {
             open={open}
             onOpenChange={(e) => setOpen(e.open)}
             size={isWide ? "cover" : "full"}
+            scrollBehavior="inside"
         >
             <Portal>
                 <Dialog.Backdrop />

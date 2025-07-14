@@ -18,7 +18,7 @@ import { IOrganizationDelegator, } from "@scspace-depot/types/organization";
 import LoadingComponent from "../../../atoms/Loading";
 import { HiOutlineRefresh } from "react-icons/hi";
 
-import OrganizationDetail from "../../../organisms/Organization/OrganizationDetail";
+import OrganizationDialog from "../../../organisms/Organization/OrganizationDetail";
 import NewOrganizationBtn from "../../../organisms/Organization/NewOrganizationBtn";
 import { useDate } from "@scspace-client/Hooks/utils";
 import TooltipComponent from "../../../atoms/Tooptip";
@@ -40,85 +40,74 @@ export default function Organization() {
 
     return (
         <Scroll>
-            {organization ? (
-                <Dialog.Root
-                    open={open}
-                    onOpenChange={(e) => setOpen(e.open)}
-                    size={isWide ? "cover" : "full"}
+            {organization ? (<>
+                <Grid
+                    height="100%"
+                    templateRows="auto 1fr"
+                    gap={2}
                 >
-                    <Grid
-                        height="100%"
-                        templateRows="auto 1fr"
-                        gap={2}
+                    <Flex
+                        width="100%"
+                        justify={isWide ? "space-between" : "end"}
+                        alignItems="end"
                     >
-                        <Flex
-                            width="100%"
-                            justify={isWide ? "space-between" : "end"}
-                            alignItems="end"
-                        >
-                            {isWide && (
-                                <Text margin={0} color="gray.focusRing">
-                                    Click each row to see detail of organization
-                                </Text>
-                            )}
-                            <HStack>
-                                <TooltipComponent content="Refresh">
-                                    <IconButton
-                                        rounded="sm"
-                                        variant="ghost"
-                                        onClick={() => refetch()}
-                                    >
-                                        <HiOutlineRefresh color="gray" />
-                                    </IconButton>
-                                </TooltipComponent>
-                                <TooltipComponent content="Make New Organization">
-                                    <NewOrganizationBtn
-                                        uid={userInfo?.id ?? 0}
-                                        onSuccess={refetch}
-                                    />
-                                </TooltipComponent>
-                            </HStack>
-                        </Flex>
-                        <Scroll>
-                            <SimpleTable
-                                onIdChange={(id: number) => {
-                                    setSelected(id);
-                                    setOpen(true);
-                                }}
-                                header={[
-                                    "Name",
-                                    "Delegator",
-                                    "Create Time",
-                                    "Update Time"
-                                ]}
-                                content={organization.map((org: IOrganizationDelegator) => ({
-                                    id: org.id,
-                                    row: [
-                                        org.name,
-                                        org.delegator.nameKr,
-                                        getString(org.timeRegister),
-                                        getString(org.timeUpdate)
-                                    ]
-                                }))}
-                            />
-                        </Scroll>
-                    </Grid>
-                    <Portal>
-                        <Dialog.Backdrop />
-                        <Dialog.Positioner>
-                            <Dialog.Content className={isWide ? "" : "full"}>
-                                <OrganizationDetail
-                                    id={selected}
-                                    onDelete={() => {
-                                        refetch();
-                                        setOpen(false);
-                                    }}
+                        {isWide && (
+                            <Text margin={0} color="gray.focusRing">
+                                Click each row to see detail of organization
+                            </Text>
+                        )}
+                        <HStack>
+                            <TooltipComponent content="Refresh">
+                                <IconButton
+                                    rounded="sm"
+                                    variant="ghost"
+                                    onClick={() => refetch()}
+                                >
+                                    <HiOutlineRefresh color="gray" />
+                                </IconButton>
+                            </TooltipComponent>
+                            <TooltipComponent content="Make New Organization">
+                                <NewOrganizationBtn
+                                    uid={userInfo?.id ?? 0}
+                                    onSuccess={refetch}
                                 />
-                            </Dialog.Content>
-                        </Dialog.Positioner>
-                    </Portal>
-                </Dialog.Root>
-            ) : (
+                            </TooltipComponent>
+                        </HStack>
+                    </Flex>
+                    <Scroll>
+                        <SimpleTable
+                            onIdChange={(id: number) => {
+                                setSelected(id);
+                                setOpen(true);
+                            }}
+                            header={[
+                                "Name",
+                                "Delegator",
+                                "Create Time",
+                                "Update Time"
+                            ]}
+                            content={organization.map((org: IOrganizationDelegator) => ({
+                                id: org.id,
+                                row: [
+                                    org.name,
+                                    org.delegator.nameKr,
+                                    getString(org.timeRegister),
+                                    getString(org.timeUpdate)
+                                ]
+                            }))}
+                        />
+                    </Scroll>
+                </Grid>
+                <OrganizationDialog
+                    open={open}
+                    setOpen={setOpen}
+                    id={selected}
+                    onDelete={() => {
+                        refetch();
+                        setOpen(false);
+                    }}
+                />
+            </>) : (
                 <LoadingComponent />
             )}
         </Scroll >

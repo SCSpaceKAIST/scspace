@@ -17,14 +17,16 @@ import { HiOutlineRefresh } from "react-icons/hi";
 
 import AddMemberBtn from "./AddMemberBtn";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useDate } from "@scspace-client/Hooks/utils";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
-import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
+import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 
-export default function OrganizationDetail({ id, onDelete }: {
+export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
+    open: boolean;
+    setOpen: Dispatch<SetStateAction<boolean>>;
     id: number;
     onDelete: () => any;
 }) {
@@ -50,103 +52,108 @@ export default function OrganizationDetail({ id, onDelete }: {
         })
     }
 
-    return (organizationDetail ? (
-        <>
-            <Dialog.Header>
-                <HStack width="100%" justify="space-between" alignItems="start">
-                    <HStack>
-                        <IconButton rounded="sm" variant="ghost" onClick={() => refetch()} size="sm">
-                            <HiOutlineRefresh color="gray" />
-                        </IconButton>
-                        <Stack gap={0}>
-                            <Text color="fg.muted">
-                                Organization Name
-                            </Text>
-                            <Dialog.Title>
-                                {organizationDetail.name}
-                            </Dialog.Title>
-                        </Stack>
-                    </HStack>
-                    <DataList.Root
-                        orientation={isWide ? "horizontal" : "vertical"}
-                        gap={1} color="fg.muted"
-                    >
-                        {isWide && (
-                            <DataListItem label="Create Time">
-                                {getString(organizationDetail.timeRegister)}
-                            </DataListItem>
-                        )}
-                        <DataListItem label="Update Time">
-                            {getString(organizationDetail.timeUpdate)}
-                        </DataListItem>
-                    </DataList.Root>
-                </HStack>
-            </Dialog.Header>
-            <Separator />
-            <Dialog.Body px={8} py={4}>
-                <Scroll>
-                    <DataList.Root orientation={isWide ? "horizontal" : "vertical"}>
-                        <DataListItem label="Delegator">
-                            <DataList.Root>
-                                <DataListItem label="Name">
-                                    {organizationDetail.delegator.nameKr}
-                                </DataListItem>
-                                <DataListItem label="Email">
-                                    {organizationDetail.delegator.email}
+    return (
+        <SimpleDialog
+            open={open}
+            setOpen={setOpen}
+        >
+            {organizationDetail ? (
+                <>
+                    <Dialog.Header>
+                        <HStack width="100%" justify="space-between" alignItems="start">
+                            <HStack>
+                                <IconButton rounded="sm" variant="ghost" onClick={() => refetch()} size="sm">
+                                    <HiOutlineRefresh color="gray" />
+                                </IconButton>
+                                <Stack gap={0}>
+                                    <Text color="fg.muted">
+                                        Organization Name
+                                    </Text>
+                                    <Dialog.Title>
+                                        {organizationDetail.name}
+                                    </Dialog.Title>
+                                </Stack>
+                            </HStack>
+                            <DataList.Root
+                                orientation={isWide ? "horizontal" : "vertical"}
+                                gap={1} color="fg.muted"
+                            >
+                                {isWide && (
+                                    <DataListItem label="Create Time">
+                                        {getString(organizationDetail.timeRegister)}
+                                    </DataListItem>
+                                )}
+                                <DataListItem label="Update Time">
+                                    {getString(organizationDetail.timeUpdate)}
                                 </DataListItem>
                             </DataList.Root>
-                        </DataListItem>
-                        <Separator />
-                        <DataListItem label={
-                            <HStack gap={2}>
-                                <Text margin={0} padding={0}>
-                                    Members
-                                </Text>
-                                {isWide && (
-                                    <AddMemberBtn
-                                        oid={organizationDetail.id}
-                                        refetch={refetch}
-                                        disabled={!isDelegator}
-                                    />
-                                )}
-                            </HStack>
-                        }>
-                            <SimpleTable
-                                header={[
-                                    "StudentNumber",
-                                    "Name (Kor)",
-                                    "Name (Eng)",
-                                    "email"
-                                ]}
-                                content={organizationDetail.members.map((u) => ({
-                                    id: u.id,
-                                    row: [
-                                        u.user.studentNumber,
-                                        u.user.nameKr,
-                                        u.user.nameEn,
-                                        u.user.email
-                                    ],
-                                }))}
+                        </HStack>
+                    </Dialog.Header>
+                    <Separator />
+                    <Dialog.Body px={8} py={4}>
+                        <DataList.Root orientation={isWide ? "horizontal" : "vertical"}>
+                            <DataListItem label="Delegator">
+                                <DataList.Root orientation="horizontal">
+                                    <DataListItem label="Name">
+                                        {organizationDetail.delegator.nameKr}
+                                    </DataListItem>
+                                    <DataListItem label="Email">
+                                        {organizationDetail.delegator.email}
+                                    </DataListItem>
+                                </DataList.Root>
+                            </DataListItem>
+                            <Separator />
+                            <DataListItem label={
+                                <HStack gap={2}>
+                                    <Text margin={0} padding={0}>
+                                        Members
+                                    </Text>
+                                    {isWide && (
+                                        <AddMemberBtn
+                                            oid={organizationDetail.id}
+                                            refetch={refetch}
+                                            disabled={!isDelegator}
+                                        />
+                                    )}
+                                </HStack>
+                            }>
+                                <SimpleTable
+                                    header={[
+                                        "StudentNumber",
+                                        "Name (Kor)",
+                                        "Name (Eng)",
+                                        "email"
+                                    ]}
+                                    content={organizationDetail.members.map((u) => ({
+                                        id: u.id,
+                                        row: [
+                                            u.user.studentNumber,
+                                            u.user.nameKr,
+                                            u.user.nameEn,
+                                            u.user.email
+                                        ],
+                                    }))}
+                                />
+                            </DataListItem>
+                        </DataList.Root>
+                    </Dialog.Body >
+                    <Separator />
+                    <Dialog.Footer>
+                        {(isDelegator) && (
+                            <DeleteBtn
+                                onDelete={deleteAction}
                             />
-                        </DataListItem>
-                    </DataList.Root>
-                </Scroll>
-            </Dialog.Body >
-            <Separator />
-            <Dialog.Footer>
-                {(isDelegator) && (
-                    <DeleteBtn
-                        onDelete={deleteAction}
-                    />
-                )}
-                <Dialog.ActionTrigger asChild>
-                    <Button variant="outline" rounded="sm">
-                        Close
-                    </Button>
-                </Dialog.ActionTrigger>
-            </Dialog.Footer>
-        </>
-    ) : (
-        <LoadingComponent />
-    ));
+                        )}
+                        <Dialog.ActionTrigger asChild>
+                            <Button variant="outline" rounded="sm">
+                                Close
+                            </Button>
+                        </Dialog.ActionTrigger>
+                    </Dialog.Footer>
+                </>
+            ) : (
+                <LoadingComponent />
+            )}
+        </SimpleDialog>
+    );
 }
