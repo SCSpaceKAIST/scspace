@@ -11,6 +11,7 @@ import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
+import RequestVerifyBtn from "@scspace-client/Components/organisms/Organization/RequestVerifyBtn";
 
 export default function Atoms() {
     const [dialogOpen, setDialogOpen] = useState(false);

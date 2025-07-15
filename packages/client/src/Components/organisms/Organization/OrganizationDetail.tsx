@@ -112,7 +112,7 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                     <Dialog.Body px={8} py={4}>
                         <DataList.Root orientation={isWide ? "horizontal" : "vertical"}>
                             <DataListItem label={
-                                <HStack w="100%" justify="space-between" alignItems="center">
+                                <HStack w="100%" justify="space-between" alignItems="center" pr={2}>
                                     <Text margin={0} padding={0}>
                                         Status
                                     </Text>

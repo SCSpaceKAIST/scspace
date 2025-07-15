@@ -15,13 +15,13 @@ export default function RequestVerifyBtn({ oid, refetch }: {
             role="alertdialog"
             placement="center"
         >
-            <Dialog.Trigger asChild>
-                <TooltipComponent content="Request Verification">
+            <TooltipComponent content="Request Verification">
+                <Dialog.Trigger asChild>
                     <IconButton size="sm" variant="outline" rounded="sm">
                         <HiOutlineCheck color="gray" />
                     </IconButton>
-                </TooltipComponent>
-            </Dialog.Trigger>
+                </Dialog.Trigger>
+            </TooltipComponent>
             <Portal>
                 <DialogBackdrop zIndex={1500} />
                 <Dialog.Positioner zIndex={1600}>

@@ -96,15 +96,13 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
             }}
             onExitComplete={refetch}
         >
-            <Dialog.Trigger asChild>
-                <TooltipComponent content="Add Member">
-                    <IconButton size="sm" variant="outline" rounded="sm"
-                        disabled={disabled}
-                    >
+            <TooltipComponent content="Add Member">
+                <Dialog.Trigger asChild>
+                    <IconButton size="sm" variant="outline" rounded="sm" disabled={disabled}>
                         <HiPlus color="gray" />
                     </IconButton>
-                </TooltipComponent>
-            </Dialog.Trigger>
+                </Dialog.Trigger>
+            </TooltipComponent>
             <Portal>
                 <DialogBackdrop zIndex={1500} />
                 <Dialog.Positioner zIndex={1600}
