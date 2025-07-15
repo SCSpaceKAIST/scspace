@@ -3,10 +3,9 @@ import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema, Organization, OrganizationMember } from '@schema';
 import { and, eq, inArray, SQL, InferInsertModel } from 'drizzle-orm';
-import { IOrganization, IOrganizationCreate, IOrganizationUpdate } from '@scspace-depot/types/organization';
+import { IOrganizationCreate, IOrganizationUpdate } from '@scspace-depot/types/organization';
 import { MOrganization } from './organization.model';
 import { getNow } from '@scspace-server/common/util';
-import { OrganizationStatusEnum } from '@scspace-depot/enums/organization.enum';
 
 @Injectable()
 export class OrganizationRepository {

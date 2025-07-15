@@ -12,7 +12,7 @@ export function Verified() {
 export function Unverified() {
     return (
         <TooltipComponent content="Under Reviewing">
-            <VscUnverified size="25" color="green" />
+            <VscUnverified size="25" color="orange" />
         </TooltipComponent>
     )
 }

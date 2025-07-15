@@ -1,7 +1,7 @@
 import { Injectable, Inject, NotFoundException, Logger } from '@nestjs/common';
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
-import { schema, OrganizationMember } from 'src/db/schema';
+import { schema, OrganizationMember, Organization } from 'src/db/schema';
 import { and, eq, inArray, SQL, InferInsertModel } from 'drizzle-orm';
 import { MOrganizationMember } from './organization.member.model';
 import { getNow } from '@scspace-server/common/util';
@@ -45,6 +45,7 @@ export class OrganizationMemberRepository {
     } as InferInsertModel<typeof OrganizationMember>;
 
     await this.db.insert(OrganizationMember).values(insertData);
+    await this.db.update(Organization).set({ timeUpdate: getNow(), }).where(eq(Organization.id, organizationId));
 
     const organizationMember = await this.fetch({ organizationId, userId });
     if (organizationMember.length === 0) {
