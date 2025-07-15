@@ -27,10 +27,10 @@ export type IOrganizationCreate = Omit<
   "id" | "timeRegister" | "timeUpdate" | "status"
 >;
 
-export type IOrganizationUpdate = Omit<
+export type IOrganizationUpdate = Partial<Omit<
   IOrganization,
   "id" | "timeRegister" | "timeUpdate"
->;
+>>;
 
 export interface IOrganizationUser {
   userId: number;

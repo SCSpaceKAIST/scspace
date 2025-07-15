@@ -6,11 +6,14 @@ import {
     IOrganizationCreate,
     IOrganizationDelegator,
     IOrganizationMember,
+    IOrganizationUpdate,
     IOrganizationUser,
 } from "@scspace-depot/types/organization";
 import { useEffect, useState } from "react";
 import { useMutationApi, useQueryApi } from "./api";
 import { ISuccessResponse } from "@scspace-depot/types/common/common.type";
+import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
+import { MutationOptions } from "@tanstack/react-query";
 
 export function useAllOrganization() {
     const [organization, setOrganization] = useState<IOrganizationDelegator[] | null>(null);
@@ -70,7 +73,7 @@ export function useOrganizationAPI(oid?: { id: number }) {
         "POST"
     ).mutate;
 
-    const updateOrg = useMutationApi<IOrganization, IOrganizationCreate>(
+    const updateOrg = useMutationApi<IOrganization, IOrganizationUpdate>(
         `/organization/${id}`,
         "PUT"
     ).mutate;
@@ -80,7 +83,7 @@ export function useOrganizationAPI(oid?: { id: number }) {
         "POST"
     ).mutate;
 
-    const removeMember = useMutationApi<ISuccessResponse, IOrganizationUser>(
+    const deleteMember = useMutationApi<ISuccessResponse, IOrganizationUser>(
         `/organization/member/${id}`,
         "DELETE"
     ).mutate;
@@ -90,11 +93,42 @@ export function useOrganizationAPI(oid?: { id: number }) {
         "DELETE"
     ).mutate;
 
+    function getOrganizationStatusCode(status: OrganizationStatusEnum) {
+        switch (status) {
+            case OrganizationStatusEnum.REGISTER_REQUEST:
+                return "Registered";
+            case OrganizationStatusEnum.REGISTERED:
+                return "Registered";
+            case OrganizationStatusEnum.VERIFY_REQUEST:
+                return "Verification Requested";
+            case OrganizationStatusEnum.VERIFIED:
+                return "Verified";
+            default:
+                return "Rejected";
+        }
+    }
+
+    function requestVerification(
+        options?: MutationOptions<IOrganization, Error, IOrganizationUpdate, unknown>
+    ) {
+        if (id === null) {
+            throw new Error("Organization ID is required for verification request.");
+        }
+        updateOrg(
+            { status: OrganizationStatusEnum.VERIFY_REQUEST },
+            options
+        );
+    }
+
     return {
         createOrg,
         updateOrg,
         deleteOrg,
-        removeMember,
+        deleteMember,
         addMember,
+        status: {
+            getOrganizationStatusCode,
+            requestVerification
+        }
     };
 }

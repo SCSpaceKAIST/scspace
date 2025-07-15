@@ -9,7 +9,7 @@ export function Verified() {
     )
 }
 
-export function Unverified() {
+export function VerifyRequested() {
     return (
         <TooltipComponent content="Under Reviewing">
             <VscUnverified size="25" color="orange" />

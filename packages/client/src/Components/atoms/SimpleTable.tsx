@@ -18,11 +18,13 @@ export default function SimpleTable({ onIdChange, header, content }: SimpleTable
     const isWide = useBreakpointValue({ base: false, md: true });
 
     return (
-        <Table.ScrollArea w="100%" h="100%">
+        <Table.ScrollArea w="100%" h="100%" maxW="100%" maxH="100%">
             <Table.Root
                 stickyHeader
                 interactive
                 colorPalette="blue"
+                maxW="inherit"
+                tableLayout="fixed" // 테이블 레이아웃을 고정으로 설정
             >
                 <Table.ColumnGroup>
                     <Table.Column htmlWidth={isWide ? "25%" : "50%"} />
@@ -34,20 +36,20 @@ export default function SimpleTable({ onIdChange, header, content }: SimpleTable
                         </>
                     )}
                 </Table.ColumnGroup>
-                <Table.Header >
+                <Table.Header>
                     <Table.Row bg="bg.muted">
-                        <Table.ColumnHeader>
+                        <Table.ColumnHeader truncate>
                             {header[0]}
                         </Table.ColumnHeader>
-                        <Table.ColumnHeader>
+                        <Table.ColumnHeader truncate>
                             {header[1]}
                         </Table.ColumnHeader>
                         {isWide && (
                             <>
-                                <Table.ColumnHeader>
+                                <Table.ColumnHeader truncate>
                                     {header[2]}
                                 </Table.ColumnHeader>
-                                <Table.ColumnHeader>
+                                <Table.ColumnHeader truncate>
                                     {header[3]}
                                 </Table.ColumnHeader>
                             </>
@@ -61,18 +63,18 @@ export default function SimpleTable({ onIdChange, header, content }: SimpleTable
                             onClick={onIdChange && (() => onIdChange(c.id))}
                             cursor="pointer"
                         >
-                            <Table.Cell>
+                            <Table.Cell truncate>
                                 {c.row[0]}
                             </Table.Cell>
-                            <Table.Cell>
+                            <Table.Cell truncate>
                                 {c.row[1]}
                             </Table.Cell>
                             {isWide && (
                                 <>
-                                    <Table.Cell>
+                                    <Table.Cell truncate>
                                         {c.row[2]}
                                     </Table.Cell>
-                                    <Table.Cell>
+                                    <Table.Cell truncate>
                                         {c.row[3]}
                                     </Table.Cell>
                                 </>
@@ -80,7 +82,7 @@ export default function SimpleTable({ onIdChange, header, content }: SimpleTable
                         </Table.Row>
                     ))}
                 </Table.Body>
-            </Table.Root >
+            </Table.Root>
         </Table.ScrollArea>
     );
 }

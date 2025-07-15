@@ -23,6 +23,9 @@ import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
+import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
+import { VerifyRequested, Verified } from "@scspace-client/Components/molecules/veritication/VerifiedMark";
+import { IOrganizationUpdate } from "@scspace-depot/types/organization";
 
 export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
     open: boolean;
@@ -43,13 +46,23 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
 
     const isWide = useBreakpointValue({ base: false, md: true });
 
-    const { deleteOrg } = useOrganizationAPI({ id });
+    const { deleteOrg, updateOrg, status } = useOrganizationAPI({ id });
+    const getOrgStatusCode = status.getOrganizationStatusCode;
+    const reqVerify = status.requestVerification;
+
     function deleteAction() {
         deleteOrg({}, {
             onSuccess: () => {
                 onDelete();
             }
         })
+    }
+    function updateAction(data: IOrganizationUpdate) {
+        updateOrg(data, {
+            onSuccess: () => {
+                refetch();
+            }
+        });
     }
 
     return (
@@ -69,7 +82,9 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                                     <Text color="fg.muted">
                                         Organization Name
                                     </Text>
-                                    <Dialog.Title>
+                                    <Dialog.Title alignContent="center">
+                                        {organizationDetail.status == OrganizationStatusEnum.VERIFY_REQUEST && <VerifyRequested />}
+                                        {organizationDetail.status == OrganizationStatusEnum.VERIFIED && <Verified />}
                                         {organizationDetail.name}
                                     </Dialog.Title>
                                 </Stack>
@@ -92,6 +107,17 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                     <Separator />
                     <Dialog.Body px={8} py={4}>
                         <DataList.Root orientation={isWide ? "horizontal" : "vertical"}>
+                            <DataListItem label="Status">
+                                {status.getOrganizationStatusCode(organizationDetail.status)}
+                                <Button onClick={() => reqVerify({
+                                    onSuccess: () => {
+                                        alert("Verification request sent successfully.");
+                                        refetch();
+                                    }
+                                })}>
+                                    Request Verification
+                                </Button>
+                            </DataListItem>
                             <DataListItem label="Delegator">
                                 <DataList.Root orientation="horizontal">
                                     <DataListItem label="Name">

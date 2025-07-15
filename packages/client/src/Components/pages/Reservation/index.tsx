@@ -10,7 +10,7 @@ export default function Reservation() {
             kor: "신청",
             eng: "Application",
             preview: (<Application />),
-            href: "/reservation/apply"
+            href: "/reservation/application"
         },
         {
             kor: "현황",

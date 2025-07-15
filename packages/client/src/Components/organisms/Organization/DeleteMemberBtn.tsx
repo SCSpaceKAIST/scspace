@@ -16,7 +16,7 @@ export default function DeleteMemberBtn({ onDelete, disabled, id, uid }: {
     id: number;
     uid: number;
 }) {
-    const deleteOrganizationMember = useOrganizationAPI({ id }).removeMember
+    const deleteOrganizationMember = useOrganizationAPI({ id }).deleteMember
     const [open, setOpen] = useState<boolean>(false);
 
     return (
