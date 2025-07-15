@@ -5,6 +5,7 @@ import { HiPlus } from "react-icons/hi";
 import { IUser } from "@scspace-depot/types/user";
 import { HiMiniXMark } from "react-icons/hi2";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
+import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 
 function NewMember({ user, unSelect }: {
     user: IUser;
@@ -96,11 +97,13 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
             onExitComplete={refetch}
         >
             <Dialog.Trigger asChild>
-                <IconButton size="sm" variant="outline" rounded="sm"
-                    disabled={disabled}
-                >
-                    <HiPlus color="gray" />
-                </IconButton>
+                <TooltipComponent content="Add Member">
+                    <IconButton size="sm" variant="outline" rounded="sm"
+                        disabled={disabled}
+                    >
+                        <HiPlus color="gray" />
+                    </IconButton>
+                </TooltipComponent>
             </Dialog.Trigger>
             <Portal>
                 <DialogBackdrop zIndex={1500} />

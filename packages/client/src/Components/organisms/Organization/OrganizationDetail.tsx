@@ -83,11 +83,13 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                                     <Text color="fg.muted">
                                         Organization Name
                                     </Text>
-                                    <Dialog.Title alignContent="center">
+                                    <HStack m={0} p={0} alignContent="center" alignItems="center">
                                         {organizationDetail.status === OrganizationStatusEnum.VERIFY_REQUEST && <VerifyRequested />}
                                         {organizationDetail.status === OrganizationStatusEnum.VERIFIED && <Verified />}
-                                        {organizationDetail.name}
-                                    </Dialog.Title>
+                                        <Dialog.Title>
+                                            {organizationDetail.name}
+                                        </Dialog.Title>
+                                    </HStack>
                                 </Stack>
                             </HStack>
                             <DataList.Root
@@ -149,17 +151,17 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                                 <SimpleTable
                                     header={[
                                         "StudentNumber",
-                                        "Name (Kor)",
-                                        "Name (Eng)",
-                                        "email"
+                                        "Name",
+                                        "email",
+                                        "manage"
                                     ]}
                                     content={organizationDetail.members.map((u) => ({
                                         id: u.id,
                                         row: [
                                             u.user.studentNumber,
                                             u.user.nameKr,
-                                            u.user.nameEn,
-                                            u.user.email
+                                            u.user.email,
+                                            "Will be implemented later"
                                         ],
                                     }))}
                                 />
