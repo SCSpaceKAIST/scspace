@@ -60,7 +60,7 @@ export class OrganizationController {
   }
 
   @UseGuards(DelegatorGuard)
-  @Put(':id/add/')
+  @Post('member/:id')
   async addMember(
     @Param('id', ParseIntPipe) id: number,
     @Body() oid: IOrganizationUser,
@@ -69,7 +69,7 @@ export class OrganizationController {
   }
 
   @UseGuards(DelegatorGuard)
-  @Put(':id/delete/')
+  @Delete('/member/:id')
   async removeMember(
     @Param('id', ParseIntPipe) id: number,
     @Body() oid: IOrganizationUser,

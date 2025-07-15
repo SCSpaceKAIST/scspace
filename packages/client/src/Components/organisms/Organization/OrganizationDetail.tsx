@@ -31,7 +31,7 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
     onDelete: () => any;
 }) {
     const { organizationDetail, refetch } = useOrganizationDetail({ id: id });
-    const { userInfo, needLogin } = useAuth();
+    const { userInfo, needLogin, isManager } = useAuth();
     const [isDelegator, setIsDelegator] = useState<boolean>(false);
     const { getString } = useDate();
 
@@ -139,7 +139,7 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                     </Dialog.Body >
                     <Separator />
                     <Dialog.Footer>
-                        {(isDelegator) && (
+                        {(isDelegator || isManager) && (
                             <DeleteBtn
                                 onDelete={deleteAction}
                             />

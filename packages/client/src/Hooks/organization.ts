@@ -76,13 +76,13 @@ export function useOrganizationAPI(oid?: { id: number }) {
     ).mutate;
 
     const addMember = useMutationApi<IOrganizationMember, IOrganizationUser>(
-        `/organization/${id}/add`,
-        "PUT"
+        `/organization/member/${id}`,
+        "POST"
     ).mutate;
 
     const removeMember = useMutationApi<ISuccessResponse, IOrganizationUser>(
-        `/organization/${id}/delete`,
-        "PUT"
+        `/organization/member/${id}`,
+        "DELETE"
     ).mutate;
 
     const deleteOrg = useMutationApi<IOrganization, {}>(
