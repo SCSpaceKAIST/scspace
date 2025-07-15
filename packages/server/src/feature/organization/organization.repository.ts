@@ -72,12 +72,16 @@ export class OrganizationRepository {
   async update(organizationId: number, organization: IOrganizationUpdate): Promise<MOrganization> {
     const updateData = {
       id: organizationId,
-      name: organization.name,
-      delegatorId: organization.delegatorId,
+      ...organization,
       timeUpdate: getNow(),
     } as InferInsertModel<typeof Organization>;
 
-    const [result] = await this.db.update(Organization).set(updateData).where(eq(Organization.id, organizationId));
+    const [result] = await this.db
+      .update(Organization)
+      .set(updateData)
+      .where(
+        eq(Organization.id, organizationId)
+      );
     if (!result.affectedRows) {
       throw new Error('Failed to update organization');
     }

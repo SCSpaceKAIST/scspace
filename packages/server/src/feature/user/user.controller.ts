@@ -25,7 +25,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Get('studentNumber/:studentNumber')
   async getUserByStudentNumber(
-    @Param('studentNumber', ParseIntPipe) studentNumber: number
+    @Param('studentNumber') studentNumber: number
   ): Promise<IUser> {
 
     const user = await this.userPublicService.fetchByStudentNumber(studentNumber);

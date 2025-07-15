@@ -44,21 +44,17 @@ export class OrganizationService {
     if (!organization) {
       throw new NotFoundException('Organization not found');
     }
-    const delegator = await this.userPublicService.fetchById(organizationNew.delegatorId);
-    if (!delegator) {
-      throw new NotFoundException('Delegator not found');
+    if (organizationNew.delegatorId) {
+      const delegator = await this.userPublicService.fetchById(organizationNew.delegatorId);
+      if (!delegator) {
+        throw new NotFoundException('Delegator not found');
+      }
     }
-    const updateData: IOrganization = {
-      id: organizationId,
-      name: organizationNew.name,
-      status: organizationNew.status,
-      hasRoom: organizationNew.hasRoom,
-      delegatorId: organizationNew.delegatorId,
-      timeRegister: organization.timeRegister,
-      timeUpdate: organization.timeUpdate,
-    };
 
-    const updatedOrganization = await this.organizationRepository.update(organizationId, updateData);
+    const updatedOrganization = await this.organizationRepository.update(
+      organizationId,
+      organizationNew
+    );
     return MOrganization.fromDB(updatedOrganization);
   }
 

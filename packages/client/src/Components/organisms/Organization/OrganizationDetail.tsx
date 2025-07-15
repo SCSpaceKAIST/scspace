@@ -26,6 +26,7 @@ import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
 import { VerifyRequested, Verified } from "@scspace-client/Components/molecules/veritication/VerifiedMark";
 import { IOrganizationUpdate } from "@scspace-depot/types/organization";
+import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
     open: boolean;
@@ -83,8 +84,8 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                                         Organization Name
                                     </Text>
                                     <Dialog.Title alignContent="center">
-                                        {organizationDetail.status == OrganizationStatusEnum.VERIFY_REQUEST && <VerifyRequested />}
-                                        {organizationDetail.status == OrganizationStatusEnum.VERIFIED && <Verified />}
+                                        {organizationDetail.status === OrganizationStatusEnum.VERIFY_REQUEST && <VerifyRequested />}
+                                        {organizationDetail.status === OrganizationStatusEnum.VERIFIED && <Verified />}
                                         {organizationDetail.name}
                                     </Dialog.Title>
                                 </Stack>
@@ -109,14 +110,16 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                         <DataList.Root orientation={isWide ? "horizontal" : "vertical"}>
                             <DataListItem label="Status">
                                 {status.getOrganizationStatusCode(organizationDetail.status)}
-                                <Button onClick={() => reqVerify({
-                                    onSuccess: () => {
-                                        alert("Verification request sent successfully.");
-                                        refetch();
-                                    }
-                                })}>
-                                    Request Verification
-                                </Button>
+                                {isManager && (
+                                    <Button onClick={() => reqVerify({
+                                        onSuccess: () => {
+                                            alert("Verification request sent successfully.");
+                                            refetch();
+                                        }
+                                    })}>
+                                        Request Verification
+                                    </Button>
+                                )}
                             </DataListItem>
                             <DataListItem label="Delegator">
                                 <DataList.Root orientation="horizontal">
