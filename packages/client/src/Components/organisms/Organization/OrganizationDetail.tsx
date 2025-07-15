@@ -25,8 +25,6 @@ import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
 import { VerifyRequested, Verified } from "@scspace-client/Components/molecules/veritication/VerifiedMark";
-import { IOrganizationUpdate } from "@scspace-depot/types/organization";
-import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 import RequestVerifyBtn from "./RequestVerifyBtn";
 
 export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
@@ -48,9 +46,8 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
 
     const isWide = useBreakpointValue({ base: false, md: true });
 
-    const { deleteOrg, updateOrg, status } = useOrganizationAPI({ id });
+    const { deleteOrg, status } = useOrganizationAPI({ id });
     const getOrgStatusCode = status.getOrganizationStatusCode;
-    const reqVerify = status.requestVerification;
 
     function deleteAction() {
         deleteOrg({}, {
@@ -58,13 +55,6 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                 onDelete();
             }
         })
-    }
-    function updateAction(data: IOrganizationUpdate) {
-        updateOrg(data, {
-            onSuccess: () => {
-                refetch();
-            }
-        });
     }
 
     return (
@@ -129,7 +119,10 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                                     }
                                 </HStack>
                             }>
-                                {getOrgStatusCode(organizationDetail.status)}
+                                <Button size="sm" variant="ghost"
+                                    colorPalette={organizationDetail.status === OrganizationStatusEnum.VERIFIED ? "blue" : "black"}>
+                                    {getOrgStatusCode(organizationDetail.status)}
+                                </Button>
                             </DataListItem>
                             <DataListItem label="Delegator">
                                 <DataList.Root orientation="horizontal">
@@ -143,7 +136,7 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                             </DataListItem>
                             <Separator />
                             <DataListItem label={
-                                <HStack w="100%" justify="space-between" alignItems="center">
+                                <HStack w="100%" justify="space-between" alignItems="center" pr={2}>
                                     <Text margin={0} padding={0}>
                                         Members
                                     </Text>

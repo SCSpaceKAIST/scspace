@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Center, DataList, Dialog } from "@chakra-ui/react";
+import { Box, Button, Center, DataList, Dialog } from "@chakra-ui/react";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import FieldComponent from "@scspace-client/Components/atoms/Field";
 import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
@@ -140,6 +140,10 @@ export default function Atoms() {
                             ]}
                         />
                     </DataListItem>
+
+                    <Button size="sm" variant="ghost" colorPalette="blue">
+                        test
+                    </Button>
                 </DataList.Root>
             </Scroll>
         </>
