@@ -52,7 +52,7 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
     oid: number,
     refetch: () => any;
 }) {
-    const [value, setvalue] = useState<string[]>(["", "", "", "", "", "", "", "",]);
+    const [value, setvalue] = useState<string[]>(["", "", "", "", "", "", "", ""]);
     const [sid, setSid] = useState<string>("");
     const [selected, setSelected] = useState<IUser[]>([]);
     const [isSelected, setIsSelected] = useState<{ [key: string]: boolean }>({});

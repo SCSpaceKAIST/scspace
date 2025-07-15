@@ -1,21 +1,15 @@
 // atoms/DeleteBtn.tsx
 
-"use client"
-
-import { Button, Dialog, Portal, } from "@chakra-ui/react";
-import { useState, } from "react";
+import { Button, Dialog, Portal, Text, } from "@chakra-ui/react";
 
 export default function DeleteBtn({ onDelete }: {
     onDelete: () => any
 }) {
-    const [open, setOpen] = useState<boolean>(false);
 
     return (
         <Dialog.Root
             role="alertdialog"
             placement="center"
-            open={open}
-            onOpenChange={(e) => setOpen(e.open)}
         >
             <Dialog.Trigger asChild>
                 <Button colorPalette="red" rounded="sm">
@@ -30,20 +24,23 @@ export default function DeleteBtn({ onDelete }: {
                             <Dialog.Title>Are you sure?</Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
-                            This action is permanent and cannot be undone.
-                            The data will be completely removed from our systems.
+                            <Text>
+                                This action is permanent and cannot be undone,
+                            </Text>
+                            <Text>
+                                and the data will be completely removed from our systems.
+                            </Text>
                         </Dialog.Body>
                         <Dialog.Footer>
-                            <Button
-                                colorPalette="red"
-                                rounded="sm"
-                                onClick={() => {
-                                    onDelete();
-                                    setOpen(false);
-                                }}
-                            >
-                                Delete
-                            </Button>
+                            <Dialog.ActionTrigger asChild>
+                                <Button
+                                    colorPalette="red"
+                                    rounded="sm"
+                                    onClick={onDelete}
+                                >
+                                    Delete
+                                </Button>
+                            </Dialog.ActionTrigger>
                             <Dialog.ActionTrigger asChild>
                                 <Button variant="outline" rounded="sm">
                                     Cancel

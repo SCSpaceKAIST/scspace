@@ -27,6 +27,7 @@ import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
 import { VerifyRequested, Verified } from "@scspace-client/Components/molecules/veritication/VerifiedMark";
 import { IOrganizationUpdate } from "@scspace-depot/types/organization";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
+import RequestVerifyBtn from "./RequestVerifyBtn";
 
 export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
     open: boolean;
@@ -83,7 +84,7 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                                     <Text color="fg.muted">
                                         Organization Name
                                     </Text>
-                                    <HStack m={0} p={0} alignContent="center" alignItems="center">
+                                    <HStack m={0} p={0} alignContent="center" alignItems="center" gap={1}>
                                         {organizationDetail.status === OrganizationStatusEnum.VERIFY_REQUEST && <VerifyRequested />}
                                         {organizationDetail.status === OrganizationStatusEnum.VERIFIED && <Verified />}
                                         <Dialog.Title>
@@ -110,18 +111,25 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                     <Separator />
                     <Dialog.Body px={8} py={4}>
                         <DataList.Root orientation={isWide ? "horizontal" : "vertical"}>
-                            <DataListItem label="Status">
-                                {status.getOrganizationStatusCode(organizationDetail.status)}
-                                {isManager && (
-                                    <Button onClick={() => reqVerify({
-                                        onSuccess: () => {
-                                            alert("Verification request sent successfully.");
-                                            refetch();
-                                        }
-                                    })}>
-                                        Request Verification
-                                    </Button>
-                                )}
+                            <DataListItem label={
+                                <HStack w="100%" justify="space-between" alignItems="center">
+                                    <Text margin={0} padding={0}>
+                                        Status
+                                    </Text>
+                                    {
+                                        (
+                                            isWide &&
+                                            organizationDetail.status === OrganizationStatusEnum.REGISTERED
+                                        ) && (
+                                            <RequestVerifyBtn
+                                                oid={organizationDetail.id}
+                                                refetch={refetch}
+                                            />
+                                        )
+                                    }
+                                </HStack>
+                            }>
+                                {getOrgStatusCode(organizationDetail.status)}
                             </DataListItem>
                             <DataListItem label="Delegator">
                                 <DataList.Root orientation="horizontal">
@@ -135,7 +143,7 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                             </DataListItem>
                             <Separator />
                             <DataListItem label={
-                                <HStack gap={2}>
+                                <HStack w="100%" justify="space-between" alignItems="center">
                                     <Text margin={0} padding={0}>
                                         Members
                                     </Text>
@@ -150,7 +158,7 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                             }>
                                 <SimpleTable
                                     header={[
-                                        "StudentNumber",
+                                        "Student Number",
                                         "Name",
                                         "email",
                                         "manage"
