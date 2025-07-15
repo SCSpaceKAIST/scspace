@@ -1,6 +1,7 @@
-import Scspace from "../../organisms/About/Scspace";
+import Scspace from "./Scspace";
 import PageSelector, { IPage } from "../Layout/PageSelector";
-import Rules from "../../organisms/About/Rules";
+import Rules from "./Rules";
+import Space from "./Spaces";
 
 export default function Browse() {
   const pages: IPage[] = [
@@ -8,13 +9,19 @@ export default function Browse() {
       kor: "공간위",
       eng: "SCSpace",
       preview: (<Scspace />),
-      href: "/about/scspace"
+      href: "/browse/scspace"
+    },
+    {
+      kor: "공간",
+      eng: "Spaces",
+      preview: (<Space />),
+      href: "/browse/space"
     },
     {
       kor: "세칙",
       eng: "Rules",
       preview: (<Rules />),
-      href: "/about/rules"
+      href: "/browse/rules"
     },
   ];
   // { value: "Business", page: <Business /> },
