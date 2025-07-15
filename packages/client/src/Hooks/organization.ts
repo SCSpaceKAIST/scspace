@@ -120,6 +120,30 @@ export function useOrganizationAPI(oid?: { id: number }) {
         );
     }
 
+    function accpetVerification(
+        options?: MutationOptions<IOrganization, Error, IOrganizationUpdate, unknown>
+    ) {
+        if (id === null) {
+            throw new Error("Organization ID is required for verification acceptance.");
+        }
+        updateOrg(
+            { status: OrganizationStatusEnum.VERIFIED },
+            options
+        );
+    }
+
+    function rejectVerification(
+        options?: MutationOptions<IOrganization, Error, IOrganizationUpdate, unknown>
+    ) {
+        if (id === null) {
+            throw new Error("Organization ID is required for verification rejection.");
+        }
+        updateOrg(
+            { status: OrganizationStatusEnum.REGISTERED },
+            options
+        );
+    }
+
     return {
         createOrg,
         updateOrg,
@@ -128,7 +152,9 @@ export function useOrganizationAPI(oid?: { id: number }) {
         addMember,
         status: {
             getOrganizationStatusCode,
-            requestVerification
+            requestVerification,
+            accpetVerification,
+            rejectVerification,
         }
     };
 }

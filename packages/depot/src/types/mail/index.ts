@@ -14,22 +14,22 @@ export interface IMail {
     }
 }
 
-export type IMailUser = Omit<
+export type IMailUser = Pick<
     IUser,
-    "type" | "id"
+    "nameKr" | "nameEn" | "email" | "studentNumber"
 >;
 
-export type IMailOrganization = Omit<
+export type IMailOrganization = Pick<
     IOrganization,
-    "id" | "timeRegister" | "timeUpdate" | "delegatorId"
+    "name" | "status" | "hasRoom"
 >;
 
-export type IMailReservation = Omit<
+export type IMailReservation = Pick<
     IReservation,
-    "id" | "userId" | "organizationId" | "spaceId" | "timePost" | "timeUpdate" | "state"
+    "title" | "content" | "timeFrom" | "timeTo"
 >;
 
-export type IMailSpace = Omit<
+export type IMailSpace = Pick<
     ISpace,
-    "id" | "spaceType"
+    "nameEn" | "nameKr"
 >;

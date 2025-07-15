@@ -3,6 +3,7 @@
 import React from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import PageSelector, { IPage } from "../Layout/PageSelector";
+import ManageOrganization from "./Organization";
 
 export default function Management() {
   const { needManager } = useAuth();
@@ -13,11 +14,7 @@ export default function Management() {
       href: "/manage/organization",
       kor: "조직",
       eng: "Organization",
-      preview: (
-        <div>
-          조직 관리 페이지입니다. 조직의 정보를 관리할 수 있습니다.
-        </div>
-      )
+      preview: (<ManageOrganization />)
     },
     {
       href: "/manage/reservation",

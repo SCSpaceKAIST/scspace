@@ -14,14 +14,18 @@ export class OrganizationController {
     private readonly organizationPublicService: OrganizationPublicService,
   ) { }
 
-  // HOOK: useAllOrganization
   @UseGuards(ManageGuard)
   @Get()
   async getOrganizations(): Promise<IOrganizationDelegator[]> {
     return await this.organizationPublicService.fetchAll();
   }
 
-  // HOOK: useOrganization 
+  @UseGuards(AuthGuard('jwt'))
+  @Get('verified')
+  async getVerifiedOrganizations(): Promise<IOrganizationDelegator[]> {
+    return await this.organizationPublicService.fetchVerified();
+  }
+
   @UseGuards(UserGuard)
   @Get('user/:id')
   async getOrganizationsByUserId(
@@ -31,7 +35,6 @@ export class OrganizationController {
     return result.filter(org => org.id !== 1);
   }
 
-  // HOOK: useOrganizationDetail
   @UseGuards(MemberGuard)
   @Get(':id')
   async getOrganizationById(
@@ -39,8 +42,6 @@ export class OrganizationController {
   ): Promise<IOrganizationAll> {
     return await this.organizationPublicService.fetchDeepById(id);
   }
-
-  // HOOK: useOrganizationAPI
 
   @UseGuards(AuthGuard('jwt'))
   @Post()

@@ -4,7 +4,7 @@ import { VscVerifiedFilled, VscUnverified } from "react-icons/vsc";
 export function Verified() {
     return (
         <TooltipComponent content="Verified">
-            <VscVerifiedFilled size="25" color="blue" />
+            <VscVerifiedFilled size="20" color="blue" />
         </TooltipComponent>
     )
 }
@@ -12,7 +12,7 @@ export function Verified() {
 export function VerifyRequested() {
     return (
         <TooltipComponent content="Under Reviewing">
-            <VscUnverified size="25" color="orange" />
+            <VscUnverified size="20" color="orange" />
         </TooltipComponent>
     )
 }

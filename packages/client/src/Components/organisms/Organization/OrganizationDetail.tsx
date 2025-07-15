@@ -9,7 +9,8 @@ import {
     HStack,
     Text,
     Stack,
-    useBreakpointValue
+    useBreakpointValue,
+    VStack
 } from "@chakra-ui/react";
 import { useOrganizationAPI, useOrganizationDetail } from "@scspace-client/Hooks/organization";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
@@ -24,9 +25,9 @@ import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
-import { VerifyRequested, Verified } from "@scspace-client/Components/molecules/veritication/VerifiedMark";
 import RequestVerifyBtn from "./RequestVerifyBtn";
 import OrganizationName from "./OrganizationName";
+import Verification from "./Verification";
 
 export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
     open: boolean;
@@ -100,6 +101,12 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                     <Separator />
                     <Dialog.Body px={8} py={4}>
                         <DataList.Root orientation={isWide ? "horizontal" : "vertical"}>
+                            {(isManager && organizationDetail.status === OrganizationStatusEnum.VERIFY_REQUEST) && (
+                                <>
+                                    <Verification oid={organizationDetail.id} />
+                                    <Separator />
+                                </>
+                            )}
                             <DataListItem label={
                                 <HStack w="100%" justify="space-between" alignItems="center" pr={2}>
                                     <Text margin={0} padding={0}>
@@ -108,7 +115,8 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                                     {
                                         (
                                             isWide &&
-                                            organizationDetail.status === OrganizationStatusEnum.REGISTERED
+                                            organizationDetail.status === OrganizationStatusEnum.REGISTERED &&
+                                            isDelegator
                                         ) && (
                                             <RequestVerifyBtn
                                                 oid={organizationDetail.id}
@@ -118,13 +126,14 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                                     }
                                 </HStack>
                             }>
-                                <Button size="sm" variant="ghost"
+                                <Button size="sm" variant="outline"
                                     colorPalette={organizationDetail.status === OrganizationStatusEnum.VERIFIED ? "blue" : "black"}
                                     cursor="default"
                                 >
                                     {getOrgStatusCode(organizationDetail.status)}
                                 </Button>
                             </DataListItem>
+                            <Separator />
                             <DataListItem label="Delegator">
                                 <DataList.Root orientation="horizontal">
                                     <DataListItem label="Name">

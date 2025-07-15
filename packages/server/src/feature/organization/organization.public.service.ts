@@ -6,6 +6,7 @@ import { MOrganization } from './organization.model';
 import { IUser } from '@scspace-depot/types/user';
 import { MOrganizationMember } from './organization.member.model';
 import { OrganizationMemberRepository } from './organization.member.repository';
+import { OrganizationStatusEnum } from '@scspace-depot/enums/organization.enum';
 
 @Injectable()
 export class OrganizationPublicService {
@@ -57,6 +58,17 @@ export class OrganizationPublicService {
       ...organization,
       delegator: delegators.find(delegator => delegator.id === organization.delegatorId),
     }));
+  }
+
+  async fetchVerified(): Promise<IOrganizationDelegator[]> {
+    const organizations = await this.organizationRepository.fetchAll();
+    const delegators = await this.userPublicService.fetchAllByIds(organizations.map(org => org.delegatorId));
+    return organizations
+      .filter(org => org.status === OrganizationStatusEnum.VERIFIED)
+      .map(org => ({
+        ...org,
+        delegator: delegators.find(delegator => delegator.id === org.delegatorId),
+      }));
   }
 
   async fetchMembersById(organizationId: number): Promise<MOrganizationMember[]> {
