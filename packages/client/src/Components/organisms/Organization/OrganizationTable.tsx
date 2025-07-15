@@ -76,7 +76,7 @@ export default function OrganizationTable({ organization, refetch }: {
                             id: org.id,
                             row: [
                                 (
-                                    <OrganizationName status={org.status}>
+                                    <OrganizationName key={org.id} status={org.status}>
                                         {org.name}
                                     </OrganizationName>
                                 ),
