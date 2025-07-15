@@ -11,6 +11,7 @@ import NumberInputComponent from "@scspace-client/Components/molecules/forms/Num
 import BorderBox from "@scspace-client/Components/atoms/BorderBox";
 import SelectComponent from "@scspace-client/Components/molecules/forms/Select";
 import TextareaComponent from "@scspace-client/Components/molecules/forms/Textarea";
+import { Unverified, Verified } from "@scspace-client/Components/molecules/veritication/VerifiedMark";
 
 export default function Molecules() {
     const [inputValue, setInputValue] = useState<string>("");
@@ -76,6 +77,16 @@ export default function Molecules() {
                                     onChange={(s) => setTextareaValue(s)}
                                 />
                             </BorderBox>
+                        </DataListItem>
+                    </DataList.Root>
+                </DataListItem>
+                <DataListItem label="Verification">
+                    <DataList.Root>
+                        <DataListItem label="Verified">
+                            <Verified />
+                        </DataListItem>
+                        <DataListItem label="Under Reviewing">
+                            <Unverified />
                         </DataListItem>
                     </DataList.Root>
                 </DataListItem>

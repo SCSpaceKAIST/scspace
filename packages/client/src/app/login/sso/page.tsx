@@ -7,7 +7,7 @@ import { randomBytes, createHash } from "crypto";
 import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 
-const LoginPage: React.FC = () => {
+export default function LoginPage() {
   const { linkPush } = useLinkPush();
   const { isLogined } = useAuth();
 
@@ -80,5 +80,3 @@ const LoginPage: React.FC = () => {
     </Scroll>
   );
 };
-
-export default LoginPage;

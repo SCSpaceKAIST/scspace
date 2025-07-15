@@ -211,6 +211,18 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 label: "관리",
                 helperText: "Management",
                 visible: isManager,
+                subdomains: [
+                    {
+                        href: "/manage/organization",
+                        label: "조직",
+                        helperText: "Organization"
+                    },
+                    {
+                        href: "/manage/reservation",
+                        label: "예약",
+                        helperText: "Reservation"
+                    }
+                ]
             },
             {
                 href: "/admin",
@@ -222,6 +234,11 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                         href: "/admin/user",
                         label: "유저 관리",
                         helperText: "Manage User"
+                    },
+                    {
+                        href: "/manage/rules",
+                        label: "세칙",
+                        helperText: "Rules"
                     }
                 ]
             },

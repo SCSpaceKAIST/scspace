@@ -58,11 +58,7 @@ export default function Atoms() {
                     </DataListItem>
                     <DataListItem label="Field">
                         <BorderBox>
-                            <FieldComponent
-                                options={{
-                                    label: "Field Label"
-                                }}
-                            >
+                            <FieldComponent options={{ label: "Field Label" }}>
                                 <BorderBox>
                                     {"Field Children"}
                                 </BorderBox>
