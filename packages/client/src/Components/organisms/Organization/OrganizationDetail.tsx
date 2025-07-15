@@ -26,6 +26,7 @@ import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
 import { VerifyRequested, Verified } from "@scspace-client/Components/molecules/veritication/VerifiedMark";
 import RequestVerifyBtn from "./RequestVerifyBtn";
+import OrganizationName from "./OrganizationName";
 
 export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
     open: boolean;
@@ -74,13 +75,11 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                                     <Text color="fg.muted">
                                         Organization Name
                                     </Text>
-                                    <HStack m={0} p={0} alignContent="center" alignItems="center" gap={1}>
-                                        {organizationDetail.status === OrganizationStatusEnum.VERIFY_REQUEST && <VerifyRequested />}
-                                        {organizationDetail.status === OrganizationStatusEnum.VERIFIED && <Verified />}
+                                    <OrganizationName status={organizationDetail.status}>
                                         <Dialog.Title>
                                             {organizationDetail.name}
                                         </Dialog.Title>
-                                    </HStack>
+                                    </OrganizationName>
                                 </Stack>
                             </HStack>
                             <DataList.Root
@@ -120,7 +119,9 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                                 </HStack>
                             }>
                                 <Button size="sm" variant="ghost"
-                                    colorPalette={organizationDetail.status === OrganizationStatusEnum.VERIFIED ? "blue" : "black"}>
+                                    colorPalette={organizationDetail.status === OrganizationStatusEnum.VERIFIED ? "blue" : "black"}
+                                    cursor="default"
+                                >
                                     {getOrgStatusCode(organizationDetail.status)}
                                 </Button>
                             </DataListItem>
@@ -185,7 +186,8 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                 </>
             ) : (
                 <LoadingComponent />
-            )}
-        </SimpleDialog>
+            )
+            }
+        </SimpleDialog >
     );
 }
