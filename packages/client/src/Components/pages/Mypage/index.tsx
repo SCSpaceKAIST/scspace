@@ -1,7 +1,7 @@
 "use client"
 
 import PageSelector, { IPage } from "../Layout/PageSelector";
-import Organization from "./Organization";
+import UserOrganization from "./Organization";
 import UserReservation from "./UserReservation";
 import { useAuth } from "@scspace-client/Hooks/auth";
 
@@ -19,7 +19,7 @@ export default function Mypage() {
     {
       kor: "조직 관리",
       eng: "Organization",
-      preview: (<Organization />),
+      preview: (<UserOrganization />),
       href: "/mypage/organization"
     },
   ];

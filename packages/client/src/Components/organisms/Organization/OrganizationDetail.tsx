@@ -29,11 +29,11 @@ import RequestVerifyBtn from "./RequestVerifyBtn";
 import OrganizationName from "./OrganizationName";
 import Verification from "./Verification";
 
-export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
+export default function OrganizationDialog({ open, setOpen, id, onChange }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     id: number;
-    onDelete: () => any;
+    onChange: () => any;
 }) {
     const { organizationDetail, refetch } = useOrganizationDetail({ id: id });
     const { userInfo, needLogin, isManager } = useAuth();
@@ -54,7 +54,7 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
     function deleteAction() {
         deleteOrg({}, {
             onSuccess: () => {
-                onDelete();
+                onChange();
             }
         })
     }
@@ -106,6 +106,7 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                                     <Verification
                                         oid={organizationDetail.id}
                                         status={organizationDetail.status}
+                                        onChange={onChange}
                                     />
                                     <Separator />
                                 </>

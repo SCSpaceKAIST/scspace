@@ -4,7 +4,8 @@ import { Button, HStack, Text, VStack } from "@chakra-ui/react";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
 
-export default function Verification({ oid, status }: {
+export default function Verification({ oid, status, onChange }: {
+    onChange: () => any;
     oid: number;
     status: OrganizationStatusEnum
 }) {
@@ -26,26 +27,47 @@ export default function Verification({ oid, status }: {
                 아래 버튼을 클릭하여 조직 권한을 조정할 수 있습니다.
             </Text>
             <HStack>
-                <Button colorPalette="blue" onClick={() => updateStatus(
+                <Button onClick={() => updateStatus(
                     OrganizationStatusEnum.REJECTED, {
                     onSuccess: () => {
                         alert("조직이 반려되었습니다.");
+                        onChange();
                     }
                 })}>
                     반려
+                </Button>
+                <Button variant="outline" colorPalette="green" onClick={() => updateStatus(
+                    OrganizationStatusEnum.REGISTER_REQUEST, {
+                    onSuccess: () => {
+                        alert("조직이 승인 대기 상태로 변경되었습니다.");
+                        onChange();
+                    }
+                })}>
+                    승인 대기
                 </Button>
                 <Button colorPalette="green" onClick={() => updateStatus(
                     OrganizationStatusEnum.REGISTERED, {
                     onSuccess: () => {
                         alert("조직 등록이 승인되었습니다.");
+                        onChange();
                     }
                 })}>
                     승인
+                </Button>
+                <Button variant="outline" colorPalette="orange" onClick={() => updateStatus(
+                    OrganizationStatusEnum.VERIFY_REQUEST, {
+                    onSuccess: () => {
+                        alert("조직이 인증 대기 상태로 변경되었습니다");
+                        onChange();
+                    }
+                })}>
+                    인증 대기
                 </Button>
                 <Button colorPalette="red" onClick={() => updateStatus(
                     OrganizationStatusEnum.VERIFIED, {
                     onSuccess: () => {
                         alert("조직이 성공적으로 인증되었습니다");
+                        onChange();
                     }
                 })}>
                     인증

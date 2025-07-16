@@ -31,6 +31,22 @@ export function useAllOrganization() {
     return { organization, isLoading, refetch };
 }
 
+export function useVerifiedOrganization() {
+    const [organization, setOrganization] = useState<IOrganizationDelegator[] | null>(null);
+    const { data, isLoading, refetch } = useQueryApi<IOrganizationDelegator[]>("/organization/verified/");
+
+    useEffect(() => {
+        if (!data) {
+            setOrganization(null);
+            return;
+        }
+
+        setOrganization(data);
+    }, [data])
+
+    return { organization, isLoading, refetch };
+}
+
 export function useOrganization({ uid }: { uid?: number }) {
     const [organization, setOrganization] = useState<IOrganizationDelegator[] | null>(null);
     const { data, isLoading, refetch } = useQueryApi<IOrganizationDelegator[]>(

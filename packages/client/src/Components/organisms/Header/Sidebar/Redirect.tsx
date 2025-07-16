@@ -153,16 +153,27 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 ]
             },
             {
-                href: "/notice",
-                label: "공지사항",
-                helperText: "Notice",
+                href: "/article",
+                label: "게시판",
+                helperText: "Article",
                 disabled: true
             },
             {
-                href: "/business",
-                label: "사업 안내",
-                helperText: "Business",
-                disabled: true
+                href: "/organization",
+                label: "조직",
+                helperText: "Organization",
+                subdomains: [
+                    {
+                        href: "/organization/verifed",
+                        label: "인증된 조직",
+                        helperText: "Verified Organization"
+                    },
+                    {
+                        href: "/mypage/organization",
+                        label: "내 조직",
+                        helperText: "My Organization"
+                    },
+                ]
             },
             {
                 href: "/reservation",
@@ -180,6 +191,11 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                         helperText: "Status",
                         subdomains: calendarLinks
                     },
+                    {
+                        href: "/mypage/reservation",
+                        label: "내 예약",
+                        helperText: "My Reservation"
+                    }
                 ]
             },
             {
@@ -187,24 +203,6 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 label: "물품 대여하기",
                 helperText: "Rental",
                 disabled: true
-            },
-            {
-                href: "/mypage",
-                label: "마이페이지",
-                helperText: "Mypage",
-                visible: isLogined,
-                subdomains: [
-                    {
-                        href: "/mypage/reservation",
-                        label: "예약 목록",
-                        helperText: "Reservation List",
-                    },
-                    {
-                        href: "/mypage/organization",
-                        label: "조직 관리",
-                        helperText: "Organization"
-                    }
-                ]
             },
             {
                 href: "/manage",

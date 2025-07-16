@@ -19,7 +19,9 @@ import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import OrganizationDialog from "@scspace-client/Components/organisms/Organization/OrganizationDetail";
 import OrganizationName from "./OrganizationName";
 
-export default function OrganizationTable({ organization, refetch }: {
+export default function OrganizationTable({ disabled, organization, refetch, helperText }: {
+    helperText?: string,
+    disabled?: boolean,
     organization: IOrganizationDelegator[],
     refetch: () => void
 }) {
@@ -45,7 +47,11 @@ export default function OrganizationTable({ organization, refetch }: {
                 >
                     {isWide && (
                         <Text margin={0} color="gray.focusRing">
-                            Click each row to see detail of organization
+                            {helperText ? (
+                                helperText
+                            ) : (
+                                "Click each row to see detail of organization"
+                            )}
                         </Text>
                     )}
                     <HStack>
@@ -62,14 +68,16 @@ export default function OrganizationTable({ organization, refetch }: {
                 </Flex>
                 <Scroll>
                     <SimpleTable
-                        onIdChange={(id: number) => {
-                            setSelected(id);
-                            setOpen(true);
-                        }}
+                        onIdChange={!disabled ? (
+                            (id: number) => {
+                                setSelected(id);
+                                setOpen(true);
+                            }
+                        ) : (undefined)}
                         header={[
                             "Name",
                             "Delegator",
-                            "Create Time",
+                            "Contact",
                             "Update Time"
                         ]}
                         content={organization.map((org: IOrganizationDelegator) => ({
@@ -81,7 +89,7 @@ export default function OrganizationTable({ organization, refetch }: {
                                     </OrganizationName>
                                 ),
                                 org.delegator.nameKr,
-                                getString(org.timeRegister),
+                                org.delegator.email,
                                 getString(org.timeUpdate)
                             ]
                         }))}
@@ -92,7 +100,7 @@ export default function OrganizationTable({ organization, refetch }: {
                 open={open}
                 setOpen={setOpen}
                 id={selected}
-                onDelete={() => {
+                onChange={() => {
                     refetch();
                     setOpen(false);
                 }}
