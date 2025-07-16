@@ -104,8 +104,7 @@ export default function OrganizationDialog({ open, setOpen, id, onChange }: {
                             {isManager && (
                                 <>
                                     <Verification
-                                        oid={organizationDetail.id}
-                                        status={organizationDetail.status}
+                                        organization={organizationDetail}
                                         onChange={onChange}
                                     />
                                     <Separator />
@@ -123,7 +122,7 @@ export default function OrganizationDialog({ open, setOpen, id, onChange }: {
                                             isDelegator
                                         ) && (
                                             <RequestVerifyBtn
-                                                oid={organizationDetail.id}
+                                                organization={organizationDetail}
                                                 refetch={refetch}
                                             />
                                         )

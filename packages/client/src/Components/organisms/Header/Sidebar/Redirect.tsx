@@ -199,8 +199,8 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 ]
             },
             {
-                href: "/",
-                label: "물품 대여하기",
+                href: "/rental",
+                label: "대여",
                 helperText: "Rental",
                 disabled: true
             },

@@ -1,15 +1,18 @@
 "use client"
 
 import { Button, HStack, Text, VStack } from "@chakra-ui/react";
+import { useMailAPI } from "@scspace-client/Hooks/mail";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
+import { IOrganizationAll } from "@scspace-depot/types/organization";
 
-export default function Verification({ oid, status, onChange }: {
+export default function Verification({ organization, onChange }: {
     onChange: () => any;
-    oid: number;
-    status: OrganizationStatusEnum
+    organization: IOrganizationAll;
 }) {
-    const { updateStatus } = useOrganizationAPI({ id: oid }).status;
+    const { updateStatus } = useOrganizationAPI({ id: organization.id }).status;
+    const { sendMail } = useMailAPI();
+    const status = organization.status;
 
     return (
         <VStack>
@@ -63,10 +66,20 @@ export default function Verification({ oid, status, onChange }: {
                 })}>
                     인증 대기
                 </Button>
-                <Button colorPalette="red" onClick={() => updateStatus(
+                <Button colorPalette="blue" onClick={() => updateStatus(
                     OrganizationStatusEnum.VERIFIED, {
                     onSuccess: () => {
                         alert("조직이 성공적으로 인증되었습니다");
+                        sendMail({
+                            to: organization.delegator.email ?? "",
+                            subject: "조직 인증 승인 완료 | Organization verification approved",
+                            template: "orgVerified",
+                            context: {
+                                organization: {
+                                    name: organization.name
+                                }
+                            }
+                        })
                         onChange();
                     }
                 })}>

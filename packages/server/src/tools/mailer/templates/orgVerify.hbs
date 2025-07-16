@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title>조직 인증 신청 알림</title>
+    <style>
+        body { 
+            font-family: 'Malgun Gothic', Arial, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            margin: 0; 
+            padding: 0; 
+            background-color: #f4f4f4;
+        }
+        .container { 
+            max-width: 700px; 
+            margin: 0 auto; 
+            background-color: white; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header { 
+            background: linear-gradient(135deg, #2196F3, #1976D2); 
+            color: white; 
+            padding: 30px 20px; 
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 { 
+            margin: 0; 
+            font-size: 24px; 
+            font-weight: 600;
+        }
+        .content { 
+            padding: 30px 20px; 
+        }
+        .alert-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+            font-weight: 500;
+            color: #856404;
+        }
+        .info-section {
+            background: #f8f9fa;
+            border-left: 4px solid #2196F3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .info-section h3 {
+            margin-top: 0;
+            color: #1976D2;
+            font-size: 18px;
+        }
+        /* Grid 대신 간단한 인라인 스타일 사용 */
+        .info-row {
+            margin: 8px 0;
+            line-height: 1.4;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #555;
+            display: inline;
+        }
+        .info-value {
+            color: #333;
+            display: inline;
+            margin-left: 5px;
+        }
+        .member-item {
+            padding: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .actions {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .button {
+            background: #2196F3;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 500;
+            margin: 0 10px;
+        }
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 0 0 8px 8px;
+            border-top: 1px solid #e9ecef;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏢 조직 인증 신청 알림</h1>
+            <p>새로운 조직에서 인증 신청을 제출했습니다</p>
+        </div>
+        
+        <div class="content">
+            <div class="alert-box">
+                ⚠️ 새로운 조직 인증 신청이 접수되어 관리자 검토가 필요합니다.
+            </div>
+
+            <div class="info-section">
+                <h3>📋 신청 조직 정보</h3>
+                <div class="info-row">
+                    <span class="info-label">조직명:</span>
+                    <span class="info-value">{{organization.name}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">전용 공간:</span>
+                    <span class="info-value">{{#if organization.hasRoom}}있음{{else}}없음{{/if}}</span>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>👤 대표자 정보</h3>
+                <div class="info-row">
+                    <span class="info-label">이름:</span>
+                    <span class="info-value">{{organization.delegator.nameKr}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">학번:</span>
+                    <span class="info-value">{{organization.delegator.studentNumber}}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">이메일:</span>
+                    <span class="info-value">{{organization.delegator.email}}</span>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>👥 조직 멤버</h3>
+                <div class="members-list">
+                    {{#each organization.members}}
+                    <div class="member-item">
+                        <strong>{{this.user.nameKr}}</strong> - {{this.user.studentNumber}} ( {{this.user.email}} )
+                    </div>
+                    {{else}}
+                    <div class="member-item">등록된 멤버가 없습니다.</div>
+                    {{/each}}
+                </div>
+            </div>
+
+            <div class="actions">
+                <h3>🛠️ 관리자 액션</h3>
+                <p>아래 링크를 통해 조직 인증 신청을 검토해 주세요:</p>
+                <a href="https://scspace.kws.sparcs.net/manage/organization" class="button">조직 상세 정보 보기</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>학생문화공간위원회</strong></p>
+            <p>이 이메일은 조직 인증 신청 알림을 위해 자동으로 발송되었습니다.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,5 +1,4 @@
 import { IUser } from "../user";
-import { IOrganization } from "./organization.type";
 
 // Table: organization_member
 export interface IOrganizationMember {
