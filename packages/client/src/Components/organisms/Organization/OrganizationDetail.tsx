@@ -101,9 +101,12 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                     <Separator />
                     <Dialog.Body px={8} py={4}>
                         <DataList.Root orientation={isWide ? "horizontal" : "vertical"}>
-                            {(isManager && organizationDetail.status === OrganizationStatusEnum.VERIFY_REQUEST) && (
+                            {isManager && (
                                 <>
-                                    <Verification oid={organizationDetail.id} />
+                                    <Verification
+                                        oid={organizationDetail.id}
+                                        status={organizationDetail.status}
+                                    />
                                     <Separator />
                                 </>
                             )}
@@ -181,7 +184,7 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                     </Dialog.Body >
                     <Separator />
                     <Dialog.Footer>
-                        {(isDelegator || isManager) && (
+                        {isDelegator && (
                             <DeleteBtn
                                 onDelete={deleteAction}
                             />
@@ -193,10 +196,7 @@ export default function OrganizationDialog({ open, setOpen, id, onDelete }: {
                         </Dialog.ActionTrigger>
                     </Dialog.Footer>
                 </>
-            ) : (
-                <LoadingComponent />
-            )
-            }
+            ) : (<LoadingComponent />)}
         </SimpleDialog >
     );
 }
