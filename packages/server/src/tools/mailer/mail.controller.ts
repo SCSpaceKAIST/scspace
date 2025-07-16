@@ -8,7 +8,7 @@ import { AuthGuard } from '@nestjs/passport';
 export class MailController {
     constructor(private readonly mailService: MailService) { }
 
-    // @UseGuards(AuthGuard("jwt"))
+    @UseGuards(AuthGuard("jwt"))
     @Post()
     async sendMail(
         @Body() mailData: IMail,
