@@ -18,12 +18,14 @@ import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import OrganizationDialog from "@scspace-client/Components/organisms/Organization/OrganizationDetail";
 import OrganizationName from "./OrganizationName";
+import NewOrganizationBtn from "./NewOrganizationBtn";
 
-export default function OrganizationTable({ disabled, organization, refetch, helperText }: {
-    helperText?: string,
-    disabled?: boolean,
-    organization: IOrganizationDelegator[],
-    refetch: () => void
+export default function OrganizationTable({ uid, disabled, organization, refetch, helperText }: {
+    helperText?: string;
+    disabled?: boolean;
+    uid?: number;
+    organization: IOrganizationDelegator[];
+    refetch: () => void;
 }) {
     const [selected, setSelected] = useState<number>(-1);
 
@@ -64,6 +66,12 @@ export default function OrganizationTable({ disabled, organization, refetch, hel
                                 <HiOutlineRefresh color="gray" />
                             </IconButton>
                         </TooltipComponent>
+                        {uid && (
+                            <NewOrganizationBtn
+                                uid={uid}
+                                onSuccess={() => refetch()}
+                            />
+                        )}
                     </HStack>
                 </Flex>
                 <Scroll>

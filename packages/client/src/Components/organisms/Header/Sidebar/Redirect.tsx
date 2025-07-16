@@ -164,7 +164,7 @@ export default function Redirect({ onClick }: { onClick: () => void }) {
                 helperText: "Organization",
                 subdomains: [
                     {
-                        href: "/organization/verifed",
+                        href: "/organization/verified",
                         label: "인증된 조직",
                         helperText: "Verified Organization"
                     },

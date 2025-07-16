@@ -5,6 +5,7 @@ import { useState, useRef } from "react";
 import { useOrganizationAPI, } from "@scspace-client/Hooks/organization";
 import InputComponent from "../../molecules/forms/Input";
 import { HiPlus } from "react-icons/hi2";
+import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 
 export default function NewOrganizationBtn({ uid, onSuccess }: {
     uid: number | null;
@@ -25,14 +26,16 @@ export default function NewOrganizationBtn({ uid, onSuccess }: {
             onExitComplete={() => setName("")}
             size={isWide ? "md" : "full"}
         >
-            <Dialog.Trigger asChild>
-                <IconButton
-                    variant="outline"
-                    rounded="sm"
-                >
-                    <HiPlus />
-                </IconButton>
-            </Dialog.Trigger>
+            <TooltipComponent content="Add new organization">
+                <Dialog.Trigger asChild>
+                    <IconButton
+                        variant="outline"
+                        rounded="sm"
+                    >
+                        <HiPlus />
+                    </IconButton>
+                </Dialog.Trigger>
+            </TooltipComponent>
             <Portal>
                 <Dialog.Backdrop />
                 <Dialog.Positioner>

@@ -19,6 +19,7 @@ export default function UserOrganization() {
                 <OrganizationTable
                     organization={organization}
                     refetch={refetch}
+                    uid={userInfo?.id ?? 0}
                 />
             ) : (
                 <LoadingComponent />
