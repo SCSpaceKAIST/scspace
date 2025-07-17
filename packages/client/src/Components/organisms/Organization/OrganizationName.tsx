@@ -6,11 +6,12 @@ export default function OrganizationName({ status, children }: {
     status: OrganizationStatusEnum;
     children: React.ReactNode;
 }) {
+
     return (
         <HStack m={0} p={0} alignContent="center" alignItems="center" gap={1}>
+            {children}
             {status === OrganizationStatusEnum.VERIFY_REQUEST && <VerifyRequested />}
             {status === OrganizationStatusEnum.VERIFIED && <Verified />}
-            {children}
         </HStack>
     );
 }

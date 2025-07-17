@@ -125,12 +125,12 @@ export function useOrganizationAPI(oid?: { id: number }) {
     }
 
     const requestVerification = useMutationApi<IOrganization, {}>(
-        `organization/verify/${id}`,
+        `/organization/verify/${id}`,
         "PUT"
     ).mutate;
 
     const updateStatus = useMutationApi<IOrganization, { status: OrganizationStatusEnum }>(
-        `organization/status/${id}`,
+        `/organization/status/${id}`,
         "PUT"
     ).mutate;
 
