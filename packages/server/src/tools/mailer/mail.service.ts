@@ -7,12 +7,14 @@ import { ISuccessResponse } from '@scspace-depot/types/common';
 export class MailService {
     constructor(private mailerService: MailerService) { }
     // 템플릿을 사용한 메일 보내기
-    sendMail({ subject, template, to, context }: IMail): Promise<ISuccessResponse> {
+    sendMail({ subject, template, to, cc, bcc, context }: IMail): Promise<ISuccessResponse> {
         if (!subject) throw new Error("Subject is missing");
         if (!template) throw new Error("Invalied Template Name");
 
         return this.mailerService.sendMail({
             to,
+            cc: cc ?? [],
+            bcc: bcc ?? [],
             subject,
             template, // 템플릿 파일명 (확장자 제외)
             context, // 템플릿에 전달할 데이터

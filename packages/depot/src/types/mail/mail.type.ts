@@ -5,12 +5,26 @@ import { IUser } from "../user";
 
 export interface IMail {
     subject: string;
-    template: "orgVerify" | "orgVerified" | "welcome";
-    to: string;
+    template: "orgStatusUpdate" | "welcome";
+    to: string | string[];
+    cc?: string | string[];
+    bcc?: string | string[];
     context: {
         user?: Partial<IUser>;
-        organization?: Partial<IOrganizationAll>;
+        organization?: Partial<IMailOrganization>;
         space?: Partial<ISpace>;
         reservation?: Partial<IReservationAll>;
+        comment?: string;
+        meta?: object;
+    }
+}
+
+export interface IMailOrganization extends Omit<
+    IOrganizationAll,
+    "status"
+> {
+    status: {
+        kr: string;
+        en: string;
     }
 }

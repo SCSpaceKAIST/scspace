@@ -6,9 +6,10 @@ import { OrganizationMemberRepository } from './organization.member.repository';
 import { OrganizationPublicService } from './organization.public.service';
 import { DBModule } from '@scspace-server/db/db.module';
 import { UserModule } from '../user/user.module';
+import { MailModule } from '../../tools/mailer/mail.module';
 
 @Module({
-  imports: [DBModule, UserModule],
+  imports: [DBModule, UserModule, MailModule],
   controllers: [OrganizationController],
   providers: [
     OrganizationService,
@@ -18,4 +19,4 @@ import { UserModule } from '../user/user.module';
   ],
   exports: [OrganizationPublicService],
 })
-export class OrganizationModule {} 
+export class OrganizationModule { } 

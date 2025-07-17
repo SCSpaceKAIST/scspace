@@ -10,7 +10,7 @@ import { ISpace } from '@scspace-depot/types/space';
 import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 import { IOrganization, IOrganizationCreate } from '@scspace-depot/types/organization';
 import { OrganizationPublicService } from './feature/organization/organization.public.service';
-import { getNow } from '@scspace-server/common/util';
+import { getNow } from '@scspace-server/common/utils';
 import { ReservationPublicService } from './feature/reservation/reservation.public.service';
 
 @Injectable()

@@ -5,7 +5,7 @@ import { schema, Organization, OrganizationMember } from '@schema';
 import { and, eq, inArray, SQL, InferInsertModel, ne } from 'drizzle-orm';
 import { IOrganizationCreate, IOrganizationUpdate } from '@scspace-depot/types/organization';
 import { MOrganization } from './organization.model';
-import { getNow } from '@scspace-server/common/util';
+import { getNow } from '@scspace-server/common/utils';
 
 @Injectable()
 export class OrganizationRepository {

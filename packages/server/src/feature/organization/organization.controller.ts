@@ -6,6 +6,7 @@ import { ISuccessResponse } from '@scspace-depot/types/common';
 import { OrganizationPublicService } from './organization.public.service';
 import { ManageGuard, UserGuard, MemberGuard, DelegatorGuard } from '../auth/jwt/jwt.guard';
 import { AuthGuard } from '@nestjs/passport';
+import { OrganizationStatusEnum } from '@scspace-depot/enums/organization.enum';
 
 @Controller('organization')
 export class OrganizationController {
@@ -58,6 +59,23 @@ export class OrganizationController {
     @Body() organizationNew: IOrganizationUpdate,
   ): Promise<IOrganization> {
     return await this.organizationService.update(id, organizationNew);
+  }
+
+  @UseGuards(ManageGuard)
+  @Put("status/:id")
+  async updateOrganizationStatus(
+    @Param("id") id: number,
+    @Body() body: { status: OrganizationStatusEnum }
+  ): Promise<IOrganization> {
+    return await this.organizationService.updateStatus(id, body.status);
+  }
+
+  @UseGuards(DelegatorGuard)
+  @Put("verify/:id")
+  async requestVerifyOrganization(
+    @Param("id") id: number,
+  ): Promise<IOrganization> {
+    return await this.organizationService.updateStatus(id, OrganizationStatusEnum.VERIFY_REQUEST);
   }
 
   @UseGuards(DelegatorGuard)

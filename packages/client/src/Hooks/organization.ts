@@ -104,7 +104,7 @@ export function useOrganizationAPI(oid?: { id: number }) {
         "DELETE"
     ).mutate;
 
-    const deleteOrg = useMutationApi<IOrganization, {}>(
+    const deleteOrg = useMutationApi<ISuccessResponse, {}>(
         `/organization/${id}`,
         "DELETE"
     ).mutate;
@@ -124,30 +124,15 @@ export function useOrganizationAPI(oid?: { id: number }) {
         }
     }
 
-    function requestVerification(
-        options?: MutationOptions<IOrganization, Error, IOrganizationUpdate, unknown>
-    ) {
-        if (id === null) {
-            throw new Error("Organization ID is required for verification request.");
-        }
-        updateOrg(
-            { status: OrganizationStatusEnum.VERIFY_REQUEST },
-            options
-        );
-    }
+    const requestVerification = useMutationApi<IOrganization, {}>(
+        `organization/verify/${id}`,
+        "PUT"
+    ).mutate;
 
-    function updateStatus(
-        status: OrganizationStatusEnum,
-        options?: MutationOptions<IOrganization, Error, IOrganizationUpdate, unknown>
-    ) {
-        if (id === null) {
-            throw new Error("Organization ID is required for verification acceptance.");
-        }
-        updateOrg(
-            { status },
-            options
-        );
-    }
+    const updateStatus = useMutationApi<IOrganization, { status: OrganizationStatusEnum }>(
+        `organization/status/${id}`,
+        "PUT"
+    ).mutate;
 
     return {
         createOrg,

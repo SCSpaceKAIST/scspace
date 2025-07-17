@@ -1,4 +1,5 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { OrganizationStatusEnum } from '@scspace-depot/enums/organization.enum';
 
 export function timeRangeCheck(timeFrom: number, timeTo: number): boolean {
   return timeFrom < timeTo;
@@ -99,5 +100,38 @@ export function getDate(time: number): Date {
 export function getDateDiff(timeBefore: number, timeAfter: number) {
   const dateBefore = getDate(timeBefore);
   const dateAfter = getDate(timeAfter);
-  return ~~(dateAfter.getTime() - dateBefore.getTime())/(60*1000);
+  return ~~(dateAfter.getTime() - dateBefore.getTime()) / (60 * 1000);
+}
+
+export function getOrganizationStatusString(status: OrganizationStatusEnum): {
+  kr: string;
+  en: string;
+} {
+  switch (status) {
+    case OrganizationStatusEnum.REJECTED:
+      return {
+        kr: "반려",
+        en: "Rejected"
+      }
+    case OrganizationStatusEnum.REGISTER_REQUEST:
+      return {
+        kr: "등록 대기",
+        en: "Registration Pending"
+      }
+    case OrganizationStatusEnum.REGISTERED:
+      return {
+        kr: "등록",
+        en: "Registered"
+      }
+    case OrganizationStatusEnum.VERIFY_REQUEST:
+      return {
+        kr: "인증 대기",
+        en: "Verification Pending"
+      }
+    case OrganizationStatusEnum.VERIFIED:
+      return {
+        kr: "인증",
+        en: "Verified"
+      }
+  }
 }

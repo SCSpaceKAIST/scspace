@@ -11,4 +11,4 @@ import { UserPublicService } from './user.public.service';
   controllers: [UserController],
   exports: [UserPublicService],
 })
-export class UserModule {}
+export class UserModule { }

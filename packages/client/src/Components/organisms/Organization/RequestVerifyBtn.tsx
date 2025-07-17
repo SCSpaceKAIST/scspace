@@ -4,7 +4,6 @@ import { Dialog, DialogBackdrop, Button, IconButton, Portal, Text } from "@chakr
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import { HiOutlineCheck } from "react-icons/hi2";
-import { useMailAPI } from "@scspace-client/Hooks/mail";
 import { IOrganizationAll } from "@scspace-depot/types/organization";
 
 export default function RequestVerifyBtn({ organization, refetch }: {
@@ -13,7 +12,6 @@ export default function RequestVerifyBtn({ organization, refetch }: {
 }) {
 
     const reqVerify = useOrganizationAPI({ id: organization.id }).status.requestVerification;
-    const { sendMail } = useMailAPI();
 
     return (
         <Dialog.Root
@@ -47,17 +45,9 @@ export default function RequestVerifyBtn({ organization, refetch }: {
                         <Dialog.Footer>
                             <Dialog.ActionTrigger asChild>
                                 <Button colorPalette="blue" rounded="sm"
-                                    onClick={() => reqVerify({
+                                    onClick={() => reqVerify({}, {
                                         onSuccess: () => {
                                             alert("Verification request sent successfully.");
-                                            sendMail({
-                                                to: "scspace@kaist.ac.kr",
-                                                subject: `조직 인증 신청 [ ${organization.name} ]`,
-                                                template: "orgVerify",
-                                                context: {
-                                                    organization
-                                                }
-                                            })
                                             refetch();
                                         }
                                     })}

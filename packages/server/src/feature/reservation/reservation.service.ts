@@ -8,7 +8,7 @@ import {
 import { IOrganization } from '@scspace-depot/types/organization';
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ReservationRepository } from './reservation.repository';
-import { checkContainAllId, takeAll, timeRangeCheck } from 'src/common/util';
+import { checkContainAllId, takeAll, timeRangeCheck } from '@scspace-server/common/utils';
 import { UserPublicService } from '../user/user.public.service';
 import { SpacePublicService } from '../space/space.public.service';
 import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';

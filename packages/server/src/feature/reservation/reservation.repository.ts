@@ -34,7 +34,7 @@ import {
   ReservationStateEnum,
 } from '@scspace-depot/enums/reservation.enum';
 import { MReservation, MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
-import { getNow } from '@scspace-server/common/util';
+import { getNow } from '@scspace-server/common/utils';
 
 @Injectable()
 export class ReservationRepository {
