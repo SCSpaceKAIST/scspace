@@ -30,13 +30,13 @@ import OrganizationName from "./OrganizationName";
 import Verification from "./Verification";
 import EditNameBtn from "./EditNameBtn";
 
-export default function OrganizationDialog({ open, setOpen, id, onChange }: {
+export default function OrganizationDialog({ open, setOpen, id, refetchList }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     id: number;
-    onChange: () => any;
+    refetchList: () => any;
 }) {
-    const { organizationDetail, refetch } = useOrganizationDetail({ id: id });
+    const { organizationDetail, refetch: refetchDetail } = useOrganizationDetail({ id: id });
     const { userInfo, needLogin, isManager } = useAuth();
     const [isDelegator, setIsDelegator] = useState<boolean>(false);
     const { getString } = useDate();
@@ -55,7 +55,7 @@ export default function OrganizationDialog({ open, setOpen, id, onChange }: {
     function deleteAction() {
         deleteOrg({}, {
             onSuccess: () => {
-                onChange();
+                refetchList();
                 setOpen(false);
             }
         })
@@ -71,7 +71,7 @@ export default function OrganizationDialog({ open, setOpen, id, onChange }: {
                     <Dialog.Header>
                         <HStack width="100%" justify="space-between" alignItems="start">
                             <HStack>
-                                <IconButton rounded="sm" variant="ghost" onClick={() => refetch()} size="sm">
+                                <IconButton rounded="sm" variant="ghost" onClick={() => refetchDetail()} size="sm">
                                     <HiOutlineRefresh color="gray" />
                                 </IconButton>
                                 <OrganizationName status={organizationDetail.status}>
@@ -83,7 +83,10 @@ export default function OrganizationDialog({ open, setOpen, id, onChange }: {
                                     <EditNameBtn
                                         name={organizationDetail.name}
                                         oid={organizationDetail.id}
-                                        refetch={refetch}
+                                        refetch={() => {
+                                            refetchDetail();
+                                            refetchList();
+                                        }}
                                     />
                                 )}
                             </HStack>
@@ -110,8 +113,8 @@ export default function OrganizationDialog({ open, setOpen, id, onChange }: {
                                     <Verification
                                         organization={organizationDetail}
                                         onChange={() => {
-                                            refetch();
-                                            onChange();
+                                            refetchDetail();
+                                            refetchList();
                                         }}
                                     />
                                     <Separator />
@@ -133,7 +136,10 @@ export default function OrganizationDialog({ open, setOpen, id, onChange }: {
                                         ) && (
                                             <RequestVerifyBtn
                                                 oid={organizationDetail.id}
-                                                refetch={refetch}
+                                                refetch={() => {
+                                                    refetchDetail();
+                                                    refetchList();
+                                                }}
                                             />
                                         )
                                     }
@@ -159,7 +165,7 @@ export default function OrganizationDialog({ open, setOpen, id, onChange }: {
                                     {isWide && (
                                         <AddMemberBtn
                                             oid={organizationDetail.id}
-                                            refetch={refetch}
+                                            refetch={refetchDetail}
                                             disabled={!isDelegator}
                                         />
                                     )}

@@ -108,7 +108,7 @@ export default function OrganizationTable({ uid, disabled, organization, refetch
                 open={open}
                 setOpen={setOpen}
                 id={selected}
-                onChange={() => refetch()}
+                refetchList={() => refetch()}
             />
         </>
     );
