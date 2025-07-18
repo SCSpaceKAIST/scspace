@@ -7,6 +7,7 @@ import {
     IOrganizationDelegator,
     IOrganizationMember,
     IOrganizationUpdate,
+    IOrganizationUpdateDelegator,
     IOrganizationUser,
 } from "@scspace-depot/types/organization";
 import { useEffect, useState } from "react";
@@ -89,7 +90,7 @@ export function useOrganizationAPI(oid?: { id: number }) {
         "POST"
     ).mutate;
 
-    const updateOrg = useMutationApi<IOrganization, IOrganizationUpdate>(
+    const updateOrg = useMutationApi<IOrganization, IOrganizationUpdateDelegator>(
         `/organization/${id}`,
         "PUT"
     ).mutate;

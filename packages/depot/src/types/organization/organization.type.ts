@@ -32,6 +32,8 @@ export type IOrganizationUpdate = Partial<Omit<
   "id" | "timeRegister" | "timeUpdate"
 >>;
 
+export type IOrganizationUpdateDelegator = Omit<IOrganizationUpdate, "status">;
+
 export interface IOrganizationUser {
   userId: number;
 };

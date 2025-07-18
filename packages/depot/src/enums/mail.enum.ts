@@ -23,8 +23,8 @@ export const OrgStatusMeta = {
             en: 'Organization registered'
         },
         body: {
-            kr: '조직 등록이 완료되었습니다. 이제 세미나실 예약을 신청할 수 있습니다.',
-            en: 'Organization registration is complete. You can now apply for seminar room reservations.'
+            kr: '조직 등록이 완료되었습니다.',
+            en: 'Organization registration is complete.'
         },
         benefits: [
             {
@@ -42,8 +42,8 @@ export const OrgStatusMeta = {
             en: 'Organization verification in progress'
         },
         body: {
-            kr: '조직 인증을 위해 제출한 서류를 검토 중입니다. 심사 완료까지 기다려 주세요.',
-            en: 'We are reviewing the documents you submitted for organization verification. Please wait for the review to complete.'
+            kr: '조직 인증을 위해 검토 중입니다. 심사 완료까지 기다려 주세요.',
+            en: 'We are reviewing the organization you registered verification. Please wait for the review to complete.'
         },
         benefits: [],
     },
@@ -79,8 +79,8 @@ export const OrgStatusMeta = {
             en: 'Organization verification rejected'
         },
         body: {
-            kr: '제출하신 서류가 인증 기준에 부합하지 않아 반려되었습니다. 자세한 사유는 관리자에게 문의해 주세요.',
-            en: 'Unfortunately, your submitted documents do not meet the verification criteria and have been rejected. Please contact the administrator for detailed reasons.'
+            kr: '자세한 사유는 이메일로 문의해 주세요.',
+            en: 'Please contact by the email for detailed reasons.'
         },
         benefits: [],
     },

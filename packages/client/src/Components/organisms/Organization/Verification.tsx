@@ -37,7 +37,7 @@ export default function Verification({ organization, onChange }: {
                 아래 버튼을 클릭하여 조직 권한을 조정할 수 있습니다.
             </Text>
             <HStack>
-                <Button onClick={() => update(
+                <Button colorPalette="red" onClick={() => update(
                     OrganizationStatusEnum.REJECTED
                 )}>
                     반려
@@ -52,7 +52,7 @@ export default function Verification({ organization, onChange }: {
                 )}>
                     등록
                 </Button>
-                <Button variant="outline" colorPalette="orange" onClick={() => update(
+                <Button variant="outline" colorPalette="blue" onClick={() => update(
                     OrganizationStatusEnum.VERIFY_REQUEST
                 )}>
                     인증 대기

@@ -28,6 +28,7 @@ import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
 import RequestVerifyBtn from "./RequestVerifyBtn";
 import OrganizationName from "./OrganizationName";
 import Verification from "./Verification";
+import EditNameBtn from "./EditNameBtn";
 
 export default function OrganizationDialog({ open, setOpen, id, onChange }: {
     open: boolean;
@@ -55,6 +56,7 @@ export default function OrganizationDialog({ open, setOpen, id, onChange }: {
         deleteOrg({}, {
             onSuccess: () => {
                 onChange();
+                setOpen(false);
             }
         })
     }
@@ -72,16 +74,16 @@ export default function OrganizationDialog({ open, setOpen, id, onChange }: {
                                 <IconButton rounded="sm" variant="ghost" onClick={() => refetch()} size="sm">
                                     <HiOutlineRefresh color="gray" />
                                 </IconButton>
-                                <Stack gap={0}>
-                                    <Text color="fg.muted">
-                                        Organization Name
-                                    </Text>
-                                    <OrganizationName status={organizationDetail.status}>
-                                        <Dialog.Title>
-                                            {organizationDetail.name}
-                                        </Dialog.Title>
-                                    </OrganizationName>
-                                </Stack>
+                                <OrganizationName status={organizationDetail.status}>
+                                    <Dialog.Title>
+                                        {organizationDetail.name}
+                                    </Dialog.Title>
+                                </OrganizationName>
+                                <EditNameBtn
+                                    name={organizationDetail.name}
+                                    oid={organizationDetail.id}
+                                    refetch={refetch}
+                                />
                             </HStack>
                             <DataList.Root
                                 orientation={isWide ? "horizontal" : "vertical"}
@@ -128,7 +130,7 @@ export default function OrganizationDialog({ open, setOpen, id, onChange }: {
                                             isDelegator
                                         ) && (
                                             <RequestVerifyBtn
-                                                organization={organizationDetail}
+                                                oid={organizationDetail.id}
                                                 refetch={refetch}
                                             />
                                         )

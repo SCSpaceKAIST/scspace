@@ -182,7 +182,7 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
                                 </Field.Root>
                                 <Field.Root>
                                     <Field.Label>
-                                        Selected Sturents
+                                        Selected Students
                                     </Field.Label>
                                     <Wrap>
                                         {selected.map((m) => (

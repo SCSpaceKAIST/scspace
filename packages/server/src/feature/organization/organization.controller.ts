@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Delete, Put, Param, ParseIntPipe, Body, UseGuards, BadRequestException, Req } from '@nestjs/common';
 import { OrganizationService } from './organization.service';
-import { IOrganization, IOrganizationAll, IOrganizationCreate, IOrganizationDelegator, IOrganizationMember, IOrganizationUpdate, IOrganizationUser } from '@scspace-depot/types/organization';
+import { IOrganization, IOrganizationAll, IOrganizationCreate, IOrganizationDelegator, IOrganizationMember, IOrganizationUpdate, IOrganizationUpdateDelegator, IOrganizationUser } from '@scspace-depot/types/organization';
 import { MOrganizationMember } from './organization.member.model';
 import { ISuccessResponse } from '@scspace-depot/types/common';
 import { OrganizationPublicService } from './organization.public.service';
@@ -56,7 +56,7 @@ export class OrganizationController {
   @Put(':id')
   async updateOrganization(
     @Param('id', ParseIntPipe) id: number,
-    @Body() organizationNew: IOrganizationUpdate,
+    @Body() organizationNew: IOrganizationUpdateDelegator,
   ): Promise<IOrganization> {
     return await this.organizationService.update(id, organizationNew);
   }
