@@ -79,11 +79,13 @@ export default function OrganizationDialog({ open, setOpen, id, onChange }: {
                                         {organizationDetail.name}
                                     </Dialog.Title>
                                 </OrganizationName>
-                                <EditNameBtn
-                                    name={organizationDetail.name}
-                                    oid={organizationDetail.id}
-                                    refetch={refetch}
-                                />
+                                {(isDelegator || isManager) && (
+                                    <EditNameBtn
+                                        name={organizationDetail.name}
+                                        oid={organizationDetail.id}
+                                        refetch={refetch}
+                                    />
+                                )}
                             </HStack>
                             <DataList.Root
                                 orientation={isWide ? "horizontal" : "vertical"}

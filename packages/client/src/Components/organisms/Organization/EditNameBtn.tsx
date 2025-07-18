@@ -22,7 +22,7 @@ export default function EditNameBtn({ oid, refetch, name }: {
         >
             <TooltipComponent content="Edit Name">
                 <Dialog.Trigger asChild>
-                    <IconButton size="sm" variant="outline" rounded="sm">
+                    <IconButton size="sm" variant="ghost" rounded="sm">
                         <HiOutlinePencilAlt />
                     </IconButton>
                 </Dialog.Trigger>
@@ -48,7 +48,9 @@ export default function EditNameBtn({ oid, refetch, name }: {
                         <Dialog.Footer>
                             <Dialog.ActionTrigger asChild>
                                 <Button colorPalette="blue" rounded="sm"
-                                    onClick={() => updateOrg({}, {
+                                    onClick={() => updateOrg({
+                                        name: newName
+                                    }, {
                                         onSuccess: () => {
                                             alert("Update name successfully.");
                                             refetch();
