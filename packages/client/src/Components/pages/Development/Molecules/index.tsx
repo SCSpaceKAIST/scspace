@@ -11,7 +11,7 @@ import NumberInputComponent from "@scspace-client/Components/molecules/forms/Num
 import BorderBox from "@scspace-client/Components/atoms/BorderBox";
 import SelectComponent from "@scspace-client/Components/molecules/forms/Select";
 import TextareaComponent from "@scspace-client/Components/molecules/forms/Textarea";
-import { VerifyRequested, Verified } from "@scspace-client/Components/molecules/veritication/VerifiedMark";
+import { Registered, RegistrationRequested, Rejected, VerificationRequested, Verified } from "@scspace-client/Components/molecules/veritication/VerifiedMark";
 
 export default function Molecules() {
     const [inputValue, setInputValue] = useState<string>("");
@@ -85,8 +85,17 @@ export default function Molecules() {
                         <DataListItem label="Verified">
                             <Verified />
                         </DataListItem>
-                        <DataListItem label="Under Reviewing">
-                            <VerifyRequested />
+                        <DataListItem label="Verification Under Review">
+                            <VerificationRequested />
+                        </DataListItem>
+                        <DataListItem label="Registeded">
+                            <Registered />
+                        </DataListItem>
+                        <DataListItem label="Registration Under Review">
+                            <RegistrationRequested />
+                        </DataListItem>
+                        <DataListItem label="Rejected">
+                            <Rejected />
                         </DataListItem>
                     </DataList.Root>
                 </DataListItem>

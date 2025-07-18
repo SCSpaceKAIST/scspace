@@ -1,9 +1,8 @@
 "use client";
 
-import { Dialog, DialogBackdrop, Button, IconButton, Portal, Text } from "@chakra-ui/react";
+import { Dialog, DialogBackdrop, Button, Portal, Text } from "@chakra-ui/react";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
-import { HiOutlineCheck } from "react-icons/hi2";
 import { IOrganizationAll } from "@scspace-depot/types/organization";
 
 export default function RequestVerifyBtn({ organization, refetch }: {
@@ -20,9 +19,9 @@ export default function RequestVerifyBtn({ organization, refetch }: {
         >
             <TooltipComponent content="Request Verification">
                 <Dialog.Trigger asChild>
-                    <IconButton size="sm" variant="outline" rounded="sm">
-                        <HiOutlineCheck color="gray" />
-                    </IconButton>
+                    <Button size="sm" variant="outline" rounded="sm">
+                        Request Verification
+                    </Button>
                 </Dialog.Trigger>
             </TooltipComponent>
             <Portal>

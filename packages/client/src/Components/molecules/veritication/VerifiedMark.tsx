@@ -1,18 +1,46 @@
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
-import { VscVerifiedFilled, VscUnverified } from "react-icons/vsc";
+import {
+    BsPatchCheckFill,
+    BsPatchExclamation,
+    BsPatchMinusFill
+} from "react-icons/bs";
 
 export function Verified() {
     return (
         <TooltipComponent content="Verified">
-            <VscVerifiedFilled size="20" color="blue" />
+            <BsPatchCheckFill size="20" color="blue" />
         </TooltipComponent>
     )
 }
 
-export function VerifyRequested() {
+export function VerificationRequested() {
     return (
-        <TooltipComponent content="Under Reviewing">
-            <VscUnverified size="20" color="orange" />
+        <TooltipComponent content="Verification Under Riview">
+            <BsPatchExclamation size="20" color="blue" />
+        </TooltipComponent>
+    )
+}
+
+export function Registered() {
+    return (
+        <TooltipComponent content="Verified">
+            <BsPatchCheckFill size="20" color="green" />
+        </TooltipComponent>
+    )
+}
+
+export function RegistrationRequested() {
+    return (
+        <TooltipComponent content="Registration Under Review">
+            <BsPatchExclamation size="20" color="green" />
+        </TooltipComponent>
+    )
+}
+
+export function Rejected() {
+    return (
+        <TooltipComponent content="Rejected">
+            <BsPatchMinusFill size="20" color="red" />
         </TooltipComponent>
     )
 }

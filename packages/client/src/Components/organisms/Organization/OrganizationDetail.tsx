@@ -105,16 +105,22 @@ export default function OrganizationDialog({ open, setOpen, id, onChange }: {
                                 <>
                                     <Verification
                                         organization={organizationDetail}
-                                        onChange={onChange}
+                                        onChange={() => {
+                                            refetch();
+                                            onChange();
+                                        }}
                                     />
                                     <Separator />
                                 </>
                             )}
-                            <DataListItem label={
-                                <HStack w="100%" justify="space-between" alignItems="center" pr={2}>
-                                    <Text margin={0} padding={0}>
-                                        Status
-                                    </Text>
+                            <DataListItem label="Status">
+                                <HStack>
+                                    <Button size="sm" variant="outline"
+                                        colorPalette={organizationDetail.status === OrganizationStatusEnum.VERIFIED ? "blue" : "black"}
+                                        cursor="default"
+                                    >
+                                        {getOrgStatusCode(organizationDetail.status)}
+                                    </Button>
                                     {
                                         (
                                             isWide &&
@@ -128,13 +134,6 @@ export default function OrganizationDialog({ open, setOpen, id, onChange }: {
                                         )
                                     }
                                 </HStack>
-                            }>
-                                <Button size="sm" variant="outline"
-                                    colorPalette={organizationDetail.status === OrganizationStatusEnum.VERIFIED ? "blue" : "black"}
-                                    cursor="default"
-                                >
-                                    {getOrgStatusCode(organizationDetail.status)}
-                                </Button>
                             </DataListItem>
                             <Separator />
                             <DataListItem label="Delegator">

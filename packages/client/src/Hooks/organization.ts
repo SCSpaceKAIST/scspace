@@ -112,7 +112,7 @@ export function useOrganizationAPI(oid?: { id: number }) {
     function getOrganizationStatusCode(status: OrganizationStatusEnum) {
         switch (status) {
             case OrganizationStatusEnum.REGISTER_REQUEST:
-                return "Registered";
+                return "Registration Requested";
             case OrganizationStatusEnum.REGISTERED:
                 return "Registered";
             case OrganizationStatusEnum.VERIFY_REQUEST:

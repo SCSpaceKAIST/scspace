@@ -28,14 +28,14 @@ export const OrgStatusMeta = {
         },
         benefits: [
             {
-                kr: '세미나실 예약 신청이 가능합니다.',
-                en: 'You can apply for seminar room reservations.'
+                kr: '공간 예약 신청이 가능합니다.',
+                en: 'You can apply for spaces reservations.'
             }
         ],
     },
 
     [OrganizationStatusEnum.VERIFY_REQUEST]: {
-        color: '#ffc107',
+        color: '#c99700ff',
         emoji: '🔍',
         header: {
             kr: '조직 인증 심사 중',

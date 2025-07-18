@@ -41,6 +41,25 @@ export class OrganizationService {
     }
     const newOrganization = await this.organizationRepository.insert(organization);
     await this.organizationMemberRepository.insert(newOrganization.id, organization.delegatorId);
+
+    const statusString = getOrganizationStatusString(newOrganization.status);
+
+    const meta = OrgStatusMeta[newOrganization.status];
+
+    this.mailService.sendMail({
+      to: delegator.email,
+      bcc: "scspace.kaist@gmail.com",
+      subject: `[SCSpace] Organization Created - ${organization.name}`,
+      template: "orgStatusUpdate",
+      context: {
+        organization: {
+          ...organization,
+          status: statusString
+        },
+        meta
+      }
+    })
+
     return MOrganization.fromDB(newOrganization);
   }
 
