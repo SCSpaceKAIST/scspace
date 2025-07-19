@@ -193,6 +193,7 @@ export default function OrganizationDialog({ open, setOpen, id, refetchList }: {
                                                         refetchDetail();
                                                         refetchList();
                                                     }}
+                                                    key={`${organizationDetail.id} - ${m.userId}`}
                                                 />
                                             )
                                         ],
