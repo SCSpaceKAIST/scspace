@@ -19,6 +19,7 @@ export default function ManageOrganization() {
                 <OrganizationTable
                     organization={organization}
                     refetch={refetch}
+                    showTabs
                 />
             ) : (
                 <LoadingComponent />
