@@ -139,8 +139,10 @@ export function useOrganizationAPI(oid?: { id: number }) {
         createOrg,
         updateOrg,
         deleteOrg,
-        deleteMember,
-        addMember,
+        member: {
+            deleteMember,
+            addMember,
+        },
         status: {
             getOrganizationStatusCode,
             requestVerification,

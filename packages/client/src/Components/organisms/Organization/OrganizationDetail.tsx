@@ -8,9 +8,7 @@ import {
     DataList,
     HStack,
     Text,
-    Stack,
     useBreakpointValue,
-    VStack
 } from "@chakra-ui/react";
 import { useOrganizationAPI, useOrganizationDetail } from "@scspace-client/Hooks/organization";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
@@ -29,6 +27,7 @@ import RequestVerifyBtn from "./RequestVerifyBtn";
 import OrganizationName from "./OrganizationName";
 import Verification from "./Verification";
 import EditNameBtn from "./EditNameBtn";
+import ManageMemberBtn from "./ManageMemberBtn";
 
 export default function OrganizationDialog({ open, setOpen, id, refetchList }: {
     open: boolean;
@@ -175,16 +174,27 @@ export default function OrganizationDialog({ open, setOpen, id, refetchList }: {
                                     header={[
                                         "Student Number",
                                         "Name",
-                                        "email",
-                                        "manage"
+                                        "Email",
+                                        "Change Role",
                                     ]}
-                                    content={organizationDetail.members.map((u) => ({
-                                        id: u.id,
+                                    content={organizationDetail.members.map((m) => ({
+                                        id: m.id,
                                         row: [
-                                            u.user.studentNumber,
-                                            u.user.nameKr,
-                                            u.user.email,
-                                            "Will be implemented later"
+                                            m.user.studentNumber,
+                                            m.user.nameKr,
+                                            m.user.email,
+                                            (
+                                                <ManageMemberBtn
+                                                    mid={m.userId}
+                                                    oid={organizationDetail.id}
+                                                    uid={userInfo?.id ?? -1}
+                                                    did={organizationDetail.delegatorId ?? -1}
+                                                    refetch={() => {
+                                                        refetchDetail();
+                                                        refetchList();
+                                                    }}
+                                                />
+                                            )
                                         ],
                                     }))}
                                 />

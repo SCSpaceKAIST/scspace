@@ -11,6 +11,7 @@ import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
+import AlertBtn from "@scspace-client/Components/atoms/AlertBtn";
 
 export default function Atoms() {
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -40,6 +41,12 @@ export default function Atoms() {
             </SimpleDialog>
             <Scroll>
                 <DataList.Root orientation="horizontal">
+                    <DataListItem label="Alert Button">
+                        <AlertBtn
+                            onClick={() => alert("Alert Button Clicked!")}
+                            buttonText="Click Me"
+                        />
+                    </DataListItem>
                     <DataListItem label="Border Box">
                         <BorderBox>
                             Border Box

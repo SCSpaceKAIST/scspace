@@ -23,7 +23,7 @@ export default function EditNameBtn({ oid, refetch, name }: {
             <TooltipComponent content="Edit Name">
                 <Dialog.Trigger asChild>
                     <IconButton size="sm" variant="ghost" rounded="sm">
-                        <HiOutlinePencilAlt />
+                        <HiOutlinePencilAlt color="gray" />
                     </IconButton>
                 </Dialog.Trigger>
             </TooltipComponent>

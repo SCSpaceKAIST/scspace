@@ -77,7 +77,7 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
         });
     }
 
-    const addOrganizationMember = useOrganizationAPI({ id: oid }).addMember;
+    const addOrganizationMember = useOrganizationAPI({ id: oid }).member.addMember;
 
     function save() {
         for (const s of selected)
