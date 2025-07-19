@@ -16,7 +16,7 @@ export default function ManageMemberBtn({ uid, oid, did, mid, refetch }: {
     const deleteMember = member.deleteMember;
 
     return ((uid === did) ? (
-        <HStack>
+        <HStack key={mid}>
             <AlertBtn
                 onClick={() => updateOrg({
                     delegatorId: mid,
