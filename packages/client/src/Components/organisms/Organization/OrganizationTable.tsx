@@ -38,7 +38,7 @@ export default function OrganizationTable({ uid, disabled, organization, refetch
 
     const isWide = useBreakpointValue({ base: false, md: true });
 
-    const [tab, setTab] = useState<string>("0");
+    const [tab, setTab] = useState<string>("all");
 
     return (
         <>
@@ -58,7 +58,7 @@ export default function OrganizationTable({ uid, disabled, organization, refetch
                             onValueChange={(e) => setTab(e.value)}
                         >
                             <Tabs.List>
-                                <Tabs.Trigger value="0">
+                                <Tabs.Trigger value="all">
                                     All
                                 </Tabs.Trigger>
                                 <Tabs.Trigger
@@ -130,7 +130,7 @@ export default function OrganizationTable({ uid, disabled, organization, refetch
                             "Update Time"
                         ]}
                         content={organization
-                            .filter(org => tab === "0" || org.status.toString() === tab)
+                            .filter(org => tab === "all" || org.status.toString() === tab)
                             .map((org: IOrganizationDelegator) => ({
                                 id: org.id,
                                 row: [
