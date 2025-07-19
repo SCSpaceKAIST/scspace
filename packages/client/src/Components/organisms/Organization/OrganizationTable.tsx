@@ -6,7 +6,8 @@ import {
     Grid,
     IconButton,
     HStack,
-    useBreakpointValue
+    useBreakpointValue,
+    Tabs
 } from "@chakra-ui/react";
 import { useState, } from "react";
 import { IOrganizationDelegator, } from "@scspace-depot/types/organization";
@@ -19,13 +20,15 @@ import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import OrganizationDialog from "@scspace-client/Components/organisms/Organization/OrganizationDetail";
 import OrganizationName from "./OrganizationName";
 import NewOrganizationBtn from "./NewOrganizationBtn";
+import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
 
-export default function OrganizationTable({ uid, disabled, organization, refetch, helperText }: {
+export default function OrganizationTable({ uid, disabled, organization, refetch, helperText, showTabs }: {
     helperText?: string;
     disabled?: boolean;
     uid?: number;
     organization: IOrganizationDelegator[];
     refetch: () => void;
+    showTabs?: boolean;
 }) {
     const [selected, setSelected] = useState<number>(-1);
 
@@ -34,6 +37,8 @@ export default function OrganizationTable({ uid, disabled, organization, refetch
     const { getString } = useDate();
 
     const isWide = useBreakpointValue({ base: false, md: true });
+
+    const [tab, setTab] = useState<string>("0");
 
     return (
         <>
@@ -47,7 +52,43 @@ export default function OrganizationTable({ uid, disabled, organization, refetch
                     justify={isWide ? "space-between" : "end"}
                     alignItems="end"
                 >
-                    {isWide && (
+                    {isWide && (showTabs ? (
+                        <Tabs.Root
+                            value={tab}
+                            onValueChange={(e) => setTab(e.value)}
+                        >
+                            <Tabs.List>
+                                <Tabs.Trigger value="0">
+                                    All
+                                </Tabs.Trigger>
+                                <Tabs.Trigger
+                                    value={OrganizationStatusEnum.VERIFIED.toString()}
+                                >
+                                    Verified
+                                </Tabs.Trigger>
+                                <Tabs.Trigger
+                                    value={OrganizationStatusEnum.VERIFY_REQUEST.toString()}
+                                >
+                                    Verification Pending
+                                </Tabs.Trigger>
+                                <Tabs.Trigger
+                                    value={OrganizationStatusEnum.REGISTERED.toString()}
+                                >
+                                    Registered
+                                </Tabs.Trigger>
+                                <Tabs.Trigger
+                                    value={OrganizationStatusEnum.REGISTER_REQUEST.toString()}
+                                >
+                                    Registration Pending
+                                </Tabs.Trigger>
+                                <Tabs.Trigger
+                                    value={OrganizationStatusEnum.REJECTED.toString()}
+                                >
+                                    Rejected
+                                </Tabs.Trigger>
+                            </Tabs.List>
+                        </Tabs.Root>
+                    ) : (
                         <Text margin={0} color="gray.focusRing">
                             {helperText ? (
                                 helperText
@@ -55,7 +96,7 @@ export default function OrganizationTable({ uid, disabled, organization, refetch
                                 "Click each row to see detail of organization"
                             )}
                         </Text>
-                    )}
+                    ))}
                     <HStack>
                         <TooltipComponent content="Refresh">
                             <IconButton
@@ -88,19 +129,22 @@ export default function OrganizationTable({ uid, disabled, organization, refetch
                             "Contact",
                             "Update Time"
                         ]}
-                        content={organization.map((org: IOrganizationDelegator) => ({
-                            id: org.id,
-                            row: [
-                                (
-                                    <OrganizationName key={org.id} status={org.status}>
-                                        {org.name}
-                                    </OrganizationName>
-                                ),
-                                org.delegator.nameKr,
-                                org.delegator.email,
-                                getString(org.timeUpdate)
-                            ]
-                        }))}
+                        content={organization
+                            .filter(org => tab === "0" || org.status.toString() === tab)
+                            .map((org: IOrganizationDelegator) => ({
+                                id: org.id,
+                                row: [
+                                    (
+                                        <OrganizationName key={org.id} status={org.status}>
+                                            {org.name}
+                                        </OrganizationName>
+                                    ),
+                                    org.delegator.nameKr,
+                                    org.delegator.email,
+                                    getString(org.timeUpdate)
+                                ]
+                            }))
+                        }
                     />
                 </Scroll>
             </Grid>

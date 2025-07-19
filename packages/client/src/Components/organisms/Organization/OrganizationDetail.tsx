@@ -156,6 +156,10 @@ export default function OrganizationDialog({ open, setOpen, id, refetchList }: {
                                 </DataList.Root>
                             </DataListItem>
                             <Separator />
+                            <DataListItem label="has Room">
+                                {organizationDetail.hasRoom ? "Yes" : "No"}
+                            </DataListItem>
+                            <Separator />
                             <DataListItem label={
                                 <HStack w="100%" justify="space-between" alignItems="center" pr={2}>
                                     <Text margin={0} padding={0}>
