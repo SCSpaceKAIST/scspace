@@ -88,7 +88,7 @@ export class OrganizationController {
   }
 
   @UseGuards(DelegatorGuard)
-  @Delete('/member/:id')
+  @Delete('member/:id')
   async removeMember(
     @Param('id', ParseIntPipe) id: number,
     @Body() oid: IOrganizationUser,

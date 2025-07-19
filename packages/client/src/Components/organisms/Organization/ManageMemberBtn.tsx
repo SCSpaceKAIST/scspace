@@ -15,6 +15,22 @@ export default function ManageMemberBtn({ uid, oid, did, mid, refetch }: {
     const { member, updateOrg } = useOrganizationAPI({ id: oid });
     const deleteMember = member.deleteMember;
 
+    if (uid !== did) {
+        return (
+            <Text color="gray">
+                Only for Delegator
+            </Text>
+        );
+    }
+
+    if (mid === uid) {
+        return (
+            <Text color="gray">
+                Cannot manage yourself
+            </Text>
+        );
+    }
+
     return ((uid === did) ? (
         <HStack>
             <AlertBtn
@@ -22,14 +38,20 @@ export default function ManageMemberBtn({ uid, oid, did, mid, refetch }: {
                     delegatorId: mid,
                 }, {
                     onSuccess: () => {
-                        alert("Member updated successfully.");
+                        alert("Delegator updated successfully.");
                         refetch();
                     }
                 })}
                 colorPalette="blue"
                 buttonText="Delegator"
-                dialogTitle="Confirm"
+                dialogTitle="Are you sure?"
             >
+                <Text>
+                    Are you sure you want to make this member a delegator?
+                </Text>
+                <Text>
+                    This action cannot be undone, and the member will have full control over the organization.
+                </Text>
             </AlertBtn>
             <DeleteBtn
                 onDelete={() => deleteMember({
@@ -37,6 +59,7 @@ export default function ManageMemberBtn({ uid, oid, did, mid, refetch }: {
                 }, {
                     onSuccess: () => {
                         alert("Member deleted successfully.");
+                        refetch();
                     }
                 })}
             />

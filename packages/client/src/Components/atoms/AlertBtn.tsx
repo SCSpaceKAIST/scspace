@@ -25,6 +25,9 @@ export default function AlertBtn({
                 <Button
                     colorPalette={colorPalette ?? "blue"}
                     rounded="sm"
+                // px={2}
+                // py={1}
+                // height="fit-content"
                 >
                     {buttonText}
                 </Button>

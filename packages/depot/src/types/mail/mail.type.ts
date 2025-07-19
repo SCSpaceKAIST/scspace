@@ -1,3 +1,4 @@
+import { OrganizationStatusEnum } from "../../enums/organization.enum";
 import { IOrganizationAll } from "../organization";
 import { IReservationAll } from "../reservation";
 import { ISpace } from "../space";
@@ -5,7 +6,7 @@ import { IUser } from "../user";
 
 export interface IMail {
     subject: string;
-    template: "orgStatusUpdate" | "welcome";
+    template: "orgStatusUpdate" | "welcome" | "orgDelegatorUpdate";
     to: string | string[];
     cc?: string | string[];
     bcc?: string | string[];
@@ -26,5 +27,5 @@ export interface IMailOrganization extends Omit<
     status: {
         kr: string;
         en: string;
-    }
+    } | OrganizationStatusEnum;
 }

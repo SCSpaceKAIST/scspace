@@ -161,11 +161,10 @@ export default function OrganizationDialog({ open, setOpen, id, refetchList }: {
                                     <Text margin={0} padding={0}>
                                         Members
                                     </Text>
-                                    {isWide && (
+                                    {isWide && isDelegator && (
                                         <AddMemberBtn
                                             oid={organizationDetail.id}
                                             refetch={refetchDetail}
-                                            disabled={!isDelegator}
                                         />
                                     )}
                                 </HStack>

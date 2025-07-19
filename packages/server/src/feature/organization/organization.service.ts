@@ -79,6 +79,34 @@ export class OrganizationService {
       organizationId,
       organizationNew
     );
+
+    return MOrganization.fromDB(updatedOrganization);
+  }
+
+  async updateDelegator(organizationId: number, newDelegatorId: number): Promise<IOrganization> {
+    const organization: IOrganization = await this.organizationPublicService.fetchById(organizationId);
+
+    const updatedOrganization = await this.organizationRepository.update(
+      organizationId,
+      { delegatorId: newDelegatorId }
+    );
+
+    const oldDelegator = await this.userPublicService.fetchById(organization.delegatorId);
+    const newDelegator = await this.userPublicService.fetchById(newDelegatorId);
+
+    this.mailService.sendMail({
+      to: [oldDelegator.email, newDelegator.email],
+      template: "orgDelegatorUpdate",
+      subject: `[SCSpace] Organization Delegator Updated - ${updatedOrganization.name}`,
+      context: {
+        organization: {
+          ...organization,
+          delegator: oldDelegator,
+        },
+        user: newDelegator
+      }
+    });
+
     return MOrganization.fromDB(updatedOrganization);
   }
 

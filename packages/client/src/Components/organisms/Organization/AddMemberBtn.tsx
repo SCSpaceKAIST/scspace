@@ -47,8 +47,7 @@ function NewMember({ user, unSelect }: {
     );
 }
 
-export default function AddMemberBtn({ oid, refetch, disabled = false }: {
-    disabled?: boolean;
+export default function AddMemberBtn({ oid, refetch }: {
     oid: number,
     refetch: () => any;
 }) {
@@ -98,7 +97,7 @@ export default function AddMemberBtn({ oid, refetch, disabled = false }: {
         >
             <TooltipComponent content="Add Member">
                 <Dialog.Trigger asChild>
-                    <IconButton size="sm" variant="outline" rounded="sm" disabled={disabled}>
+                    <IconButton size="sm" variant="outline" rounded="sm">
                         <HiPlus color="gray" />
                     </IconButton>
                 </Dialog.Trigger>
