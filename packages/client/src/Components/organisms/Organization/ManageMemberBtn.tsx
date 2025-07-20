@@ -57,7 +57,7 @@ export default function ManageMemberBtn({ uid, oid, did, mid, refetch }: {
                 </>}
             >
                 <Button
-                    colorPalette="blue"
+                    colorPalette="green"
                     variant={"outline"}
                     px={1}
                     py={0}

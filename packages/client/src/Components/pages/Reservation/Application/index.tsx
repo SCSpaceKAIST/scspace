@@ -107,7 +107,7 @@ export default function Application() {
           timeTo: getTime(dateTo) + getTime({ hour: hourTo }),
         },
         {
-          onSuccess: (res) => {
+          onSuccess: () => {
             setCount(c => c + 1);
           },
           onError: (error) => {
