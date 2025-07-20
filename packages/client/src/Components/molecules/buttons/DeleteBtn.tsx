@@ -1,6 +1,6 @@
 // atoms/DeleteBtn.tsx
 
-import { Text } from "@chakra-ui/react";
+import { Button, Text } from "@chakra-ui/react";
 import AlertBtn from "@scspace-client/Components/atoms/AlertBtn";
 
 export default function DeleteBtn({ onDelete }: {
@@ -13,13 +13,25 @@ export default function DeleteBtn({ onDelete }: {
             colorPalette="red"
             buttonText="Delete"
             dialogTitle="Are you sure?"
+            dialogBody={
+                <>
+                    <Text>
+                        This action is permanent and cannot be undone,
+                    </Text>
+                    <Text>
+                        and the data will be completely removed from our systems.
+                    </Text>
+                </>
+            }
         >
-            <Text>
-                This action is permanent and cannot be undone,
-            </Text>
-            <Text>
-                and the data will be completely removed from our systems.
-            </Text>
+            <Button
+                colorPalette="red"
+            // px={2}
+            // py={1}
+            // height="fit-content"
+            >
+                Delete
+            </Button>
         </AlertBtn>
     );
 }

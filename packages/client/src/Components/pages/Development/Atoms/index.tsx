@@ -45,7 +45,11 @@ export default function Atoms() {
                         <AlertBtn
                             onClick={() => alert("Alert Button Clicked!")}
                             buttonText="Click Me"
-                        />
+                        >
+                            <Button>
+                                Click Me
+                            </Button>
+                        </AlertBtn>
                     </DataListItem>
                     <DataListItem label="Border Box">
                         <BorderBox>

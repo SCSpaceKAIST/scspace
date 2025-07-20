@@ -1,6 +1,6 @@
 "use client"
 
-import { HStack, Text } from "@chakra-ui/react";
+import { Button, HStack, Text } from "@chakra-ui/react";
 import AlertBtn from "@scspace-client/Components/atoms/AlertBtn";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
@@ -42,19 +42,27 @@ export default function ManageMemberBtn({ uid, oid, did, mid, refetch }: {
                         refetch();
                     }
                 })}
-                colorPalette="blue"
-                buttonText="Delegator"
                 dialogTitle="Are you sure?"
+                dialogBody={<>
+                    <Text>
+                        Are you sure you want to make this member a delegator?
+                    </Text>
+                    <Text>
+                        This action cannot be undone, and the member will have full control over the organization.
+                    </Text>
+                </>}
             >
-                <Text>
-                    Are you sure you want to make this member a delegator?
-                </Text>
-                <Text>
-                    This action cannot be undone, and the member will have full control over the organization.
-                </Text>
+                <Button
+                    colorPalette="blue"
+                    px={2}
+                    py={1}
+                    height="fit-content"
+                >
+                    Delegator
+                </Button>
             </AlertBtn>
-            <DeleteBtn
-                onDelete={() => deleteMember({
+            <AlertBtn
+                onClick={() => deleteMember({
                     userId: mid
                 }, {
                     onSuccess: () => {
@@ -62,7 +70,27 @@ export default function ManageMemberBtn({ uid, oid, did, mid, refetch }: {
                         refetch();
                     }
                 })}
-            />
+                colorPalette="red"
+                buttonText="Delete"
+                dialogTitle="Are you sure?"
+                dialogBody={<>
+                    <Text>
+                        Are you sure you want to delete this member?
+                    </Text>
+                    <Text>
+                        This action cannot be undone, so if you want to add this member again, you will need to invite them again.
+                    </Text>
+                </>}
+            >
+                <Button
+                    colorPalette="red"
+                    px={2}
+                    py={1}
+                    height="fit-content"
+                >
+                    Delegator
+                </Button>
+            </AlertBtn>
         </HStack>
     ) : (
         <Text color="gray">

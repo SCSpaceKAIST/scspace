@@ -1,19 +1,21 @@
 import { Button, Dialog, Portal, } from "@chakra-ui/react";
+import React from "react";
 
 export default function AlertBtn({
     onClick,
     colorPalette,
     buttonText,
-    innerButtonText,
     dialogTitle,
+    dialogBody,
     children
 }: {
     onClick: () => any;
     colorPalette?: string;
-    buttonText: string;
+    buttonText?: string;
     innerButtonText?: string;
     dialogTitle?: string;
-    children?: React.ReactNode;
+    dialogBody?: React.ReactNode;
+    children: React.ReactNode;
 }) {
 
     return (
@@ -22,15 +24,7 @@ export default function AlertBtn({
             placement="center"
         >
             <Dialog.Trigger asChild>
-                <Button
-                    colorPalette={colorPalette ?? "blue"}
-                    rounded="sm"
-                // px={2}
-                // py={1}
-                // height="fit-content"
-                >
-                    {buttonText}
-                </Button>
+                {children}
             </Dialog.Trigger>
             <Portal>
                 <Dialog.Backdrop zIndex={1500} />
@@ -42,7 +36,7 @@ export default function AlertBtn({
                             </Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
-                            {children ?? "Description of the action."}
+                            {dialogBody ?? "Description of the action."}
                         </Dialog.Body>
                         <Dialog.Footer>
                             <Dialog.ActionTrigger asChild>
@@ -56,7 +50,7 @@ export default function AlertBtn({
                                     rounded="sm"
                                     onClick={onClick}
                                 >
-                                    {innerButtonText ?? buttonText}
+                                    {buttonText ?? "Confirm"}
                                 </Button>
                             </Dialog.ActionTrigger>
                         </Dialog.Footer>
