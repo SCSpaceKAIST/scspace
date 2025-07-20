@@ -22,7 +22,7 @@ export default function SimpleTable({ onIdChange, header, content }: SimpleTable
             <Table.Root
                 stickyHeader
                 interactive
-                colorPalette="blue"
+                colorPalette="cyan"
                 maxW="inherit"
                 tableLayout="fixed" // 테이블 레이아웃을 고정으로 설정
             >
