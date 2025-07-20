@@ -54,8 +54,9 @@ export default function ManageMemberBtn({ uid, oid, did, mid, refetch }: {
             >
                 <Button
                     colorPalette="blue"
-                    px={2}
-                    py={1}
+                    variant={"outline"}
+                    px={1}
+                    py={0}
                     height="fit-content"
                 >
                     Delegator
@@ -84,11 +85,12 @@ export default function ManageMemberBtn({ uid, oid, did, mid, refetch }: {
             >
                 <Button
                     colorPalette="red"
-                    px={2}
-                    py={1}
+                    variant={"outline"}
+                    px={1}
+                    py={0}
                     height="fit-content"
                 >
-                    Delegator
+                    Delete
                 </Button>
             </AlertBtn>
         </HStack>
