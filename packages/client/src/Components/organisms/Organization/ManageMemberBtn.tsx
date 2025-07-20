@@ -2,6 +2,7 @@
 
 import { Button, HStack, Text } from "@chakra-ui/react";
 import AlertBtn from "@scspace-client/Components/atoms/AlertBtn";
+import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 
@@ -38,7 +39,10 @@ export default function ManageMemberBtn({ uid, oid, did, mid, refetch }: {
                     delegatorId: mid,
                 }, {
                     onSuccess: () => {
-                        alert("Delegator updated successfully.");
+                        toaster.success({
+                            title: "Delegator Updated",
+                            description: "The member has been made a delegator.",
+                        });
                         refetch();
                     }
                 })}
@@ -67,7 +71,10 @@ export default function ManageMemberBtn({ uid, oid, did, mid, refetch }: {
                     userId: mid
                 }, {
                     onSuccess: () => {
-                        alert("Member deleted successfully.");
+                        toaster.success({
+                            title: "Member Deleted",
+                            description: "The member has been deleted successfully.",
+                        });
                         refetch();
                     }
                 })}

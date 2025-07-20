@@ -28,6 +28,7 @@ import OrganizationName from "./OrganizationName";
 import Verification from "./Verification";
 import EditNameBtn from "./EditNameBtn";
 import ManageMemberBtn from "./ManageMemberBtn";
+import HasRoom from "./hasRoom";
 
 export default function OrganizationDialog({ open, setOpen, id, refetchList }: {
     open: boolean;
@@ -157,7 +158,12 @@ export default function OrganizationDialog({ open, setOpen, id, refetchList }: {
                             </DataListItem>
                             <Separator />
                             <DataListItem label="has Room">
-                                {organizationDetail.hasRoom ? "Yes" : "No"}
+                                <HasRoom
+                                    oid={organizationDetail.id}
+                                    refetch={refetchDetail}
+                                    disabled={!isDelegator && !isManager}
+                                    hasRoom={organizationDetail.hasRoom}
+                                />
                             </DataListItem>
                             <Separator />
                             <DataListItem label={

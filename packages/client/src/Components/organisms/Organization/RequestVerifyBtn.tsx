@@ -1,6 +1,7 @@
 "use client";
 
 import { Dialog, DialogBackdrop, Button, Portal, Text } from "@chakra-ui/react";
+import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 
 export default function RequestVerifyBtn({ oid, refetch }: {
@@ -42,7 +43,10 @@ export default function RequestVerifyBtn({ oid, refetch }: {
                                 <Button colorPalette="blue" rounded="sm"
                                     onClick={() => reqVerify({}, {
                                         onSuccess: () => {
-                                            alert("Verification request sent successfully.");
+                                            toaster.success({
+                                                title: "Verification Request Sent",
+                                                description: "Your request for organization verification has been sent successfully."
+                                            });
                                             refetch();
                                         }
                                     })}

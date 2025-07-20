@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, Center, DataList, Dialog } from "@chakra-ui/react";
+import { Button, Center, DataList, Dialog } from "@chakra-ui/react";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import FieldComponent from "@scspace-client/Components/atoms/Field";
 import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
@@ -32,7 +32,7 @@ export default function Atoms() {
                     <Center fontSize={"md"}>
                         Dialog Footer
                     </Center>
-                    <Dialog.ActionTrigger>
+                    <Dialog.ActionTrigger asChild>
                         <Button>
                             Close Dialog
                         </Button>

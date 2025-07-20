@@ -1,6 +1,7 @@
 "use client";
 
 import { Dialog, DialogBackdrop, Button, Portal, Text, IconButton } from "@chakra-ui/react";
+import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import InputComponent from "@scspace-client/Components/molecules/forms/Input";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
@@ -52,7 +53,10 @@ export default function EditNameBtn({ oid, refetch, name }: {
                                         name: newName
                                     }, {
                                         onSuccess: () => {
-                                            alert("Update name successfully.");
+                                            toaster.success({
+                                                title: "Organization Name Updated",
+                                                description: "The organization name has been updated successfully."
+                                            });
                                             refetch();
                                         }
                                     })}
