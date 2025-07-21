@@ -23,3 +23,11 @@ html, body {
 .full {
   min-height: 100svh !important;
 }
+
+.chakra-blockquote__root {
+  width: var(--chakra-sizes-full) !important;
+}
+
+.chakra-blockquote__content {
+  width: var(--chakra-sizes-full) !important;
+}

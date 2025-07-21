@@ -156,15 +156,19 @@ export default function OrganizationDialog({ open, setOpen, id, refetchList }: {
                                     </DataListItem>
                                 </DataList.Root>
                             </DataListItem>
-                            <Separator />
-                            <DataListItem label="has Room">
-                                <HasRoom
-                                    oid={organizationDetail.id}
-                                    refetch={refetchDetail}
-                                    disabled={!isDelegator && !isManager}
-                                    hasRoom={organizationDetail.hasRoom}
-                                />
-                            </DataListItem>
+                            {organizationDetail.status === OrganizationStatusEnum.VERIFIED && (
+                                <>
+                                    <Separator />
+                                    <DataListItem label="has Room">
+                                        <HasRoom
+                                            oid={organizationDetail.id}
+                                            refetch={refetchDetail}
+                                            disabled={!isDelegator && !isManager}
+                                            hasRoom={organizationDetail.hasRoom}
+                                        />
+                                    </DataListItem>
+                                </>
+                            )}
                             <Separator />
                             <DataListItem label={
                                 <HStack w="100%" justify="space-between" alignItems="center" pr={2}>

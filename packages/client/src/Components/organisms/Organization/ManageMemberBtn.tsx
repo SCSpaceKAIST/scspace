@@ -62,6 +62,7 @@ export default function ManageMemberBtn({ uid, oid, did, mid, refetch }: {
                     px={1}
                     py={0}
                     height="fit-content"
+                    size={"sm"}
                 >
                     Delegator
                 </Button>
@@ -96,6 +97,7 @@ export default function ManageMemberBtn({ uid, oid, did, mid, refetch }: {
                     px={1}
                     py={0}
                     height="fit-content"
+                    size={"sm"}
                 >
                     Delete
                 </Button>
