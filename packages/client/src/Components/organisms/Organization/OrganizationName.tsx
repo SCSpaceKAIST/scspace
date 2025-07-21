@@ -15,7 +15,7 @@ export default function OrganizationName({ status, children }: {
     }
 
     return (
-        <HStack m={0} p={0} alignContent="center" alignItems="center" gap={1}>
+        <HStack m={0} p={0} alignContent="center" alignItems="center" gap={1} maxW={"full"} truncate>
             {mark[status]}
             {children}
         </HStack>

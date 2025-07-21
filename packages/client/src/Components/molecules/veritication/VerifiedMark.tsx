@@ -1,3 +1,4 @@
+import { Box } from "@chakra-ui/react";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import {
     BsPatchCheckFill,
@@ -10,7 +11,9 @@ const size: number = 18;
 export function Verified() {
     return (
         <TooltipComponent content="Verified">
-            <BsPatchCheckFill size={size} color="blue" />
+            <Box width={"18px"} height={"18px"}>
+                <BsPatchCheckFill size={size} color="blue" />
+            </Box>
         </TooltipComponent>
     )
 }
@@ -18,7 +21,9 @@ export function Verified() {
 export function VerificationRequested() {
     return (
         <TooltipComponent content="Verification Under Riview">
-            <BsPatchExclamation size={size} color="blue" />
+            <Box width={"18px"} height={"18px"}>
+                <BsPatchExclamation size={size} color="blue" />
+            </Box>
         </TooltipComponent>
     )
 }
@@ -26,7 +31,9 @@ export function VerificationRequested() {
 export function Registered() {
     return (
         <TooltipComponent content="Verified">
-            <BsPatchCheckFill size={size} color="green" />
+            <Box width={"18px"} height={"18px"}>
+                <BsPatchCheckFill size={size} color="green" />
+            </Box>
         </TooltipComponent>
     )
 }
@@ -34,7 +41,9 @@ export function Registered() {
 export function RegistrationRequested() {
     return (
         <TooltipComponent content="Registration Under Review">
-            <BsPatchExclamation size={size} color="green" />
+            <Box width={"18px"} height={"18px"}>
+                <BsPatchExclamation size={size} color="green" />
+            </Box>
         </TooltipComponent>
     )
 }
@@ -42,7 +51,9 @@ export function RegistrationRequested() {
 export function Rejected() {
     return (
         <TooltipComponent content="Rejected">
-            <BsPatchMinusFill size={size} color="red" />
+            <Box width={"18px"} height={"18px"}>
+                <BsPatchMinusFill size={size} color="red" />
+            </Box>
         </TooltipComponent>
     )
 }

@@ -5,7 +5,7 @@ import React from "react";
 
 export default function ManageReservation() {
     const tabList: { [key: string]: React.ReactNode } = {
-        List: <AllReservation />,
+        History: <AllReservation />,
         Create: <div>Create a New Reservation</div>,
     };
 
