@@ -13,24 +13,24 @@ import {
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { useUserReservation } from "@scspace-client/Hooks/reservation";
+import { useAllReservation, useUserReservation } from "@scspace-client/Hooks/reservation";
 import { useEffect, useState } from "react";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import { useDate } from "@scspace-client/Hooks/utils";
 import CalendarDialog from "@scspace-client/Components/organisms/Calendar/CalendarDialog";
-import { useOrganization } from "@scspace-client/Hooks/organization";
-import TooltipComponent from "../../../atoms/Tooptip";
+import { useAllOrganization, useOrganization } from "@scspace-client/Hooks/organization";
+import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import OrgSelect from "@scspace-client/Components/organisms/Reservation/Listing/OrgSelect";
 import SimplePagination from "@scspace-client/Components/molecules/page/SimplePagenation";
 
-export default function UserReservation() {
-    const { userInfo, needLogin } = useAuth();
-    needLogin();
+export default function AllReservation() {
+    const { needManager } = useAuth();
+    needManager();
 
     const [oid, setOid] = useState<number>(0);
-    const { organization } = useOrganization({ uid: userInfo?.id ?? -1 });
+    const { organization } = useAllOrganization();
 
     const [page, setPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(10);
@@ -45,18 +45,17 @@ export default function UserReservation() {
     const [open, setOpen] = useState<boolean>(false);
     const isWide = useBreakpointValue({ base: false, md: true });
 
-    const { userReservation, count, refetch } = useUserReservation({
-        uid: userInfo?.id || 0,
+    const { allReservation, count, refetch } = useAllReservation({
         oid,
         limit,
         offset: limit * (page - 1)
     });
 
-    useEffect(() => { refetch(); }, [page, limit, userInfo?.id || 0]);
+    useEffect(() => { refetch(); }, [page, limit]);
 
     useEffect(() => {
-        setSelected(userReservation[0] || null);
-    }, [userReservation]);
+        setSelected(allReservation[0] || null);
+    }, [allReservation]);
 
     return (
         <>
@@ -67,7 +66,7 @@ export default function UserReservation() {
                 refetch={refetch}
             />
             <Scroll>
-                {!userReservation ? (
+                {!allReservation ? (
                     <LoadingComponent />
                 ) : (
                     <Grid
@@ -121,14 +120,14 @@ export default function UserReservation() {
                         </Flex>
                         <SimpleTable
                             onIdChange={(id) => {
-                                const res = userReservation.find((r) => r.id === id);
+                                const res = allReservation.find((r) => r.id === id);
                                 if (res) {
                                     setSelected(res);
                                     setOpen(true);
                                 }
                             }}
                             header={["Title", "Booker", "From", "To"]}
-                            content={userReservation.map((r) => ({
+                            content={allReservation.map((r) => ({
                                 id: r.id,
                                 row: [
                                     r.title,

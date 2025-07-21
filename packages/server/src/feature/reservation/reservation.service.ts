@@ -109,6 +109,41 @@ export class ReservationService {
     }));
   }
 
+  async getReservationList(
+    organizationId: number,
+    limit: number,
+    offset: number,
+  ): Promise<IReservationAll[]> {
+    const reservations = await this.reservationRepository.fetch({
+      organizationId,
+      limit,
+      offset,
+    });
+
+    const userIds = reservations.map((reservation) => reservation.userId);
+    const organizationIds = reservations.map((reservation) => reservation.organizationId);
+    const spaceIds = reservations.map((reservation) => reservation.spaceId);
+
+    const [users, organizations, spaces, reservationContents] = await Promise.all([
+      this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
+      this.organizationPublicService.fetchByIds(organizationIds),
+      this.spacePublicService.fetchAllByIds(spaceIds),
+      this.reservationPublicService.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
+    ]) as [IUser[], IOrganization[], ISpace[], IReservationContent[]];
+
+    checkContainAllId(userIds, users, 'users');
+    checkContainAllId(organizationIds, organizations, 'organizations');
+    checkContainAllId(spaceIds, spaces, 'spaces');
+
+    return reservations.map((reservation) => ({
+      ...reservation,
+      user: users.find(user => user.id === reservation.userId)!,
+      organization: organizations.find(org => org.id === reservation.organizationId)!,
+      space: spaces.find(space => space.id === reservation.spaceId)!,
+      content: reservationContents.find(content => content.id === reservation.id)!,
+    }));
+  }
+
   async getReservationCount(
     userId: number,
     organizationId: number,

@@ -4,7 +4,7 @@ import { IOrganization, IOrganizationAll, IOrganizationCreate, IOrganizationDele
 import { MOrganizationMember } from './organization.member.model';
 import { ISuccessResponse } from '@scspace-depot/types/common';
 import { OrganizationPublicService } from './organization.public.service';
-import { ManageGuard, UserGuard, MemberGuard, DelegatorGuard } from '../auth/jwt/jwt.guard';
+import { ManagerGuard, UserGuard, MemberGuard, DelegatorGuard } from '../auth/jwt/jwt.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { OrganizationStatusEnum } from '@scspace-depot/enums/organization.enum';
 
@@ -15,7 +15,7 @@ export class OrganizationController {
     private readonly organizationPublicService: OrganizationPublicService,
   ) { }
 
-  @UseGuards(ManageGuard)
+  @UseGuards(ManagerGuard)
   @Get()
   async getOrganizations(): Promise<IOrganizationDelegator[]> {
     return await this.organizationPublicService.fetchAll();
@@ -61,7 +61,7 @@ export class OrganizationController {
     return await this.organizationService.update(id, organizationNew);
   }
 
-  @UseGuards(ManageGuard)
+  @UseGuards(ManagerGuard)
   @Put("status/:id")
   async updateOrganizationStatus(
     @Param("id") id: number,

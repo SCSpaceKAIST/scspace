@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { IUser, IUserCreate, IUserUpdate } from '@scspace-depot/types/user';
 import { ISuccessResponse } from '@scspace-depot/types/common';
 import { UserPublicService } from './user.public.service';
-import { AdminGuard, ManageGuard } from '../auth/jwt/jwt.guard';
+import { AdminGuard, ManagerGuard } from '../auth/jwt/jwt.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 @Controller('user')
@@ -36,7 +36,7 @@ export class UserController {
   }
 
   //HOOK: useUserInfo
-  @UseGuards(ManageGuard)
+  @UseGuards(ManagerGuard)
   @Get(':id')
   async getUserById(
     @Param('id', ParseIntPipe) id: number
@@ -48,7 +48,7 @@ export class UserController {
     return user;
   }
 
-  @UseGuards(ManageGuard)
+  @UseGuards(ManagerGuard)
   @Post()
   async postUser(
     @Body() body: IUserCreate
@@ -66,7 +66,7 @@ export class UserController {
   }
 
   //HOOK: useUserInfo
-  @UseGuards(ManageGuard)
+  @UseGuards(ManagerGuard)
   @Delete(':id')
   async deleteUser(
     @Param('id', ParseIntPipe) id: number

@@ -4,14 +4,14 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { DelegatorGuard, ManageGuard, MemberGuard, UserGuard } from './jwt/jwt.guard';
+import { DelegatorGuard, ManagerGuard, MemberGuard, UserGuard } from './jwt/jwt.guard';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from 'src/feature/user/user.module';
 import { OrganizationModule } from '../organization/organization.module';
 import { ReservationModule } from '../reservation/reservation.module';
 
 @Module({
-  providers: [AuthService, JwtStrategy, ManageGuard, UserGuard, DelegatorGuard, MemberGuard],
+  providers: [AuthService, JwtStrategy, ManagerGuard, UserGuard, DelegatorGuard, MemberGuard],
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt', session: false }),
     JwtModule.registerAsync({
@@ -27,6 +27,6 @@ import { ReservationModule } from '../reservation/reservation.module';
     ReservationModule,
   ],
   controllers: [AuthController],
-  exports: [ManageGuard, UserGuard, DelegatorGuard, MemberGuard],
+  exports: [ManagerGuard, UserGuard, DelegatorGuard, MemberGuard],
 })
-export class AuthModule {}
+export class AuthModule { }

@@ -20,7 +20,7 @@ import {
   IReservationAll
 } from '@scspace-depot/types/reservation';
 import { ISuccessResponse } from '@scspace-depot/types/common';
-import { AdminGuard, MemberGuard, MemberGuardWithRervation, UserGuard } from '../auth/jwt/jwt.guard';
+import { AdminGuard, ManagerGuard, MemberGuard, MemberGuardWithRervation, UserGuard } from '../auth/jwt/jwt.guard';
 import { IUser } from '@scspace-depot/types/user';
 import { SpacePublicService } from '../space/space.public.service';
 
@@ -57,6 +57,20 @@ export class ReservationController {
   ): Promise<IReservationAll[]> {
     return await this.reservationService.getReservationListByUserId(
       userId,
+      organizationId,
+      limit,
+      offset,
+    );
+  }
+
+  @UseGuards(ManagerGuard)
+  @Get()
+  async getReservationList(
+    @Query('oid', ParseIntPipe) organizationId: number,
+    @Query('limit', ParseIntPipe) limit: number,
+    @Query('offset', ParseIntPipe) offset: number,
+  ): Promise<IReservationAll[]> {
+    return await this.reservationService.getReservationList(
       organizationId,
       limit,
       offset,

@@ -11,7 +11,7 @@ function isManage(user: IUser): boolean {
 }
 
 @Injectable()
-export class ManageGuard extends AuthGuard('jwt') {
+export class ManagerGuard extends AuthGuard('jwt') {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const can = await super.canActivate(context);
     if (!can) return false;
