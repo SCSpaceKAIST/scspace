@@ -71,6 +71,15 @@ export class OrganizationController {
   }
 
   @UseGuards(DelegatorGuard)
+  @Put("delegator/:id")
+  async updateOrganizationDelegator(
+    @Param("id") id: number,
+    @Body() body: { delegatorId: number }
+  ): Promise<IOrganization> {
+    return await this.organizationService.updateDelegator(id, body.delegatorId);
+  }
+
+  @UseGuards(DelegatorGuard)
   @Put("verify/:id")
   async requestVerifyOrganization(
     @Param("id") id: number,

@@ -135,11 +135,17 @@ export function useOrganizationAPI(oid?: { id: number }) {
         "PUT"
     ).mutate;
 
+    const updateDelegator = useMutationApi<IOrganization, { delegatorId: number }>(
+        `/organization/delegator/${id}`,
+        "PUT"
+    ).mutate;
+
     return {
         createOrg,
         updateOrg,
         deleteOrg,
         member: {
+            updateDelegator,
             deleteMember,
             addMember,
         },

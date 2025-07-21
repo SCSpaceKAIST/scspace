@@ -13,8 +13,9 @@ export default function ManageMemberBtn({ uid, oid, did, mid, refetch }: {
     mid: number;
     refetch: () => any;
 }) {
-    const { member, updateOrg } = useOrganizationAPI({ id: oid });
+    const { member } = useOrganizationAPI({ id: oid });
     const deleteMember = member.deleteMember;
+    const updateDelegator = member.updateDelegator;
 
     if (uid !== did) {
         return (
@@ -35,7 +36,7 @@ export default function ManageMemberBtn({ uid, oid, did, mid, refetch }: {
     return ((uid === did) ? (
         <HStack>
             <AlertBtn
-                onClick={() => updateOrg({
+                onClick={() => updateDelegator({
                     delegatorId: mid,
                 }, {
                     onSuccess: () => {
