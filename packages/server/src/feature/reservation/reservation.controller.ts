@@ -80,8 +80,8 @@ export class ReservationController {
   @UseGuards(UserGuard)
   @Get('count')
   async getReservationCount(
-    @Query('uid', ParseIntPipe) userId: number,
     @Query('oid', ParseIntPipe) organizationId: number,
+    @Query('uid', ParseIntPipe) userId?: number,
   ): Promise<{ count: number }> {
     return await this.reservationService.getReservationCount(
       userId,

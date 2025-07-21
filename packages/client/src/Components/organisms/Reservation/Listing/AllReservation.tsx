@@ -19,7 +19,7 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import { useDate } from "@scspace-client/Hooks/utils";
 import CalendarDialog from "@scspace-client/Components/organisms/Calendar/CalendarDialog";
-import { useAllOrganization, useOrganization } from "@scspace-client/Hooks/organization";
+import { useAllOrganization } from "@scspace-client/Hooks/organization";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import OrgSelect from "@scspace-client/Components/organisms/Reservation/Listing/OrgSelect";
@@ -118,25 +118,27 @@ export default function AllReservation() {
                                 </TooltipComponent>
                             </HStack>
                         </Flex>
-                        <SimpleTable
-                            onIdChange={(id) => {
-                                const res = allReservation.find((r) => r.id === id);
-                                if (res) {
-                                    setSelected(res);
-                                    setOpen(true);
-                                }
-                            }}
-                            header={["Title", "Booker", "From", "To"]}
-                            content={allReservation.map((r) => ({
-                                id: r.id,
-                                row: [
-                                    r.title,
-                                    r.organization.name,
-                                    getString(r.timeFrom),
-                                    getString(r.timeTo)
-                                ]
-                            }))}
-                        />
+                        <Scroll>
+                            <SimpleTable
+                                onIdChange={(id) => {
+                                    const res = allReservation.find((r) => r.id === id);
+                                    if (res) {
+                                        setSelected(res);
+                                        setOpen(true);
+                                    }
+                                }}
+                                header={["Title", "Booker", "From", "To"]}
+                                content={allReservation.map((r) => ({
+                                    id: r.id,
+                                    row: [
+                                        r.title,
+                                        r.organization.name,
+                                        getString(r.timeFrom),
+                                        getString(r.timeTo)
+                                    ]
+                                }))}
+                            />
+                        </Scroll>
                         <Center width="100%">
                             <SimplePagination
                                 count={count}

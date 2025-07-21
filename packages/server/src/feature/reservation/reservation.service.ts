@@ -145,8 +145,8 @@ export class ReservationService {
   }
 
   async getReservationCount(
-    userId: number,
     organizationId: number,
+    userId?: number,
   ): Promise<{ count: number }> {
     const count = await this.reservationRepository.fetchCount({
       userId,

@@ -4,6 +4,7 @@ import React from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import PageSelector, { IPage } from "../../molecules/page/PageSelector";
 import ManageOrganization from "./Organization";
+import ManageReservation from "./Reservation";
 
 export default function Management() {
   const { needManager } = useAuth();
@@ -20,11 +21,7 @@ export default function Management() {
       href: "/manage/reservation",
       kor: "예약",
       eng: "Reservation",
-      preview: (
-        <div>
-          예약 관리 페이지입니다. 공간 예약을 관리할 수 있습니다.
-        </div>
-      )
+      preview: (<ManageReservation />)
     }
   ]
 
