@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react";
 import {
     SpaceForm,
-    OrganizationForm,
     TitleForm,
     DescriptionForm,
     InnerPeopleForm,

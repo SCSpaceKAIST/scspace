@@ -8,7 +8,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import CheckComponent from "./Checkbox";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { SmallLoading } from "@scspace-client/Components/atoms/Loading";
 
 export interface ISelectOption {
   label: string;
@@ -35,11 +36,19 @@ export default function SelectComponent({
     items: optionList,
   });
 
-  const [_value, _setValue] = useState<string>(optionList[0].value);
-  const [_label, _setLabel] = useState<string>(optionList[0].label);
-  const [_dscrp, _setDscrp] = useState<string>(optionList[0].description ?? "");
+  const [_value, _setValue] = useState<string>("");
+  const [_label, _setLabel] = useState<string>("");
+  const [_dscrp, _setDscrp] = useState<string>("");
 
-  return (
+  useEffect(() => {
+    _setValue(optionList[0].value ?? "");
+    _setLabel(optionList[0].label ?? "");
+    _setDscrp(optionList[0].description ?? "");
+  }, [optionList]);
+
+  return (options.items.length === 0) ? (
+    <SmallLoading />
+  ) : (
     <Select.Root
       size="lg"
       collection={options}

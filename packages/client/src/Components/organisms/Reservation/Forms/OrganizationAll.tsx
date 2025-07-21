@@ -23,7 +23,7 @@ export function AllOrganizationForm({ setOrgId }: {
       label="Organization Name"
       optionList={organization ? ([
         ...organization.filter(
-          (o) => o.status !== OrganizationStatusEnum.REJECTED && OrganizationStatusEnum.REGISTER_REQUEST
+          (o) => o.status !== OrganizationStatusEnum.REJECTED && o.status !== OrganizationStatusEnum.REGISTER_REQUEST
         ).map((o): ISelectOption => {
           return {
             label: o.name,
