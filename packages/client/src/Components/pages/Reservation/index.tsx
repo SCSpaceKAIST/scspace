@@ -1,4 +1,4 @@
-import PageSelector, { IPage } from "@scspace-client/Components/pages/Layout/PageSelector";
+import PageSelector, { IPage } from "@scspace-client/Components/molecules/page/PageSelector";
 import Application from "./Application";
 import ResStatus from "./Status";
 import UserReservation from "../Mypage/UserReservation";

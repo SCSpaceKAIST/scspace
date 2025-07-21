@@ -1,7 +1,7 @@
 import { Tabs } from "@chakra-ui/react";
 import OrgRule from "@scspace-client/Components/organisms/Rules/organization";
 import ResRule from "@scspace-client/Components/organisms/Rules/reservation";
-import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
+import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import React from "react";
 
 export default function Rules() {

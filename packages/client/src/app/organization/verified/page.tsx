@@ -1,4 +1,4 @@
-import PageTemplete from "@scspace-client/Components/pages/Layout/PageTemplete";
+import PageTemplete from "@scspace-client/Components/molecules/page/PageTemplete";
 import VerifiedOrganization from "@scspace-client/Components/pages/Organization/Verified";
 
 export default function SpacePage() {

@@ -1,6 +1,6 @@
 "use client"
 
-import Scroll from "../../Layout/Scroll";
+import Scroll from "../../../molecules/page/Scroll";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useOrganization, } from "@scspace-client/Hooks/organization";
 import LoadingComponent from "../../../atoms/Loading";

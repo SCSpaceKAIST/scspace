@@ -1,6 +1,6 @@
 "use client"
 
-import PageSelector, { IPage } from "../Layout/PageSelector";
+import PageSelector, { IPage } from "../../molecules/page/PageSelector";
 import UserOrganization from "./Organization";
 import UserReservation from "./UserReservation";
 import { useAuth } from "@scspace-client/Hooks/auth";

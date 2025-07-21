@@ -5,7 +5,7 @@ import SelectComponent, { ISelectOption } from "@scspace-client/Components/molec
 import { Dispatch, SetStateAction } from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
 
-export function OrganizationForm({ setOrgId }: {
+export function AllOrganizationForm({ setOrgId }: {
   setOrgId: Dispatch<SetStateAction<number>>;
 }) {
   const { needManager } = useAuth();

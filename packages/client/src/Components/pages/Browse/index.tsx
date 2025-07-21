@@ -1,5 +1,5 @@
 import Scspace from "./Scspace";
-import PageSelector, { IPage } from "../Layout/PageSelector";
+import PageSelector, { IPage } from "../../molecules/page/PageSelector";
 import Rules from "./Rules";
 import Space from "./Spaces";
 

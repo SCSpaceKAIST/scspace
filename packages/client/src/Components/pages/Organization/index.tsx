@@ -1,4 +1,4 @@
-import PageSelector, { IPage } from "@scspace-client/Components/pages/Layout/PageSelector";
+import PageSelector, { IPage } from "@scspace-client/Components/molecules/page/PageSelector";
 import UserOrganization from "../Mypage/Organization";
 import VerifiedOrganization from "./Verified";
 

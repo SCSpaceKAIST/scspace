@@ -8,7 +8,7 @@ import {
     Text,
     useBreakpointValue,
 } from "@chakra-ui/react";
-import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
+import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useState } from "react";

@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Button, Card, Center, CloseButton, Dialog, DialogPositioner, HStack, Portal, Separator, Stack, StackSeparator, Tabs, Text, useBreakpointValue } from "@chakra-ui/react";
-import Scroll from "../Layout/Scroll";
+import Scroll from "../../molecules/page/Scroll";
 import PrivacyPolicy from "../../organisms/Login/PrivacyPolicy";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useState } from "react";

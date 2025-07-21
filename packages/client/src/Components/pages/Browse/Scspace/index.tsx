@@ -2,7 +2,7 @@
 
 import { Blockquote, Box, Center, ColorPicker, DataList, Field, Fieldset, Grid, Heading, HStack, parseColor, Separator, Stack, Text, Wrap } from "@chakra-ui/react";
 import Image from "next/image";
-import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
+import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 
 export default function Scspace() {

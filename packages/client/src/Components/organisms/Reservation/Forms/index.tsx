@@ -6,6 +6,7 @@ export * from "./Food";
 export * from "./Hour";
 export * from "./InnerPeople";
 export * from "./Organization";
+export * from "./OrganizationAll";
 export * from "./OuterPeople";
 export * from "./Space";
 export * from "./Title";

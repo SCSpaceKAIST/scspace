@@ -15,7 +15,7 @@ import { HiOutlineRefresh } from "react-icons/hi";
 
 import { useDate } from "@scspace-client/Hooks/utils";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
-import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
+import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import OrganizationDialog from "@scspace-client/Components/organisms/Organization/OrganizationDetail";
 import OrganizationName from "./OrganizationName";

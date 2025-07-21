@@ -1,5 +1,5 @@
 import { Tabs } from "@chakra-ui/react";
-import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
+import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import React from "react";
 
 export default function ManageReservation() {

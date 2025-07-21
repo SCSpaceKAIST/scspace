@@ -1,4 +1,4 @@
-import PageTemplete from "@scspace-client/Components/pages/Layout/PageTemplete";
+import PageTemplete from "@scspace-client/Components/molecules/page/PageTemplete";
 import ManageUser from "@scspace-client/Components/pages/Administration/ManageUser";
 
 export default function SpacePage() {

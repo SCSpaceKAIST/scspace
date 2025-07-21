@@ -3,7 +3,7 @@
 import { Button, Center, DataList, Dialog } from "@chakra-ui/react";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import FieldComponent from "@scspace-client/Components/atoms/Field";
-import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
+import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import BorderBox from "@scspace-client/Components/atoms/BorderBox";
 import LoadingComponent, { SmallLoading } from "@scspace-client/Components/atoms/Loading";
 import { useState } from "react";

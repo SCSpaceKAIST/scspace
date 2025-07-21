@@ -3,19 +3,16 @@
 import {
     ButtonGroup,
     Center,
-    createListCollection,
     Flex,
     Grid,
     HStack,
     IconButton,
     NumberInput,
     Pagination,
-    Portal,
-    Select,
     Text,
     useBreakpointValue,
 } from "@chakra-ui/react";
-import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
+import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useUserReservation } from "@scspace-client/Hooks/reservation";
@@ -28,38 +25,15 @@ import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { useOrganization } from "@scspace-client/Hooks/organization";
 import TooltipComponent from "../../../atoms/Tooptip";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
+import OrgSelect from "@scspace-client/Components/organisms/Reservation/Listing/OrgSelect";
+import SimplePagination from "@scspace-client/Components/molecules/page/SimplePagenation";
 
 export default function UserReservation() {
     const { userInfo, needLogin } = useAuth();
     needLogin();
 
     const [oid, setOid] = useState<number>(0);
-    const [_oid, _setOid] = useState<string[]>(["0"]);
-    useEffect(() => {
-        const _t = parseInt(_oid[0]);
-        if (_t != oid) setOid(_t);
-    }, [_oid]);
-
     const { organization } = useOrganization({ uid: userInfo?.id ?? -1 });
-    const initOpt = [
-        { label: "All", value: "0" },
-        { label: "Individual", value: "1" }
-    ];
-    const [options, setOptions] = useState<{ label: string; value: string }[]>(initOpt);
-    const optionList = createListCollection({ items: options });
-    useEffect(() => {
-        if (!organization) {
-            setOptions(initOpt);
-            return;
-        }
-        setOptions([
-            ...initOpt,
-            ...organization.map((o) => ({
-                label: o.name,
-                value: o.id.toString()
-            }))
-        ])
-    }, [organization]);
 
     const [page, setPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(10);
@@ -119,39 +93,11 @@ export default function UserReservation() {
                                 width={isWide ? "fit-content" : "100%"}
                                 justify="space-between"
                             >
-                                <Select.Root
-                                    collection={optionList}
-                                    value={_oid}
-                                    onValueChange={(e) => _setOid(e.value)}
-                                    width="180px"
-                                >
-                                    <Select.HiddenSelect />
-                                    <TooltipComponent content="Organization">
-                                        <Select.Control>
-                                            <Select.Trigger>
-                                                <Select.ValueText />
-                                            </Select.Trigger>
-                                            <Select.IndicatorGroup>
-                                                <Select.Indicator />
-                                            </Select.IndicatorGroup>
-                                        </Select.Control>
-                                    </TooltipComponent>
-                                    <Portal>
-                                        <Select.Positioner>
-                                            <Select.Content minW="fit-content">
-                                                {optionList.items.map((option) => (
-                                                    <Select.Item
-                                                        item={option}
-                                                        key={option.value}
-                                                    >
-                                                        {option.label}
-                                                        <Select.ItemIndicator />
-                                                    </Select.Item>
-                                                ))}
-                                            </Select.Content>
-                                        </Select.Positioner>
-                                    </Portal>
-                                </Select.Root>
+                                <OrgSelect
+                                    organization={organization || []}
+                                    setOid={setOid}
+                                    oid={oid}
+                                />
                                 {isWide && (
                                     <NumberInput.Root
                                         value={_limit}
@@ -176,60 +122,32 @@ export default function UserReservation() {
                                 </TooltipComponent>
                             </HStack>
                         </Flex>
-                        <Scroll>
-                            <SimpleTable
-                                onIdChange={(id) => {
-                                    const res = userReservation.find((r) => r.id === id);
-                                    if (res) {
-                                        setSelected(res);
-                                        setOpen(true);
-                                    }
-                                }}
-                                header={["Title", "Booker", "From", "To"]}
-                                content={userReservation.map((r) => ({
-                                    id: r.id,
-                                    row: [
-                                        r.title,
-                                        r.organization.name,
-                                        getString(r.timeFrom),
-                                        getString(r.timeTo)
-                                    ]
-                                }))}
-                            />
-                        </Scroll>
+                        <SimpleTable
+                            onIdChange={(id) => {
+                                const res = userReservation.find((r) => r.id === id);
+                                if (res) {
+                                    setSelected(res);
+                                    setOpen(true);
+                                }
+                            }}
+                            header={["Title", "Booker", "From", "To"]}
+                            content={userReservation.map((r) => ({
+                                id: r.id,
+                                row: [
+                                    r.title,
+                                    r.organization.name,
+                                    getString(r.timeFrom),
+                                    getString(r.timeTo)
+                                ]
+                            }))}
+                        />
                         <Center width="100%">
-                            <Pagination.Root
+                            <SimplePagination
                                 count={count}
                                 pageSize={limit}
-                                // siblingCount={2}
                                 page={page}
-                                onPageChange={(e) => setPage(e.page)}
-                            >
-                                <ButtonGroup variant="ghost">
-                                    <Pagination.PrevTrigger asChild>
-                                        <IconButton>
-                                            <HiChevronLeft />
-                                        </IconButton>
-                                    </Pagination.PrevTrigger>
-                                    <Pagination.Items
-                                        render={(p) => (
-                                            <IconButton
-                                                variant={{
-                                                    base: "ghost",
-                                                    _selected: "outline"
-                                                }}
-                                            >
-                                                {p.value}
-                                            </IconButton>
-                                        )}
-                                    />
-                                    <Pagination.NextTrigger asChild>
-                                        <IconButton>
-                                            <HiChevronRight />
-                                        </IconButton>
-                                    </Pagination.NextTrigger>
-                                </ButtonGroup>
-                            </Pagination.Root>
+                                onPageChange={({ page }) => setPage(page)}
+                            />
                         </Center>
                     </Grid>
                 )}

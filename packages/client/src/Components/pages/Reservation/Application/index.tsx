@@ -21,8 +21,8 @@ import {
   WorkerForm,
   DateForm,
   HourForm
-} from "@scspace-client/Components/organisms/Reservation/index";
-import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
+} from "@scspace-client/Components/organisms/Reservation/Forms/index";
+import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { SmallLoading } from "@scspace-client/Components/atoms/Loading";
 import { CalendarView } from "@scspace-client/Components/organisms/Calendar/CalendarView";
