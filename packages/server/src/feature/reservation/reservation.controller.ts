@@ -84,8 +84,8 @@ export class ReservationController {
     @Query('uid') userId?: number,
   ): Promise<{ count: number }> {
     return await this.reservationService.getReservationCount(
+      organizationId,
       userId,
-      organizationId
     );
   }
 

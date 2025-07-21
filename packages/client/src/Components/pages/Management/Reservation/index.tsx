@@ -11,7 +11,7 @@ export default function ManageReservation() {
 
     return (
         <Scroll>
-            <Tabs.Root defaultValue={Object.keys(tabList)[0]} fitted>
+            <Tabs.Root defaultValue={Object.keys(tabList)[0]} fitted >
                 <Tabs.List>
                     {Object.keys(tabList).map((key) => (
                         <Tabs.Trigger key={key} value={key}>
@@ -20,7 +20,7 @@ export default function ManageReservation() {
                     ))}
                 </Tabs.List>
                 {Object.entries(tabList).map(([key, content]) => (
-                    <Tabs.Content key={key} value={key}>
+                    <Tabs.Content key={key} value={key} minHeight={"full"}>
                         {content}
                     </Tabs.Content>
                 ))}

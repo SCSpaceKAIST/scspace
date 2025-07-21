@@ -118,27 +118,25 @@ export default function AllReservation() {
                                 </TooltipComponent>
                             </HStack>
                         </Flex>
-                        <Scroll>
-                            <SimpleTable
-                                onIdChange={(id) => {
-                                    const res = allReservation.find((r) => r.id === id);
-                                    if (res) {
-                                        setSelected(res);
-                                        setOpen(true);
-                                    }
-                                }}
-                                header={["Title", "Booker", "From", "To"]}
-                                content={allReservation.map((r) => ({
-                                    id: r.id,
-                                    row: [
-                                        r.title,
-                                        r.organization.name,
-                                        getString(r.timeFrom),
-                                        getString(r.timeTo)
-                                    ]
-                                }))}
-                            />
-                        </Scroll>
+                        <SimpleTable
+                            onIdChange={(id) => {
+                                const res = allReservation.find((r) => r.id === id);
+                                if (res) {
+                                    setSelected(res);
+                                    setOpen(true);
+                                }
+                            }}
+                            header={["Title", "Booker", "From", "To"]}
+                            content={allReservation.map((r) => ({
+                                id: r.id,
+                                row: [
+                                    r.title,
+                                    r.organization.name,
+                                    getString(r.timeFrom),
+                                    getString(r.timeTo)
+                                ]
+                            }))}
+                        />
                         <Center width="100%">
                             <SimplePagination
                                 count={count}
