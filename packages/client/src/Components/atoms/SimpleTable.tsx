@@ -18,7 +18,11 @@ export default function SimpleTable({ onIdChange, header, content }: SimpleTable
     const isWide = useBreakpointValue({ base: false, md: true });
 
     return (
-        <Table.ScrollArea w="100%" h="100%" maxW="100%" maxH="100%">
+        <Table.ScrollArea
+            w="100%" h="100%" maxW="100%" maxH="100%"
+            scrollbar="hidden"
+            scrollBehavior="smooth"
+        >
             <Table.Root
                 stickyHeader
                 interactive
