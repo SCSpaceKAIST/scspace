@@ -32,6 +32,7 @@ export function XScroll({
             overflowX="auto"
             scrollBehavior="smooth"
             minW={0}
+            width="100%"
             maxW="100%"
         >
             {children}
