@@ -4,6 +4,7 @@ import { useAllOrganization } from "@scspace-client/Hooks/organization";
 import SelectComponent, { ISelectOption } from "@scspace-client/Components/molecules/forms/Select";
 import { Dispatch, SetStateAction } from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
+import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
 
 export function AllOrganizationForm({ setOrgId }: {
   setOrgId: Dispatch<SetStateAction<number>>;
@@ -23,7 +24,9 @@ export function AllOrganizationForm({ setOrgId }: {
       label="Organization Name"
       optionList={organization ? ([
         organizations[0],
-        ...organization.map((o): ISelectOption => {
+        ...organization.filter(
+          (o) => o.status !== OrganizationStatusEnum.REJECTED && OrganizationStatusEnum.REGISTER_REQUEST
+        ).map((o): ISelectOption => {
           return {
             label: o.name,
             value: o.id.toString(),

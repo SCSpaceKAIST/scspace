@@ -24,13 +24,17 @@ import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import OrgSelect from "@scspace-client/Components/organisms/Reservation/Listing/OrgSelect";
 import SimplePagination from "@scspace-client/Components/molecules/page/SimplePagenation";
+import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
 
 export default function AllReservation() {
     const { needManager } = useAuth();
     needManager();
 
     const [oid, setOid] = useState<number>(0);
-    const { organization } = useAllOrganization();
+    const { organization: allOrganization } = useAllOrganization();
+    const organization = allOrganization ? allOrganization.filter((o) =>
+        o.status !== OrganizationStatusEnum.REGISTER_REQUEST && o.status !== OrganizationStatusEnum.REJECTED
+    ) : [];
 
     const [page, setPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(10);

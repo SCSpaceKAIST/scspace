@@ -19,6 +19,8 @@ import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 import { OrganizationPublicService } from '../organization/organization.public.service';
 import { MReservation, MReservationContent } from './reservation.model';
 import { ISuccessResponse } from '@scspace-depot/types/common';
+import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
+import { User } from '@scspace-server/db/schema';
 
 @Injectable()
 export class ReservationService {
@@ -190,9 +192,11 @@ export class ReservationService {
     if (!organizations) throw new BadRequestException('Organization not found');
     if (!space) throw new BadRequestException('Space not found');
 
-    const userOrganizations = await this.organizationPublicService.fetchByUserId(reservationInput.userId);
-    if (!userOrganizations.some(org => org.id === reservationInput.organizationId)) {
-      throw new BadRequestException('User does not belong to the specified organization');
+    if (user.type !== UserTypeEnum.MANAGER && user.type !== UserTypeEnum.ADMIN) {
+      const userOrganizations = await this.organizationPublicService.fetchByUserId(reservationInput.userId);
+      if (!userOrganizations.some(org => org.id === reservationInput.organizationId)) {
+        throw new BadRequestException('User does not belong to the specified organization');
+      }
     }
 
     const [reservation, reservationContent] = await this.reservationRepository.insert(reservationInput);
