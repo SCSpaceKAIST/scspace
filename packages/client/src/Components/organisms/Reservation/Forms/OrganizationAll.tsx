@@ -13,7 +13,6 @@ export function AllOrganizationForm({ setOrgId }: {
   needManager();
 
   const { organization } = useAllOrganization();
-  const organizations: ISelectOption[] = [];
 
   function onChange(e: ISelectOption) {
     setOrgId(parseInt(e.value));
@@ -23,7 +22,6 @@ export function AllOrganizationForm({ setOrgId }: {
     <SelectComponent
       label="Organization Name"
       optionList={organization ? ([
-        organizations[0],
         ...organization.filter(
           (o) => o.status !== OrganizationStatusEnum.REJECTED && OrganizationStatusEnum.REGISTER_REQUEST
         ).map((o): ISelectOption => {
@@ -33,7 +31,7 @@ export function AllOrganizationForm({ setOrgId }: {
             description: "Delegator: " + o.delegator.nameKr
           }
         })
-      ]) : (organizations)}
+      ]) : []}
       onChange={onChange}
     />
   );
