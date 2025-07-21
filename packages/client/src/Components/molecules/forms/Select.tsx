@@ -41,6 +41,8 @@ export default function SelectComponent({
   const [_dscrp, _setDscrp] = useState<string>("");
 
   useEffect(() => {
+    if (optionList.length === 0) return;
+
     _setValue(optionList[0].value ?? "");
     _setLabel(optionList[0].label ?? "");
     _setDscrp(optionList[0].description ?? "");
