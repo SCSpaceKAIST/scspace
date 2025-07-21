@@ -1,6 +1,6 @@
 import { Blockquote, Field, Fieldset, Heading, Stack, Text } from "@chakra-ui/react";
 
-export default function ResRule() {
+export default function OrgRule() {
     return (
         <Fieldset.Root>
             <Fieldset.Legend>

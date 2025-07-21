@@ -1,20 +1,22 @@
 import { Tabs } from "@chakra-ui/react";
+import OrgRule from "@scspace-client/Components/organisms/Rules/organization";
 import ResRule from "@scspace-client/Components/organisms/Rules/reservation";
 import Scroll from "@scspace-client/Components/pages/Layout/Scroll";
 import React from "react";
 
 export default function Rules() {
     const tabList: { [key: string]: React.ReactNode } = {
-        reservation: (<ResRule />)
+        Reservation: (<ResRule />),
+        Organization: (<OrgRule />)
     };
 
     return (
         <Scroll>
-            <Tabs.Root>
+            <Tabs.Root defaultValue={Object.keys(tabList)[0]} fitted>
                 <Tabs.List>
                     {Object.keys(tabList).map((key) => (
                         <Tabs.Trigger key={key} value={key}>
-                            {key.charAt(0).toUpperCase() + key.slice(1)}
+                            {key}
                         </Tabs.Trigger>
                     ))}
                 </Tabs.List>
