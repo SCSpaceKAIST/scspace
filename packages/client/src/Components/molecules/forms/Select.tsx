@@ -46,7 +46,7 @@ export default function SelectComponent({
     _setValue(optionList[0].value ?? "");
     _setLabel(optionList[0].label ?? "");
     _setDscrp(optionList[0].description ?? "");
-  }, [optionList]);
+  }, [optionList.length]);
 
   return (options.items.length === 0) ? (
     <SmallLoading />
