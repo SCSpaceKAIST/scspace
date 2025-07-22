@@ -61,6 +61,10 @@ export default function AllReservation() {
         setSelected(allReservation[0] || null);
     }, [allReservation]);
 
+    useEffect(() => {
+        setPage(1);
+    }, [oid, limit]);
+
     return (
         <>
             <CalendarDialog
