@@ -237,29 +237,37 @@ export class ReservationService {
     }[] = [];
 
     for (const time of reservationInput.time) {
-      await this.reservationPublicService.checkWholeTime(reservationInput.userId, reservationInput.organizationId, reservationInput.spaceId, time.timeFrom, time.timeTo);
-      const [reservation, _] = await this.reservationRepository.insert({
-        ...reservationInput,
-        timeFrom: time.timeFrom,
-        timeTo: time.timeTo,
-        content: reservationInput.content,
-        state: this.getDefaultStatus(space.spaceType),
-      } as IReservationCreate);
+      try {
+        await this.reservationPublicService.checkWholeTime(reservationInput.userId, reservationInput.organizationId, reservationInput.spaceId, time.timeFrom, time.timeTo);
+        const [reservation, _] = await this.reservationRepository.insert({
+          ...reservationInput,
+          timeFrom: time.timeFrom,
+          timeTo: time.timeTo,
+          content: reservationInput.content,
+          state: this.getDefaultStatus(space.spaceType),
+        } as IReservationCreate);
 
-      if (!reservation) {
+        if (!reservation) {
+          result.push({
+            timeFrom: time.timeFrom,
+            timeTo: time.timeTo,
+            success: false,
+          });
+          continue;
+        }
+
+        result.push({
+          timeFrom: reservation.timeFrom,
+          timeTo: reservation.timeTo,
+          success: true,
+        });
+      } catch (error) {
         result.push({
           timeFrom: time.timeFrom,
           timeTo: time.timeTo,
           success: false,
         });
-        continue;
       }
-
-      result.push({
-        timeFrom: reservation.timeFrom,
-        timeTo: reservation.timeTo,
-        success: true,
-      });
     }
     return {
       userId: reservationInput.userId,
