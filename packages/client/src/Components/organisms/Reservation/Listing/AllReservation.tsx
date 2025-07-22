@@ -135,7 +135,7 @@ export default function AllReservation() {
                                 id: r.id,
                                 row: [
                                     r.title,
-                                    r.organization.name,
+                                    r.organizationId !== 1 ? r.organization.name : r.user.nameKr,
                                     getString(r.timeFrom),
                                     getString(r.timeTo)
                                 ]

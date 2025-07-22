@@ -98,8 +98,13 @@ export default function CalendarDialog({ open, setOpen, selectedRes, refetch }: 
                             <DataListItem label="Space">
                                 {selectedRes.space.nameKr} ({selectedRes.space.nameEn})
                             </DataListItem>
+                            {selectedRes.organizationId !== 1 && (
+                                <DataListItem label="Organization">
+                                    {selectedRes.organization.name}
+                                </DataListItem>
+                            )}
                             <DataListItem label="Booker">
-                                {(selectedRes.organizationId === 1) ? (selectedRes.user.nameKr) : (selectedRes.organization.name)}
+                                {selectedRes.user.nameKr}
                             </DataListItem>
                         </DataList.Root>
                     </Dialog.Body>
