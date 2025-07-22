@@ -145,8 +145,8 @@ export default function ReservationCard({ resList, setResList }: {
                                         {
                                             dateFrom: new Date(resList[resList.length - 1].dateFrom.getFullYear(), resList[resList.length - 1].dateFrom.getMonth(), resList[resList.length - 1].dateFrom.getDate()),
                                             dateTo: new Date(resList[resList.length - 1].dateTo.getFullYear(), resList[resList.length - 1].dateTo.getMonth(), resList[resList.length - 1].dateTo.getDate()),
-                                            hourFrom: 0,
-                                            hourTo: 0,
+                                            hourFrom: resList[resList.length - 1].hourFrom,
+                                            hourTo: resList[resList.length - 1].hourTo,
                                             correct: true
                                         }
                                     ]);

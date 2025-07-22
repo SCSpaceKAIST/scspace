@@ -236,7 +236,7 @@ export default function CreateReservation() {
                 </Grid>
                 <Separator />
                 {submitLog && (
-                    <Button width="100%" onClick={() => setOpen(true)} variant={"outline"}>
+                    <Button width="100%" onClick={() => setOpen(true)} variant={"outline"} backgroundColor={"bg"}>
                         Show Submit Log
                     </Button>
                 )}

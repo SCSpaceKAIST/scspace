@@ -48,8 +48,8 @@ export default function SubmitLog({ submitLog, open, setOpen }: {
                     {submitLog.result.map((log, index) => (
                         <Card.Root
                             key={index}
-                            borderColor={log.success ? "green" : "red"}
-                            borderWidth={2}
+                            borderColor={log.success ? "bg.emphasized" : "red"}
+                            borderWidth={log.success ? 1 : 2}
                             size="sm"
                         >
                             <Card.Header>
