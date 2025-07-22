@@ -24,6 +24,15 @@ export default function SubmitLog({ submitLog, open, setOpen }: {
         post_time: getString(submitLog.timePost),
     }
 
+    function logGenerator() {
+        return "Title: " + submitLog.title + "\n" +
+            "Post Time: " + getString(submitLog.timePost) + "\n" +
+            "Results:\n" +
+            submitLog.result.map(log => {
+                return `- From: ${getString(log.timeFrom)}, To: ${getString(log.timeTo)}, Success: ${log.success}`;
+            }).join("\n");
+    }
+
     return (
         <SimpleDialog
             open={open}
@@ -71,7 +80,7 @@ export default function SubmitLog({ submitLog, open, setOpen }: {
             </Dialog.Body>
             <Dialog.Footer>
                 <DownloadTrigger
-                    data={JSON.stringify(downloadData)}
+                    data={logGenerator()}
                     fileName={`reservation_log_${downloadData.title}_${downloadData.post_time}.txt`}
                     asChild
                     mimeType="text/plain"
