@@ -1,4 +1,4 @@
-import { Button, Card, DataList, Dialog } from "@chakra-ui/react";
+import { Button, Card, DataList, Dialog, Stack } from "@chakra-ui/react";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { Dispatch, SetStateAction } from "react";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
@@ -8,7 +8,6 @@ export interface ISubmitLog {
     timeFrom: number;
     timeTo: number;
     success: boolean;
-    message: string;
 }
 
 export default function SubmitLog({ submitLog, open, setOpen }: {
@@ -32,37 +31,39 @@ export default function SubmitLog({ submitLog, open, setOpen }: {
                 </Dialog.Description>
             </Dialog.Header>
             <Dialog.Body>
-                {submitLog.map((log, index) => (
-                    <Card.Root
-                        key={index}
-                        borderColor={log.success ? "green" : "red"}
-                        borderWidth={2}
-                        size="sm"
-                    >
-                        <Card.Header>
-                            <Card.Title>
-                                {log.success ? "Success" : "Fail"}
-                            </Card.Title>
-                        </Card.Header>
-                        <Card.Body>
-                            <DataList.Root>
-                                <DataListItem label="start time">
-                                    {getString(log.timeFrom)}
-                                </DataListItem>
-                                <DataListItem label="end time">
-                                    {getString(log.timeTo)}
-                                </DataListItem>
-                            </DataList.Root>
-                        </Card.Body>
-                        {!log.success && (
-                            <Card.Footer>
-                                <Card.Description>
-                                    {log.message}
-                                </Card.Description>
-                            </Card.Footer>
-                        )}
-                    </Card.Root>
-                ))}
+                <Stack>
+                    {submitLog.map((log, index) => (
+                        <Card.Root
+                            key={index}
+                            borderColor={log.success ? "green" : "red"}
+                            borderWidth={2}
+                            size="sm"
+                        >
+                            <Card.Header>
+                                <Card.Title>
+                                    {log.success ? "Success" : "Fail"}
+                                </Card.Title>
+                            </Card.Header>
+                            <Card.Body>
+                                <DataList.Root orientation={"horizontal"}>
+                                    <DataListItem label="start time">
+                                        {getString(log.timeFrom)}
+                                    </DataListItem>
+                                    <DataListItem label="end time">
+                                        {getString(log.timeTo)}
+                                    </DataListItem>
+                                </DataList.Root>
+                            </Card.Body>
+                            {!log.success && (
+                                <Card.Footer>
+                                    <Card.Description>
+                                        시간이 겹치는지 확인하세요.
+                                    </Card.Description>
+                                </Card.Footer>
+                            )}
+                        </Card.Root>
+                    ))}
+                </Stack>
             </Dialog.Body>
             <Dialog.Footer>
                 <Dialog.ActionTrigger asChild>

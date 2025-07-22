@@ -4,9 +4,11 @@ import {
   IReservationAll,
   IReservationContent,
   IReservation,
+  IReservationCreateMultiple,
+  IReservationMultipleCreateResurt,
 } from '@scspace-depot/types/reservation';
 import { IOrganization } from '@scspace-depot/types/organization';
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ReservationRepository } from './reservation.repository';
 import { checkContainAllId, takeAll, timeRangeCheck } from '@scspace-server/common/utils';
 import { UserPublicService } from '../user/user.public.service';
@@ -17,10 +19,10 @@ import { IUser } from '@scspace-depot/types/user';
 import { ISpace } from '@scspace-depot/types/space';
 import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 import { OrganizationPublicService } from '../organization/organization.public.service';
-import { MReservation, MReservationContent } from './reservation.model';
+import { MReservation } from './reservation.model';
 import { ISuccessResponse } from '@scspace-depot/types/common';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
-import { User } from '@scspace-server/db/schema';
+import { getNow } from '@scspace-server/common/utils';
 
 @Injectable()
 export class ReservationService {
@@ -205,6 +207,68 @@ export class ReservationService {
       reservation,
       reservationContent,
     );
+  }
+
+  async postMultipleReservation(
+    reservationInput: IReservationCreateMultiple,
+  ): Promise<IReservationMultipleCreateResurt> {
+    const [user, organizations, space] = await Promise.all([
+      this.userPublicService.fetchById(reservationInput.userId),
+      this.organizationPublicService.fetchById(reservationInput.organizationId),
+      this.spacePublicService.fetchById(reservationInput.spaceId),
+    ]);
+
+    if (!user) throw new BadRequestException('User not found');
+    if (!organizations) throw new BadRequestException('Organization not found');
+    if (!space) throw new BadRequestException('Space not found');
+    if (!reservationInput.time) throw new BadRequestException('Time cannot be empty');
+
+    if (user.type !== UserTypeEnum.MANAGER && user.type !== UserTypeEnum.ADMIN) {
+      const userOrganizations = await this.organizationPublicService.fetchByUserId(reservationInput.userId);
+      if (!userOrganizations.some(org => org.id === reservationInput.organizationId)) {
+        throw new BadRequestException('User does not belong to the specified organization');
+      }
+    }
+
+    const result: {
+      timeFrom: number;
+      timeTo: number;
+      success: boolean;
+    }[] = [];
+
+    for (const time of reservationInput.time) {
+      await this.reservationPublicService.checkWholeTime(reservationInput.userId, reservationInput.organizationId, reservationInput.spaceId, time.timeFrom, time.timeTo);
+      const [reservation, _] = await this.reservationRepository.insert({
+        ...reservationInput,
+        timeFrom: time.timeFrom,
+        timeTo: time.timeTo,
+        content: reservationInput.content,
+        state: this.getDefaultStatus(space.spaceType),
+      } as IReservationCreate);
+
+      if (!reservation) {
+        result.push({
+          timeFrom: time.timeFrom,
+          timeTo: time.timeTo,
+          success: false,
+        });
+        continue;
+      }
+
+      result.push({
+        timeFrom: reservation.timeFrom,
+        timeTo: reservation.timeTo,
+        success: true,
+      });
+    }
+    return {
+      userId: reservationInput.userId,
+      organizationId: reservationInput.organizationId,
+      spaceId: reservationInput.spaceId,
+      title: reservationInput.title,
+      result,
+      timePost: getNow(),
+    } as IReservationMultipleCreateResurt;
   }
 
   async updateReservation(

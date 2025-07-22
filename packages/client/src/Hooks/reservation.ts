@@ -2,7 +2,7 @@
 
 import { ReservationStateEnum } from "@scspace-depot/enums/reservation.enum";
 import { useMutationApi, useQueryApi } from "./api"
-import { IReservation, IReservationAll, IReservationCreate, IReservationUpdate } from "@scspace-depot/types/reservation"
+import { IReservation, IReservationAll, IReservationCreate, IReservationCreateMultiple, IReservationMultipleCreateResurt, IReservationUpdate } from "@scspace-depot/types/reservation"
 import { useEffect, useState } from "react";
 import { ISuccessResponse } from "@scspace-depot/types/common/common.type";
 import { useDate } from "./utils";
@@ -245,6 +245,11 @@ export function useReservationAPI(Rid?: { rid: number }) {
         "POST"
     ).mutateAsync;
 
+    const createMultipleRes = useMutationApi<IReservationMultipleCreateResurt, IReservationCreateMultiple>(
+        "/reservation/multiple",
+        "POST"
+    ).mutateAsync;
+
     const updateRes = useMutationApi<IReservation, IReservationUpdate>(
         `/reservation/${rid}`,
         "PUT"
@@ -255,5 +260,5 @@ export function useReservationAPI(Rid?: { rid: number }) {
         "DELETE"
     ).mutate;
 
-    return { createRes, updateRes, deleteRes };
+    return { createRes, createMultipleRes, updateRes, deleteRes };
 };

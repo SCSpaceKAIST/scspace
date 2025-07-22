@@ -17,7 +17,9 @@ import {
   IReservation,
   IReservationCreate,
   IReservationUpdate,
-  IReservationAll
+  IReservationAll,
+  IReservationCreateMultiple,
+  IReservationMultipleCreateResurt
 } from '@scspace-depot/types/reservation';
 import { ISuccessResponse } from '@scspace-depot/types/common';
 import { AdminGuard, ManagerGuard, MemberGuard, MemberGuardWithRervation, UserGuard } from '../auth/jwt/jwt.guard';
@@ -103,6 +105,14 @@ export class ReservationController {
     @Body() reservationInput: IReservationCreate,
   ): Promise<IReservation> {
     return await this.reservationService.postReservation(reservationInput);
+  }
+
+  @UseGuards(ManagerGuard)
+  @Post('multiple')
+  async postMultipleReservation(
+    @Body() reservationInput: IReservationCreateMultiple,
+  ): Promise<IReservationMultipleCreateResurt> {
+    return await this.reservationService.postMultipleReservation(reservationInput);
   }
 
   // AuthGuard - user

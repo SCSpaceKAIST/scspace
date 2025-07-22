@@ -47,9 +47,9 @@ export default function CreateReservation() {
     const [worker, setWorker] = useState<number>(0);
     const [check, setCheck] = useState<boolean>(false);
 
-    const createReservation = useReservationAPI().createRes;
+    const createMultiReservation = useReservationAPI().createMultipleRes;
 
-    const { getTime, timeUnit } = useDate();
+    const { getTime, getDate } = useDate();
 
     const [resList, setResList] = useState<IReservationRepeat[]>([
         {
@@ -85,59 +85,61 @@ export default function CreateReservation() {
 
         if (!userInfo) return;
 
+        setSubmitLog([]);
+
         var i: number;
-        var timeFrom: number;
-        var timeTo: number;
-        for (i = 0; i < repeat; i++) {
-            resList.forEach((info) => {
-                timeFrom = getTime(info.dateFrom) + getTime({ hour: info.hourFrom }) + i * 7 * timeUnit.day;
-                timeTo = getTime(info.dateTo) + getTime({ hour: info.hourTo }) + i * 7 * timeUnit.day;
-                createReservation(
-                    {
-                        content: {
-                            description: dscrp,
-                            innerParticipantNumber: inner,
-                            outerParticipantNumber: outer,
-                            food: food,
-                            desk: desk,
-                            chair: chair,
-                            busking: check && (spaceId === 13),
-                            worker: worker
-                        },
-                        userId: userInfo.id,
-                        organizationId: orgId,
-                        spaceId: spaceId,
-                        title: title,
-                        timeFrom,
-                        timeTo,
-                    },
-                    {
-                        onSuccess: () => {
-                            setSubmitLog((prev) => [
-                                ...prev,
-                                {
-                                    timeFrom,
-                                    timeTo,
-                                    success: true,
-                                    message: ""
-                                }
-                            ]);
-                        },
-                        onError: (error) => {
-                            setSubmitLog((prev) => [
-                                ...prev,
-                                {
-                                    timeFrom,
-                                    timeTo,
-                                    success: false,
-                                    message: error.message
-                                }
-                            ]);
-                        },
-                    }
-                );
-            });
-        }
+        var _timeFrom: Date;
+        var _timeTo: Date;
+
+        const time: {
+            timeFrom: number;
+            timeTo: number;
+        }[] = [];
+
+        resList.forEach((res) => {
+            _timeFrom = getDate(getTime(res.dateFrom) + getTime({ hour: res.hourFrom }));
+            _timeTo = getDate(getTime(res.dateTo) + getTime({ hour: res.hourTo }));
+
+            for (i = 0; i < repeat; i++) {
+                _timeFrom.setDate(_timeFrom.getDate() + i * 7);
+                _timeTo.setDate(_timeTo.getDate() + i * 7);
+                time.push({
+                    timeFrom: getTime(_timeFrom),
+                    timeTo: getTime(_timeTo)
+                });
+            }
+        });
+
+        createMultiReservation(
+            {
+                content: {
+                    description: dscrp,
+                    innerParticipantNumber: inner,
+                    outerParticipantNumber: outer,
+                    food: food,
+                    desk: desk,
+                    chair: chair,
+                    busking: check && (spaceId === 13),
+                    worker: worker
+                },
+                userId: userInfo.id,
+                organizationId: orgId,
+                spaceId: spaceId,
+                title: title,
+                time
+            },
+            {
+                onSuccess: (r) => {
+                    setSubmitLog(r.result);
+                },
+                onError: (error) => {
+                    toaster.error({
+                        title: "Reservate Failed",
+                        description: error.message || "An error occurred while creating the reservation."
+                    });
+                },
+            }
+        );
         setOpen(true);
     }
 

@@ -35,10 +35,27 @@ export type IReservationSimpleAll = IReservationSimple & {
 
 export type IReservationCreate = Omit<
   IReservation,
-  "id" | "timePost" |  "timeUpdate" | "state" | "content"
+  "id" | "timePost" | "timeUpdate" | "state" | "content"
 > & {
   content: IReservationContentCreate;
 };
+
+export type IReservationCreateMultiple = Omit<IReservationCreate, "timeFrom" | "timeTo"> & {
+  time: {
+    timeFrom: number;
+    timeTo: number;
+  }[];
+};
+
+export type IReservationMultipleCreateResurt = Omit<
+  IReservation, "id" | "timeFrom" | "timeTo" | "timeUpdate" | "content" | "state"
+> & {
+  result: {
+    timeFrom: number;
+    timeTo: number;
+    success: boolean;
+  }[];
+}
 
 export type IReservationUpdate = Omit<
   IReservation,

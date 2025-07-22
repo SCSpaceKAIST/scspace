@@ -64,7 +64,6 @@ export default function ReservationCard({ resList, setResList }: {
     resList: IReservationRepeat[];
     setResList: React.Dispatch<React.SetStateAction<IReservationRepeat[]>>;
 }) {
-    const _init = new Date();
     const { getTime } = useDate();
 
     return (
@@ -144,8 +143,8 @@ export default function ReservationCard({ resList, setResList }: {
                                     setResList((l) => [
                                         ...l,
                                         {
-                                            dateFrom: new Date(_init.getFullYear(), _init.getMonth(), _init.getDate()),
-                                            dateTo: new Date(_init.getFullYear(), _init.getMonth(), _init.getDate()),
+                                            dateFrom: new Date(resList[resList.length - 1].dateFrom.getFullYear(), resList[resList.length - 1].dateFrom.getMonth(), resList[resList.length - 1].dateFrom.getDate()),
+                                            dateTo: new Date(resList[resList.length - 1].dateTo.getFullYear(), resList[resList.length - 1].dateTo.getMonth(), resList[resList.length - 1].dateTo.getDate()),
                                             hourFrom: 0,
                                             hourTo: 0,
                                             correct: true
