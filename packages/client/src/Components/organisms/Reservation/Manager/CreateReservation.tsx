@@ -27,7 +27,8 @@ import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useDate } from "@scspace-client/Hooks/utils";
 import ReservationCard, { IReservationRepeat } from "./ReservationCard";
 import { RepeatForm } from "./Repeat";
-import SubmitLog, { ISubmitLog } from "./SubmitLog";
+import SubmitLog from "./SubmitLog";
+import { IReservationMultipleCreateResurt } from "@scspace-depot/types/reservation";
 
 export default function CreateReservation() {
     const { userInfo, needManager } = useAuth();
@@ -62,7 +63,7 @@ export default function CreateReservation() {
     ]);
 
     const [repeat, setRepeat] = useState<number>(1);
-    const [submitLog, setSubmitLog] = useState<ISubmitLog[]>([]);
+    const [submitLog, setSubmitLog] = useState<IReservationMultipleCreateResurt | null>(null);
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -85,7 +86,7 @@ export default function CreateReservation() {
 
         if (!userInfo) return;
 
-        setSubmitLog([]);
+        setSubmitLog(null);
 
         var i: number;
         var _timeFrom: Date;
@@ -130,7 +131,7 @@ export default function CreateReservation() {
             },
             {
                 onSuccess: (r) => {
-                    setSubmitLog(r.result);
+                    setSubmitLog(r);
                 },
                 onError: (error) => {
                     toaster.error({
@@ -145,11 +146,13 @@ export default function CreateReservation() {
 
     return (
         <Scroll>
-            <SubmitLog
-                submitLog={submitLog}
-                open={open}
-                setOpen={setOpen}
-            />
+            {submitLog && (
+                <SubmitLog
+                    submitLog={submitLog}
+                    open={open}
+                    setOpen={setOpen}
+                />
+            )}
             <Stack>
                 <Text color="red" fontWeight={"semibold"}>
                     주의: 정기 예약 생성 시 예약이 중복되지 않도록 주의해주세요.
@@ -232,7 +235,12 @@ export default function CreateReservation() {
                     </GridItem>
                 </Grid>
                 <Separator />
-                <Button rounded="sm" width="100%" onClick={submit}
+                {submitLog && (
+                    <Button width="100%" onClick={() => setOpen(true)}>
+                        Show Submit Log
+                    </Button>
+                )}
+                <Button width="100%" onClick={submit}
                     disabled={resList.map((res) => res.correct).includes(false)}
                 >
                     Submit

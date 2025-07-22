@@ -261,7 +261,7 @@ export class ReservationService {
           timeTo: reservation.timeTo,
           success: true,
         });
-      } catch (error) {
+      } catch {
         result.push({
           timeFrom: time.timeFrom,
           timeTo: time.timeTo,

@@ -1,21 +1,28 @@
-import { Button, Card, DataList, Dialog, Stack } from "@chakra-ui/react";
+"use client";
+
+import { Button, Card, DataList, Dialog, DownloadTrigger, Stack } from "@chakra-ui/react";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { Dispatch, SetStateAction } from "react";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import { useDate } from "@scspace-client/Hooks/utils";
-
-export interface ISubmitLog {
-    timeFrom: number;
-    timeTo: number;
-    success: boolean;
-}
+import { IReservationMultipleCreateResurt } from "@scspace-depot/types/reservation";
 
 export default function SubmitLog({ submitLog, open, setOpen }: {
-    submitLog: ISubmitLog[];
+    submitLog: IReservationMultipleCreateResurt;
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
 }) {
     const { getString } = useDate();
+
+    const downloadData = {
+        title: submitLog.title,
+        result: submitLog.result.map(log => ({
+            from: getString(log.timeFrom),
+            to: getString(log.timeTo),
+            success: log.success,
+        })),
+        post_time: getString(submitLog.timePost),
+    }
 
     return (
         <SimpleDialog
@@ -24,15 +31,12 @@ export default function SubmitLog({ submitLog, open, setOpen }: {
         >
             <Dialog.Header>
                 <Dialog.Title>
-                    Submit Log
+                    {`${submitLog.title} 예약 제출 로그 (${getString(submitLog.timePost)})`}
                 </Dialog.Title>
-                <Dialog.Description>
-                    The log of the reservation submission.
-                </Dialog.Description>
             </Dialog.Header>
             <Dialog.Body>
                 <Stack>
-                    {submitLog.map((log, index) => (
+                    {submitLog.result.map((log, index) => (
                         <Card.Root
                             key={index}
                             borderColor={log.success ? "green" : "red"}
@@ -66,6 +70,16 @@ export default function SubmitLog({ submitLog, open, setOpen }: {
                 </Stack>
             </Dialog.Body>
             <Dialog.Footer>
+                <DownloadTrigger
+                    data={JSON.stringify(downloadData)}
+                    fileName={`reservation_log_${downloadData.title}_${downloadData.post_time}.txt`}
+                    asChild
+                    mimeType="text/plain"
+                >
+                    <Button variant={"outline"}>
+                        Download Log
+                    </Button>
+                </DownloadTrigger>
                 <Dialog.ActionTrigger asChild>
                     <Button variant={"outline"}>
                         Close
