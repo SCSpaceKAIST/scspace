@@ -4,6 +4,7 @@ import { createToaster, HStack, Stack, Toast, Toaster, } from "@chakra-ui/react"
 
 export const toaster = createToaster({
     placement: "bottom-end",
+    removeDelay: 500,
 });
 
 export default function ToasterComponent() {

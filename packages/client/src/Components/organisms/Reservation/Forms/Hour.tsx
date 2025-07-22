@@ -1,11 +1,10 @@
 "use client"
 
 import SelectComponent, { ISelectOption } from "@scspace-client/Components/molecules/forms/Select";
-import { Dispatch, SetStateAction } from "react";
 
 export function HourForm({ label, setHour }: {
     label: string;
-    setHour: Dispatch<SetStateAction<number>>;
+    setHour: (hour: number) => void;
 }) {
     const options = Array.from({ length: 24 }).map((_, i): ISelectOption => {
         return {

@@ -6,6 +6,7 @@ export default function NumberInputComponent({
   helpertext,
   errortext,
   disabled,
+  min,
   value,
   onChange,
 }: {
@@ -13,6 +14,7 @@ export default function NumberInputComponent({
   helpertext?: string;
   errortext?: string;
   disabled?: boolean;
+  min?: number;
   value: string;
   onChange: (value: string) => any;
 }) {
@@ -30,7 +32,7 @@ export default function NumberInputComponent({
         value={value}
         onValueChange={(e) => onChange(e.value)}
         width="100%"
-        min={0}
+        min={min ?? 0}
       >
         <NumberInput.Control />
         <NumberInput.Input />

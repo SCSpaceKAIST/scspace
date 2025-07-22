@@ -54,12 +54,18 @@ export function useDate() {
         return new Date(year, month, day, hour, minute, 0, 0);
     }
 
+    const minute = 1;
+    const hour = minute * 60;
+    const day = hour * 24;
+    const month = day * 32;
+    const year = month * 12;
+
     const timeUnit = {
-        minute: 1,
-        hour: 60,
-        day: 60 * 24,
-        month: 60 * 24 * 32,
-        year: 60 * 24 * 32 * 12
+        minute,
+        hour,
+        day,
+        month,
+        year
     }
 
     return {

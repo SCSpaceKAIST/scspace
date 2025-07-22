@@ -16,7 +16,7 @@ export function DateForm({
 }: {
   label: string;
   date: Date;
-  setDate: Dispatch<SetStateAction<Date>>;
+  setDate: (date: Date) => void;
   maxDate?: Date;
   minDate?: Date
 }) {

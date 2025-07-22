@@ -48,9 +48,9 @@ export default function EditNameBtn({ oid, refetch, name }: {
                         </Dialog.Body>
                         <Dialog.Footer>
                             <Dialog.ActionTrigger asChild>
-                                <Button colorPalette="blue" rounded="sm"
+                                <Button colorPalette="blue" rounded="sm" disabled={!newName.trim()}
                                     onClick={() => updateOrg({
-                                        name: newName
+                                        name: newName.trim()
                                     }, {
                                         onSuccess: () => {
                                             toaster.success({

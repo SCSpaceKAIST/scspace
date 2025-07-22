@@ -18,35 +18,22 @@ import {
     DeskForm,
     ChairForm,
     WorkerForm,
-    DateForm,
-    HourForm,
     AllOrganizationForm
 } from "@scspace-client/Components/organisms/Reservation/Forms/index";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { CalendarView } from "@scspace-client/Components/organisms/Calendar/CalendarView";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useDate } from "@scspace-client/Hooks/utils";
+import ReservationCard, { IReservationRepeat } from "./ReservationCard";
+import { RepeatForm } from "./Repeat";
+import SubmitLog, { ISubmitLog } from "./SubmitLog";
 
 export default function CreateReservation() {
     const { userInfo, needManager } = useAuth();
     needManager();
 
     const _init = new Date();
-    const [dateFrom, setDateFrom] = useState<Date>(() => new Date(_init.getFullYear(), _init.getMonth(), _init.getDate()));
-    const [dateTo, setDateTo] = useState<Date>(() => new Date(_init.getFullYear(), _init.getMonth(), _init.getDate()));
-
-    useEffect(() => {
-        if (dateFrom > dateTo) setDateTo(dateFrom);
-    }, [dateFrom.getTime()]);
-
-    useEffect(() => {
-        if (dateFrom > dateTo) setDateFrom(dateTo);
-    }, [dateTo.getTime()]);
-
-    const [hourFrom, setHourFrom] = useState<number>(0);
-    const [hourTo, setHourTo] = useState<number>(0);
 
     const [spaceId, setSpaceId] = useState<number>(1);
     const [orgId, setOrgId] = useState<number>(1);
@@ -62,9 +49,22 @@ export default function CreateReservation() {
 
     const createReservation = useReservationAPI().createRes;
 
-    const [e, setE] = useState<string>();
+    const { getTime, timeUnit } = useDate();
 
-    const { getTime } = useDate();
+    const [resList, setResList] = useState<IReservationRepeat[]>([
+        {
+            dateFrom: new Date(_init.getFullYear(), _init.getMonth(), _init.getDate()),
+            dateTo: new Date(_init.getFullYear(), _init.getMonth(), _init.getDate()),
+            hourFrom: 0,
+            hourTo: 0,
+            correct: true
+        }
+    ]);
+
+    const [repeat, setRepeat] = useState<number>(1);
+    const [submitLog, setSubmitLog] = useState<ISubmitLog[]>([]);
+
+    const [open, setOpen] = useState<boolean>(false);
 
     function submit() {
         if (title === "") {
@@ -85,59 +85,72 @@ export default function CreateReservation() {
 
         if (!userInfo) return;
 
-        toaster.promise(
-            createReservation(
-                {
-                    content: {
-                        description: dscrp,
-                        innerParticipantNumber: inner,
-                        outerParticipantNumber: outer,
-                        food: food,
-                        desk: desk,
-                        chair: chair,
-                        busking: check && (spaceId === 13),
-                        worker: worker
+        var i: number;
+        var timeFrom: number;
+        var timeTo: number;
+        for (i = 0; i < repeat; i++) {
+            resList.forEach((info) => {
+                timeFrom = getTime(info.dateFrom) + getTime({ hour: info.hourFrom }) + i * 7 * timeUnit.day;
+                timeTo = getTime(info.dateTo) + getTime({ hour: info.hourTo }) + i * 7 * timeUnit.day;
+                createReservation(
+                    {
+                        content: {
+                            description: dscrp,
+                            innerParticipantNumber: inner,
+                            outerParticipantNumber: outer,
+                            food: food,
+                            desk: desk,
+                            chair: chair,
+                            busking: check && (spaceId === 13),
+                            worker: worker
+                        },
+                        userId: userInfo.id,
+                        organizationId: orgId,
+                        spaceId: spaceId,
+                        title: title,
+                        timeFrom,
+                        timeTo,
                     },
-                    userId: userInfo.id,
-                    organizationId: orgId,
-                    spaceId: spaceId,
-                    title: title,
-                    timeFrom: getTime(dateFrom) + getTime({ hour: hourFrom }),
-                    timeTo: getTime(dateTo) + getTime({ hour: hourTo }),
-                },
-                {
-                    onSuccess: () => {
-                        setCount(c => c + 1);
-                    },
-                    onError: (error) => {
-                        setE(error.message);
-                    },
-                }
-            ),
-            {
-                loading: {
-                    title: "Submitting...",
-                    description: "Please wait",
-                },
-                success: {
-                    title: "Submitted Successfully!",
-                    description: "Enjoy Your Reservation",
-                },
-                error: {
-                    title: "Reservate Failed",
-                    description: e ?? "Please resubmit"
-                }
-            }
-        );
+                    {
+                        onSuccess: () => {
+                            setSubmitLog((prev) => [
+                                ...prev,
+                                {
+                                    timeFrom,
+                                    timeTo,
+                                    success: true,
+                                    message: ""
+                                }
+                            ]);
+                        },
+                        onError: (error) => {
+                            setSubmitLog((prev) => [
+                                ...prev,
+                                {
+                                    timeFrom,
+                                    timeTo,
+                                    success: false,
+                                    message: error.message
+                                }
+                            ]);
+                        },
+                    }
+                );
+            });
+        }
+        setOpen(true);
     }
-
-    const [count, setCount] = useState<number>(0);
 
     return (
         <Scroll>
+            <SubmitLog
+                submitLog={submitLog}
+                open={open}
+                setOpen={setOpen}
+            />
             <Stack>
-                <Text color="fg.subtle">
-                    {'Before making a reservation, please register your organization under "My Page > Organization."'}
+                <Text color="red" fontWeight={"semibold"}>
+                    주의: 정기 예약 생성 시 예약이 중복되지 않도록 주의해주세요.
                 </Text>
                 <Grid
                     templateColumns="repeat(6, 1fr)"
@@ -155,40 +168,16 @@ export default function CreateReservation() {
                             setOrgId={setOrgId}
                         />
                     </GridItem>
-                    <GridItem colSpan={{ base: 6, md: 3 }}>
-                        <DateForm
-                            label="start date"
-                            date={dateFrom}
-                            setDate={setDateFrom}
+                    <GridItem colSpan={6}>
+                        <ReservationCard
+                            resList={resList}
+                            setResList={setResList}
                         />
                     </GridItem>
-                    <GridItem colSpan={{ base: 6, md: 3 }}>
-                        <DateForm
-                            label="end date"
-                            date={dateTo}
-                            setDate={setDateTo}
-                        />
-                    </GridItem>
-                    <GridItem colSpan={{ base: 6, md: 3 }}>
-                        <HourForm
-                            label="start time"
-                            setHour={setHourFrom}
-                        />
-                    </GridItem>
-                    <GridItem colSpan={{ base: 6, md: 3 }}>
-                        <HourForm
-                            label="end time"
-                            setHour={setHourTo}
-                        />
-                    </GridItem>
-                    <GridItem colSpan={6} >
-                        <CalendarView
-                            // dateFrom={new Date(dateFrom.getFullYear(), dateFrom.getMonth(), dateFrom.getDate() - 1)}
-                            // dateTo={new Date(dateTo.getFullYear(), dateTo.getMonth(), dateTo.getDate() + 1)}
-                            dateFrom={dateFrom}
-                            dateTo={dateTo}
-                            spaceId={spaceId}
-                            refetchCounter={count}
+                    <GridItem colSpan={6}>
+                        <RepeatForm
+                            count={repeat}
+                            setCount={setRepeat}
                         />
                     </GridItem>
                     <GridItem colSpan={6}>
@@ -241,7 +230,9 @@ export default function CreateReservation() {
                     </GridItem>
                 </Grid>
                 <Separator />
-                <Button rounded="sm" width="100%" onClick={submit}>
+                <Button rounded="sm" width="100%" onClick={submit}
+                    disabled={resList.map((res) => res.correct).includes(false)}
+                >
                     Submit
                 </Button>
             </Stack >

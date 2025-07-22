@@ -3,7 +3,6 @@
 import { Button, HStack, Text } from "@chakra-ui/react";
 import AlertBtn from "@scspace-client/Components/atoms/AlertBtn";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
-import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 
 export default function ManageMemberBtn({ uid, oid, did, mid, refetch }: {
