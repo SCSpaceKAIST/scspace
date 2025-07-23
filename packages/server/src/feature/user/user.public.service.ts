@@ -31,9 +31,9 @@ export class UserPublicService {
   async fetchAllByIds(ids: number[]): Promise<IUser[]> {
     const uniqueIds = [...new Set(ids)];
     const users = await this.userRepository.fetch({ ids: uniqueIds });
-    if (users.length !== uniqueIds.length) {
-      throw new NotFoundException(`Some users not found: ${users} | ${uniqueIds}`);
-    }
+    // if (users.length !== uniqueIds.length) {
+    //   throw new NotFoundException(`Some users not found: ${users} | ${uniqueIds}`);
+    // }
     return users.map(MUser.fromDB);
   }
 
