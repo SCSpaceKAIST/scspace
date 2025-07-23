@@ -8,6 +8,8 @@ import { MySql2Database } from 'drizzle-orm/mysql2';
 import {
   schema,
   Reservation,
+  Organization,
+  OrganizationMember,
   ReservationContent,
 } from '@schema';
 import {
@@ -34,7 +36,7 @@ import {
 import {
   ReservationStateEnum,
 } from '@scspace-depot/enums/reservation.enum';
-import { MReservation, MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
+import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
 import { getNow } from '@scspace-server/common/utils';
 
 @Injectable()
@@ -141,7 +143,7 @@ export class ReservationRepository {
       return await reservations;
   }
 
-  userSqlGenerator(userId: number, organizationId: number): SQL {
+  async userSqlGenerator(userId: number, organizationId: number): Promise<SQL> {
     if (userId === -1) {
       return eq(Reservation.organizationId, organizationId);
     }
@@ -154,7 +156,19 @@ export class ReservationRepository {
           ),
           and(
             ne(Reservation.organizationId, 1),
-            eq(Reservation.organizationId, organizationId)
+            inArray(
+              Reservation.organizationId,
+              (await this.db.select({ id: Organization.id })
+                .from(Organization)
+                .leftJoin(
+                  OrganizationMember,
+                  eq(Organization.id, OrganizationMember.organizationId)
+                )
+                .where(
+                  eq(OrganizationMember.userId, userId)
+                )
+              ).map((e) => e.id)
+            )
           )
         );
       case 1: // Individual
@@ -182,7 +196,7 @@ export class ReservationRepository {
     return await this.db
       .select()
       .from(Reservation)
-      .where(this.userSqlGenerator(userId, organizationId))
+      .where(await this.userSqlGenerator(userId, organizationId))
       .orderBy(desc(Reservation.id))
       .limit(limit)
       .offset(offset);
@@ -197,7 +211,7 @@ export class ReservationRepository {
         count: count()
       })
       .from(Reservation)
-      .where(this.userSqlGenerator(param.userId || -1, param.organizationId || 0));
+      .where(await this.userSqlGenerator(param.userId || -1, param.organizationId || 0));
 
     return reservationCount[0].count;
   }

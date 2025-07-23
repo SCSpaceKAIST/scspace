@@ -237,8 +237,7 @@ export class ReservationService {
           ...reservationInput,
           timeFrom: time.timeFrom,
           timeTo: time.timeTo,
-          content: reservationInput.content,
-          state: this.getDefaultStatus(space.spaceType),
+          content: reservationInput.content
         } as IReservationCreate);
 
         if (!reservation) {
