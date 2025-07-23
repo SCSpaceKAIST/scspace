@@ -23,7 +23,7 @@ export class ReservationPublicService {
   ) { }
 
   async fetchById(id: number): Promise<IReservationSimple | null> {
-    const reservation = await this.reservationRepository.fetch({ id: id });
+    const { data: reservation } = await this.reservationRepository.fetch({ id: id });
     if (reservation.length === 0) {
       return null;
     }
@@ -46,7 +46,7 @@ export class ReservationPublicService {
     const startOfDay = BigInt(~~(timeFrom / (60 * 24))) * BigInt(60 * 24);
     const endOfDay = startOfDay + BigInt(60 * 24) - BigInt(1);
 
-    const todayReservations = await this.reservationRepository.fetch({
+    const { data: todayReservations } = await this.reservationRepository.fetch({
       organizationId: organizationId,
       spaceId: spaceId,
       state: ReservationStateEnum.GRANT,
@@ -77,7 +77,7 @@ export class ReservationPublicService {
     const startOfWeek = BigInt(~~(timeFrom / (60 * 24 * 7))) * BigInt(60 * 24 * 7);
     const endOfWeek = startOfWeek + BigInt(60 * 24 * 7) - BigInt(1);
 
-    const weeklyReservations = await this.reservationRepository.fetch({
+    const { data: weeklyReservations } = await this.reservationRepository.fetch({
       organizationId: organizationId,
       spaceId: spaceId,
       state: ReservationStateEnum.GRANT,
@@ -113,7 +113,7 @@ export class ReservationPublicService {
     const startOfDay = BigInt(~~(timeFrom / (60 * 24))) * BigInt(60 * 24);
     const endOfDay = startOfDay + BigInt(60 * 24) - BigInt(1);
 
-    const todayReservations = await this.reservationRepository.fetch({
+    const { data: todayReservations } = await this.reservationRepository.fetch({
       userId: userId,
       spaceId: spaceId,
       state: ReservationStateEnum.GRANT,
@@ -144,7 +144,7 @@ export class ReservationPublicService {
     const startOfWeek = BigInt(~~(timeFrom / (60 * 24 * 7))) * BigInt(60 * 24 * 7);
     const endOfWeek = startOfWeek + BigInt(60 * 24 * 7) - BigInt(1);
 
-    const weeklyReservations = await this.reservationRepository.fetch({
+    const { data: weeklyReservations } = await this.reservationRepository.fetch({
       userId: userId,
       spaceId: spaceId,
       state: ReservationStateEnum.GRANT,
@@ -237,7 +237,7 @@ export class ReservationPublicService {
     timeFrom: number,
     timeTo: number,
   ): Promise<boolean> {
-    const overlappingReservations = await this.reservationRepository.fetch({
+    const { data: overlappingReservations } = await this.reservationRepository.fetch({
       spaceId: spaceId,
       timeRange: {
         timeFrom: timeFrom,
@@ -253,7 +253,7 @@ export class ReservationPublicService {
     spaceIds?: number[];
     timeRange?: { timeFrom: number; timeTo: number };
   }): Promise<MReservationSimple[]> {
-    return this.reservationRepository.fetch(params);
+    return (await this.reservationRepository.fetch(params)).data;
   }
 
   async checkWholeTime(userId: number, organizationId: number, spaceId: number, timeFrom: number, timeTo: number): Promise<void> {
@@ -304,7 +304,7 @@ export class ReservationPublicService {
   async backupReservations(): Promise<string> {
     try {
       // 모든 예약 데이터 가져오기
-      const reservations = await this.reservationRepository.fetch({});
+      const { data: reservations } = await this.reservationRepository.fetch({});
       const reservationContents = await Promise.all(reservations.map(reservation => this.reservationRepository.fetchContent(reservation.id)));
 
       // CSV 헤더와 데이터 생성
