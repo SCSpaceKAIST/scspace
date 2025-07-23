@@ -84,9 +84,13 @@ export class ReservationService {
   ): Promise<IDataResponse<IReservationAll[]>> {
     var { data: reservations, count } = await this.reservationRepository.fetchByUserId(userId, organizationId, limit, offset);
 
-    const userIds = reservations.map((reservation) => reservation.userId);
-    const organizationIds = reservations.map((reservation) => reservation.organizationId);
-    const spaceIds = reservations.map((reservation) => reservation.spaceId);
+    console.log(reservations, count);
+
+    const userIds = reservations.map((r) => r.userId);
+    const organizationIds = reservations.map((r) => r.organizationId);
+    const spaceIds = reservations.map((r) => r.spaceId);
+
+    console.log(userIds, organizationIds, spaceIds);
 
     const [users, organizations, spaces, reservationContents] = await Promise.all([
       this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
