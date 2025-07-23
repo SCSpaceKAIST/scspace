@@ -243,7 +243,7 @@ export class ReservationRepository {
       countQuery = this.db
         .select({ count: count() })
         .from(Reservation)
-        .leftJoin(
+        .innerJoin(
           OrganizationMember,
           and(
             eq(OrganizationMember.organizationId, Reservation.organizationId),
