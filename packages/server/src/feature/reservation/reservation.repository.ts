@@ -131,7 +131,10 @@ export class ReservationRepository {
     const whereClause: SQL[] = this.sqlGenerator(param);
 
     const reservations = this.db
-      .select()
+      .select({
+        reservation: Reservation,
+        count: count(),
+      })
       .from(Reservation)
       .where(and(...whereClause))
       .orderBy(desc(Reservation.id));
