@@ -25,7 +25,8 @@ import {
   gte,
   lte,
   count,
-  ne
+  ne,
+  isNotNull,
 } from 'drizzle-orm';
 import {
   IReservationCreate,
@@ -38,6 +39,8 @@ import {
 } from '@scspace-depot/enums/reservation.enum';
 import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
 import { getNow } from '@scspace-server/common/utils';
+import { MySqlTable } from 'drizzle-orm/mysql-core';
+import { IDataResponse } from '@scspace-depot/types/common/common.type';
 
 @Injectable()
 export class ReservationRepository {
@@ -124,7 +127,7 @@ export class ReservationRepository {
       timeFrom?: number;
       timeTo?: number;
     };
-  }): Promise<MReservationSimple[]> {
+  }): Promise<IDataResponse<MReservationSimple[]>> {
     const whereClause: SQL[] = this.sqlGenerator(param);
 
     const reservations = this.db
@@ -133,54 +136,65 @@ export class ReservationRepository {
       .where(and(...whereClause))
       .orderBy(desc(Reservation.id));
 
+    let result;
     if (param.limit && param.offset)
-      return await reservations.limit(param.limit).offset(param.offset);
+      result = await reservations.limit(param.limit).offset(param.offset);
     else if (param.limit)
-      return await reservations.limit(param.limit);
+      result = await reservations.limit(param.limit);
     else if (param.offset)
-      return await reservations.offset(param.offset);
+      result = await reservations.offset(param.offset);
     else
-      return await reservations;
+      result = await reservations;
+
+    return {
+      data: result.map(r => r.reservation),
+      count: result[0]?.count || 0
+    };
   }
 
-  async userSqlGenerator(userId: number, organizationId: number): Promise<SQL> {
+  userSqlGenerator(userId: number, organizationId: number): { needsJoin: boolean, where: SQL } {
     if (userId === -1) {
-      return eq(Reservation.organizationId, organizationId);
+      if (organizationId === 0) {
+        return { needsJoin: false, where: null };
+      }
+      return {
+        needsJoin: false,
+        where: eq(Reservation.organizationId, organizationId)
+      };
     }
+
     switch (organizationId) {
       case 0: // All
-        return or(
-          and(
-            eq(Reservation.organizationId, 1),
-            eq(Reservation.userId, userId)
-          ),
-          and(
-            ne(Reservation.organizationId, 1),
-            inArray(
-              Reservation.organizationId,
-              (await this.db.select({ id: Organization.id })
-                .from(Organization)
-                .leftJoin(
-                  OrganizationMember,
-                  eq(Organization.id, OrganizationMember.organizationId)
-                )
-                .where(
-                  eq(OrganizationMember.userId, userId)
-                )
-              ).map((e) => e.id)
+        return {
+          needsJoin: true,
+          where: or(
+            and(
+              eq(Reservation.organizationId, 1),
+              eq(Reservation.userId, userId)
+            ),
+            and(
+              ne(Reservation.organizationId, 1),
+              isNotNull(OrganizationMember.userId)
             )
           )
-        );
+        };
       case 1: // Individual
-        return and(
-          eq(Reservation.organizationId, 1),
-          eq(Reservation.userId, userId)
-        );
+        return {
+          needsJoin: false,
+          where: and(
+            eq(Reservation.organizationId, 1),
+            eq(Reservation.userId, userId)
+          )
+        };
       default: // Organization
-        return and(
-          ne(Reservation.organizationId, 1),
-          eq(Reservation.organizationId, organizationId)
-        );
+        return {
+          needsJoin: true,
+          where: and(
+            ne(Reservation.organizationId, 1),
+            eq(Reservation.organizationId, organizationId),
+            isNotNull(OrganizationMember.userId)
+          )
+        };
     }
   }
 
@@ -189,31 +203,43 @@ export class ReservationRepository {
     organizationId: number,
     limit: number,
     offset: number
-  ): Promise<MReservationSimple[]> {
+  ): Promise<IDataResponse<MReservationSimple[]>> {
+    const { needsJoin, where } = this.userSqlGenerator(userId, organizationId);
 
-    const whereClause: SQL[] = [];
+    let query;
+    if (needsJoin) {
+      query = this.db
+        .select({
+          reservation: Reservation,
+          count: count(),
+        })
+        .from(Reservation)
+        .leftJoin(
+          OrganizationMember,
+          and(
+            eq(OrganizationMember.organizationId, Reservation.organizationId),
+            eq(OrganizationMember.userId, userId)
+          )
+        );
+    } else {
+      query = this.db
+        .select({
+          reservation: Reservation,
+          count: count(),
+        })
+        .from(Reservation);
+    }
 
-    return await this.db
-      .select()
-      .from(Reservation)
-      .where(await this.userSqlGenerator(userId, organizationId))
+    const result = await query
+      .where(where)
       .orderBy(desc(Reservation.id))
       .limit(limit)
       .offset(offset);
-  }
 
-  async fetchCount(param: {
-    userId?: number;
-    organizationId?: number;
-  }): Promise<number> {
-    const reservationCount = await this.db
-      .select({
-        count: count()
-      })
-      .from(Reservation)
-      .where(await this.userSqlGenerator(param.userId || -1, param.organizationId || 0));
-
-    return reservationCount[0].count;
+    return {
+      data: result.map(r => r.reservation),
+      count: result[0]?.count || 0
+    }
   }
 
   async fetchContent(id: number): Promise<MReservationContent> {
@@ -244,7 +270,7 @@ export class ReservationRepository {
       throw new Error('Failed to get inserted ID');
     }
 
-    const reservationCreated = await this.fetch({ id: result.insertId });
+    const { data: reservationCreated } = await this.fetch({ id: result.insertId });
     if (reservationCreated.length === 0) {
       throw new NotFoundException('Reservation not found after creation');
     }
@@ -285,7 +311,7 @@ export class ReservationRepository {
     if (!result.affectedRows) {
       throw new Error('Failed to update reservation');
     }
-    const reservationUpdated = await this.fetch({ id: data.id! });
+    const { data: reservationUpdated } = await this.fetch({ id: data.id! });
     if (reservationUpdated.length === 0) {
       throw new NotFoundException('Reservation not found after update');
     }

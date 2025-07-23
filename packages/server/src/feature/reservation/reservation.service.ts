@@ -20,7 +20,7 @@ import { ISpace } from '@scspace-depot/types/space';
 import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 import { OrganizationPublicService } from '../organization/organization.public.service';
 import { MReservation } from './reservation.model';
-import { ISuccessResponse } from '@scspace-depot/types/common';
+import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { getNow } from '@scspace-server/common/utils';
 
@@ -46,7 +46,7 @@ export class ReservationService {
       timeTo = Number(BigInt(timeTo) + oneDayInMs - BigInt(1));
     }
     // If either timeFrom or timeTo is missing, fetch all reservations for the space
-    const reservations = await this.reservationRepository.fetch({
+    const { data: reservations } = await this.reservationRepository.fetch({
       spaceId,
       ...(timeFrom && timeTo ? { timeRange: { timeFrom: timeFrom, timeTo: timeTo } } : {})
     });
@@ -81,8 +81,8 @@ export class ReservationService {
     organizationId: number,
     limit: number,
     offset: number,
-  ): Promise<IReservationAll[]> {
-    var reservations = await this.reservationRepository.fetchByUserId(userId, organizationId, limit, offset);
+  ): Promise<IDataResponse<IReservationAll[]>> {
+    var { data: reservations, count } = await this.reservationRepository.fetchByUserId(userId, organizationId, limit, offset);
 
     const userIds = reservations.map((reservation) => reservation.userId);
     const organizationIds = reservations.map((reservation) => reservation.organizationId);
@@ -99,21 +99,24 @@ export class ReservationService {
     checkContainAllId(organizationIds, organizations, 'organizations');
     checkContainAllId(spaceIds, spaces, 'spaces');
 
-    return reservations.map((reservation) => ({
-      ...reservation,
-      user: users.find(user => user.id === reservation.userId)!,
-      organization: organizations.find(org => org.id === reservation.organizationId)!,
-      space: spaces.find(space => space.id === reservation.spaceId)!,
-      content: reservationContents.find(content => content.id === reservation.id)!,
-    }));
+    return {
+      data: reservations.map((reservation) => ({
+        ...reservation,
+        user: users.find(user => user.id === reservation.userId)!,
+        organization: organizations.find(org => org.id === reservation.organizationId)!,
+        space: spaces.find(space => space.id === reservation.spaceId)!,
+        content: reservationContents.find(content => content.id === reservation.id)!,
+      })),
+      count
+    };
   }
 
   async getReservationList(
     organizationId: number,
     limit: number,
     offset: number,
-  ): Promise<IReservationAll[]> {
-    const reservations = await this.reservationRepository.fetch({
+  ): Promise<IDataResponse<IReservationAll[]>> {
+    const { data: reservations, count } = await this.reservationRepository.fetch({
       organizationId,
       limit,
       offset,
@@ -134,23 +137,16 @@ export class ReservationService {
     checkContainAllId(organizationIds, organizations, 'organizations');
     checkContainAllId(spaceIds, spaces, 'spaces');
 
-    return reservations.map((reservation) => ({
-      ...reservation,
-      user: users.find(user => user.id === reservation.userId)!,
-      organization: organizations.find(org => org.id === reservation.organizationId)!,
-      space: spaces.find(space => space.id === reservation.spaceId)!,
-      content: reservationContents.find(content => content.id === reservation.id)!,
-    }));
-  }
-
-  async getReservationCount(param: {
-    userId?: number,
-    organizationId: number,
-  }): Promise<number> {
-    return await this.reservationRepository.fetchCount({
-      userId: param.organizationId === 1 ? param.userId : undefined,
-      organizationId: param.organizationId
-    });
+    return {
+      data: reservations.map((reservation) => ({
+        ...reservation,
+        user: users.find(user => user.id === reservation.userId)!,
+        organization: organizations.find(org => org.id === reservation.organizationId)!,
+        space: spaces.find(space => space.id === reservation.spaceId)!,
+        content: reservationContents.find(content => content.id === reservation.id)!,
+      })),
+      count
+    };
   }
 
   private getDefaultStatus(spaceType: SpaceTypeEnum): ReservationStateEnum {
@@ -275,7 +271,7 @@ export class ReservationService {
   async updateReservation(
     reservationInput: IReservationUpdate,
   ): Promise<MReservation> {
-    const reservation = await this.reservationRepository.fetch({
+    const { data: reservation } = await this.reservationRepository.fetch({
       id: reservationInput.id,
     });
 
@@ -293,7 +289,7 @@ export class ReservationService {
   }
 
   async deleteReservation(id: number, user: IUser): Promise<ISuccessResponse> {
-    const reservation = await this.reservationRepository.fetch({
+    const { data: reservation } = await this.reservationRepository.fetch({
       id: id,
     });
     if (reservation.length === 0) {
@@ -316,7 +312,7 @@ export class ReservationService {
   }
 
   async getManageReservation(): Promise<IReservationAll[]> {
-    const reservations = await this.reservationRepository.fetch({
+    const { data: reservations } = await this.reservationRepository.fetch({
       states: [ReservationStateEnum.RECEIVED, ReservationStateEnum.WAIT],
     });
 

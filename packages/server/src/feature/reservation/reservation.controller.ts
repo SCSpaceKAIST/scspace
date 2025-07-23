@@ -57,16 +57,13 @@ export class ReservationController {
     @Query('limit', ParseIntPipe) limit: number,
     @Query('offset', ParseIntPipe) offset: number,
   ): Promise<IDataResponse<IReservationAll[]>> {
-    return {
-      data: await this.reservationService.getReservationListByUserId(
-        userId,
-        organizationId,
-        limit,
-        offset,
-      ),
-      count: await this.reservationService.getReservationCount({ organizationId, userId })
-    };
-  }
+    return await this.reservationService.getReservationListByUserId(
+      userId,
+      organizationId,
+      limit,
+      offset,
+    )
+  };
 
   @UseGuards(ManagerGuard)
   @Get()
@@ -75,15 +72,12 @@ export class ReservationController {
     @Query('limit', ParseIntPipe) limit: number,
     @Query('offset', ParseIntPipe) offset: number,
   ): Promise<IDataResponse<IReservationAll[]>> {
-    return {
-      data: await this.reservationService.getReservationList(
-        organizationId,
-        limit,
-        offset,
-      ),
-      count: await this.reservationService.getReservationCount({ organizationId })
-    };
-  }
+    return await this.reservationService.getReservationList(
+      organizationId,
+      limit,
+      offset,
+    )
+  };
 
   // @UseGuards(UserGuard)
   // @Get('count')
