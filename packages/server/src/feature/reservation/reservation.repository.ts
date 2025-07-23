@@ -39,7 +39,6 @@ import {
 } from '@scspace-depot/enums/reservation.enum';
 import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
 import { getNow } from '@scspace-server/common/utils';
-import { MySqlTable } from 'drizzle-orm/mysql-core';
 import { IDataResponse } from '@scspace-depot/types/common/common.type';
 
 @Injectable()
@@ -131,27 +130,32 @@ export class ReservationRepository {
     const whereClause: SQL[] = this.sqlGenerator(param);
 
     const reservations = this.db
-      .select({
-        reservation: Reservation,
-        count: count(),
-      })
+      .select()
       .from(Reservation)
       .where(and(...whereClause))
       .orderBy(desc(Reservation.id));
 
-    let result;
+    let query;
     if (param.limit && param.offset)
-      result = await reservations.limit(param.limit).offset(param.offset);
+      query = reservations.limit(param.limit).offset(param.offset);
     else if (param.limit)
-      result = await reservations.limit(param.limit);
+      query = reservations.limit(param.limit);
     else if (param.offset)
-      result = await reservations.offset(param.offset);
+      query = reservations.offset(param.offset);
     else
-      result = await reservations;
+      query = reservations;
+
+    const [data, totalCount] = await Promise.all([
+      query,
+      this.db
+        .select({ count: count() })
+        .from(Reservation)
+        .where(and(...whereClause))
+    ]);
 
     return {
-      data: result.map(r => r.reservation),
-      count: result[0]?.count || 0
+      data,
+      count: totalCount[0]?.count || 0
     };
   }
 
@@ -212,10 +216,7 @@ export class ReservationRepository {
     let query;
     if (needsJoin) {
       query = this.db
-        .select({
-          reservation: Reservation,
-          count: count(),
-        })
+        .select()
         .from(Reservation)
         .leftJoin(
           OrganizationMember,
@@ -223,25 +224,49 @@ export class ReservationRepository {
             eq(OrganizationMember.organizationId, Reservation.organizationId),
             eq(OrganizationMember.userId, userId)
           )
-        );
+        )
+        .where(where)
+        .orderBy(desc(Reservation.id))
+        .limit(limit)
+        .offset(offset);
     } else {
       query = this.db
-        .select({
-          reservation: Reservation,
-          count: count(),
-        })
-        .from(Reservation);
+        .select()
+        .from(Reservation)
+        .where(where)
+        .orderBy(desc(Reservation.id))
+        .limit(limit)
+        .offset(offset);
     }
 
-    const result = await query
-      .where(where)
-      .orderBy(desc(Reservation.id))
-      .limit(limit)
-      .offset(offset);
+    let countQuery;
+    if (needsJoin) {
+      countQuery = this.db
+        .select({ count: count() })
+        .from(Reservation)
+        .leftJoin(
+          OrganizationMember,
+          and(
+            eq(OrganizationMember.organizationId, Reservation.organizationId),
+            eq(OrganizationMember.userId, userId)
+          )
+        )
+        .where(where);
+    } else {
+      countQuery = this.db
+        .select({ count: count() })
+        .from(Reservation)
+        .where(where);
+    }
+
+    const [data, countResult] = await Promise.all([
+      query,
+      countQuery
+    ]);
 
     return {
-      data: result.map(r => r.reservation),
-      count: result[0]?.count || 0
+      data,
+      count: countResult[0]?.count || 0
     }
   }
 
