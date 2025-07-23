@@ -82,12 +82,17 @@ export class ReservationService {
     limit: number,
     offset: number,
   ): Promise<IReservationAll[]> {
-    const reservations = await this.reservationRepository.fetch({
+    var reservations = await this.reservationRepository.fetch({
       userId: organizationId === 1 ? userId : undefined,
       organizationId,
       limit,
       offset,
     });
+
+    if (organizationId === 0) {
+      const userOrganizations = await this.organizationPublicService.fetchByUserId(userId);
+      reservations = reservations.filter(r => r.organizationId === 1 && r.userId === userId || userOrganizations.some(org => org.id === r.organizationId));
+    }
 
     const userIds = reservations.map((reservation) => reservation.userId);
     const organizationIds = reservations.map((reservation) => reservation.organizationId);

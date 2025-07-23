@@ -32,7 +32,7 @@ export default function UserReservation() {
     const [oid, setOid] = useState<number>(0);
     const { organization } = useOrganization({ uid: userInfo?.id ?? -1 });
 
-    const [page, setPage] = useState<number>(1);
+    const [page, setPage] = useState<number>(0);
     const [limit, setLimit] = useState<number>(10);
     const [_limit, _setLimit] = useState<string>("10");
     const { getString } = useDate();
