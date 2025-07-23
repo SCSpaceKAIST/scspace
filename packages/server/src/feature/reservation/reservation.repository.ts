@@ -181,7 +181,6 @@ export class ReservationRepository {
             ),
             and(
               ne(Reservation.organizationId, 1),
-              isNotNull(OrganizationMember.userId)
             )
           )
         };
@@ -262,6 +261,8 @@ export class ReservationRepository {
       query,
       countQuery
     ]);
+
+    console.log(query.toSQL(), data);
 
     return {
       data,
