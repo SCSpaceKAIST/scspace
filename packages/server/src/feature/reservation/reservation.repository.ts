@@ -199,7 +199,6 @@ export class ReservationRepository {
           where: and(
             ne(Reservation.organizationId, 1),
             eq(Reservation.organizationId, organizationId),
-            isNotNull(OrganizationMember.userId)
           )
         };
     }
