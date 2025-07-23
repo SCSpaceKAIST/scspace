@@ -21,7 +21,7 @@ import {
   IReservationCreateMultiple,
   IReservationMultipleCreateResurt
 } from '@scspace-depot/types/reservation';
-import { ISuccessResponse } from '@scspace-depot/types/common';
+import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
 import { AdminGuard, ManagerGuard, MemberGuard, MemberGuardWithRervation, UserGuard } from '../auth/jwt/jwt.guard';
 import { IUser } from '@scspace-depot/types/user';
 import { SpacePublicService } from '../space/space.public.service';
@@ -56,13 +56,16 @@ export class ReservationController {
     @Query('oid', ParseIntPipe) organizationId: number,
     @Query('limit', ParseIntPipe) limit: number,
     @Query('offset', ParseIntPipe) offset: number,
-  ): Promise<IReservationAll[]> {
-    return await this.reservationService.getReservationListByUserId(
-      userId,
-      organizationId,
-      limit,
-      offset,
-    );
+  ): Promise<IDataResponse<IReservationAll[]>> {
+    return {
+      data: await this.reservationService.getReservationListByUserId(
+        userId,
+        organizationId,
+        limit,
+        offset,
+      ),
+      count: await this.reservationService.getReservationCount({ organizationId, userId })
+    };
   }
 
   @UseGuards(ManagerGuard)
@@ -71,25 +74,28 @@ export class ReservationController {
     @Query('oid', ParseIntPipe) organizationId: number,
     @Query('limit', ParseIntPipe) limit: number,
     @Query('offset', ParseIntPipe) offset: number,
-  ): Promise<IReservationAll[]> {
-    return await this.reservationService.getReservationList(
-      organizationId,
-      limit,
-      offset,
-    );
+  ): Promise<IDataResponse<IReservationAll[]>> {
+    return {
+      data: await this.reservationService.getReservationList(
+        organizationId,
+        limit,
+        offset,
+      ),
+      count: await this.reservationService.getReservationCount({ organizationId })
+    };
   }
 
-  @UseGuards(UserGuard)
-  @Get('count')
-  async getReservationCount(
-    @Query('oid', ParseIntPipe) organizationId: number,
-    @Query('uid') userId?: number,
-  ): Promise<{ count: number }> {
-    return await this.reservationService.getReservationCount(
-      organizationId,
-      userId,
-    );
-  }
+  // @UseGuards(UserGuard)
+  // @Get('count')
+  // async getReservationCount(
+  //   @Query('oid', ParseIntPipe) organizationId: number,
+  //   @Query('uid') userId?: number,
+  // ): Promise<{ count: number }> {
+  //   return await this.reservationService.getReservationCount({
+  //     organizationId,
+  //     userId,
+  //   });
+  // }
 
   //HOOK: useWaitReservations
   // @Get('manage')

@@ -82,20 +82,7 @@ export class ReservationService {
     limit: number,
     offset: number,
   ): Promise<IReservationAll[]> {
-    var reservations = await this.reservationRepository.fetch({
-      userId: organizationId === 1 ? userId : undefined,
-      organizationId,
-      limit,
-      offset,
-    });
-
-    if (organizationId === 0) {
-      const userOrganizations = await this.organizationPublicService.fetchByUserId(userId);
-      reservations = reservations.filter(r =>
-        r.organizationId === 1 && r.userId === userId ||
-        r.organizationId !== 1 && userOrganizations.some(org => org.id === r.organizationId)
-      );
-    }
+    var reservations = await this.reservationRepository.fetchByUserId(userId, organizationId, limit, offset);
 
     const userIds = reservations.map((reservation) => reservation.userId);
     const organizationIds = reservations.map((reservation) => reservation.organizationId);
@@ -156,15 +143,14 @@ export class ReservationService {
     }));
   }
 
-  async getReservationCount(
-    organizationId: number,
+  async getReservationCount(param: {
     userId?: number,
-  ): Promise<{ count: number }> {
-    const count = await this.reservationRepository.fetchCount({
-      userId,
-      organizationId
+    organizationId: number,
+  }): Promise<number> {
+    return await this.reservationRepository.fetchCount({
+      userId: param.organizationId === 1 ? param.userId : undefined,
+      organizationId: param.organizationId
     });
-    return { count: count };
   }
 
   private getDefaultStatus(spaceType: SpaceTypeEnum): ReservationStateEnum {

@@ -22,7 +22,8 @@ import {
   or,
   gte,
   lte,
-  count
+  count,
+  ne
 } from 'drizzle-orm';
 import {
   IReservationCreate,
@@ -140,27 +141,63 @@ export class ReservationRepository {
       return await reservations;
   }
 
-  async fetchCount(param: {
-    id?: number;
-    userId?: number;
-    spaceId?: number;
-    spaceIds?: number[];
-    organizationId?: number;
-    state?: ReservationStateEnum;
-    states?: ReservationStateEnum[];
-    timeRange?: {
-      timeFrom?: number;
-      timeTo?: number;
-    };
-  }): Promise<number> {
-    const whereClause: SQL[] = this.sqlGenerator(param);
+  userSqlGenerator(userId: number, organizationId: number): SQL {
+    if (userId === -1) {
+      return eq(Reservation.organizationId, organizationId);
+    }
+    switch (organizationId) {
+      case 0: // All
+        return or(
+          and(
+            eq(Reservation.organizationId, 1),
+            eq(Reservation.userId, userId)
+          ),
+          and(
+            ne(Reservation.organizationId, 1),
+            eq(Reservation.organizationId, organizationId)
+          )
+        );
+      case 1: // Individual
+        return and(
+          eq(Reservation.organizationId, 1),
+          eq(Reservation.userId, userId)
+        );
+      default: // Organization
+        return and(
+          ne(Reservation.organizationId, 1),
+          eq(Reservation.organizationId, organizationId)
+        );
+    }
+  }
 
+  async fetchByUserId(
+    userId: number,
+    organizationId: number,
+    limit: number,
+    offset: number
+  ): Promise<MReservationSimple[]> {
+
+    const whereClause: SQL[] = [];
+
+    return await this.db
+      .select()
+      .from(Reservation)
+      .where(this.userSqlGenerator(userId, organizationId))
+      .orderBy(desc(Reservation.id))
+      .limit(limit)
+      .offset(offset);
+  }
+
+  async fetchCount(param: {
+    userId?: number;
+    organizationId?: number;
+  }): Promise<number> {
     const reservationCount = await this.db
       .select({
         count: count()
       })
       .from(Reservation)
-      .where(and(...whereClause))
+      .where(this.userSqlGenerator(param.userId || -1, param.organizationId || 0));
 
     return reservationCount[0].count;
   }

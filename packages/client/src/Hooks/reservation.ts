@@ -4,7 +4,7 @@ import { ReservationStateEnum } from "@scspace-depot/enums/reservation.enum";
 import { useMutationApi, useQueryApi } from "./api"
 import { IReservation, IReservationAll, IReservationCreate, IReservationCreateMultiple, IReservationMultipleCreateResurt, IReservationUpdate } from "@scspace-depot/types/reservation"
 import { useEffect, useState } from "react";
-import { ISuccessResponse } from "@scspace-depot/types/common/common.type";
+import { IDataResponse, ISuccessResponse } from "@scspace-depot/types/common/common.type";
 import { useDate } from "./utils";
 
 export function useReservations({ spaceId, dateFrom, dateTo }: {
@@ -126,47 +126,26 @@ export function useUserReservation({ uid, oid, limit, offset }: {
     offset: number;
 }) {
     const {
-        data: resData,
-        isLoading: isResLoading,
-        refetch: refetchRes
-    } = useQueryApi<IReservationAll[]>(
+        data,
+        isLoading,
+        refetch
+    } = useQueryApi<IDataResponse<IReservationAll[]>>(
         `/reservation/user?uid=${uid}&oid=${oid}&limit=${limit}&offset=${offset}`
     );
-    const [userReservation, setUserReservation] = useState<IReservationAll[]>([]);
-
-    const {
-        data: countData,
-        isLoading: isCountLoading,
-        refetch: refetchCount
-    } = useQueryApi<{ count: number }>(
-        `/reservation/count?uid=${uid}&oid=${oid}`
-    );
-    const [count, setCount] = useState<number>(0);
+    const [reservation, setReservationData] = useState<IDataResponse<IReservationAll[]>>({ data: [], count: 0 });
 
     useEffect(() => {
-        if (!resData) {
-            setUserReservation([]);
+        if (!data) {
+            setReservationData({ data: [], count: 0 });
             return;
         }
-        setUserReservation(resData);
-    }, [resData, uid]);
-
-    useEffect(() => {
-        if (!countData) {
-            setCount(0);
-            return;
-        }
-        setCount(countData.count);
-    }, [countData, uid]);
+        setReservationData(data);
+    }, [data, uid]);
 
     return {
-        userReservation,
-        count,
-        isLoading: isResLoading || isCountLoading,
-        refetch: () => {
-            refetchRes();
-            refetchCount();
-        }
+        reservation,
+        isLoading,
+        refetch
     };
 };
 
@@ -176,47 +155,26 @@ export function useAllReservation({ oid, limit, offset }: {
     offset: number;
 }) {
     const {
-        data: resData,
-        isLoading: isResLoading,
-        refetch: refetchRes
-    } = useQueryApi<IReservationAll[]>(
+        data,
+        isLoading,
+        refetch
+    } = useQueryApi<IDataResponse<IReservationAll[]>>(
         `/reservation?oid=${oid}&limit=${limit}&offset=${offset}`
     );
-    const [allReservation, setAllReservation] = useState<IReservationAll[]>([]);
-
-    const {
-        data: countData,
-        isLoading: isCountLoading,
-        refetch: refetchCount
-    } = useQueryApi<{ count: number }>(
-        `/reservation/count?oid=${oid}`
-    );
-    const [count, setCount] = useState<number>(0);
+    const [reservation, setReservation] = useState<IDataResponse<IReservationAll[]>>({ data: [], count: 0 });
 
     useEffect(() => {
-        if (!resData) {
-            setAllReservation([]);
+        if (!data) {
+            setReservation({ data: [], count: 0 });
             return;
         }
-        setAllReservation(resData);
-    }, [resData]);
-
-    useEffect(() => {
-        if (!countData) {
-            setCount(0);
-            return;
-        }
-        setCount(countData.count);
-    }, [countData]);
+        setReservation(data);
+    }, [data]);
 
     return {
-        allReservation,
-        count,
-        isLoading: isResLoading || isCountLoading,
-        refetch: () => {
-            refetchRes();
-            refetchCount();
-        }
+        reservation,
+        isLoading,
+        refetch
     };
 };
 

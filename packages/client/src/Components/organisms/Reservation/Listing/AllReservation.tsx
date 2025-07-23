@@ -49,7 +49,7 @@ export default function AllReservation() {
     const [open, setOpen] = useState<boolean>(false);
     const isWide = useBreakpointValue({ base: false, md: true });
 
-    const { allReservation, count, refetch } = useAllReservation({
+    const { reservation, refetch } = useAllReservation({
         oid,
         limit,
         offset: limit * (page - 1)
@@ -58,8 +58,8 @@ export default function AllReservation() {
     useEffect(() => { refetch(); }, [page, limit]);
 
     useEffect(() => {
-        setSelected(allReservation[0] || null);
-    }, [allReservation]);
+        setSelected(reservation.data[0] || null);
+    }, [reservation]);
 
     useEffect(() => {
         setPage(1);
@@ -74,7 +74,7 @@ export default function AllReservation() {
                 refetch={refetch}
             />
             <Scroll>
-                {!allReservation ? (
+                {!reservation ? (
                     <LoadingComponent />
                 ) : (
                     <Grid
@@ -128,14 +128,14 @@ export default function AllReservation() {
                         </Flex>
                         <SimpleTable
                             onIdChange={(id) => {
-                                const res = allReservation.find((r) => r.id === id);
+                                const res = reservation.data.find((r) => r.id === id);
                                 if (res) {
                                     setSelected(res);
                                     setOpen(true);
                                 }
                             }}
                             header={["Title", "Booker", "From", "To"]}
-                            content={allReservation.map((r) => ({
+                            content={reservation.data.map((r) => ({
                                 id: r.id,
                                 row: [
                                     r.title,
@@ -147,7 +147,7 @@ export default function AllReservation() {
                         />
                         <Center width="100%">
                             <SimplePagination
-                                count={count}
+                                count={reservation.count}
                                 pageSize={limit}
                                 page={page}
                                 onPageChange={({ page }) => setPage(page)}

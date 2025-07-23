@@ -45,7 +45,7 @@ export default function UserReservation() {
     const [open, setOpen] = useState<boolean>(false);
     const isWide = useBreakpointValue({ base: false, md: true });
 
-    const { userReservation, count, refetch } = useUserReservation({
+    const { reservation, refetch } = useUserReservation({
         uid: userInfo?.id || 0,
         oid,
         limit,
@@ -55,8 +55,8 @@ export default function UserReservation() {
     useEffect(() => { refetch(); }, [page, limit, userInfo?.id || 0]);
 
     useEffect(() => {
-        setSelected(userReservation[0] || null);
-    }, [userReservation]);
+        setSelected(reservation.data[0] || null);
+    }, [reservation]);
 
     return (
         <>
@@ -67,7 +67,7 @@ export default function UserReservation() {
                 refetch={refetch}
             />
             <Scroll>
-                {!userReservation ? (
+                {!reservation ? (
                     <LoadingComponent />
                 ) : (
                     <Grid
@@ -121,14 +121,14 @@ export default function UserReservation() {
                         </Flex>
                         <SimpleTable
                             onIdChange={(id) => {
-                                const res = userReservation.find((r) => r.id === id);
+                                const res = reservation.data.find((r) => r.id === id);
                                 if (res) {
                                     setSelected(res);
                                     setOpen(true);
                                 }
                             }}
                             header={["Title", "Booker", "From", "To"]}
-                            content={userReservation.map((r) => ({
+                            content={reservation.data.map((r) => ({
                                 id: r.id,
                                 row: [
                                     r.title,
@@ -140,7 +140,7 @@ export default function UserReservation() {
                         />
                         <Center width="100%">
                             <SimplePagination
-                                count={count}
+                                count={reservation.count}
                                 pageSize={limit}
                                 page={page}
                                 onPageChange={({ page }) => setPage(page)}
