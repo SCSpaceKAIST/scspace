@@ -218,7 +218,7 @@ export class ReservationRepository {
       query = this.db
         .select()
         .from(Reservation)
-        .leftJoin(
+        .innerJoin(
           OrganizationMember,
           and(
             eq(OrganizationMember.organizationId, Reservation.organizationId),
