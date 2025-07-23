@@ -181,6 +181,7 @@ export class ReservationRepository {
             ),
             and(
               ne(Reservation.organizationId, 1),
+              isNotNull(OrganizationMember.userId),
             )
           )
         };
@@ -194,9 +195,10 @@ export class ReservationRepository {
         };
       default: // Organization
         return {
-          needsJoin: true,
+          needsJoin: false,
           where: and(
             ne(Reservation.organizationId, 1),
+            isNotNull(Reservation.organizationId),
             eq(Reservation.organizationId, organizationId),
           )
         };
@@ -261,8 +263,6 @@ export class ReservationRepository {
       query,
       countQuery
     ]);
-
-    console.log(query.toSQL(), data);
 
     return {
       data,
