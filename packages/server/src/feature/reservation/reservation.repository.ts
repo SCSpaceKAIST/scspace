@@ -8,7 +8,6 @@ import { MySql2Database } from 'drizzle-orm/mysql2';
 import {
   schema,
   Reservation,
-  Organization,
   OrganizationMember,
   ReservationContent,
 } from '@schema';
@@ -27,6 +26,7 @@ import {
   count,
   ne,
   isNotNull,
+  getTableColumns,
 } from 'drizzle-orm';
 import {
   IReservationCreate,
@@ -181,7 +181,6 @@ export class ReservationRepository {
             ),
             and(
               ne(Reservation.organizationId, 1),
-              isNotNull(OrganizationMember.userId),
             )
           )
         };
@@ -216,7 +215,7 @@ export class ReservationRepository {
     let query;
     if (needsJoin) {
       query = this.db
-        .select()
+        .select(getTableColumns(Reservation))
         .from(Reservation)
         .innerJoin(
           OrganizationMember,
