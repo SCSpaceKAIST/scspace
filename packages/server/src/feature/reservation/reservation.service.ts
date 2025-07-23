@@ -91,7 +91,10 @@ export class ReservationService {
 
     if (organizationId === 0) {
       const userOrganizations = await this.organizationPublicService.fetchByUserId(userId);
-      reservations = reservations.filter(r => r.organizationId === 1 && r.userId === userId || userOrganizations.some(org => org.id === r.organizationId));
+      reservations = reservations.filter(r =>
+        r.organizationId === 1 && r.userId === userId ||
+        r.organizationId !== 1 && userOrganizations.some(org => org.id === r.organizationId)
+      );
     }
 
     const userIds = reservations.map((reservation) => reservation.userId);
