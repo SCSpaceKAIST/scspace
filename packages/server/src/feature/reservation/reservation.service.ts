@@ -83,7 +83,7 @@ export class ReservationService {
     offset: number,
   ): Promise<IReservationAll[]> {
     const reservations = await this.reservationRepository.fetch({
-      userId,
+      userId: organizationId === 1 ? userId : undefined,
       organizationId,
       limit,
       offset,

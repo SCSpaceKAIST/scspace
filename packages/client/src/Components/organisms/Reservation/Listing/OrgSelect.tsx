@@ -17,7 +17,6 @@ export default function OrgSelect({ organization, setOid, oid }: {
     }, [_oid]);
 
     const initOpt = [
-        { label: "All", value: "0" },
         { label: "Individual", value: "1" }
     ];
 
