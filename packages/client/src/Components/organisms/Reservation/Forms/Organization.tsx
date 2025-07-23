@@ -24,9 +24,10 @@ export function OrganizationForm({ id, setOrgId }: {
     <SelectComponent
       label="Organization Name"
       optionList={organization ? ([
-        organizations[0],
-        ...organization.filter(
-          (o) => o.status !== OrganizationStatusEnum.REJECTED && OrganizationStatusEnum.REGISTER_REQUEST
+        ...organizations,
+        ...organization.filter((o) =>
+          o.status !== OrganizationStatusEnum.REJECTED &&
+          o.status !== OrganizationStatusEnum.REGISTER_REQUEST
         ).map((o): ISelectOption => {
           return {
             label: o.name,
