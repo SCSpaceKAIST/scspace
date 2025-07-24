@@ -12,6 +12,7 @@ import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import ChangeTimeBtn from "./ChangeTimeBtn";
+import { useOrganizationDetail } from "@scspace-client/Hooks/organization";
 
 export default function ReservationDetail({ open, setOpen, selectedRes, refetch }: {
     open: boolean;
@@ -20,7 +21,11 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
     refetch: () => any;
 }) {
     const { getString } = useDate();
-    const { userInfo } = useAuth();
+    const { userInfo, isManager } = useAuth();
+
+    const { organizationDetail } = useOrganizationDetail({ id: selectedRes?.organizationId ?? 0 });
+
+    const isMember = organizationDetail?.members.some(member => member.userId === userInfo?.id) ?? false;
 
     const deleteReservation = useReservationAPI({ rid: selectedRes?.id ?? 0 }).deleteRes;
     function onDelete() {
@@ -31,6 +36,8 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
             }
         });
     }
+
+    const isWide = useBreakpointValue<boolean>({ base: false, md: true });
 
     return (
         <SimpleDialog
@@ -95,14 +102,16 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
                             <DataListItem label="Time">
                                 <HStack>
                                     <Text>
-                                        {getString(selectedRes.timeFrom)} - {getString(selectedRes.timeTo)}
+                                        {getString(selectedRes.timeFrom)} {isWide ? " - " : "\n"} {getString(selectedRes.timeTo)}
                                     </Text>
-                                    <ChangeTimeBtn
-                                        rid={selectedRes.id}
-                                        refetch={refetch}
-                                        timeFrom={selectedRes.timeFrom}
-                                        timeTo={selectedRes.timeTo}
-                                    />
+                                    {(isManager || isMember) && (
+                                        <ChangeTimeBtn
+                                            rid={selectedRes.id}
+                                            refetch={refetch}
+                                            timeFrom={selectedRes.timeFrom}
+                                            timeTo={selectedRes.timeTo}
+                                        />
+                                    )}
                                 </HStack>
                             </DataListItem>
                             <DataListItem label="Space">

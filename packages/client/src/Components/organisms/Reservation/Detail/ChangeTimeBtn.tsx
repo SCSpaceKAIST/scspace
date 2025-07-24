@@ -61,7 +61,7 @@ export default function ChangeTimeBtn({ rid, refetch, timeFrom, timeTo }: {
         >
             <TooltipComponent content="Edit Name">
                 <Dialog.Trigger asChild>
-                    <IconButton size="sm" variant="ghost" rounded="sm" disabled>
+                    <IconButton size="sm" variant="ghost" rounded="sm">
                         <HiOutlinePencilAlt color="gray" />
                     </IconButton>
                 </Dialog.Trigger>

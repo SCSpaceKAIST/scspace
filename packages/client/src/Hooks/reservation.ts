@@ -211,7 +211,7 @@ export function useReservationAPI(Rid?: { rid: number }) {
     const updateRes = useMutationApi<IReservation, IReservationUpdate>(
         `/reservation/`,
         "PUT"
-    ).mutate;
+    ).mutateAsync;
 
     const deleteRes = useMutationApi<ISuccessResponse, {}>(
         `/reservation/${rid}`,

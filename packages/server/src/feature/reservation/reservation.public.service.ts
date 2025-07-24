@@ -236,6 +236,7 @@ export class ReservationPublicService {
     spaceId: number,
     timeFrom: number,
     timeTo: number,
+    reservationId: number,
   ): Promise<boolean> {
     const { data: overlappingReservations } = await this.reservationRepository.fetch({
       spaceId: spaceId,
@@ -245,7 +246,14 @@ export class ReservationPublicService {
       },
     });
 
-    return overlappingReservations.length === 0; // 겹치는 예약이 있으면 false
+    if (overlappingReservations.length === 0)
+      return true; // 겹치는 예약이 있으면 false
+    if (
+      overlappingReservations.length === 1 &&
+      overlappingReservations[0].id === reservationId
+    )
+      return true; // 예약 ID가 일치하면 겹치지 않는 것으로 간주
+    return false; // 겹치는 예약이 있으면 false
   }
 
   async find(params: {
@@ -256,7 +264,14 @@ export class ReservationPublicService {
     return (await this.reservationRepository.fetch(params)).data;
   }
 
-  async checkWholeTime(userId: number, organizationId: number, spaceId: number, timeFrom: number, timeTo: number): Promise<void> {
+  async checkWholeTime(
+    userId: number,
+    organizationId: number,
+    spaceId: number,
+    timeFrom: number,
+    timeTo: number,
+    reservationId: number = 0,
+  ): Promise<void> {
     if (!timeFrom || !timeTo) {
       throw new BadRequestException('timeFrom and timeTo are required');
     }
@@ -267,7 +282,6 @@ export class ReservationPublicService {
     if (timeFrom === timeTo) {
       timeTo = Number(BigInt(timeFrom) + BigInt(60 * 24) - BigInt(1));
     }
-
 
     const isAvailable = await this.validateTimeConstraints(
       userId,
@@ -285,6 +299,7 @@ export class ReservationPublicService {
       spaceId,
       timeFrom,
       timeTo,
+      reservationId
     );
 
     if (!isOverlap) {
