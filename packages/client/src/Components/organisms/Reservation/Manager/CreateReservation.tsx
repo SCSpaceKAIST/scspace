@@ -98,10 +98,14 @@ export default function CreateReservation() {
         }[] = [];
 
         resList.forEach((res) => {
+            time.push({
+                timeFrom: getTime(res.dateFrom) + getTime({ hour: res.hourFrom }),
+                timeTo: getTime(res.dateTo) + getTime({ hour: res.hourTo })
+            });
             _timeFrom = getDate(getTime(res.dateFrom) + getTime({ hour: res.hourFrom }));
             _timeTo = getDate(getTime(res.dateTo) + getTime({ hour: res.hourTo }));
 
-            for (i = 0; i < repeat; i++) {
+            for (i = 1; i < repeat; i++) {
                 _timeFrom.setDate(_timeFrom.getDate() + 7);
                 _timeTo.setDate(_timeTo.getDate() + 7);
                 time.push({
