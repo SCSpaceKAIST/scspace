@@ -354,7 +354,10 @@ export class ReservationRepository {
       workerNeed: data.content.worker,
     } as InferInsertModel<typeof ReservationContent>;
 
-    const [resultContent] = await this.db.update(ReservationContent).set(updateContentData).where(eq(ReservationContent.id, data.id!));
+    const [resultContent] = await this.db
+      .update(ReservationContent)
+      .set(updateContentData)
+      .where(eq(ReservationContent.id, data.id!));
     if (!resultContent.affectedRows) {
       throw new Error('Failed to update reservation content');
     }

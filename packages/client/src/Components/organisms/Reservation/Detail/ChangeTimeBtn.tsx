@@ -109,6 +109,12 @@ export default function ChangeTimeBtn({ rid, refetch, timeFrom, timeTo }: {
                                             description: "The reservation time has been updated successfully."
                                         });
                                         refetch();
+                                    },
+                                    onError: (error) => {
+                                        toaster.error({
+                                            title: "Update Failed",
+                                            description: error.message || "An error occurred while updating the reservation."
+                                        });
                                     }
                                 })}
                             >
