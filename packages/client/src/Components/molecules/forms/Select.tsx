@@ -18,25 +18,29 @@ export interface ISelectOption {
 }
 
 export default function SelectComponent({
+  inDialog,
   label,
   checkboxLabel,
   optionList,
+  defaultValue,
   onChange,
   setCheck = () => null
 }: {
+  inDialog?: boolean;
   label: string;
   checkboxLabel?: {
     [key: string]: string;
   } | string;
   optionList: ISelectOption[];
   onChange: (e: ISelectOption) => any;
+  defaultValue?: string;
   setCheck?: Dispatch<SetStateAction<boolean>>;
 }) {
   const options = createListCollection({
     items: optionList,
   });
 
-  const [_value, _setValue] = useState<string>("");
+  const [_value, _setValue] = useState<string>(defaultValue ?? "");
   const [_label, _setLabel] = useState<string>("");
   const [_dscrp, _setDscrp] = useState<string>("");
 
@@ -100,7 +104,7 @@ export default function SelectComponent({
           <Select.Indicator />
         </Select.IndicatorGroup>
       </Select.Control>
-      <Portal>
+      <Portal disabled={inDialog}>
         <Select.Positioner>
           <Select.Content cursor="pointer" minW="fit-content">
             {options.items.map((o) => (

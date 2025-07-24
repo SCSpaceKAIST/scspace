@@ -82,10 +82,13 @@ export default function ChangeTimeBtn({ rid, refetch, timeFrom, timeTo }: {
                                 </Dialog.Description>
                             )}
                             <ResTime
+                                inDialog
                                 dateFrom={dateFrom}
                                 dateTo={dateTo}
                                 setDateFrom={setDateFrom}
                                 setDateTo={setDateTo}
+                                hourFrom={hourFrom}
+                                hourTo={hourTo}
                                 setHourFrom={setHourFrom}
                                 setHourTo={setHourTo}
                             />

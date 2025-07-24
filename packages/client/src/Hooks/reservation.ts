@@ -209,7 +209,7 @@ export function useReservationAPI(Rid?: { rid: number }) {
     ).mutateAsync;
 
     const updateRes = useMutationApi<IReservation, IReservationUpdate>(
-        `/reservation/${rid}`,
+        `/reservation/`,
         "PUT"
     ).mutate;
 
