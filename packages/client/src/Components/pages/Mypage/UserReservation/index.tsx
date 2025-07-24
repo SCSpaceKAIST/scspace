@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import { useDate } from "@scspace-client/Hooks/utils";
-import CalendarDialog from "@scspace-client/Components/organisms/Calendar/CalendarDialog";
+import ReservationDetail from "@scspace-client/Components/organisms/Reservation/Detail";
 import { useOrganization } from "@scspace-client/Hooks/organization";
 import TooltipComponent from "../../../atoms/Tooptip";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
@@ -60,7 +60,7 @@ export default function UserReservation() {
 
     return (
         <>
-            <CalendarDialog
+            <ReservationDetail
                 open={open}
                 setOpen={setOpen}
                 selectedRes={selected}

@@ -25,7 +25,7 @@ import {
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { SmallLoading } from "@scspace-client/Components/atoms/Loading";
-import { CalendarView } from "@scspace-client/Components/organisms/Calendar/CalendarView";
+import { CalendarView } from "@scspace-client/Components/organisms/Reservation/Calendar/CalendarView";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useDate } from "@scspace-client/Hooks/utils";

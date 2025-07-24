@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogBackdrop, Button, Portal, Text, IconButton } from "@chakra-ui/react";
+import { Dialog, DialogBackdrop, Button, Portal, IconButton } from "@chakra-ui/react";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import InputComponent from "@scspace-client/Components/molecules/forms/Input";

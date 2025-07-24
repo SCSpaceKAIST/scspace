@@ -11,14 +11,14 @@ import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
+import ChangeTimeBtn from "./ChangeTimeBtn";
 
-export default function CalendarDialog({ open, setOpen, selectedRes, refetch }: {
+export default function ReservationDetail({ open, setOpen, selectedRes, refetch }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     selectedRes: IReservationAll | null;
     refetch: () => any;
 }) {
-    const isWide = useBreakpointValue({ base: false, md: true });
     const { getString } = useDate();
     const { userInfo } = useAuth();
 
@@ -93,7 +93,17 @@ export default function CalendarDialog({ open, setOpen, selectedRes, refetch }: 
                             </DataListItem>
                             <Separator />
                             <DataListItem label="Time">
-                                {getString(selectedRes.timeFrom)} - {getString(selectedRes.timeTo)}
+                                <HStack>
+                                    <Text>
+                                        {getString(selectedRes.timeFrom)} - {getString(selectedRes.timeTo)}
+                                    </Text>
+                                    <ChangeTimeBtn
+                                        rid={selectedRes.id}
+                                        refetch={refetch}
+                                        timeFrom={selectedRes.timeFrom}
+                                        timeTo={selectedRes.timeTo}
+                                    />
+                                </HStack>
                             </DataListItem>
                             <DataListItem label="Space">
                                 {selectedRes.space.nameKr} ({selectedRes.space.nameEn})

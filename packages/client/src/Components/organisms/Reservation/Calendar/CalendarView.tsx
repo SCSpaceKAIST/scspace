@@ -11,7 +11,7 @@ import {
 import { useDateReservations, useReservations } from "@scspace-client/Hooks/reservation";
 import { useEffect, useState } from "react";
 import { IReservationAll } from "@scspace-depot/types/reservation";
-import CalendarDialog from "./CalendarDialog";
+import ReservationDetail from "../Detail";
 import { stringToColor } from "@scspace-client/Hooks/utils";
 
 export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: {
@@ -46,7 +46,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
 
     return (
         <>
-            <CalendarDialog
+            <ReservationDetail
                 open={open}
                 setOpen={setOpen}
                 selectedRes={selectedRes}

@@ -57,10 +57,12 @@ export type IReservationMultipleCreateResurt = Omit<
   }[];
 }
 
-export type IReservationUpdate = Omit<
+export type IReservationUpdate = Partial<Omit<
   IReservation,
-  "spaceId" | "organizationId" | "timePost" | "timeUpdate" | "state"
->;
+  "id" | "spaceId" | "organizationId" | "timePost" | "timeUpdate" | "state"
+>> & {
+  id: number
+};
 
 // 공간 예약 시간 체크 요청
 export type ISpaceTimeCheckRequest = Pick<

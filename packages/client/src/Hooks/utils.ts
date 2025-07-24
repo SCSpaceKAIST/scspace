@@ -22,7 +22,7 @@ export function useDate() {
     }
 
     function getMidnightTime(time: number) {
-        return Math.floor(time / timeUnit.day) * timeUnit.day;
+        return Math.floor(time / timeUnit.date) * timeUnit.date;
     }
 
     function getDateUnit(time: number) {
@@ -30,17 +30,17 @@ export function useDate() {
         time = Math.floor(time / 60);
         const hour = time % 24;
         time = Math.floor(time / 24);
-        const day = time % 32;
+        const date = time % 32;
         time = Math.floor(time / 32);
         const month = time % 12;
         const year = Math.floor(time / 12);
 
-        return { year, month, day, hour, minute };
+        return { year, month, date, hour, minute };
     }
 
     function getDateString(time: number) {
-        const { year, month, day } = getDateUnit(time);
-        return `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        const { year, month, date } = getDateUnit(time);
+        return `${year}-${(month + 1).toString().padStart(2, '0')}-${date.toString().padStart(2, '0')}`;
     }
 
     function getString(time: number) {
@@ -50,20 +50,20 @@ export function useDate() {
     }
 
     function getDate(time: number) {
-        const { year, month, day, hour, minute } = getDateUnit(time);
-        return new Date(year, month, day, hour, minute, 0, 0);
+        const { year, month, date, hour, minute } = getDateUnit(time);
+        return new Date(year, month, date, hour, minute, 0, 0);
     }
 
     const minute = 1;
     const hour = minute * 60;
-    const day = hour * 24;
-    const month = day * 32;
+    const date = hour * 24;
+    const month = date * 32;
     const year = month * 12;
 
     const timeUnit = {
         minute,
         hour,
-        day,
+        date,
         month,
         year
     }

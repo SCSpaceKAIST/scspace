@@ -98,7 +98,7 @@ export function useDateReservations({ spaceId, dateFrom, dateTo, }: {
                 if (d.timeFrom >= getMidnightTime(getTime(dateFrom))) {
                     if (_reservation[dF]) _reservation[dF].push(format({ d: d, hF: tF.getHours(), hT: 24 }));
                 }
-                if (d.timeTo <= getMidnightTime(getTime(dateTo)) + timeUnit.day - 1) {
+                if (d.timeTo <= getMidnightTime(getTime(dateTo)) + timeUnit.date - 1) {
                     if (_reservation[dT]) _reservation[dT].push(format({ d: d, hF: 0, hT: tT.getHours() }));
                 }
 
