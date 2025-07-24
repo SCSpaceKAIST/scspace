@@ -102,8 +102,8 @@ export default function CreateReservation() {
             _timeTo = getDate(getTime(res.dateTo) + getTime({ hour: res.hourTo }));
 
             for (i = 0; i < repeat; i++) {
-                _timeFrom.setDate(_timeFrom.getDate() + i * 7);
-                _timeTo.setDate(_timeTo.getDate() + i * 7);
+                _timeFrom.setDate(_timeFrom.getDate() + 7);
+                _timeTo.setDate(_timeTo.getDate() + 7);
                 time.push({
                     timeFrom: getTime(_timeFrom),
                     timeTo: getTime(_timeTo)
