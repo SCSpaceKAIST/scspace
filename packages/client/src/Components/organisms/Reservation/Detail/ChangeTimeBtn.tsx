@@ -22,11 +22,11 @@ export default function ChangeTimeBtn({ rid, refetch, timeFrom, timeTo }: {
     const timeFromUnit = getDateUnit(timeFrom);
 
     const [dateFrom, setDateFrom] = useState<Date>(new Date(
-        timeFromUnit.year, timeFromUnit.month - 1, timeFromUnit.date
+        timeFromUnit.year, timeFromUnit.month, timeFromUnit.date
     ));
 
     const [dateTo, setDateTo] = useState<Date>(new Date(
-        timeToUnit.year, timeToUnit.month - 1, timeToUnit.date
+        timeToUnit.year, timeToUnit.month, timeToUnit.date
     ));
 
     const [hourFrom, setHourFrom] = useState<number>(timeFromUnit.hour);
@@ -67,8 +67,8 @@ export default function ChangeTimeBtn({ rid, refetch, timeFrom, timeTo }: {
                 </Dialog.Trigger>
             </TooltipComponent>
             <Portal>
-                <DialogBackdrop zIndex={1500} />
-                <Dialog.Positioner zIndex={1600}>
+                <DialogBackdrop />
+                <Dialog.Positioner>
                     <Dialog.Content>
                         <Dialog.Header>
                             <Dialog.Title>
