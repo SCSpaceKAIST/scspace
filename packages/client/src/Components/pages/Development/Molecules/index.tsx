@@ -28,7 +28,11 @@ export default function Molecules() {
                             <DeleteBtn onDelete={() => alert("Delete")} />
                         </DataListItem>
                         <DataListItem label="Update Button">
-                            <UpdateBtn onUpdate={() => alert("Update")} refetch={() => alert("Refetch")} title="Update Item">
+                            <UpdateBtn
+                                onUpdate={() => alert("Update")}
+                                title="Update Item"
+                                tooltipContent="I'm a tooltip for the update button"
+                            >
                                 Update Dialog
                             </UpdateBtn>
                         </DataListItem>
