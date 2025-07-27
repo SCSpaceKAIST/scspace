@@ -40,16 +40,16 @@ export default function SelectComponent({
     items: optionList,
   });
 
-  const [_value, _setValue] = useState<string>(defaultValue ?? "");
+  const [_value, _setValue] = useState<string>("");
   const [_label, _setLabel] = useState<string>("");
   const [_dscrp, _setDscrp] = useState<string>("");
 
   useEffect(() => {
     if (optionList.length === 0) return;
 
-    _setValue(optionList[0].value ?? "");
-    _setLabel(optionList[0].label ?? "");
-    _setDscrp(optionList[0].description ?? "");
+    _setValue(defaultValue ?? optionList[0].value ?? "");
+    _setLabel(optionList.find(o => o.value === defaultValue)?.label ?? optionList[0].label ?? "");
+    _setDscrp(optionList.find(o => o.value === defaultValue)?.description ?? optionList[0].description ?? "");
   }, [optionList.length]);
 
   return (options.items.length === 0) ? (
