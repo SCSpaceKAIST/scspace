@@ -324,10 +324,7 @@ export class ReservationRepository {
 
   async update(data: IReservationUpdate): Promise<[MReservationSimple, MReservationContent]> {
     const updateData = {
-      userId: data.userId,
-      title: data.title,
-      timeFrom: data.timeFrom,
-      timeTo: data.timeTo,
+      ...data,
       timeUpdate: getNow(),
     } as Partial<InferInsertModel<typeof Reservation>>;
 
@@ -342,24 +339,20 @@ export class ReservationRepository {
     if (reservationUpdated.length === 0) {
       throw new NotFoundException('Reservation not found after update');
     }
-    const updateContentData = {
-      id: data.id!,
-      description: data.content.description,
-      innerParticipantNumber: data.content.innerParticipantNumber,
-      outerParticipantNumber: data.content.outerParticipantNumber,
-      food: data.content.food,
-      desk: data.content.desk,
-      chair: data.content.chair,
-      busking: data.content.busking,
-      workerNeed: data.content.worker,
-    } as InferInsertModel<typeof ReservationContent>;
 
-    const [resultContent] = await this.db
-      .update(ReservationContent)
-      .set(updateContentData)
-      .where(eq(ReservationContent.id, data.id!));
-    if (!resultContent.affectedRows) {
-      throw new Error('Failed to update reservation content');
+    if (data.content) {
+      const updateContentData = {
+        id: data.id!,
+        ...data.content
+      } as InferInsertModel<typeof ReservationContent>;
+
+      const [resultContent] = await this.db
+        .update(ReservationContent)
+        .set(updateContentData)
+        .where(eq(ReservationContent.id, data.id!));
+      if (!resultContent.affectedRows) {
+        throw new Error('Failed to update reservation content');
+      }
     }
 
     const reservationContentUpdated = await this.fetchContent(data.id!);
