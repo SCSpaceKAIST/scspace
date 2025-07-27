@@ -1,6 +1,6 @@
 "use client"
 
-import { Dialog, Portal, HStack, useBreakpointValue, DataList, Separator, Text, Button, Center } from "@chakra-ui/react";
+import { Dialog, Portal, HStack, useBreakpointValue, DataList, Separator, Text, Button, Center, Stack } from "@chakra-ui/react";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useDate } from "@scspace-client/Hooks/utils";
 import { IReservationAll } from "@scspace-depot/types/reservation";
@@ -48,17 +48,19 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
                 <>
                     <Dialog.Header>
                         <HStack width="100%" justifyContent="space-between" alignItems="start">
-                            <Dialog.Title whiteSpace="nowrap">
+                            <Dialog.Title>
                                 {selectedRes.title}
                             </Dialog.Title>
-                            <DataList.Root orientation="horizontal" gap={1} color="fg.muted">
-                                <DataListItem label="Create Time">
-                                    {getString(selectedRes.timePost)}
-                                </DataListItem>
-                                <DataListItem label="Update Time">
-                                    {getString(selectedRes.timeUpdate)}
-                                </DataListItem>
-                            </DataList.Root>
+                            {isWide && (
+                                <DataList.Root orientation="horizontal" gap={1} color="fg.muted">
+                                    <DataListItem label="Create Time">
+                                        {getString(selectedRes.timePost)}
+                                    </DataListItem>
+                                    <DataListItem label="Update Time">
+                                        {getString(selectedRes.timeUpdate)}
+                                    </DataListItem>
+                                </DataList.Root>
+                            )}
                         </HStack>
                     </Dialog.Header>
                     <Dialog.Body>
@@ -101,9 +103,16 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
                             <Separator />
                             <DataListItem label="Time">
                                 <HStack>
-                                    <Text>
-                                        {getString(selectedRes.timeFrom)} {isWide ? " - " : (<br />)} {getString(selectedRes.timeTo)}
-                                    </Text>
+                                    <Stack >
+                                        <HStack>
+                                            <Text color={"fg.muted"} fontSize="sm">F</Text>
+                                            <Text>{getString(selectedRes.timeFrom)}</Text>
+                                        </HStack>
+                                        <HStack>
+                                            <Text color={"fg.muted"} fontSize="sm">T</Text>
+                                            <Text>{getString(selectedRes.timeTo)}</Text>
+                                        </HStack>
+                                    </Stack>
                                     {(isManager || isMember) && (
                                         <ChangeTimeBtn
                                             rid={selectedRes.id}
