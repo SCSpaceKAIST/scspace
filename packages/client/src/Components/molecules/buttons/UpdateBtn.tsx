@@ -1,51 +1,47 @@
-import { Button, Dialog, Portal, } from "@chakra-ui/react";
-import React from "react";
+import { Dialog, DialogBackdrop, Button, Portal, IconButton } from "@chakra-ui/react";
+import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
+import { HiOutlinePencilAlt } from "react-icons/hi";
 
-export default function AlertBtn({
-    onClick,
-    colorPalette,
-    buttonText,
-    dialogTitle,
-    dialogBody,
-    children
-}: {
-    onClick: () => any;
-    colorPalette?: string;
-    buttonText?: string;
-    innerButtonText?: string;
-    dialogTitle?: string;
-    dialogBody?: React.ReactNode;
+export default function UpdateBtn({ onUpdate, children, title, updateDisallowed, tooltipContent }: {
+    onUpdate: () => void;
     children: React.ReactNode;
+    title: string;
+    updateDisallowed?: boolean;
+    tooltipContent: string;
 }) {
-
     return (
         <Dialog.Root
             role="alertdialog"
             placement="center"
         >
-            <Dialog.Trigger asChild>
-                {children}
-            </Dialog.Trigger>
+            <TooltipComponent content={tooltipContent}>
+                <Dialog.Trigger asChild>
+                    <IconButton size="xs" variant="ghost">
+                        <HiOutlinePencilAlt color="gray" />
+                    </IconButton>
+                </Dialog.Trigger>
+            </TooltipComponent>
             <Portal>
-                <Dialog.Backdrop zIndex={1500} />
-                <Dialog.Positioner zIndex={1600}>
+                <DialogBackdrop />
+                <Dialog.Positioner>
                     <Dialog.Content>
                         <Dialog.Header>
                             <Dialog.Title>
-                                {dialogTitle ?? "Title of the action."}
+                                {title}
                             </Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
-                            {dialogBody ?? "Description of the action."}
+                            {children}
                         </Dialog.Body>
                         <Dialog.Footer>
                             <Dialog.ActionTrigger asChild>
                                 <Button
-                                    colorPalette={colorPalette ?? "blue"}
+                                    colorPalette="blue"
                                     rounded="sm"
-                                    onClick={onClick}
+                                    disabled={updateDisallowed}
+                                    onClick={onUpdate}
                                 >
-                                    {buttonText ?? "Confirm"}
+                                    Update
                                 </Button>
                             </Dialog.ActionTrigger>
                             <Dialog.ActionTrigger asChild>

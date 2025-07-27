@@ -1,13 +1,12 @@
 "use client";
 
-import { Dialog, DialogBackdrop, Button, Portal, Text, IconButton } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
-import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import { useEffect, useState } from "react";
-import { HiOutlinePencilAlt } from "react-icons/hi";
 import ResTime from "../Manager/NewTime";
 import { useDate } from "@scspace-client/Hooks/utils";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
+import UpdateBtn from "@scspace-client/Components/molecules/buttons/UpdateBtn";
 
 export default function ChangeTimeBtn({ rid, refetch, timeFrom, timeTo }: {
     rid: number;
@@ -55,80 +54,46 @@ export default function ChangeTimeBtn({ rid, refetch, timeFrom, timeTo }: {
     }, [newTimeFrom, newTimeTo]);
 
     return (
-        <Dialog.Root
-            role="alertdialog"
-            placement="center"
+        <UpdateBtn
+            tooltipContent="Change Reservation Time"
+            onUpdate={() => updateRes({
+                id: rid,
+                timeFrom: newTimeFrom,
+                timeTo: newTimeTo
+            }, {
+                onSuccess: () => {
+                    toaster.success({
+                        title: "Reservation Updated",
+                        description: "The reservation time has been updated successfully."
+                    });
+                    refetch();
+                },
+                onError: (error) => {
+                    toaster.error({
+                        title: "Update Failed",
+                        description: error.message || "An error occurred while updating the reservation."
+                    });
+                }
+            })}
+            title="Change Reservation Time"
+            updateDisallowed={!isCorrect}
         >
-            <TooltipComponent content="Edit Name">
-                <Dialog.Trigger asChild>
-                    <IconButton size="sm" variant="ghost" rounded="sm">
-                        <HiOutlinePencilAlt color="gray" />
-                    </IconButton>
-                </Dialog.Trigger>
-            </TooltipComponent>
-            <Portal>
-                <DialogBackdrop />
-                <Dialog.Positioner>
-                    <Dialog.Content>
-                        <Dialog.Header>
-                            <Dialog.Title>
-                                Edit Reservated Time
-                            </Dialog.Title>
-                        </Dialog.Header>
-                        <Dialog.Body>
-                            {!isCorrect && (
-                                <Dialog.Description color="red.500" fontWeight="semibold">
-                                    The selected time range is invalid. Please ensure that the start time is before the end time.
-                                </Dialog.Description>
-                            )}
-                            <ResTime
-                                inDialog
-                                dateFrom={dateFrom}
-                                dateTo={dateTo}
-                                setDateFrom={setDateFrom}
-                                setDateTo={setDateTo}
-                                hourFrom={hourFrom}
-                                hourTo={hourTo}
-                                setHourFrom={setHourFrom}
-                                setHourTo={setHourTo}
-                            />
-                        </Dialog.Body>
-                        <Dialog.Footer>
-                            <Button
-                                colorPalette="blue"
-                                rounded="sm"
-                                disabled={!isCorrect}
-                                onClick={() => updateRes({
-                                    id: rid,
-                                    timeFrom: newTimeFrom,
-                                    timeTo: newTimeTo
-                                }, {
-                                    onSuccess: () => {
-                                        toaster.success({
-                                            title: "Reservation Updated",
-                                            description: "The reservation time has been updated successfully."
-                                        });
-                                        refetch();
-                                    },
-                                    onError: (error) => {
-                                        toaster.error({
-                                            title: "Update Failed",
-                                            description: error.message || "An error occurred while updating the reservation."
-                                        });
-                                    }
-                                })}
-                            >
-                                Update
-                            </Button>
-                            <Dialog.ActionTrigger asChild>
-                                <Button variant="outline" rounded="sm">
-                                    Cancel
-                                </Button>
-                            </Dialog.ActionTrigger>
-                        </Dialog.Footer>
-                    </Dialog.Content>
-                </Dialog.Positioner>
-            </Portal>
-        </Dialog.Root >
+            {!isCorrect && (
+                <Text color="red.500" fontWeight="semibold">
+                    The selected time range is invalid. Please ensure that the start time is before the end time.
+                </Text>
+            )}
+            <ResTime
+                inDialog
+                dateFrom={dateFrom}
+                dateTo={dateTo}
+                setDateFrom={setDateFrom}
+                setDateTo={setDateTo}
+                hourFrom={hourFrom}
+                hourTo={hourTo}
+                setHourFrom={setHourFrom}
+                setHourTo={setHourTo}
+            />
+        </UpdateBtn>
     );
 }

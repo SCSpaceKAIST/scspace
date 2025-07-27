@@ -102,7 +102,7 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
                             <DataListItem label="Time">
                                 <HStack>
                                     <Text>
-                                        {getString(selectedRes.timeFrom)} {isWide ? " - " : "\n"} {getString(selectedRes.timeTo)}
+                                        {getString(selectedRes.timeFrom)} {isWide ? " - " : (<br />)} {getString(selectedRes.timeTo)}
                                     </Text>
                                     {(isManager || isMember) && (
                                         <ChangeTimeBtn

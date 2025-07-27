@@ -12,6 +12,7 @@ import BorderBox from "@scspace-client/Components/atoms/BorderBox";
 import SelectComponent from "@scspace-client/Components/molecules/forms/Select";
 import TextareaComponent from "@scspace-client/Components/molecules/forms/Textarea";
 import { Registered, RegistrationRequested, Rejected, VerificationRequested, Verified } from "@scspace-client/Components/molecules/veritication/VerifiedMark";
+import UpdateBtn from "@scspace-client/Components/molecules/buttons/UpdateBtn";
 
 export default function Molecules() {
     const [inputValue, setInputValue] = useState<string>("");
@@ -25,6 +26,11 @@ export default function Molecules() {
                     <DataList.Root>
                         <DataListItem label="Delete Button">
                             <DeleteBtn onDelete={() => alert("Delete")} />
+                        </DataListItem>
+                        <DataListItem label="Update Button">
+                            <UpdateBtn onUpdate={() => alert("Update")} refetch={() => alert("Refetch")} title="Update Item">
+                                Update Dialog
+                            </UpdateBtn>
                         </DataListItem>
                     </DataList.Root>
                 </DataListItem>

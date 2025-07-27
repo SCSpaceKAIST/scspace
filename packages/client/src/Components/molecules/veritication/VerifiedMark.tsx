@@ -20,7 +20,7 @@ export function Verified() {
 
 export function VerificationRequested() {
     return (
-        <TooltipComponent content="Verification Under Riview">
+        <TooltipComponent content="Verification Under Review">
             <Box width={"18px"} height={"18px"}>
                 <BsPatchExclamation size={size} color="blue" />
             </Box>
