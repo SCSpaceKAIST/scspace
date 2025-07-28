@@ -16,7 +16,7 @@ import LoadingComponent from "../../../../atoms/Loading";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
-import { CalendarView } from "../../../../organisms/Reservation/Calendar/CalendarView";
+import { CalendarView } from "../../../../organisms/Reservation/Calendar";
 
 export default function Calendar({ spaceId }: { spaceId: number }) {
   const [date, setDate] = useState<Date>(() => new Date());

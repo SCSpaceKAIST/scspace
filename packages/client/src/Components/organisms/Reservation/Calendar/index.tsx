@@ -210,8 +210,38 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                                     </GridItem>
                                 );
                             } else if (
-                                !slot ||
-                                slot.hourFrom === 0 && slot.hourTo === 24 && i > 0 ||
+                                !slot
+                            ) {
+                                return (
+                                    <GridItem
+                                        key={`${date}-${hour}`}
+                                        rowStart={hour + 2}
+                                        colStart={ci + 2}
+                                        borderBottomWidth="1px"
+                                        borderRightWidth="1px"
+                                        height="64px"
+                                        minW={0}
+                                    >
+                                        1
+                                    </GridItem>
+                                );
+                            } else if (
+                                slot.hourFrom === 0 && slot.hourTo === 24 && i > 0
+                            ) {
+                                return (
+                                    <GridItem
+                                        key={`${date}-${hour}`}
+                                        rowStart={hour + 2}
+                                        colStart={ci + 2}
+                                        borderBottomWidth="1px"
+                                        borderRightWidth="1px"
+                                        height="64px"
+                                        minW={0}
+                                    >
+                                        2
+                                    </GridItem>
+                                );
+                            } else if (
                                 dateReservation[date][i - 1] && dateReservation[date][i - 1].hourTo <= hour
                             ) {
                                 return (
@@ -223,7 +253,9 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
                                         borderRightWidth="1px"
                                         height="64px"
                                         minW={0}
-                                    />
+                                    >
+                                        3
+                                    </GridItem>
                                 );
                             }
 
