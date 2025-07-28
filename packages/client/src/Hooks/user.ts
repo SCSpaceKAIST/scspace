@@ -61,8 +61,22 @@ export function useUserAPI({ uid }: { uid: number }) {
         "PATCH"
     ).mutate;
 
+    const getUserTypeCode = (type: UserTypeEnum): string => {
+        switch (type) {
+            case UserTypeEnum.ADMIN:
+                return "임원진/개발진";
+            case UserTypeEnum.MANAGER:
+                return "공간위원";
+            case UserTypeEnum.WORKER:
+                return "근로자";
+            default:
+                return "일반";
+        }
+    }
+
     return {
-        updateUserType
+        updateUserType,
+        getUserTypeCode
     }
 }
 

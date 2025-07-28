@@ -15,7 +15,7 @@ import { useState } from "react";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { classify, useAllUser } from "@scspace-client/Hooks/user";
 import { IUser } from "@scspace-depot/types/user";
-import UserDialog from "../../../organisms/Manage/UserDialog";
+import UserDialog from "../../../organisms/User/UserDialog";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 

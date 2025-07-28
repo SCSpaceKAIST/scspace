@@ -8,6 +8,7 @@ import { IUser } from "@scspace-depot/types/user";
 import { useUserAPI } from "@scspace-client/Hooks/user";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
+import UpdateType from "./UpdateType";
 
 export default function UserDialog({ open, setOpen, user, refetch }: {
     open: boolean;
@@ -15,9 +16,7 @@ export default function UserDialog({ open, setOpen, user, refetch }: {
     user: IUser | null;
     refetch: () => any;
 }) {
-    const isWide = useBreakpointValue({ base: false, md: true });
-
-    const { updateUserType } = useUserAPI({ uid: user?.id ?? 0 });
+    const { getUserTypeCode } = useUserAPI({ uid: user?.id ?? 0 });
 
     return (
         <SimpleDialog
@@ -32,6 +31,8 @@ export default function UserDialog({ open, setOpen, user, refetch }: {
                         </Dialog.Title>
                     </Dialog.Header>
                     <Dialog.Body>
+                        <UpdateType uid={user.id} onChange={refetch} />
+                        <Separator my={4} />
                         <DataList.Root orientation="horizontal" width="100%">
                             <DataListItem label="Eng Name">
                                 {user.nameEn}
@@ -40,21 +41,8 @@ export default function UserDialog({ open, setOpen, user, refetch }: {
                                 {user.email}
                             </DataListItem>
                             <Separator />
-                            <DataListItem label="Update Type">
-                                <Wrap>
-                                    <Button onClick={() => updateUserType({ type: UserTypeEnum.USER })}>
-                                        User
-                                    </Button>
-                                    <Button onClick={() => updateUserType({ type: UserTypeEnum.WORKER })}>
-                                        Worker
-                                    </Button>
-                                    <Button onClick={() => updateUserType({ type: UserTypeEnum.MANAGER })}>
-                                        Manager
-                                    </Button>
-                                    <Button onClick={() => updateUserType({ type: UserTypeEnum.ADMIN })}>
-                                        Admin
-                                    </Button>
-                                </Wrap>
+                            <DataListItem label="Type">
+                                {getUserTypeCode(user.type)}
                             </DataListItem>
                         </DataList.Root>
                     </Dialog.Body>
