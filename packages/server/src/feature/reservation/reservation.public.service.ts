@@ -185,10 +185,10 @@ export class ReservationPublicService {
     }
     // check min / max time
     const nowDay = (~~((getNow() / (60 * 24))))
-    if (reservationMinDate[space.spaceType] > ~~(getDateDiff(timeFrom, nowDay) / (60 * 24))) {
+    if (reservationMinDate[space.spaceType] > ~~(this.getDifferenceInMinutes(nowDay, timeFrom) / (60 * 24))) {
       throw new BadRequestException(`Check the minimum reservation date. ${space.nameEn} can be reserved at least ${reservationMinDate[space.spaceType]} days in advance.`);
     }
-    if (reservationMaxDate[space.spaceType] < ~~(getDateDiff(timeFrom, nowDay) / (60 * 24))) {
+    if (reservationMaxDate[space.spaceType] < ~~(this.getDifferenceInMinutes(nowDay, timeFrom) / (60 * 24))) {
       throw new BadRequestException(`Check the maximum reservation date. ${space.nameEn} can be reserved at most ${reservationMaxDate[space.spaceType]} days in advance.`);
     }
 
