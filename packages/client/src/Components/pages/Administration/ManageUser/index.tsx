@@ -25,7 +25,7 @@ export default function ManageUser() {
 
     const { users, refetch } = useAllUser();
 
-    const [selected, setSelected] = useState<IUser | null>(null);
+    const [selectedId, setSelectedId] = useState<number>(0);
     const [open, setOpen] = useState<boolean>(false);
     const isWide = useBreakpointValue({ base: false, md: true });
 
@@ -34,7 +34,7 @@ export default function ManageUser() {
             <UserDialog
                 open={open}
                 setOpen={setOpen}
-                user={selected}
+                user={users?.find((u) => u.id === selectedId) ?? null}
                 refetch={refetch}
             />
             <Scroll>
@@ -77,7 +77,7 @@ export default function ManageUser() {
                                 onIdChange={(id: number) => {
                                     const user = users.find((u) => u.id === id);
                                     if (user) {
-                                        setSelected(user);
+                                        setSelectedId(user.id);
                                         setOpen(true);
                                     }
                                 }}
