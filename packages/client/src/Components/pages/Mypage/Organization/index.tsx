@@ -19,7 +19,7 @@ export default function UserOrganization() {
                 <OrganizationTable
                     organization={organization}
                     refetch={refetch}
-                    uid={0}
+                    uid={userInfo?.id ?? 0}
                     showTabs
                 />
             ) : (

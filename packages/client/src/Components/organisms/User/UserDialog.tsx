@@ -87,7 +87,6 @@ export default function UserDialog({
                                     <OrganizationTable
                                         organization={organization}
                                         refetch={refetchOrg}
-                                        uid={user?.id ?? 0}
                                     />
                                 ) : (
                                     <LoadingComponent />
