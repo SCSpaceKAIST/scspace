@@ -36,7 +36,7 @@ export default function ManageUser() {
                 open={open}
                 setOpen={setOpen}
                 user={users?.find((u) => u.id === selectedId) ?? null}
-                refetch={refetch}
+                refetchList={refetch}
             />
             <Scroll>
                 {!users ? (
@@ -82,7 +82,7 @@ export default function ManageUser() {
                                         setOpen(true);
                                     }
                                 }}
-                                header={["StudentNumber", "Name", "email", "Name(Eng)"]}
+                                header={["StudentNumber", "Name", "email", "Name (Eng)"]}
                                 content={users.map((u: IUser) => ({
                                     id: u.id,
                                     row: [
