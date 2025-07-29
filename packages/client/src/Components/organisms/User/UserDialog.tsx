@@ -1,6 +1,6 @@
 "use client"
 
-import { Dialog, DataList, Separator, Button, Center, useBreakpointValue } from "@chakra-ui/react";
+import { Dialog, DataList, Separator, Button, Center, useBreakpointValue, Stack } from "@chakra-ui/react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { IUser } from "@scspace-depot/types/user";
@@ -95,33 +95,35 @@ export default function UserDialog({
                             </DataListItem>
                             <Separator />
                             <DataListItem label="Reservation">
-                                <SimpleTable
-                                    onIdChange={(id) => {
-                                        const res = reservation.data.find((r) => r.id === id);
-                                        if (res) {
-                                            setSelectedRes(res);
-                                            setOpenResDetail(true);
-                                        }
-                                    }}
-                                    header={["Title", "Booker", "From", "To"]}
-                                    content={reservation.data.map((r) => ({
-                                        id: r.id,
-                                        row: [
-                                            r.title,
-                                            r.organizationId !== 1 ? r.organization.name : r.user.nameKr,
-                                            getString(r.timeFrom),
-                                            getString(r.timeTo)
-                                        ]
-                                    }))}
-                                />
-                                <Center width="100%">
-                                    <SimplePagination
-                                        count={reservation.count}
-                                        pageSize={50}
-                                        page={page}
-                                        onPageChange={({ page }) => setPage(page)}
+                                <Stack>
+                                    <SimpleTable
+                                        onIdChange={(id) => {
+                                            const res = reservation.data.find((r) => r.id === id);
+                                            if (res) {
+                                                setSelectedRes(res);
+                                                setOpenResDetail(true);
+                                            }
+                                        }}
+                                        header={["Title", "Booker", "From", "To"]}
+                                        content={reservation.data.map((r) => ({
+                                            id: r.id,
+                                            row: [
+                                                r.title,
+                                                r.organizationId !== 1 ? r.organization.name : r.user.nameKr,
+                                                getString(r.timeFrom),
+                                                getString(r.timeTo)
+                                            ]
+                                        }))}
                                     />
-                                </Center>
+                                    <Center width="100%">
+                                        <SimplePagination
+                                            count={reservation.count}
+                                            pageSize={50}
+                                            page={page}
+                                            onPageChange={({ page }) => setPage(page)}
+                                        />
+                                    </Center>
+                                </Stack>
                             </DataListItem>
                         </DataList.Root>
                     </Dialog.Body>
