@@ -58,6 +58,10 @@ export default function UserReservation() {
         setSelected(reservation.data[0] || null);
     }, [reservation]);
 
+    useEffect(() => {
+        setPage(1);
+    }, [oid, limit]);
+
     return (
         <>
             <ReservationDetail

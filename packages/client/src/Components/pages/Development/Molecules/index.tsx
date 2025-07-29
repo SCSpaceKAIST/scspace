@@ -13,11 +13,13 @@ import SelectComponent from "@scspace-client/Components/molecules/forms/Select";
 import TextareaComponent from "@scspace-client/Components/molecules/forms/Textarea";
 import { Registered, RegistrationRequested, Rejected, VerificationRequested, Verified } from "@scspace-client/Components/molecules/veritication/VerifiedMark";
 import UpdateBtn from "@scspace-client/Components/molecules/buttons/UpdateBtn";
+import SimplePagination from "@scspace-client/Components/molecules/page/SimplePagenation";
 
 export default function Molecules() {
     const [inputValue, setInputValue] = useState<string>("");
     const [textareaValue, setTextareaValue] = useState<string>("");
     const [numberInputValue, setNumberInputValue] = useState<string>("");
+    const [page, setPage] = useState<number>(1);
 
     return (
         <Scroll>
@@ -35,6 +37,18 @@ export default function Molecules() {
                             >
                                 Update Dialog
                             </UpdateBtn>
+                        </DataListItem>
+                    </DataList.Root>
+                </DataListItem>
+                <DataListItem label="Page">
+                    <DataList.Root>
+                        <DataListItem label="Simple Pagination">
+                            <SimplePagination
+                                count={100}
+                                pageSize={1}
+                                page={page}
+                                onPageChange={({ page }) => setPage(page)}
+                            />
                         </DataListItem>
                     </DataList.Root>
                 </DataListItem>
