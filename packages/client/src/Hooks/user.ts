@@ -79,16 +79,3 @@ export function useUserAPI({ uid }: { uid: number }) {
         getUserTypeCode
     }
 }
-
-export function classify(type: UserTypeEnum): string {
-    switch (type) {
-        case UserTypeEnum.ADMIN:
-            return "Admin"
-        case UserTypeEnum.MANAGER:
-            return "Manager"
-        case UserTypeEnum.WORKER:
-            return "Worker"
-        default:
-            return "User"
-    }
-}

@@ -13,11 +13,12 @@ import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useState } from "react";
 import { HiOutlineRefresh } from "react-icons/hi";
-import { classify, useAllUser } from "@scspace-client/Hooks/user";
+import { useAllUser } from "@scspace-client/Hooks/user";
 import { IUser } from "@scspace-depot/types/user";
 import UserDialog from "../../../organisms/User/UserDialog";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
+import UserName from "@scspace-client/Components/organisms/User/UserName";
 
 export default function ManageUser() {
     const { needManager } = useAuth();
@@ -81,14 +82,14 @@ export default function ManageUser() {
                                         setOpen(true);
                                     }
                                 }}
-                                header={["StudentNumber", "Name", "email", "type"]}
+                                header={["StudentNumber", "Name", "email", "Name(Eng)"]}
                                 content={users.map((u: IUser) => ({
                                     id: u.id,
                                     row: [
                                         u.studentNumber,
-                                        u.nameKr,
+                                        (<UserName key={u.id} user={u} />),
                                         u.email,
-                                        classify(u.type),
+                                        u.nameEn,
                                     ],
                                 }))}
                             />

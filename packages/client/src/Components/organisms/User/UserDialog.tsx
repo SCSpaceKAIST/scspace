@@ -1,9 +1,8 @@
 "use client"
 
-import { Dialog, Portal, Wrap, useBreakpointValue, DataList, Separator, Text, Button, Center, VStack } from "@chakra-ui/react";
+import { Dialog, DataList, Separator, Button, Center } from "@chakra-ui/react";
 import { Dispatch, SetStateAction } from "react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
-import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 import { IUser } from "@scspace-depot/types/user";
 import { useUserAPI } from "@scspace-client/Hooks/user";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
@@ -30,6 +29,7 @@ export default function UserDialog({ open, setOpen, user, refetch }: {
                             {user.nameKr}
                         </Dialog.Title>
                     </Dialog.Header>
+                    <Separator />
                     <Dialog.Body>
                         <UpdateType uid={user.id} onChange={refetch} />
                         <Separator my={4} />
