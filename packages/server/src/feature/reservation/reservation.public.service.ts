@@ -192,6 +192,9 @@ export class ReservationPublicService {
       throw new BadRequestException(`Check the minimum reservation date. ${space.nameEn} can be reserved at least ${reservationMinDate[space.spaceType]} days in advance.`);
     }
     if (reservationMaxDate[space.spaceType] * (24 * 60) < this.getDifferenceInMinutes(nowDay, timeFrom)) {
+      Logger.warn(`Reservation max date check failed for space ${space.nameEn}`);
+      Logger.warn(`Current time: ${JSON.stringify(getDateUnit(nowDay))}, Reservation time: ${JSON.stringify(getDateUnit(timeFrom))}, Difference: ${this.getDifferenceInMinutes(nowDay, timeFrom)} minutes`);
+      Logger.warn(`Max reservation date: ${reservationMaxDate[space.spaceType]} days`);
       throw new BadRequestException(`Check the maximum reservation date. ${space.nameEn} can be reserved at most ${reservationMaxDate[space.spaceType]} days in advance.`);
     }
 
