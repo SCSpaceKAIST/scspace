@@ -10,7 +10,7 @@ import {
 import { IOrganization } from '@scspace-depot/types/organization';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ReservationRepository } from './reservation.repository';
-import { checkContainAllId, takeAll, timeRangeCheck } from '@scspace-server/common/utils';
+import { checkContainAllId, takeAll } from '@scspace-server/common/utils';
 import { UserPublicService } from '../user/user.public.service';
 import { SpacePublicService } from '../space/space.public.service';
 import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
@@ -202,9 +202,6 @@ export class ReservationService {
     // organizations의 모든 멤버 가져오기
     const organizationWithMembers = await this.organizationPublicService.fetchDeepById(organization.id);
     const memberEmails = organizationWithMembers.members.map(member => member.user.email);
-
-
-    // const members = await this.organizationPublicService.fetchDeepById(organizations.id)['members']
 
 
     await this.mailService.sendMail({
