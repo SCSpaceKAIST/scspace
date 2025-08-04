@@ -175,9 +175,9 @@ export class ReservationPublicService {
     timeTo: number,
   ): Promise<boolean> {
     // 공간위원이면 최대 시간 제한 없음
-    // if (await this.userPublicService.isManager(userId)) {
-    //   return true;
-    // }
+    if (await this.userPublicService.isManager(userId)) {
+      return true;
+    }
 
     const space = await this.spacePublicService.fetchById(spaceId);
     if (!space) {
@@ -186,15 +186,9 @@ export class ReservationPublicService {
     // check min / max time
     const nowDay = getNow();
     if (reservationMinDate[space.spaceType] * (24 * 60) > getDateDiffInMinute(nowDay, timeFrom)) {
-      Logger.warn(`Reservation min date check failed for space ${space.nameEn}`);
-      Logger.warn(`Current time: ${JSON.stringify(getDateUnit(nowDay))}, Reservation time: ${JSON.stringify(getDateUnit(timeFrom))}, Difference: ${getDateDiffInMinute(nowDay, timeFrom)} minutes`);
-      Logger.warn(`Min reservation date: ${reservationMinDate[space.spaceType]} days`);
       throw new BadRequestException(`Check the minimum reservation date. ${space.nameEn} can be reserved at least ${reservationMinDate[space.spaceType]} days in advance.`);
     }
     if (reservationMaxDate[space.spaceType] * (24 * 60) < getDateDiffInMinute(nowDay, timeFrom)) {
-      Logger.warn(`Reservation max date check failed for space ${space.nameEn}`);
-      Logger.warn(`Current time: ${JSON.stringify(getDateUnit(nowDay))}, Reservation time: ${JSON.stringify(getDateUnit(timeFrom))}, Difference: ${getDateDiffInMinute(nowDay, timeFrom)} minutes`);
-      Logger.warn(`Max reservation date: ${reservationMaxDate[space.spaceType]} days`);
       throw new BadRequestException(`Check the maximum reservation date. ${space.nameEn} can be reserved at most ${reservationMaxDate[space.spaceType]} days in advance.`);
     }
 
