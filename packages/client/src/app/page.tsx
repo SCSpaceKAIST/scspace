@@ -57,38 +57,25 @@ export default function SpacePage() {
 
   return (
     <Scroll>
-      {isLogined ? (
-        <VStack>
-          <Heading size={"2xl"}>
-            안녕하세요, 학생문화공간위원회 입니다.
-          </Heading>
-          <Heading size={"2xl"}>
-            Hello, this is the SCSpace.
-          </Heading>
-          <Separator width={"180px"} />
-          <Heading size={"lg"}>
-            아래 버튼을 클릭하여 서비스로 이동할 수 있습니다.
-          </Heading>
-          <Heading size={"lg"}>
-            You can click the button below to navigate to the services.
-          </Heading>
-          <Separator width={"180px"} />
-          <RedirectCard
-            links={links} width="32%"
-          />
-        </VStack>
-      ) : (
-        <Center height={"100%"}>
-          <VStack separator={<StackSeparator />}>
-            <Heading px={16}>
-              학생문화공간위원회의 서비스를 이용하려면 로그인이 필요합니다.
-            </Heading>
-            <Heading px={16}>
-              You need to log in to use the services of the SCSpace.
-            </Heading>
-          </VStack>
-        </Center>
-      )}
+      <VStack>
+        <Heading size={"2xl"}>
+          안녕하세요, 학생문화공간위원회 입니다.
+        </Heading>
+        <Heading size={"2xl"}>
+          Hello, this is the SCSpace.
+        </Heading>
+        <Separator width={"180px"} />
+        <Heading size={"lg"}>
+          아래 버튼을 클릭하여 서비스로 이동할 수 있습니다.
+        </Heading>
+        <Heading size={"lg"}>
+          You can click the button below to navigate to the services.
+        </Heading>
+        <Separator width={"180px"} />
+        <RedirectCard
+          links={links} width="32%"
+        />
+      </VStack>
     </Scroll>
   );
 };
