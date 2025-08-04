@@ -20,6 +20,7 @@ export interface IPage {
     eng: string;
     preview: React.ReactNode;
     href: string;
+    invisible?: boolean;
 }
 
 function Element({ p }: { p: IPage }) {
