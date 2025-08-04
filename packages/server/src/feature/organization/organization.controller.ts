@@ -21,7 +21,6 @@ export class OrganizationController {
     return await this.organizationPublicService.fetchAll();
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get('verified')
   async getVerifiedOrganizations(): Promise<IOrganizationDelegator[]> {
     return await this.organizationPublicService.fetchVerified();
