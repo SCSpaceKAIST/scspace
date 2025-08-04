@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>{{meta.header.kr}} / {{meta.header.en}}</title>
+  <style>
+    body {
+      font-family: 'Malgun Gothic', Arial, sans-serif;
+      background: #f4f4f4; margin: 0; padding: 0; color: #333;
+    }
+    .container {
+      max-width: 600px; margin: 0 auto; background: #fff;
+      border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    }
+    .header {
+      background: {{meta.color}};
+      color: #fff; text-align: center; padding: 30px 20px;
+      border-radius: 8px 8px 0 0;
+    }
+    .header h1 { margin: 0; font-size: 24px; }
+    .content { padding: 30px 20px; }
+    .footer {
+      background: #f8f9fa; border-top: 1px solid #e9ecef;
+      padding: 20px; text-align: center; font-size: 14px; color: #6c757d;
+      border-radius: 0 0 8px 8px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- ─── 헤더 ─── -->
+  <div class="header">
+    <h1>{{meta.emoji}} {{meta.header.kr}}</h1>
+    <h2 style="margin:8px 0 0 0; font-weight:400">{{meta.header.en}}</h2>
+    <p style="margin-top:18px">
+      {{meta.body.kr}}<br/>
+      {{meta.body.en}}
+    </p>
+  </div>
+
+  <!-- ─── 본문 ─── -->
+  <div class="content">
+    <p><strong>예약명 / Reservation Title:</strong> {{reservation.name}}</p>
+    <p><strong>예약자 / Reserved by:</strong> {{reservation.user.studentNumber}} {{reservation.user.nameKr}}</p>
+    <p><strong>소속 / Organization:</strong> {{reservation.organization.name}}</p>
+    <p><strong>공간 / Space:</strong> {{reservation.space.nameKr}}</p>
+    <p><strong>시작 시간 / Start Time:</strong> {{meta.timeFrom}}</p>
+    <p><strong>종료 시간 / End Time:</strong> {{meta.timeTo}}</p>
+  </div>
+
+  <!-- ─── 푸터 ─── -->
+  <div class="footer">
+    <p><strong>학생문화공간위원회 / Student Culture and Space Committee</strong></p>
+    <p>문의사항이 있으시면 언제든 연락해 주세요.<br/>
+      Please feel free to contact us if you have any questions.</p>
+  </div>
+</div>
+</body>
+</html>

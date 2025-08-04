@@ -85,3 +85,19 @@ export const OrgStatusMeta = {
         benefits: [],
     },
 } as const;
+
+
+export const ReservationMeta = {
+    ReservationCompleted : {
+        color : '#00ffff',
+        emoji: '📅',
+        header: {
+            kr: "예약 완료 안내",
+            en: "Reservation Confirmed"
+        },
+        body : {
+            kr : "귀하의 예약이 아래와 같이 정상적으로 처리되었습니다. ",
+            en : "Your reservation request has been processed successfully. Details are as follows. "
+        }
+    }
+} as const
