@@ -37,15 +37,13 @@ export default function OrganizationDialog({ open, setOpen, id, refetchList }: {
     refetchList: () => any;
 }) {
     const { organizationDetail, refetch: refetchDetail } = useOrganizationDetail({ id: id });
-    const { userInfo, needLogin, isManager, isAdmin } = useAuth();
+    const { userInfo, isManager, isAdmin } = useAuth();
     const [isDelegator, setIsDelegator] = useState<boolean>(false);
     const { getString } = useDate();
 
     useEffect(() => {
         setIsDelegator((userInfo?.id ?? -1) === (organizationDetail?.delegatorId ?? -2));
     }, [userInfo, organizationDetail]);
-
-    useEffect(() => { needLogin() }, []);
 
     const isWide = useBreakpointValue({ base: false, md: true });
 
