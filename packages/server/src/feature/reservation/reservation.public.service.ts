@@ -5,7 +5,7 @@ import { reservationMaxDate, reservationMaxDayTime, reservationMaxWeekTime, rese
 import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
 import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
 import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
-import { getDateDiff, getNow, timeRangeCheck } from '@scspace-server/common/utils';
+import { getDate, getDateDiff, getDateUnit, getNow, timeRangeCheck } from '@scspace-server/common/utils';
 import { IReservationContent, IReservationSimple } from '@scspace-depot/types/reservation';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -185,10 +185,13 @@ export class ReservationPublicService {
     }
     // check min / max time
     const nowDay = getNow();
-    if (reservationMinDate[space.spaceType] > ~~(this.getDifferenceInMinutes(nowDay, timeFrom) / (60 * 24))) {
+    if (reservationMinDate[space.spaceType] * (24 * 60) > this.getDifferenceInMinutes(nowDay, timeFrom)) {
+      Logger.warn(`Reservation min date check failed for space ${space.nameEn}`);
+      Logger.warn(`Current time: ${getDateUnit(nowDay)}, Reservation time: ${getDateUnit(timeFrom)}`);
+      Logger.warn(`Min reservation date: ${reservationMinDate[space.spaceType]} days`);
       throw new BadRequestException(`Check the minimum reservation date. ${space.nameEn} can be reserved at least ${reservationMinDate[space.spaceType]} days in advance.`);
     }
-    if (reservationMaxDate[space.spaceType] < ~~(this.getDifferenceInMinutes(nowDay, timeFrom) / (60 * 24))) {
+    if (reservationMaxDate[space.spaceType] * (24 * 60) < this.getDifferenceInMinutes(nowDay, timeFrom)) {
       throw new BadRequestException(`Check the maximum reservation date. ${space.nameEn} can be reserved at most ${reservationMaxDate[space.spaceType]} days in advance.`);
     }
 
