@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { IRedirect, useRedirectStore } from ".";
 import { useAuth } from "@scspace-client/Hooks/auth";
 
-export function resetRedirects() {
+export function useRedirects() {
     const { spaces } = useAllSpace();
     const [spaceLinks, setSpaceLinks] = useState<IRedirect[]>([]);
     const [calendarLinks, setCalendarLinks] = useState<IRedirect[]>([]);

@@ -5,7 +5,7 @@ import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { IRedirect, useRedirectStore } from "@scspace-client/Store/redirect";
-import { resetRedirects } from "@scspace-client/Store/redirect/reset";
+import { useRedirects } from "@scspace-client/Store/redirect/reset";
 
 function RedirectCard({ links, width }: {
   links: IRedirect[],
@@ -53,7 +53,7 @@ export default function SpacePage() {
   const { isLogined } = useAuth();
   const { links } = useRedirectStore();
 
-  resetRedirects();
+  useRedirects();
 
   return (
     <Scroll>
