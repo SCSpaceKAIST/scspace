@@ -90,7 +90,8 @@ export function useRedirects() {
                     {
                         href: "/reservation/application",
                         label: "신청",
-                        helperText: "Application"
+                        helperText: "Application",
+                        invisible: !isLogined,
                     },
                     {
                         href: "/reservation/status",
