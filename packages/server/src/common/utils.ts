@@ -97,10 +97,10 @@ export function getDate(time: number): Date {
   return new Date(year, month, day, hour, minute);
 }
 
-export function getDateDiff(timeBefore: number, timeAfter: number) {
+export function getDateDiffInMinute(timeBefore: number, timeAfter: number) {
   const dateBefore = getDate(timeBefore);
   const dateAfter = getDate(timeAfter);
-  return ~~(dateAfter.getTime() - dateBefore.getTime()) / (60 * 1000);
+  return dateAfter.getTime() - dateBefore.getTime();
 }
 
 export function getOrganizationStatusString(status: OrganizationStatusEnum): {

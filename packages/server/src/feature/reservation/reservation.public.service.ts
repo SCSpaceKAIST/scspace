@@ -5,7 +5,7 @@ import { reservationMaxDate, reservationMaxDayTime, reservationMaxWeekTime, rese
 import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
 import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
 import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
-import { getDate, getDateDiff, getDateUnit, getNow, timeRangeCheck } from '@scspace-server/common/utils';
+import { getDate, getDateDiffInMinute, getDateUnit, getNow, timeRangeCheck } from '@scspace-server/common/utils';
 import { IReservationContent, IReservationSimple } from '@scspace-depot/types/reservation';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -31,7 +31,7 @@ export class ReservationPublicService {
   }
 
   private getDifferenceInMinutes(timeFrom: number, timeTo: number): number {
-    return getDateDiff(timeFrom, timeTo);
+    return getDateDiffInMinute(timeFrom, timeTo);
   }
 
   async getDailyReservationTimeByOrganization(
@@ -187,7 +187,7 @@ export class ReservationPublicService {
     const nowDay = getNow();
     if (reservationMinDate[space.spaceType] * (24 * 60) > this.getDifferenceInMinutes(nowDay, timeFrom)) {
       Logger.warn(`Reservation min date check failed for space ${space.nameEn}`);
-      Logger.warn(`Current time: ${JSON.stringify(getDateUnit(nowDay))}, Reservation time: ${JSON.stringify(getDateUnit(timeFrom))}`);
+      Logger.warn(`Current time: ${JSON.stringify(getDateUnit(nowDay))}, Reservation time: ${JSON.stringify(getDateUnit(timeFrom))}, Difference: ${this.getDifferenceInMinutes(nowDay, timeFrom)} minutes`);
       Logger.warn(`Min reservation date: ${reservationMinDate[space.spaceType]} days`);
       throw new BadRequestException(`Check the minimum reservation date. ${space.nameEn} can be reserved at least ${reservationMinDate[space.spaceType]} days in advance.`);
     }

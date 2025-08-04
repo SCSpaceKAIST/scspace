@@ -4,7 +4,6 @@ import { Card, Center, Heading, HStack, Separator, StackSeparator, useBreakpoint
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { IRedirect, useRedirectStore } from "@scspace-client/Store/redirect";
-import { useRedirects } from "@scspace-client/Store/redirect/reset";
 
 function RedirectCard({ links }: {
   links: IRedirect[],
@@ -45,8 +44,6 @@ function RedirectCard({ links }: {
 export default function SpacePage() {
   const { links } = useRedirectStore();
   const isWide = useBreakpointValue({ base: false, md: true });
-
-  useRedirects();
 
   return (
     <Scroll>
