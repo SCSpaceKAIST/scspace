@@ -1,4 +1,4 @@
-import { Box, Center } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import React from "react";
 
 export default function Scroll({
@@ -7,7 +7,7 @@ export default function Scroll({
     children: React.ReactNode
 }) {
     return (
-        <Center
+        <Box
             id="scroll"
             overflowY="auto"
             scrollbar="hidden"
@@ -17,7 +17,7 @@ export default function Scroll({
             maxH="100%"
         >
             {children}
-        </Center>
+        </Box>
     );
 }
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, Heading, HStack, Separator, StackSeparator, useBreakpointValue, VStack, Wrap } from "@chakra-ui/react";
+import { Card, Center, Heading, HStack, Separator, StackSeparator, useBreakpointValue, VStack, Wrap } from "@chakra-ui/react";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { IRedirect, useRedirectStore } from "@scspace-client/Store/redirect";
@@ -50,19 +50,21 @@ export default function SpacePage() {
 
   return (
     <Scroll>
-      <VStack minH={"100%"} width={isWide ? "50%" : "100%"} align="center" justify="center"
-        separator={<StackSeparator />}
-      >
-        <HStack separator={<StackSeparator />}>
-          <Heading size={"2xl"}>
-            학생문화공간위원회
-          </Heading>
-          <Heading size={"2xl"}>
-            SCSpace
-          </Heading>
-        </HStack>
-        <RedirectCard links={links} />
-      </VStack>
+      <Center minH={"100%"}>
+        <VStack width={isWide ? "50%" : "100%"} align="center" justify="center"
+          separator={<StackSeparator />}
+        >
+          <HStack separator={<StackSeparator />}>
+            <Heading>
+              학생문화공간위원회
+            </Heading>
+            <Heading>
+              SCSpace
+            </Heading>
+          </HStack>
+          <RedirectCard links={links} />
+        </VStack>
+      </Center>
     </Scroll >
   );
 };
