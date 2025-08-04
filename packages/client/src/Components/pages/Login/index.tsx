@@ -15,9 +15,8 @@ export default function SSOLogin() {
     const [read, setRead] = useState<boolean>(false);
 
     return (
-        <Dialog.Root size="full" scrollBehavior="inside">
+        <Dialog.Root size={"full"} scrollBehavior="inside">
             <Portal>
-                <Dialog.Backdrop />
                 <Tabs.Root defaultValue="Eng">
                     <Dialog.Positioner>
                         <PrivacyPolicy onRead={() => setRead(true)} />

@@ -7,7 +7,7 @@ export default function PrivacyPolicy({ onRead }: { onRead: () => void }) {
     const isWide = useBreakpointValue({ base: false, md: true });
 
     return (
-        <Dialog.Content minH="100svh">
+        <Dialog.Content minH="full">
             <Dialog.Header gap={4}>
                 <Tabs.List width="100%">
                     <Tabs.Trigger value="Eng">
@@ -47,7 +47,7 @@ export default function PrivacyPolicy({ onRead }: { onRead: () => void }) {
                     </Tabs.Content>
                 </Dialog.Title>
             </Dialog.Footer>
-            <Dialog.CloseTrigger>
+            <Dialog.CloseTrigger asChild>
                 <CloseButton />
             </Dialog.CloseTrigger>
         </Dialog.Content>
