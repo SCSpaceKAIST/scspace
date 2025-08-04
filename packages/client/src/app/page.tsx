@@ -57,7 +57,7 @@ export default function SpacePage() {
 
   return (
     <Scroll>
-      {!isLogined ? (
+      {isLogined ? (
         <VStack>
           <Heading size={"2xl"}>
             안녕하세요, 학생문화공간위원회 입니다.
@@ -78,7 +78,7 @@ export default function SpacePage() {
           />
         </VStack>
       ) : (
-        <Center h="100vh">
+        <Center height={"100%"}>
           <VStack separator={<StackSeparator />}>
             <Heading px={16}>
               학생문화공간위원회의 서비스를 이용하려면 로그인이 필요합니다.
