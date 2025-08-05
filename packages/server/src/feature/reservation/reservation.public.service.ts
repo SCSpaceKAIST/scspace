@@ -1,7 +1,7 @@
 import { Logger, Injectable, BadRequestException } from '@nestjs/common';
 import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
 import { ReservationRepository } from './reservation.repository';
-import { reservationMaxDate, reservationMaxDayTime, reservationMaxWeekTime, reservationMinDate } from '@scspace-depot/consts/reservation.const';
+import { reservationMaxDate, reservationMaxDayTime, reservationMaxWeekTime, reservationMinDate, reservationTimeWeightOrg } from '@scspace-depot/consts/reservation.const';
 import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
 import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
 import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
@@ -30,10 +30,6 @@ export class ReservationPublicService {
     return MReservationSimple.fromDB(reservation[0]);
   }
 
-  private getDifferenceInMinutes(timeFrom: number, timeTo: number): number {
-    return getDateDiffInMinute(timeFrom, timeTo);
-  }
-
   async getDailyReservationTimeByOrganization(
     organizationId: number,
     spaceId: number,
@@ -59,7 +55,7 @@ export class ReservationPublicService {
     const totalReservedTime = todayReservations.reduce((acc, reservation) => {
       return (
         acc +
-        this.getDifferenceInMinutes(
+        getDateDiffInMinute(
           reservation.timeFrom,
           reservation.timeTo,
         )
@@ -90,7 +86,7 @@ export class ReservationPublicService {
     const totalReservedTime = weeklyReservations.reduce((acc, reservation) => {
       return (
         acc +
-        this.getDifferenceInMinutes(
+        getDateDiffInMinute(
           reservation.timeFrom,
           reservation.timeTo,
         )
@@ -126,7 +122,7 @@ export class ReservationPublicService {
     const totalReservedTime = todayReservations.reduce((acc, reservation) => {
       return (
         acc +
-        this.getDifferenceInMinutes(
+        getDateDiffInMinute(
           reservation.timeFrom,
           reservation.timeTo,
         )
@@ -157,7 +153,7 @@ export class ReservationPublicService {
     const totalReservedTime = weeklyReservations.reduce((acc, reservation) => {
       return (
         acc +
-        this.getDifferenceInMinutes(
+        getDateDiffInMinute(
           reservation.timeFrom,
           reservation.timeTo,
         )
@@ -195,6 +191,7 @@ export class ReservationPublicService {
     const newReservationTime = getDateDiffInMinute(timeFrom, timeTo);
     const maxDayTime = reservationMaxDayTime[space.spaceType];
     const maxWeekTime = reservationMaxWeekTime[space.spaceType];
+    const orgWeight = reservationTimeWeightOrg[space.spaceType];
 
     // Check if the new reservation itself exceeds daily limit
     if (newReservationTime > maxDayTime) {
@@ -218,8 +215,8 @@ export class ReservationPublicService {
       daily = await this.getDailyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
       weekly = await this.getWeeklyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
       isWithinLimits =
-        daily + newReservationTime <= maxDayTime &&
-        weekly + newReservationTime <= maxWeekTime;
+        daily + newReservationTime <= maxDayTime * orgWeight &&
+        weekly + newReservationTime <= maxWeekTime * orgWeight;
     }
 
     if (!isWithinLimits) {

@@ -3,13 +3,13 @@ import { SpaceTypeEnum } from "../enums/space.enum";
 export const reservationMaxDayTime: { [key in SpaceTypeEnum]: number } = {
   [SpaceTypeEnum.INDIVIDUAL]: 120, // 개인연습실, 하루 최대 2시간
   [SpaceTypeEnum.PIANO]: 120, // 피아노실, 하루 최대 2시간
-  [SpaceTypeEnum.SEMINAR]: 180, // 세미나실 1주일 최대 6시간 (세미나1실/세미나2실 합계), 하루 최대 6시간으로 계산
+  [SpaceTypeEnum.SEMINAR]: 180, // 세미나실 1주일 최대 6시간 (세미나1실/세미나2실 합계), 하루 최대 3시간으로 계산
   [SpaceTypeEnum.DANCE]: 120, // 무예실, 하루 최대 2시간
   [SpaceTypeEnum.GROUP]: 120, // 합주실, 하루 최대 2시간
-  [SpaceTypeEnum.MIRAE]: 1440, // 미래홀, 제한 없음 (하루 24시간 가능)
-  [SpaceTypeEnum.SUMI]: 1440, // 조수미홀, 제한 없음 (하루 24시간 가능)
-  [SpaceTypeEnum.OPEN]: 1440, // 오픈스페이스, 제한 없음 (하루 24시간 가능)
-  [SpaceTypeEnum.WORK]: 360, // 창작공방, 하루 최대 6시간
+  [SpaceTypeEnum.MIRAE]: 240, // 미래홀, 하루 최대 4시간
+  [SpaceTypeEnum.SUMI]: 240, // 조수미홀, 하루 최대 4시간
+  [SpaceTypeEnum.OPEN]: 240, // 오픈스페이스, 하루 최대 4시간
+  [SpaceTypeEnum.WORK]: 240, // 창작공방, 하루 최대 4시간
 };
 
 export const reservationMaxWeekTime: { [key in SpaceTypeEnum]: number } = {
@@ -18,11 +18,23 @@ export const reservationMaxWeekTime: { [key in SpaceTypeEnum]: number } = {
   [SpaceTypeEnum.SEMINAR]: 180 * 2, // 세미나실 1주일 최대 6시간 (세미나1실/세미나2실 합계)
   [SpaceTypeEnum.DANCE]: 120 * 7, // 무예실, 하루 최대 2시간
   [SpaceTypeEnum.GROUP]: 120 * 7, // 합주실, 하루 최대 2시간
-  [SpaceTypeEnum.MIRAE]: 1440 * 2, // 미래홀, 최대 48시간
-  [SpaceTypeEnum.SUMI]: 1440 * 2, // 조수미홀, 최대 48시간
-  [SpaceTypeEnum.OPEN]: 1440 * 7, // 오픈스페이스, 제한 없음
-  [SpaceTypeEnum.WORK]: 360 * 7, // 창작공방, 하루 최대 6시간
+  [SpaceTypeEnum.MIRAE]: 240 * 2, // 미래홀, 최대 8시간
+  [SpaceTypeEnum.SUMI]: 240 * 2, // 조수미홀, 최대 8시간
+  [SpaceTypeEnum.OPEN]: 240 * 7, // 오픈스페이스, 최대 28시간
+  [SpaceTypeEnum.WORK]: 240 * 7, // 창작공방, 최대 28시간
 };
+
+export const reservationTimeWeightOrg: { [key in SpaceTypeEnum]: number } = {
+  [SpaceTypeEnum.INDIVIDUAL]: 1, // 개인과 동일
+  [SpaceTypeEnum.PIANO]: 1, // 개인과 동일
+  [SpaceTypeEnum.SEMINAR]: 1, // 개인과 동일
+  [SpaceTypeEnum.DANCE]: 2, // 개인의 2배 (4시간)
+  [SpaceTypeEnum.GROUP]: 2, // 개인의 2배 (4시간)
+  [SpaceTypeEnum.MIRAE]: 6, // 개인의 6배 (24시간)
+  [SpaceTypeEnum.SUMI]: 6, // 개인의 6배 (24시간)
+  [SpaceTypeEnum.OPEN]: 6, // 개인의 6배 (24시간)
+  [SpaceTypeEnum.WORK]: 2, // 개인의 2배 (8시간)
+}
 
 export const reservationMinDate: { [key in SpaceTypeEnum]: number } = {
   [SpaceTypeEnum.INDIVIDUAL]: 1, // 개인연습실, 1일 전부터 예약 가능
