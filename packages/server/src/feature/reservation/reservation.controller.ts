@@ -20,10 +20,10 @@ import {
   IReservationAll,
   IReservationCreateMultiple,
   IReservationMultipleCreateResurt
-} from '@scspace-depot/src/types/reservation';
-import { IDataResponse, ISuccessResponse } from '@scspace-depot/src/types/common';
+} from '@scspace-depot/types/reservation';
+import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
 import { AdminGuard, ManagerGuard, MemberGuard, MemberGuardWithRervation, UserGuard } from '../auth/jwt/jwt.guard';
-import { IUser } from '@scspace-depot/src/types/user';
+import { IUser } from '@scspace-depot/types/user';
 import { SpacePublicService } from '../space/space.public.service';
 
 @Controller('reservation')
