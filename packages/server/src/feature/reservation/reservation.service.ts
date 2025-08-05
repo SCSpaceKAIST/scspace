@@ -17,7 +17,7 @@ import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
 import { ReservationPublicService } from './reservation.public.service';
 import { IUser } from '@scspace-depot/types/user';
 import { ISpace } from '@scspace-depot/types/space';
-import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
+// import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 import { OrganizationPublicService } from '../organization/organization.public.service';
 import { MReservation } from './reservation.model';
 import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
@@ -25,6 +25,8 @@ import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { getNow } from '@scspace-server/common/utils';
 import { MailService} from '@scspace-server/tools/mailer/mail.service';
 import { ReservationMeta } from '@scspace-depot/enums/mail.enum';
+import moment from 'moment'
+
 
 @Injectable()
 export class ReservationService {
@@ -151,24 +153,24 @@ export class ReservationService {
       count
     };
   }
-
-  private getDefaultStatus(spaceType: SpaceTypeEnum): ReservationStateEnum {
-    switch (spaceType) {
-      // 기본적으로 GRANT 상태로 예약
-      case SpaceTypeEnum.INDIVIDUAL:
-      case SpaceTypeEnum.PIANO:
-      case SpaceTypeEnum.SEMINAR:
-      case SpaceTypeEnum.DANCE:
-      case SpaceTypeEnum.GROUP:
-      case SpaceTypeEnum.OPEN:
-      case SpaceTypeEnum.WORK:
-        return ReservationStateEnum.GRANT;
-      // WAIT 상태로 예약
-      case SpaceTypeEnum.MIRAE:
-      case SpaceTypeEnum.SUMI:
-        return ReservationStateEnum.WAIT;
-    }
-  }
+  // 사용안함
+  // private getDefaultStatus(spaceType: SpaceTypeEnum): ReservationStateEnum {
+  //   switch (spaceType) {
+  //     // 기본적으로 GRANT 상태로 예약
+  //     case SpaceTypeEnum.INDIVIDUAL:
+  //     case SpaceTypeEnum.PIANO:
+  //     case SpaceTypeEnum.SEMINAR:
+  //     case SpaceTypeEnum.DANCE:
+  //     case SpaceTypeEnum.GROUP:
+  //     case SpaceTypeEnum.OPEN:
+  //     case SpaceTypeEnum.WORK:
+  //       return ReservationStateEnum.GRANT;
+  //     // WAIT 상태로 예약
+  //     case SpaceTypeEnum.MIRAE:
+  //     case SpaceTypeEnum.SUMI:
+  //       return ReservationStateEnum.WAIT;
+  //   }
+  // }
 
   async postReservation(
     reservationInput: IReservationCreate,
@@ -195,8 +197,14 @@ export class ReservationService {
 
     const [reservation, reservationContent] = await this.reservationRepository.insert(reservationInput);
 
-    const timeFrom =  new Date(reservation.timeFrom).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
-    const timeTo =  new Date(reservation.timeTo).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
+    // const timeFrom = new Date(reservation.timeFrom).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
+    // const timeTo = new Date(reservation.timeTo).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
+    // 1970. 1. 14. 오전 8:07:56 fuck
+
+    const timeFrom = moment(reservation.timeFrom).format('YYYY-MM-DD HH:mm:ss')
+    const timeTo = moment(reservation.timeTo).format('YYYY-MM-DD HH:mm:ss')
+
+    console.log("timeFrom : ", timeFrom)
     const meta = { ...ReservationMeta.ReservationCompleted,timeFrom, timeTo }
 
     // organizations의 모든 멤버 가져오기
@@ -208,6 +216,7 @@ export class ReservationService {
       to: organization.id === 1 ? user.email : memberEmails,
       subject: `[SCSpace] Reservation Completed - ${reservation.title}`,
       template: "reservationPosted",
+      // bcc: "scspace.kaist@gmail.com" << WHY
       context: {
         reservation: {
           ...reservation,
