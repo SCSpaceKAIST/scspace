@@ -25,6 +25,8 @@ import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { getNow } from '@scspace-server/common/utils';
 import { MailService} from '@scspace-server/tools/mailer/mail.service';
 import { ReservationMeta } from '@scspace-depot/enums/mail.enum';
+import moment from 'moment'
+
 
 @Injectable()
 export class ReservationService {
@@ -195,8 +197,14 @@ export class ReservationService {
 
     const [reservation, reservationContent] = await this.reservationRepository.insert(reservationInput);
 
-    const timeFrom =  new Date(reservation.timeFrom).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
-    const timeTo =  new Date(reservation.timeTo).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
+    // const timeFrom = new Date(reservation.timeFrom).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
+    // const timeTo = new Date(reservation.timeTo).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
+    // 1970. 1. 14. 오전 8:07:56 fuck
+
+    const timeFrom = moment(reservation.timeFrom).format('YYYY-MM-DD HH:mm:ss')
+    const timeTo = moment(reservation.timeTo).format('YYYY-MM-DD HH:mm:ss')
+
+    console.log("timeFrom : ", timeFrom)
     const meta = { ...ReservationMeta.ReservationCompleted,timeFrom, timeTo }
 
     // organizations의 모든 멤버 가져오기
@@ -208,6 +216,7 @@ export class ReservationService {
       to: organization.id === 1 ? user.email : memberEmails,
       subject: `[SCSpace] Reservation Completed - ${reservation.title}`,
       template: "reservationPosted",
+      // bcc: "scspace.kaist@gmail.com" << WHY
       context: {
         reservation: {
           ...reservation,
