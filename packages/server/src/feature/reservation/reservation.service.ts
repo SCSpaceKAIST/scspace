@@ -85,7 +85,7 @@ export class ReservationService {
     limit: number,
     offset: number,
   ): Promise<IDataResponse<IReservationAll[]>> {
-    var { data: reservations, count } = await this.reservationRepository.fetchByUserId(userId, organizationId, limit, offset);
+    let { data: reservations, count } = await this.reservationRepository.fetchByUserId(userId, organizationId, limit, offset);
 
     const userIds = reservations.map((r) => r.userId);
     const organizationIds = reservations.map((r) => r.organizationId);
