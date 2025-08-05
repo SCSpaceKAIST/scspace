@@ -28,7 +28,7 @@ export class OrganizationPublicService {
     return {
       ...organization,
       delegator,
-      members: memberDetails,
+      members: memberDetails
     };
   }
 

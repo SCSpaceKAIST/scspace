@@ -10,7 +10,7 @@ import {
 import { IOrganization } from '@scspace-depot/types/organization';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ReservationRepository } from './reservation.repository';
-import { checkContainAllId, takeAll, timeRangeCheck } from '@scspace-server/common/utils';
+import { checkContainAllId, takeAll } from '@scspace-server/common/utils';
 import { UserPublicService } from '../user/user.public.service';
 import { SpacePublicService } from '../space/space.public.service';
 import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
@@ -23,6 +23,8 @@ import { MReservation } from './reservation.model';
 import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { getNow } from '@scspace-server/common/utils';
+import { MailService} from '@scspace-server/tools/mailer/mail.service';
+import { ReservationMeta } from '@scspace-depot/enums/mail.enum';
 
 @Injectable()
 export class ReservationService {
@@ -32,6 +34,7 @@ export class ReservationService {
     private readonly spacePublicService: SpacePublicService,
     private readonly userPublicService: UserPublicService,
     private readonly organizationPublicService: OrganizationPublicService,
+    private readonly mailService: MailService,
   ) { }
 
   async getReservationBySpaceIDBetweenTime(
@@ -167,21 +170,20 @@ export class ReservationService {
     }
   }
 
-
   async postReservation(
     reservationInput: IReservationCreate,
   ): Promise<IReservation> {
 
     await this.reservationPublicService.checkWholeTime(reservationInput.userId, reservationInput.organizationId, reservationInput.spaceId, reservationInput.timeFrom, reservationInput.timeTo);
 
-    const [user, organizations, space] = await Promise.all([
+    const [user, organization, space] = await Promise.all([
       this.userPublicService.fetchById(reservationInput.userId),
       this.organizationPublicService.fetchById(reservationInput.organizationId),
       this.spacePublicService.fetchById(reservationInput.spaceId),
     ]);
 
     if (!user) throw new BadRequestException('User not found');
-    if (!organizations) throw new BadRequestException('Organization not found');
+    if (!organization) throw new BadRequestException('Organization not found');
     if (!space) throw new BadRequestException('Space not found');
 
     if (user.type !== UserTypeEnum.MANAGER && user.type !== UserTypeEnum.ADMIN) {
@@ -192,6 +194,30 @@ export class ReservationService {
     }
 
     const [reservation, reservationContent] = await this.reservationRepository.insert(reservationInput);
+
+    const timeFrom =  new Date(reservation.timeFrom).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
+    const timeTo =  new Date(reservation.timeTo).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
+    const meta = { ...ReservationMeta.ReservationCompleted,timeFrom, timeTo }
+
+    // organizations의 모든 멤버 가져오기
+    const organizationWithMembers = await this.organizationPublicService.fetchDeepById(organization.id);
+    const memberEmails = organizationWithMembers.members.map(member => member.user.email);
+
+
+    await this.mailService.sendMail({
+      to: organization.id === 1 ? user.email : memberEmails,
+      subject: `[SCSpace] Reservation Completed - ${reservation.title}`,
+      template: "reservationPosted",
+      context: {
+        reservation: {
+          ...reservation,
+          user,
+          space,
+          organization
+        },
+        meta
+        }
+      })
 
     return MReservation.fromDB(
       reservation,

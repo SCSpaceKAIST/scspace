@@ -7,9 +7,10 @@ import { SpaceModule } from 'src/feature/space/space.module';
 import { UserModule } from 'src/feature/user/user.module';
 import { ReservationPublicService } from './reservation.public.service';
 import { OrganizationModule } from 'src/feature/organization/organization.module';
+import { MailModule } from 'src/tools/mailer/mail.module';
 
 @Module({
-  imports: [DBModule, SpaceModule, UserModule, OrganizationModule],
+  imports: [DBModule, SpaceModule, UserModule, OrganizationModule, MailModule],
   controllers: [ReservationController],
   providers: [
     ReservationRepository,
