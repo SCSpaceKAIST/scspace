@@ -89,7 +89,7 @@ export const OrgStatusMeta = {
 
 export const ReservationMeta = {
     ReservationCompleted : {
-        color : '#22ff00',
+        color : '#4CAF50',
         emoji: '📅',
         header: {
             kr: "예약 완료 안내",

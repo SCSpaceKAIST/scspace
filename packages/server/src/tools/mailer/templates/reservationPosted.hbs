@@ -43,7 +43,7 @@
     <p><strong>예약명 / Reservation Title:</strong> {{reservation.title}}</p>
     <p><strong>예약자 / Reserved by:</strong> {{reservation.user.studentNumber}} {{reservation.user.nameKr}}</p>
     <p><strong>소속 / Organization:</strong> {{reservation.organization.name}}</p>
-    <p><strong>공간 / Space:</strong> {{reservation.space.nameKr}}</p>
+    <p><strong>공간 / Space:</strong> {{reservation.space.nameKr}} / {{reservation.space.nameEn}}</p>
     <p><strong>시작 시간 / Start Time:</strong> {{meta.timeFrom}}</p>
     <p><strong>종료 시간 / End Time:</strong> {{meta.timeTo}}</p>
   </div>
@@ -51,8 +51,8 @@
   <!-- ─── 푸터 ─── -->
   <div class="footer">
     <p><strong>학생문화공간위원회 / Student Culture and Space Committee</strong></p>
-    <p>문의사항이 있으시면 언제든 연락해 주세요.<br/>
-      Please feel free to contact us if you have any questions.</p>
+    <p>{{meta.templateFooter}}<br/>
+      {{meta.templateFooterEn}}</p>
   </div>
 </div>
 </body>

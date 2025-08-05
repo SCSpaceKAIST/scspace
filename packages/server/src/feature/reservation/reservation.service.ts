@@ -204,8 +204,11 @@ export class ReservationService {
     const timeFrom = moment(reservation.timeFrom).format('YYYY-MM-DD HH:mm:ss')
     const timeTo = moment(reservation.timeTo).format('YYYY-MM-DD HH:mm:ss')
 
-    console.log("timeFrom : ", timeFrom)
-    const meta = { ...ReservationMeta.ReservationCompleted,timeFrom, timeTo }
+    console.log("timeFrom : ", reservation.timeFrom)
+
+    const templateFooter:string = organization.id === 1 ? "문의사항이 있으시면 언제든 연락해 주세요." : "이 메일은 예약자 본인 및 조직에 등록된 모든 구성원에게 발송되었습니다."
+    const templateFooterEn : string = organization.id === 1 ? "Please feel free to contact us if you have any questions." : "This email has been sent to the reservation holder and all members registered with the organization."
+    const meta = { ...ReservationMeta.ReservationCompleted,timeFrom, timeTo , templateFooter, templateFooterEn }
 
     // organizations의 모든 멤버 가져오기
     const organizationWithMembers = await this.organizationPublicService.fetchDeepById(organization.id);

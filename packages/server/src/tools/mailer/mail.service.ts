@@ -18,8 +18,8 @@ export class MailService {
             subject,
             template, // 템플릿 파일명 (확장자 제외)
             context, // 템플릿에 전달할 데이터
-            replyTo: "no-reply.scspace@kaist.ac.kr"
-        }).then((res) => {
+            replyTo: "no-reply.scspace@kaist.ac.kr" //그냥 scspace@kaist.ac.kr이나 scspacekaist@gmail.com으로 하면 되는거 아님? (진짜모름)
+        }).then(() => {
             return { success: true };
         }
         ).catch((error) => {
