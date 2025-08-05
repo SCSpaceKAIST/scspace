@@ -97,7 +97,12 @@ export const ReservationMeta = {
         },
         body : {
             kr : "귀하의 예약이 아래와 같이 정상적으로 처리되었습니다. ",
-            en : "Your reservation request has been processed successfully. Details are as follows. "
+            en : "Your reservation request has been processed successfully. "
+        },
+        contentUpperDesc: {
+            kr : "신규 예약",
+            en : "New Reservation"
         }
+
     }
 } as const

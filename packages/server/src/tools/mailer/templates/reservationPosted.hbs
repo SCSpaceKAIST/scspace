@@ -19,6 +19,8 @@
     }
     .header h1 { margin: 0; font-size: 24px; }
     .content { padding: 30px 20px; }
+    .informations{margin:20px 0;background:#f8f9fa;padding:20px;border-radius:6px;}
+    .informations li{margin:6px 0;}
     .footer {
       background: #f8f9fa; border-top: 1px solid #e9ecef;
       padding: 20px; text-align: center; font-size: 14px; color: #6c757d;
@@ -40,12 +42,22 @@
 
   <!-- ─── 본문 ─── -->
   <div class="content">
-    <p><strong>예약명 / Reservation Title:</strong> {{reservation.title}}</p>
-    <p><strong>예약자 / Reserved by:</strong> {{reservation.user.studentNumber}} {{reservation.user.nameKr}}</p>
-    <p><strong>소속 / Organization:</strong> {{reservation.organization.name}}</p>
-    <p><strong>공간 / Space:</strong> {{reservation.space.nameKr}} / {{reservation.space.nameEn}}</p>
-    <p><strong>시작 시간 / Start Time:</strong> {{meta.timeFrom}}</p>
-    <p><strong>종료 시간 / End Time:</strong> {{meta.timeTo}}</p>
+    <p>
+      <strong>{{reservation.title}}</strong> —
+      {{meta.contentUpperDesc.kr}} / {{organization.contentUpperDesc.en}}
+    </p>
+
+    <div class="informations">
+        <strong>⏰ 상세 정보 / Informations</strong>
+        <ul>
+          <li><strong>예약명 / Reservation Title:</strong> {{reservation.title}}</li>
+          <li><strong>예약자 / Reserved by:</strong> {{reservation.user.studentNumber}} {{reservation.user.nameKr}}</li>
+          <li><strong>소속 / Organization:</strong> {{reservation.organization.name}}</li>
+          <li><strong>공간 / Space:</strong> {{reservation.space.nameKr}} / {{reservation.space.nameEn}}</li>
+          <li><strong>시작 시간 / Start Time:</strong> {{meta.timeFrom}}</li>
+          <li><strong>종료 시간 / End Time:</strong> {{meta.timeTo}}</li>
+        </ul>
+      </div>
   </div>
 
   <!-- ─── 푸터 ─── -->

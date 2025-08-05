@@ -64,9 +64,7 @@ export function getNow() {
   const month = date.getMonth() + 12 * year;
   const day = date.getDate() + 32 * month;
   const hour = date.getHours() + day * 24;
-  const minute = date.getMinutes() + hour * 60;
-
-  return minute;
+  return date.getMinutes() + hour * 60;
 }
 
 export function getTime(date: Date) {
@@ -74,9 +72,7 @@ export function getTime(date: Date) {
   const month = date.getMonth() + 12 * year;
   const day = date.getDate() + 32 * month;
   const hour = date.getHours() + day * 24;
-  const minute = date.getMinutes() + hour * 60;
-
-  return minute;
+  return date.getMinutes() + hour * 60;
 }
 
 export function getDateUnit(time: number) {
@@ -97,6 +93,17 @@ export function getDate(time: number): Date {
   return new Date(year, month, day, hour, minute);
 }
 
+export function getDateString(time: number) {
+  const { year, month, day } = getDateUnit(time);
+  return `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+}
+
+export function getString(time: number) {
+  const dateString = getDateString(time);
+  const { hour, minute } = getDateUnit(time);
+  return `${dateString} ${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+}
+
 export function getDateDiffInMinute(timeBefore: number, timeAfter: number) {
   const dateBefore = getDate(timeBefore);
   const dateAfter = getDate(timeAfter);
@@ -110,28 +117,28 @@ export function getOrganizationStatusString(status: OrganizationStatusEnum): {
   switch (status) {
     case OrganizationStatusEnum.REJECTED:
       return {
-        kr: "반려",
-        en: "Rejected"
-      }
+        kr: '반려',
+        en: 'Rejected',
+      };
     case OrganizationStatusEnum.REGISTER_REQUEST:
       return {
-        kr: "등록 대기",
-        en: "Registration Pending"
-      }
+        kr: '등록 대기',
+        en: 'Registration Pending',
+      };
     case OrganizationStatusEnum.REGISTERED:
       return {
-        kr: "등록",
-        en: "Registered"
-      }
+        kr: '등록',
+        en: 'Registered',
+      };
     case OrganizationStatusEnum.VERIFY_REQUEST:
       return {
-        kr: "인증 대기",
-        en: "Verification Pending"
-      }
+        kr: '인증 대기',
+        en: 'Verification Pending',
+      };
     case OrganizationStatusEnum.VERIFIED:
       return {
-        kr: "인증",
-        en: "Verified"
-      }
+        kr: '인증',
+        en: 'Verified',
+      };
   }
 }

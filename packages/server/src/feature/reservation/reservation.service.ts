@@ -25,8 +25,7 @@ import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { getNow } from '@scspace-server/common/utils';
 import { MailService} from '@scspace-server/tools/mailer/mail.service';
 import { ReservationMeta } from '@scspace-depot/enums/mail.enum';
-import moment from 'moment'
-
+import { getString } from '@scspace-server/common/utils'
 
 @Injectable()
 export class ReservationService {
@@ -201,23 +200,21 @@ export class ReservationService {
     // const timeTo = new Date(reservation.timeTo).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
     // 1970. 1. 14. 오전 8:07:56 fuck
 
-    const timeFrom = moment(reservation.timeFrom).format('YYYY-MM-DD HH:mm:ss')
-    const timeTo = moment(reservation.timeTo).format('YYYY-MM-DD HH:mm:ss')
+    const timeFrom = getString(reservation.timeFrom)
+    const timeTo = getString(reservation.timeTo)
 
-    console.log("timeFrom : ", reservation.timeFrom)
-
+    //조직의 경우 모든 구성원에게 발송함 Notif
     const templateFooter:string = organization.id === 1 ? "문의사항이 있으시면 언제든 연락해 주세요." : "이 메일은 예약자 본인 및 조직에 등록된 모든 구성원에게 발송되었습니다."
     const templateFooterEn : string = organization.id === 1 ? "Please feel free to contact us if you have any questions." : "This email has been sent to the reservation holder and all members registered with the organization."
     const meta = { ...ReservationMeta.ReservationCompleted,timeFrom, timeTo , templateFooter, templateFooterEn }
 
-    // organizations의 모든 멤버 가져오기
-    const organizationWithMembers = await this.organizationPublicService.fetchDeepById(organization.id);
-    const memberEmails = organizationWithMembers.members.map(member => member.user.email);
+    // organizations의 모든 멤버 가져오기 when org.id !== 1 >> 성능 개선
+    const organizationWithMembers = organization.id !== 1 ? await this.organizationPublicService.fetchDeepById(organization.id) : undefined
 
 
     await this.mailService.sendMail({
-      to: organization.id === 1 ? user.email : memberEmails,
-      subject: `[SCSpace] Reservation Completed - ${reservation.title}`,
+      to: organization.id === 1 ? user.email : organizationWithMembers.members.map(member => member.user.email),
+      subject: `[SCSpace] Reservation Confirmed - ${reservation.title}`,
       template: "reservationPosted",
       // bcc: "scspace.kaist@gmail.com" << WHY
       context: {
