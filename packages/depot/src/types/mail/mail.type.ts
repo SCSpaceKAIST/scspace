@@ -10,6 +10,7 @@ export interface IMail {
     to: string | string[];
     cc?: string | string[];
     bcc?: string | string[];
+    replyTo?: string;
     context: {
         user?: Partial<IUser>;
         organization?: Partial<IMailOrganization>;

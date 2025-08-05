@@ -215,7 +215,9 @@ export class ReservationService {
     await this.mailService.sendMail({
       to: organization.id === 1 ? user.email : organizationWithMembers.members.map(member => member.user.email),
       subject: `[SCSpace] Reservation Confirmed - ${reservation.title}`,
+      bcc: 'scspace.kaist@gmail.com',
       template: "reservationPosted",
+      replyTo: "scspace@kaist.ac.kr",
       // bcc: "scspace.kaist@gmail.com" << WHY
       context: {
         reservation: {
