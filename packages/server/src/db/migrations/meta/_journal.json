@@ -29,6 +29,20 @@
       "when": 1754298053160,
       "tag": "0003_fluffy_leopardon",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1754485248012,
+      "tag": "0004_charming_dagger",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1754485731462,
+      "tag": "0005_dear_leader",
+      "breakpoints": true
     }
   ]
 }

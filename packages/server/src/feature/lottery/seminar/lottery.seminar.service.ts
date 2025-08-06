@@ -114,7 +114,7 @@ export class LotterySeminarService {
         const pastLotteries = await this.lotterySeminarRepository.fetch({
             organizationId: params.lottery.organizationId,
             spaceId: params.lottery.spaceId,
-            seminarInfoId: params.lottery.seminarInfoId
+            infoId: params.lottery.infoId
         });
         if (pastLotteries.length >= 6) {
             throw new Error("Maximum number of seminar lotteries is 6. Cannot create more.");

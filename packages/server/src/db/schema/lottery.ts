@@ -2,7 +2,7 @@ import { mysqlTable, int, bigint } from 'drizzle-orm/mysql-core';
 import { Organization } from './organization';
 import { Space } from './space';
 
-export const SeminarLotteryInfo = mysqlTable('seminar_lottery_info', {
+export const SeminarLotteryInfo = mysqlTable('s_lottery_info', {
   id: int('id').primaryKey().autoincrement().unique(),
   timeLotteryStart: bigint('time_lottery_start', { mode: 'number' }).notNull(),
   timeLotteryEnd: bigint('time_lottery_end', { mode: 'number' }).notNull(),
@@ -10,9 +10,9 @@ export const SeminarLotteryInfo = mysqlTable('seminar_lottery_info', {
   timeEnd: bigint('time_end', { mode: 'number' }).notNull(),
 });
 
-export const SeminarLottery = mysqlTable('seminar_lottery', {
+export const SeminarLottery = mysqlTable('s_lottery', {
   id: int('id').primaryKey().autoincrement().unique(),
-  seminarInfoId: int('seminar_info_id')
+  infoId: int('info_id')
     .notNull()
     .references(() => SeminarLotteryInfo.id, { onDelete: 'cascade' }),
   organizationId: int('organization_id')
@@ -26,7 +26,7 @@ export const SeminarLottery = mysqlTable('seminar_lottery', {
   timeUpdate: bigint('time_update', { mode: 'number' }).notNull(),
 });
 
-export const PerformanceLotteryInfo = mysqlTable('performance_lottery_info', {
+export const PerformanceLotteryInfo = mysqlTable('p_lottery_info', {
   id: int('id').primaryKey().autoincrement().unique(),
   timeLotteryStart: bigint('time_lottery_start', { mode: 'number' }).notNull(),
   timeLotteryEnd: bigint('time_lottery_end', { mode: 'number' }).notNull(),
@@ -34,9 +34,9 @@ export const PerformanceLotteryInfo = mysqlTable('performance_lottery_info', {
   timeEnd: bigint('time_end', { mode: 'number' }).notNull(),
 });
 
-export const PerformanceLottery = mysqlTable('performance_lottery', {
+export const PerformanceLottery = mysqlTable('p_lottery', {
   id: int('id').primaryKey().autoincrement().unique(),
-  performanceInfoId: int('performance_info_id')
+  infoId: int('info_id')
     .notNull()
     .references(() => PerformanceLotteryInfo.id, { onDelete: 'cascade' }),
   organizationId: int('organization_id')

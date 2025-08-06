@@ -17,7 +17,7 @@ export class LotterySeminarRepository {
         id?: number;
         organizationId?: number;
         spaceId?: number;
-        seminarInfoId?: number;
+        infoId?: number;
         time?: number;
         lotteryWin?: boolean;
     }): Promise<MSeminarLottery[]> {
@@ -31,8 +31,8 @@ export class LotterySeminarRepository {
         if (params.spaceId) {
             whereClause.push(eq(SeminarLottery.spaceId, params.spaceId));
         }
-        if (params.seminarInfoId) {
-            whereClause.push(eq(SeminarLottery.seminarInfoId, params.seminarInfoId));
+        if (params.infoId) {
+            whereClause.push(eq(SeminarLottery.infoId, params.infoId));
         }
         if (params.time) {
             whereClause.push(eq(SeminarLottery.time, params.time));

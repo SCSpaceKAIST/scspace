@@ -1,6 +1,6 @@
 export interface ISeminarLottery {
     id: number;
-    seminarInfoId: number;
+    infoId: number;
     organizationId: number;
     spaceId: number;
     time: number;

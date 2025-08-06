@@ -1,6 +1,6 @@
 export interface IPerformanceLottery {
     id: number;
-    performanceInfoId: number;
+    infoId: number;
     organizationId: number;
     spaceId: number;
     priority: number;

@@ -29,7 +29,7 @@ export class MPerformanceLotteryInfo implements ILotteryInfo {
 
 export class MPerformanceLottery implements IPerformanceLottery {
     id: IPerformanceLottery['id'];
-    performanceInfoId: IPerformanceLottery['performanceInfoId'];
+    infoId: IPerformanceLottery['infoId'];
     organizationId: IPerformanceLottery['organizationId'];
     spaceId: IPerformanceLottery['spaceId'];
     priority: IPerformanceLottery['priority'];
@@ -39,7 +39,7 @@ export class MPerformanceLottery implements IPerformanceLottery {
 
     constructor(data: IPerformanceLottery) {
         this.id = data.id;
-        this.performanceInfoId = data.performanceInfoId;
+        this.infoId = data.infoId;
         this.organizationId = data.organizationId;
         this.spaceId = data.spaceId;
         this.priority = data.priority;
@@ -51,7 +51,7 @@ export class MPerformanceLottery implements IPerformanceLottery {
     static fromDB(lottery: typeof PerformanceLottery.$inferSelect): IPerformanceLottery {
         return {
             id: lottery.id,
-            performanceInfoId: lottery.performanceInfoId,
+            infoId: lottery.infoId,
             organizationId: lottery.organizationId,
             spaceId: lottery.spaceId,
             priority: lottery.priority,

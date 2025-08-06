@@ -3,7 +3,7 @@ import { SeminarLottery } from '@schema';
 
 export class MSeminarLottery implements ISeminarLottery {
     id: ISeminarLottery['id'];
-    seminarInfoId: ISeminarLottery['seminarInfoId'];
+    infoId: ISeminarLottery['infoId'];
     organizationId: ISeminarLottery['organizationId'];
     spaceId: ISeminarLottery['spaceId'];
     time: ISeminarLottery['time'];
@@ -12,7 +12,7 @@ export class MSeminarLottery implements ISeminarLottery {
 
     constructor(data: ISeminarLottery) {
         this.id = data.id;
-        this.seminarInfoId = data.seminarInfoId;
+        this.infoId = data.infoId;
         this.organizationId = data.organizationId;
         this.spaceId = data.spaceId;
         this.time = data.time;
@@ -23,7 +23,7 @@ export class MSeminarLottery implements ISeminarLottery {
     static fromDB(lottery: typeof SeminarLottery.$inferSelect): ISeminarLottery {
         return {
             id: lottery.id,
-            seminarInfoId: lottery.seminarInfoId,
+            infoId: lottery.infoId,
             organizationId: lottery.organizationId,
             spaceId: lottery.spaceId,
             time: lottery.time,
