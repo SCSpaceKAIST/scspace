@@ -1,11 +1,5 @@
-import { IReservation, IReservationContent, IReservationSimple, IReservationSimpleAll } from '@scspace-depot/types/reservation';
+import { IReservation, IReservationContent, IReservationSimple } from '@scspace-depot/types/reservation';
 import { Reservation, ReservationContent, schema } from '@schema';
-import { InferSelectModel } from 'drizzle-orm';
-
-type ReservationDBResult = {
-  reservation: InferSelectModel<typeof schema.Reservation>;
-  reservationContent: InferSelectModel<typeof schema.ReservationContent>;
-};
 
 export class MReservationContent implements IReservationContent {
   id: IReservationContent['id'];

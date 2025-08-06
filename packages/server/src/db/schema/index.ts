@@ -1,8 +1,8 @@
 import { Business } from './business';
 import {
-  PerformanceInfo,
+  PerformanceLotteryInfo,
   PerformanceLottery,
-  SeminarInfo,
+  SeminarLotteryInfo,
   SeminarLottery
 } from './lottery';
 import { Notice } from './notice';
@@ -22,7 +22,7 @@ const schema = {
   Organization,
   OrganizationMember,
   Passpin,
-  PerformanceInfo,
+  PerformanceLotteryInfo,
   PerformanceLottery,
   Qna,
   Goods,
@@ -30,7 +30,7 @@ const schema = {
   Reservation,
   ReservationContent,
   Rule,
-  SeminarInfo,
+  SeminarLotteryInfo,
   SeminarLottery,
   Space,
   User,
@@ -44,7 +44,7 @@ export {
   Organization,
   OrganizationMember,
   Passpin,
-  PerformanceInfo,
+  PerformanceLotteryInfo,
   PerformanceLottery,
   Qna,
   Goods,
@@ -53,7 +53,7 @@ export {
   ReservationContent,
   Rule,
   Space,
-  SeminarInfo,
+  SeminarLotteryInfo,
   SeminarLottery,
   User,
 };

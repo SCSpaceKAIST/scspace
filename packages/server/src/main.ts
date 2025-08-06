@@ -1,8 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
-import * as cors from 'cors';
-import { config } from 'dotenv';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {

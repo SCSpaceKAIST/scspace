@@ -22,7 +22,7 @@ import {
   IReservationMultipleCreateResurt
 } from '@scspace-depot/types/reservation';
 import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
-import { AdminGuard, ManagerGuard, MemberGuard, MemberGuardWithRervation, UserGuard } from '../auth/jwt/jwt.guard';
+import { AdminGuard, ManagerGuard, MemberGuard, MemberGuardWithReservation, UserGuard } from '../auth/jwt/jwt.guard';
 import { IUser } from '@scspace-depot/types/user';
 import { SpacePublicService } from '../space/space.public.service';
 
@@ -140,7 +140,7 @@ export class ReservationController {
   }
 
   // AuthGuard - user
-  @UseGuards(MemberGuardWithRervation)
+  @UseGuards(MemberGuardWithReservation)
   @Delete(':id')
   // 1인 경우를 고려하기 위해 추가
   // userid 비교 

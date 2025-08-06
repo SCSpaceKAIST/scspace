@@ -1,0 +1,28 @@
+import { ILotteryInfo } from '@scspace-depot/types/lottery';
+import { SeminarLotteryInfo } from '@schema';
+
+export class MSeminarLotteryInfo implements ILotteryInfo {
+    id: ILotteryInfo['id'];
+    timeLotteryStart: ILotteryInfo['timeLotteryStart'];
+    timeLotteryEnd: ILotteryInfo['timeLotteryEnd'];
+    timeStart: ILotteryInfo['timeStart'];
+    timeEnd: ILotteryInfo['timeEnd'];
+
+    constructor(data: ILotteryInfo) {
+        this.id = data.id;
+        this.timeLotteryStart = data.timeLotteryStart;
+        this.timeLotteryEnd = data.timeLotteryEnd;
+        this.timeStart = data.timeStart;
+        this.timeEnd = data.timeEnd;
+    }
+
+    static fromDB(lottery: typeof SeminarLotteryInfo.$inferSelect): ILotteryInfo {
+        return {
+            id: lottery.id,
+            timeLotteryStart: lottery.timeLotteryStart,
+            timeLotteryEnd: lottery.timeLotteryEnd,
+            timeStart: lottery.timeStart,
+            timeEnd: lottery.timeEnd,
+        };
+    }
+}

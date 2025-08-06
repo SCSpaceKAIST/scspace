@@ -2,11 +2,8 @@ import { mysqlTable, int, bigint } from 'drizzle-orm/mysql-core';
 import { Organization } from './organization';
 import { Space } from './space';
 
-export const SeminarInfo = mysqlTable('seminar_info', {
+export const SeminarLotteryInfo = mysqlTable('seminar_lottery_info', {
   id: int('id').primaryKey().autoincrement().unique(),
-  organizationId: int('organization_id')
-    .notNull()
-    .references(() => Organization.id, { onDelete: 'cascade' }),
   timeLotteryStart: bigint('time_lottery_start', { mode: 'number' }).notNull(),
   timeLotteryEnd: bigint('time_lottery_end', { mode: 'number' }).notNull(),
   timeStart: bigint('time_start', { mode: 'number' }).notNull(),
@@ -17,7 +14,7 @@ export const SeminarLottery = mysqlTable('seminar_lottery', {
   id: int('id').primaryKey().autoincrement().unique(),
   seminarInfoId: int('seminar_info_id')
     .notNull()
-    .references(() => SeminarInfo.id, { onDelete: 'cascade' }),
+    .references(() => SeminarLotteryInfo.id, { onDelete: 'cascade' }),
   organizationId: int('organization_id')
     .notNull()
     .references(() => Organization.id, { onDelete: 'cascade' }),
@@ -29,11 +26,8 @@ export const SeminarLottery = mysqlTable('seminar_lottery', {
   timeUpdate: bigint('time_update', { mode: 'number' }).notNull(),
 });
 
-export const PerformanceInfo = mysqlTable('performance_info', {
+export const PerformanceLotteryInfo = mysqlTable('performance_lottery_info', {
   id: int('id').primaryKey().autoincrement().unique(),
-  organizationId: int('organization_id')
-    .notNull()
-    .references(() => Organization.id, { onDelete: 'cascade' }),
   timeLotteryStart: bigint('time_lottery_start', { mode: 'number' }).notNull(),
   timeLotteryEnd: bigint('time_lottery_end', { mode: 'number' }).notNull(),
   timeStart: bigint('time_start', { mode: 'number' }).notNull(),
@@ -44,7 +38,7 @@ export const PerformanceLottery = mysqlTable('performance_lottery', {
   id: int('id').primaryKey().autoincrement().unique(),
   performanceInfoId: int('performance_info_id')
     .notNull()
-    .references(() => PerformanceInfo.id, { onDelete: 'cascade' }),
+    .references(() => PerformanceLotteryInfo.id, { onDelete: 'cascade' }),
   organizationId: int('organization_id')
     .notNull()
     .references(() => Organization.id, { onDelete: 'cascade' }),

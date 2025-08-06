@@ -47,7 +47,7 @@ export class ReservationRepository {
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>
   ) { }
 
-  sqlGenerator(param: {
+  sqlGenerator(params: {
     id?: number;
     userId?: number;
     spaceId?: number;
@@ -64,31 +64,31 @@ export class ReservationRepository {
   }): SQL[] {
     const whereClause: SQL[] = [];
 
-    if (param.id) {
-      whereClause.push(eq(Reservation.id, param.id));
+    if (params.id) {
+      whereClause.push(eq(Reservation.id, params.id));
     }
-    if (param.userId) {
-      whereClause.push(eq(Reservation.userId, param.userId));
+    if (params.userId) {
+      whereClause.push(eq(Reservation.userId, params.userId));
     }
-    if (param.spaceId) {
-      whereClause.push(eq(Reservation.spaceId, param.spaceId));
+    if (params.spaceId) {
+      whereClause.push(eq(Reservation.spaceId, params.spaceId));
     }
-    if (param.spaceIds) {
-      whereClause.push(inArray(Reservation.spaceId, param.spaceIds));
+    if (params.spaceIds) {
+      whereClause.push(inArray(Reservation.spaceId, params.spaceIds));
     }
-    if (param.organizationId) {
-      whereClause.push(eq(Reservation.organizationId, param.organizationId));
+    if (params.organizationId) {
+      whereClause.push(eq(Reservation.organizationId, params.organizationId));
     }
-    if (param.state) {
-      whereClause.push(eq(Reservation.state, param.state));
+    if (params.state) {
+      whereClause.push(eq(Reservation.state, params.state));
     }
-    if (param.states) {
-      if (param.states.length === 0) return [];
-      whereClause.push(inArray(Reservation.state, param.states));
+    if (params.states) {
+      if (params.states.length === 0) return [];
+      whereClause.push(inArray(Reservation.state, params.states));
     }
-    if (param.timeRange) {
-      const timeFrom = param.timeRange.timeFrom;
-      const timeTo = param.timeRange.timeTo;
+    if (params.timeRange) {
+      const timeFrom = params.timeRange.timeFrom;
+      const timeTo = params.timeRange.timeTo;
       if (timeFrom && timeTo) {
         whereClause.push(
           or(
@@ -112,7 +112,7 @@ export class ReservationRepository {
     return whereClause;
   }
 
-  async fetch(param: {
+  async fetch(params: {
     id?: number;
     userId?: number;
     spaceId?: number;
@@ -127,7 +127,7 @@ export class ReservationRepository {
       timeTo?: number;
     };
   }): Promise<IDataResponse<MReservationSimple[]>> {
-    const whereClause: SQL[] = this.sqlGenerator(param);
+    const whereClause: SQL[] = this.sqlGenerator(params);
 
     const reservations = this.db
       .select()
@@ -136,12 +136,12 @@ export class ReservationRepository {
       .orderBy(desc(Reservation.id));
 
     let query;
-    if (param.limit && param.offset)
-      query = reservations.limit(param.limit).offset(param.offset);
-    else if (param.limit)
-      query = reservations.limit(param.limit);
-    else if (param.offset)
-      query = reservations.offset(param.offset);
+    if (params.limit && params.offset)
+      query = reservations.limit(params.limit).offset(params.offset);
+    else if (params.limit)
+      query = reservations.limit(params.limit);
+    else if (params.offset)
+      query = reservations.offset(params.offset);
     else
       query = reservations;
 

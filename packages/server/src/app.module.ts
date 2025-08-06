@@ -10,6 +10,7 @@ import { ReservationModule } from './feature/reservation/reservation.module';
 import { OrganizationModule } from './feature/organization/organization.module';
 import { join } from 'path';
 import { MailModule } from './tools/mailer/mail.module';
+import { LotterySeminarModule } from './feature/lottery/seminar/lottery.seminar.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { MailModule } from './tools/mailer/mail.module';
     SpaceModule,
     ReservationModule,
     OrganizationModule,
-    MailModule
+    MailModule,
+    LotterySeminarModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -78,8 +78,8 @@ export default function OrgRule() {
                                 <Text>
                                     멤버는 조직의 예약을 관리할 수 있으며, 예약 신청, 수정, 취소 권한을 가집니다.
                                 </Text>
-                                <Text color={"gray"}>
-                                    멤버 및 위임자는 조직 예약 신청 시, 예약 승인 내역을 메일로 전달받습니다. (추가 예정)
+                                <Text>
+                                    멤버 및 위임자는 조직 예약 신청 시, 예약 승인 내역을 메일로 전달받습니다.
                                 </Text>
                             </Stack>
                         </Blockquote.Content>

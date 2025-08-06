@@ -112,7 +112,7 @@ export class MemberGuard extends AuthGuard('jwt') {
   }
 }
 @Injectable()
-export class MemberGuardWithRervation extends AuthGuard('jwt') {
+export class MemberGuardWithReservation extends AuthGuard('jwt') {
   constructor(
     private readonly organizationPublicService: OrganizationPublicService,
     private readonly reservationPublicService: ReservationPublicService,

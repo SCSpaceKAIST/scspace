@@ -17,13 +17,12 @@ import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
 import { ReservationPublicService } from './reservation.public.service';
 import { IUser } from '@scspace-depot/types/user';
 import { ISpace } from '@scspace-depot/types/space';
-// import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 import { OrganizationPublicService } from '../organization/organization.public.service';
 import { MReservation } from './reservation.model';
 import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { getNow } from '@scspace-server/common/utils';
-import { MailService} from '@scspace-server/tools/mailer/mail.service';
+import { MailService } from '@scspace-server/tools/mailer/mail.service';
 import { ReservationMeta } from '@scspace-depot/enums/mail.enum';
 import { getString } from '@scspace-server/common/utils'
 
@@ -196,17 +195,13 @@ export class ReservationService {
 
     const [reservation, reservationContent] = await this.reservationRepository.insert(reservationInput);
 
-    // const timeFrom = new Date(reservation.timeFrom).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
-    // const timeTo = new Date(reservation.timeTo).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
-    // 1970. 1. 14. 오전 8:07:56 fuck
-
     const timeFrom = getString(reservation.timeFrom)
     const timeTo = getString(reservation.timeTo)
 
     //조직의 경우 모든 구성원에게 발송함 Notif
-    const templateFooter:string = organization.id === 1 ? "문의사항이 있으시면 언제든 연락해 주세요." : "이 메일은 예약자 본인 및 조직에 등록된 모든 구성원에게 발송되었습니다."
-    const templateFooterEn : string = organization.id === 1 ? "Please feel free to contact us if you have any questions." : "This email has been sent to the reservation holder and all members registered with the organization."
-    const meta = { ...ReservationMeta.ReservationCompleted,timeFrom, timeTo , templateFooter, templateFooterEn }
+    const templateFooter: string = organization.id === 1 ? "문의사항이 있으시면 언제든 연락해 주세요." : "이 메일은 예약자 본인 및 조직에 등록된 모든 구성원에게 발송되었습니다."
+    const templateFooterEn: string = organization.id === 1 ? "Please feel free to contact us if you have any questions." : "This email has been sent to the reservation holder and all members registered with the organization."
+    const meta = { ...ReservationMeta.ReservationCompleted, timeFrom, timeTo, templateFooter, templateFooterEn }
 
     // organizations의 모든 멤버 가져오기 when org.id !== 1 >> 성능 개선
     const organizationWithMembers = organization.id !== 1 ? await this.organizationPublicService.fetchDeepById(organization.id) : undefined
@@ -218,7 +213,6 @@ export class ReservationService {
       bcc: 'scspace.kaist@gmail.com',
       template: "reservationPosted",
       replyTo: "scspace@kaist.ac.kr",
-      // bcc: "scspace.kaist@gmail.com" << WHY
       context: {
         reservation: {
           ...reservation,
@@ -227,8 +221,8 @@ export class ReservationService {
           organization
         },
         meta
-        }
-      })
+      }
+    })
 
     return MReservation.fromDB(
       reservation,

@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
-import { IVerificationResponse } from '@scspace-depot/types/auth/auth.type';
 import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from '@nestjs/passport';
 @Controller('auth')
@@ -31,12 +30,12 @@ export class AuthController {
   @Get('verify')
   async verify(@Req() req: Request, @Res() res: Response): Promise<void> {
     const verifyRes = await this.authService.verify(req.cookies);
-    
+
     // 토큰이 만료되었거나 유효하지 않은 경우 쿠키 제거
     if (!verifyRes) {
       res.clearCookie('scspacetoken', { path: '/' });
     }
-    
+
     res.json({
       isLogined: !!verifyRes,
       userInfo: verifyRes,
@@ -51,7 +50,7 @@ export class AuthController {
   ): Promise<void> {
     try {
       const token = await this.authService.login(state, code);
-      
+
       // 쿠키 설정
       const cookieOptions = {
         maxAge: 60 * 60 * 1000 * 24 * 7, // 7 days
