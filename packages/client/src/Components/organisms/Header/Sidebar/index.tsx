@@ -15,10 +15,30 @@ import {
 
 import Redirect from "./Redirect";
 import Contact from "./Contact";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@scspace-client/Hooks/auth";
+import { useRedirectStore } from "@scspace-client/Store/redirect";
 
 export default function Sidebar() {
     const [open, setOpen] = useState<boolean>(false);
+    const { isAdmin } = useAuth();
+    const { links, update } = useRedirectStore();
+
+    useEffect(() => {
+        // Update admin link visibility based on user permissions
+        const updatedLinks = links.map(link => {
+            if (link.href === "/admin") {
+                return { ...link, invisible: !isAdmin };
+            }
+            return link;
+        });
+
+        // Only update if there's a change to prevent infinite loop
+        const adminLink = links.find(link => link.href === "/admin");
+        if (adminLink && adminLink.invisible === isAdmin) {
+            update(updatedLinks);
+        }
+    }, [isAdmin, links, update]);
 
     return (
         <Drawer.Root

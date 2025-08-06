@@ -146,6 +146,11 @@ export function useRedirects() {
                         href: "/manage/rules",
                         label: "세칙",
                         helperText: "Rules"
+                    },
+                    {
+                        href: "/admin/lottery",
+                        label: "추첨 관리",
+                        helperText: "Lottery Management"
                     }
                 ]
             },
