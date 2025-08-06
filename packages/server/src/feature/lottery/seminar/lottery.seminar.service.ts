@@ -84,7 +84,7 @@ export class LotterySeminarService {
     async getSeminarLotteryByOrganization(params: {
         organizationId: number;
         spaceId: number;
-        seminarInfoId: number;
+        infoId: number;
     }): Promise<MSeminarLottery[]> {
         // Implementation for fetching organization lottery data
         // This is a placeholder implementation
@@ -94,7 +94,7 @@ export class LotterySeminarService {
     async getSeminarLotteryByTime(params: {
         time: number;
         spaceId: number;
-        seminarInfoId: number;
+        infoId: number;
     }): Promise<MSeminarLottery[]> {
         // Implementation for fetching seminar lottery data by time
         return this.lotterySeminarRepository.fetch(params);

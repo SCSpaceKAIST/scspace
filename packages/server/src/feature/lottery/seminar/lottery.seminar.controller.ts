@@ -45,13 +45,13 @@ export class LotterySeminarController {
   async getSeminarLotteryByOrganization(
     @Query('organizationId') organizationId: number,
     @Query('spaceId') spaceId: number,
-    @Query('seminarInfoId') seminarInfoId: number
+    @Query('infoId') infoId: number
   ): Promise<MSeminarLottery[]> {
     // Implementation for fetching seminar lottery by organization
     return await this.lotterySeminarService.getSeminarLotteryByOrganization({
       organizationId,
       spaceId,
-      seminarInfoId
+      infoId
     });
   }
 
@@ -59,13 +59,13 @@ export class LotterySeminarController {
   async getSeminarLotteryByTime(
     @Query('time') time: number,
     @Query('spaceId') spaceId: number,
-    @Query('seminarInfoId') seminarInfoId: number
+    @Query('infoId') infoId: number
   ): Promise<MSeminarLottery[]> {
     // Implementation for fetching seminar lottery by time
     return await this.lotterySeminarService.getSeminarLotteryByTime({
       time,
       spaceId,
-      seminarInfoId
+      infoId
     });
   }
 

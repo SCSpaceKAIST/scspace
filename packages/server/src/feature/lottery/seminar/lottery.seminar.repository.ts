@@ -4,7 +4,7 @@ import { schema, SeminarLottery } from "@scspace-server/db/schema";
 import { and, eq, InferInsertModel, SQL } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { MSeminarLottery } from "./lottery.seminar.model";
-import { ISeminarLotteryCreate } from "@scspace-depot/types/lottery";
+import { ISeminarLotteryCreate, ISeminarLotteryFetch } from "@scspace-depot/types/lottery";
 import { getNow } from "@scspace-server/common/utils";
 
 @Injectable()
@@ -13,14 +13,7 @@ export class LotterySeminarRepository {
         @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>
     ) { }
 
-    async fetch(params: {
-        id?: number;
-        organizationId?: number;
-        spaceId?: number;
-        infoId?: number;
-        time?: number;
-        lotteryWin?: boolean;
-    }): Promise<MSeminarLottery[]> {
+    async fetch(params: ISeminarLotteryFetch): Promise<MSeminarLottery[]> {
         const whereClause: SQL[] = [];
         if (params.id) {
             whereClause.push(eq(SeminarLottery.id, params.id));
@@ -46,9 +39,6 @@ export class LotterySeminarRepository {
             .select()
             .from(SeminarLottery)
             .where(and(...whereClause));
-        if (result.length === 0) {
-            throw new Error("Seminar lottery not found");
-        }
         return result;
     }
 

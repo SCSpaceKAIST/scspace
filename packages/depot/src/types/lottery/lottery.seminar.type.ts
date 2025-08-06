@@ -14,3 +14,5 @@ export type ISeminarLotteryCreate = Omit<
 >;
 
 export type ISeminarLotteryUpdate = Partial<ISeminarLotteryCreate>;
+
+export type ISeminarLotteryFetch = Partial<Omit<ISeminarLottery, "timeUpdate">>;
