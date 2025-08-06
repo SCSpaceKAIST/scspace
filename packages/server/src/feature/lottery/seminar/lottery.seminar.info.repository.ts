@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ILotteryInfoCreate, ILotteryInfoUpdate } from "@scspace-depot/types/lottery";
 import { DBAsyncProvider } from "@scspace-server/db/db.provider";
 import { schema, SeminarLotteryInfo } from "@scspace-server/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, InferInsertModel } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { MSeminarLotteryInfo } from "@scspace-server/feature/lottery/seminar/lottery.seminar.info.model";
 
@@ -39,7 +39,9 @@ export class LotterySeminarInfoRepository {
     async insert(lotteryInfo: ILotteryInfoCreate): Promise<MSeminarLotteryInfo> {
         // Implementation for inserting seminar lottery data
         // This is a placeholder, actual implementation will depend on the schema and requirements
-        const [result] = await this.db.insert(SeminarLotteryInfo).values(lotteryInfo);
+        const [result] = await this.db
+            .insert(SeminarLotteryInfo)
+            .values(lotteryInfo as InferInsertModel<typeof SeminarLotteryInfo>);
         if (!result.insertId) {
             throw new Error("Failed to insert seminar lottery info");
         }

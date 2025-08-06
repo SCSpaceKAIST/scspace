@@ -6,7 +6,6 @@ import {
     IOrganizationCreate,
     IOrganizationDelegator,
     IOrganizationMember,
-    IOrganizationUpdate,
     IOrganizationUpdateDelegator,
     IOrganizationUser,
 } from "@scspace-depot/types/organization";
@@ -14,7 +13,6 @@ import { useEffect, useState } from "react";
 import { useMutationApi, useQueryApi } from "./api";
 import { ISuccessResponse } from "@scspace-depot/types/common/common.type";
 import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
-import { MutationOptions } from "@tanstack/react-query";
 
 export function useAllOrganization() {
     const [organization, setOrganization] = useState<IOrganizationDelegator[] | null>(null);

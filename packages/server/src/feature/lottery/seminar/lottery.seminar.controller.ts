@@ -41,6 +41,17 @@ export class LotterySeminarController {
     });
   }
 
+  @UseGuards(AdminGuard)
+  @Delete("info/:id")
+  async deleteInfo(
+    @Param('id') id: number
+  ): Promise<ISuccessResponse> {
+    // Implementation for deleting existing lottery seminar info
+    return {
+      success: await this.lotterySeminarService.deleteSeminarLottery(id)
+    };
+  }
+
   @Get()
   async getSeminarLotteryByOrganization(
     @Query('organizationId') organizationId: number,

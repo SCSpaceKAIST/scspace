@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useMutationApi, useQueryApi } from "./api";
 import { ILotteryInfo, ILotteryInfoCreate, ILotteryInfoUpdate } from "@scspace-depot/types/lottery/lottery.info.type";
+import { ISuccessResponse } from "@scspace-depot/types/common/common.type";
 
 export function useLotteryInfo() {
     const [lotteryInfos, setLotteryInfos] = useState<ILotteryInfo[] | null>(null);
@@ -20,29 +21,25 @@ export function useLotteryInfo() {
     return { lotteryInfos, isLoading, refetch };
 }
 
-export function useLotteryAPI() {
-    const createLotteryInfo = useMutationApi<ILotteryInfo, { lotteryInfo: ILotteryInfoCreate }>(
+export function useLotteryInfoAPI(id = 0) {
+    const createLotteryInfo = useMutationApi<ILotteryInfo, ILotteryInfoCreate>(
         "/lottery/seminar/info",
         "POST"
-    );
+    ).mutate;
 
-    const updateLotteryInfo = async (id: number, updateData: ILotteryInfoUpdate) => {
-        const res = await fetch(`/api/lottery/seminar/info/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify(updateData),
-        });
+    const updateLotteryInfo = useMutationApi<ILotteryInfo, ILotteryInfoUpdate>(
+        `/lottery/seminar/info/${id}`,
+        "PUT"
+    ).mutate;
 
-        if (!res.ok) {
-            throw new Error(res.statusText);
-        }
-
-        return res.json();
-    };
+    const deleteLotteryInfo = useMutationApi<ISuccessResponse, {}>(
+        `/lottery/seminar/info/${id}`,
+        "DELETE"
+    ).mutate;
 
     return {
         createLotteryInfo,
-        updateLotteryInfo
+        updateLotteryInfo,
+        deleteLotteryInfo
     };
 }

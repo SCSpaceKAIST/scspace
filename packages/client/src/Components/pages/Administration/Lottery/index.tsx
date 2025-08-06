@@ -18,7 +18,7 @@ import {
     Box
 } from "@chakra-ui/react";
 import { HiPencilSquare, HiPlus } from "react-icons/hi2";
-import { useLotteryInfo, useLotteryAPI } from "@scspace-client/Hooks/lottery";
+import { useLotteryInfo, useLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import { ILotteryInfo, ILotteryInfoCreate, ILotteryInfoUpdate } from "@scspace-depot/types/lottery/lottery.info.type";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
@@ -48,7 +48,7 @@ export default function LotteryManagement() {
     });
 
     const { lotteryInfos, isLoading, refetch } = useLotteryInfo();
-    const { createLotteryInfo, updateLotteryInfo } = useLotteryAPI();
+    const { createLotteryInfo, updateLotteryInfo } = useLotteryInfoAPI();
 
     const formatTimestamp = (timestamp: number) => {
         return new Date(timestamp * 1000).toLocaleString('ko-KR');
@@ -71,7 +71,7 @@ export default function LotteryManagement() {
     const handleCreateSubmit = async () => {
         try {
             const lotteryData = convertFormToTimestamp(formData);
-            await createLotteryInfo.mutateAsync({ lotteryInfo: lotteryData });
+            createLotteryInfo(lotteryData);
             setIsCreateModalOpen(false);
             setFormData({
                 timeLotteryStart: "",
@@ -90,7 +90,7 @@ export default function LotteryManagement() {
 
         try {
             const updateData = convertFormToTimestamp(formData);
-            await updateLotteryInfo(selectedLottery.id, updateData);
+            updateLotteryInfo(updateData);
             setIsEditModalOpen(false);
             setSelectedLottery(null);
             refetch();
@@ -241,7 +241,6 @@ export default function LotteryManagement() {
                                     <Button
                                         colorScheme="blue"
                                         onClick={handleCreateSubmit}
-                                        loading={createLotteryInfo.isPending}
                                     >
                                         추가
                                     </Button>
