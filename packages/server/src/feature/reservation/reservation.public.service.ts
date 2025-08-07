@@ -410,17 +410,17 @@ export class ReservationPublicService {
     }
 
     // 공간위원이면 추첨 기간과 겹쳐도 예약 가능
-    // if (await this.userPublicService.isManager(userId)) {
-    //   return;
-    // }
+    if (await this.userPublicService.isManager(userId)) {
+      return;
+    }
 
     // 모든 추첨 정보 조회 (시간 순으로 정렬됨)
     const allLotteries = await this.lotterySeminarService.getAllSeminarLotteryInfo();
 
     for (const lottery of allLotteries) {
       // 추첨 시작 시간부터 행사 끝 시간까지의 기간
-      const lotteryStartTime = lottery.timeLotteryStart;
-      const eventEndTime = lottery.timeEnd;
+      const lotteryStartTime = BigInt(lottery.timeLotteryStart);
+      const eventEndTime = BigInt(lottery.timeEnd) + BigInt(24 * 60 - 1);
 
       // 예약 시간과 추첨 기간이 겹치는지 확인
       // A: [timeFrom ---- timeTo] (예약)
