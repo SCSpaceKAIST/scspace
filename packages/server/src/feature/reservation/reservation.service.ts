@@ -215,6 +215,10 @@ export class ReservationService {
     // organizations의 모든 멤버 가져오기 when org.id !== 1 >> 성능 개선
     const organizationWithMembers = organization.id !== 1 ? await this.organizationPublicService.fetchDeepById(organization.id) : undefined
 
+    if (!organizationWithMembers  && organization.id !== 1) {
+      throw new BadRequestException('Organization fetch error : Please Contact by Email.')
+    }
+
 
     await this.mailService.sendMail({
       to: organization.id === 1 ? user.email : organizationWithMembers.members.map(member => member.user.email),
