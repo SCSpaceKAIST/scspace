@@ -6,18 +6,10 @@ import { ISuccessResponse } from "@scspace-depot/types/common/common.type";
 
 // 통합 Lottery API Hook
 export function useLotteryInfoAPI(id?: number) {
-    // GET 메서드들
-    const getAllLotteryInfo = () => {
-        return useQueryApi<ILotteryInfo[]>("/lottery/seminar/info");
-    };
-
-    const getActiveLotteryInfo = () => {
-        return useQueryApi<ILotteryInfo[]>("/lottery/seminar/info/active");
-    };
-
-    const getUpcomingLotteryInfo = () => {
-        return useQueryApi<ILotteryInfo[]>("/lottery/seminar/info/upcoming");
-    };
+    // GET Hook들을 최상위에서 호출
+    const allLotteryInfo = useQueryApi<ILotteryInfo[]>("/lottery/seminar/info");
+    const activeLotteryInfo = useQueryApi<ILotteryInfo[]>("/lottery/seminar/info/active");
+    const upcomingLotteryInfo = useQueryApi<ILotteryInfo[]>("/lottery/seminar/info/upcoming");
 
     // POST/PUT/DELETE 메서드들
     const createLotteryInfo = useMutationApi<ILotteryInfo, ILotteryInfoCreate>(
@@ -36,10 +28,10 @@ export function useLotteryInfoAPI(id?: number) {
     ).mutate;
 
     return {
-        // GET 메서드들
-        getAllLotteryInfo,
-        getActiveLotteryInfo,
-        getUpcomingLotteryInfo,
+        // GET 데이터와 상태들
+        allLotteryInfo,
+        activeLotteryInfo,
+        upcomingLotteryInfo,
 
         // CUD 메서드들
         createLotteryInfo,

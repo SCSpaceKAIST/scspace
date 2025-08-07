@@ -21,7 +21,7 @@ import { ILotteryInfo } from "@scspace-depot/types/lottery/lottery.info.type";
 export default function SeminarLotteryInfo() {
     const { needAdmin } = useAuth();
     needAdmin();
-    const { data: lotteryInfos, isLoading, refetch } = useLotteryInfoAPI().getAllLotteryInfo();
+    const { data: lotteryInfos, isLoading, refetch } = useLotteryInfoAPI().allLotteryInfo;
 
     const { getDateString } = useDate();
 
