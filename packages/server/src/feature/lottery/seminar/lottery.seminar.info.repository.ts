@@ -60,7 +60,7 @@ export class LotterySeminarInfoRepository {
         // This is a placeholder, actual implementation will depend on the schema and requirements
         const [result] = await this.db
             .update(SeminarLotteryInfo)
-            .set(updateLotteryInfo)
+            .set(updateLotteryInfo as InferInsertModel<typeof SeminarLotteryInfo>)
             .where(eq(SeminarLotteryInfo.id, id));
         if (!result.affectedRows) {
             throw new Error("Failed to update seminar lottery info");

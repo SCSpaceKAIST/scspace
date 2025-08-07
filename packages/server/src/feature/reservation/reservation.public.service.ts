@@ -171,9 +171,9 @@ export class ReservationPublicService {
     timeTo: number,
   ): Promise<boolean> {
     // 공간위원이면 최대 시간 제한 없음
-    if (await this.userPublicService.isManager(userId)) {
-      return true;
-    }
+    // if (await this.userPublicService.isManager(userId)) {
+    //   return true;
+    // }
 
     const space = await this.spacePublicService.fetchById(spaceId);
     if (!space) {
@@ -194,13 +194,14 @@ export class ReservationPublicService {
     const orgWeight = reservationTimeWeightOrg[space.spaceType];
 
     // Check if the new reservation itself exceeds daily limit
-    if (newReservationTime > maxDayTime) {
-      throw new BadRequestException(
-        `Reservation duration exceeds daily limit : ${newReservationTime} / ${maxDayTime} minutes for ${space.nameEn}`
-      );
-    }
+    // if (newReservationTime > maxDayTime) {
+    //   throw new BadRequestException(
+    //     `Reservation duration exceeds daily limit : ${newReservationTime} / ${maxDayTime} minutes for ${space.nameEn}`
+    //   );
+    // }
 
-    let isWithinLimits = false;
+    let isWithinDailyLimits = false;
+    let isWithinWeeklyLimits = false;
 
     let daily = 0;
     let weekly = 0;
@@ -208,24 +209,27 @@ export class ReservationPublicService {
     if (organizationId === 1) {
       daily = await this.getDailyReservationTime(userId, spaceId, timeFrom);
       weekly = await this.getWeeklyReservationTime(userId, spaceId, timeFrom);
-      isWithinLimits =
-        daily + newReservationTime <= maxDayTime &&
-        weekly + newReservationTime <= maxWeekTime;
+      isWithinDailyLimits = daily + newReservationTime <= maxDayTime;
+      isWithinWeeklyLimits = weekly + newReservationTime <= maxWeekTime;
     } else {
       daily = await this.getDailyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
       weekly = await this.getWeeklyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
-      isWithinLimits =
-        daily + newReservationTime <= maxDayTime * orgWeight &&
-        weekly + newReservationTime <= maxWeekTime * orgWeight;
+      isWithinDailyLimits = daily + newReservationTime <= maxDayTime * orgWeight;
+      isWithinWeeklyLimits = weekly + newReservationTime <= maxWeekTime * orgWeight;
     }
 
-    if (!isWithinLimits) {
+    if (!isWithinDailyLimits) {
       throw new BadRequestException(
-        `Reservation duration exceeds limits\n(daily: ${daily + newReservationTime} / ${maxDayTime} minutes, weekly: ${weekly + newReservationTime} / ${maxWeekTime} minutes) for ${space.nameEn}`
+        `Reservation duration exceeds limits\n(registered: ${daily + newReservationTime}min / limit: ${maxDayTime} min) for ${space.nameEn}`
+      );
+    }
+    if (!isWithinWeeklyLimits) {
+      throw new BadRequestException(
+        `Reservation duration exceeds weekly limits\n(registered: ${weekly + newReservationTime}min / limit: ${maxWeekTime} min) for ${space.nameEn}`
       );
     }
 
-    return isWithinLimits;
+    return isWithinWeeklyLimits && isWithinDailyLimits;
   }
 
   // 예약 시간 중복 검사
