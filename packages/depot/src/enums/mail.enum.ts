@@ -103,5 +103,21 @@ export const ReservationMeta = {
             en: "New Reservation"
         }
 
+    },
+
+    ReservationDeleted: {
+        color : '#eb4034',
+        header : {
+            kr: "예약 취소 안내",
+            en: "Reservation Cancelled"
+        },
+        body: {
+            kr: "귀하의 예약이 정상적으로 삭제되었습니다. ",
+            en: "Your reservation has been deleted successfully. "
+        },
+        contentUpperDesc: {
+            kr: "예약 취소됨",
+            en: "Reservation Cancelled"
+        }
     }
 } as const
