@@ -56,14 +56,16 @@ export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, ref
             setOpen={setOpen}
         >
             <Dialog.Header>
-                <Dialog.Title>
-                    세미나실 정기 예약 추첨 정보
-                </Dialog.Title>
-                {isError && (
-                    <Dialog.Description color="red" fontWeight={"bold"}>
-                        날짜 설정에 오류가 있습니다. 날짜 순서를 확인해주세요.
-                    </Dialog.Description>
-                )}
+                <Stack>
+                    <Dialog.Title>
+                        세미나실 정기 예약 추첨 정보
+                    </Dialog.Title>
+                    {isError && (
+                        <Dialog.Description color="red" fontWeight={"bold"}>
+                            날짜 설정에 오류가 있습니다. 날짜 순서를 확인해주세요.
+                        </Dialog.Description>
+                    )}
+                </Stack>
             </Dialog.Header>
             <Dialog.Body>
                 <Wrap justify="center">
@@ -104,7 +106,7 @@ export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, ref
                     </Card.Root>
                     <Card.Root>
                         <Card.Header>
-                            <Card.Title>행사 날짜</Card.Title>
+                            <Card.Title>학기 기간</Card.Title>
                             <Card.Description>
                                 추첨 결과가 반영되는 날짜입니다.
                             </Card.Description>
@@ -186,7 +188,7 @@ export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, ref
                             });
                         }}
                     >
-                        Save
+                        Update
                     </Button>
                 </>) : (
                     <Button
