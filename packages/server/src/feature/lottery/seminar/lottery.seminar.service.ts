@@ -81,6 +81,15 @@ export class LotterySeminarService {
         return updatedLotteryInfo;
     }
 
+    async deleteSeminarLotteryInfo(id: number): Promise<boolean> {
+        const seminarLotteryInfo = await this.lotterySeminarInfoRepository.fetch({ id });
+        if (!seminarLotteryInfo) {
+            throw new BadRequestException("Seminar lottery info not found");
+        }
+        // Implementation for deleting seminar lottery info
+        return await this.lotterySeminarInfoRepository.delete(id);
+    }
+
     async getSeminarLotteryByOrganization(params: {
         organizationId: number;
         spaceId: number;

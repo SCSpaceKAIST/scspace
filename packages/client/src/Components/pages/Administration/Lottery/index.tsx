@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import {
     Stack,
@@ -9,29 +9,37 @@ import {
     HStack,
     IconButton,
 } from "@chakra-ui/react";
-import { useLotteryInfo, useLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
+import { useLotteryInfo } from "@scspace-client/Hooks/lottery";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useDate } from "@scspace-client/Hooks/utils";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import { HiPlus } from "react-icons/hi";
-import InfoDetailModal from "@scspace-client/Components/organisms/Lottery/Info/InfoDetailModal";
+import SeminarLotteryInfoDetailModal from "@scspace-client/Components/organisms/Lottery/Info/SeminarInfoDetailModal";
+import { ILotteryInfo } from "@scspace-depot/types/lottery/lottery.info.type";
 
 export default function LotteryManagement() {
     const { needAdmin } = useAuth();
     needAdmin();
-
-    const [open, setOpen] = useState<boolean>(false);
-    const [selectedId, setSelectedId] = useState<number>(0);
+    const { lotteryInfos, isLoading, refetch } = useLotteryInfo();
 
     const { getDateString } = useDate();
 
-    const { lotteryInfos, isLoading, refetch } = useLotteryInfo();
+    const [open, setOpen] = useState<boolean>(false);
+    const [selectedId, setSelectedId] = useState<number>(0);
+    const [selectedInfo, setSelectedInfo] = useState<ILotteryInfo | null>(null);
+    useEffect(() => {
+        if (selectedId === 0) {
+            setSelectedInfo(null);
+        } else {
+            setSelectedInfo(lotteryInfos?.find(info => info.id === selectedId) || null);
+        }
+    }, [selectedId, lotteryInfos]);
 
     return (
         <>
-            <InfoDetailModal
-                id={selectedId}
+            <SeminarLotteryInfoDetailModal
+                info={selectedInfo}
                 open={open}
                 setOpen={setOpen}
                 refetch={refetch}

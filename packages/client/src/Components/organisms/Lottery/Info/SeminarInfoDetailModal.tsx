@@ -6,17 +6,22 @@ import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import { useLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import { useDate } from "@scspace-client/Hooks/utils";
+import { ILotteryInfo } from "@scspace-depot/types/lottery/lottery.info.type";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-export default function InfoDetailModal({ id, open, setOpen, refetch }: {
-    id?: number;
+export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, refetch }: {
+    info: ILotteryInfo | null;
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     refetch: () => void;
 }) {
-    const { createLotteryInfo, deleteLotteryInfo } = useLotteryInfoAPI();
+    const {
+        createLotteryInfo,
+        deleteLotteryInfo,
+        updateLotteryInfo
+    } = useLotteryInfoAPI(info?.id || 0);
 
     const today = new Date();
     const { getTime, getDateString } = useDate();
@@ -46,7 +51,6 @@ export default function InfoDetailModal({ id, open, setOpen, refetch }: {
 
     return (
         <SimpleDialog
-            size="xl"
             open={open}
             setOpen={setOpen}
         >
@@ -133,17 +137,16 @@ export default function InfoDetailModal({ id, open, setOpen, refetch }: {
                 </Wrap>
             </Dialog.Body>
             <Dialog.Footer>
-                {id && (
+                {info ? (<>
                     <Dialog.ActionTrigger asChild>
                         <DeleteBtn onDelete={() => {
-                            deleteLotteryInfo({ id }, {
+                            deleteLotteryInfo({}, {
                                 onSuccess: () => {
                                     toaster.success({
                                         title: "추첨 정보 삭제 완료",
                                         description: "추첨 정보가 성공적으로 삭제되었습니다.",
                                     });
                                     refetch();
-                                    setOpen(false);
                                 },
                                 onError: (error) => {
                                     toaster.error({
@@ -154,36 +157,66 @@ export default function InfoDetailModal({ id, open, setOpen, refetch }: {
                             })
                         }} />
                     </Dialog.ActionTrigger>
+                    <Button
+                        disabled={isError}
+                        colorPalette="blue"
+                        onClick={() => {
+                            updateLotteryInfo({
+                                timeLotteryStart: getTime(dateLotteryStart),
+                                timeLotteryEnd: getTime(dateLotteryEnd),
+                                timeStart: getTime(dateStart),
+                                timeEnd: getTime(dateEnd),
+                            }, {
+                                onSuccess: () => {
+                                    toaster.success({
+                                        title: "추첨 정보 업데이트 완료",
+                                        description: "추첨 정보가 성공적으로 업데이트되었습니다.",
+                                    });
+                                    refetch();
+                                    setOpen(false);
+                                },
+                                onError: (error) => {
+                                    toaster.error({
+                                        title: "추첨 정보 업데이트 실패",
+                                        description: error.message || "추첨 정보 업데이트에 실패했습니다.",
+                                    });
+                                },
+                            });
+                        }}
+                    >
+                        Save
+                    </Button>
+                </>) : (
+                    <Button
+                        disabled={isError}
+                        colorPalette="blue"
+                        onClick={() => {
+                            createLotteryInfo({
+                                timeLotteryStart: getTime(dateLotteryStart),
+                                timeLotteryEnd: getTime(dateLotteryEnd),
+                                timeStart: getTime(dateStart),
+                                timeEnd: getTime(dateEnd),
+                            }, {
+                                onSuccess: () => {
+                                    toaster.success({
+                                        title: "추첨 정보 추가 완료",
+                                        description: "추첨 정보가 성공적으로 추가되었습니다.",
+                                    });
+                                    refetch();
+                                    setOpen(false);
+                                },
+                                onError: (error) => {
+                                    toaster.error({
+                                        title: "추첨 정보 추가 실패",
+                                        description: error.message || "추첨 정보 추가에 실패했습니다.",
+                                    });
+                                },
+                            });
+                        }}
+                    >
+                        Save
+                    </Button>
                 )}
-                <Button
-                    disabled={isError}
-                    colorPalette="blue"
-                    onClick={() => {
-                        createLotteryInfo({
-                            timeLotteryStart: getTime(dateLotteryStart),
-                            timeLotteryEnd: getTime(dateLotteryEnd),
-                            timeStart: getTime(dateStart),
-                            timeEnd: getTime(dateEnd),
-                        }, {
-                            onSuccess: () => {
-                                toaster.success({
-                                    title: "추첨 정보 추가 완료",
-                                    description: "추첨 정보가 성공적으로 추가되었습니다.",
-                                });
-                                refetch();
-                                setOpen(false);
-                            },
-                            onError: (error) => {
-                                toaster.error({
-                                    title: "추첨 정보 추가 실패",
-                                    description: error.message || "추첨 정보 추가에 실패했습니다.",
-                                });
-                            },
-                        });
-                    }}
-                >
-                    Save
-                </Button>
                 <Dialog.ActionTrigger asChild>
                     <Button variant="outline">
                         Close

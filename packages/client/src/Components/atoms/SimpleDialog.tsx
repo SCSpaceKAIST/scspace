@@ -7,11 +7,10 @@ import {
 } from "@chakra-ui/react";
 import React, { Dispatch, SetStateAction } from "react";
 
-export default function SimpleDialog({ open, setOpen, children, size }: {
+export default function SimpleDialog({ open, setOpen, children }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     children: React.ReactNode;
-    size?: "sm" | "md" | "lg" | "xl" | "xs" | "full" | "cover";
 }) {
     const isWide = useBreakpointValue({ base: false, md: true });
 
@@ -19,7 +18,7 @@ export default function SimpleDialog({ open, setOpen, children, size }: {
         <Dialog.Root
             open={open}
             onOpenChange={(e) => setOpen(e.open)}
-            size={isWide ? (size ?? "cover") : "full"}
+            size={isWide ? "cover" : "full"}
             scrollBehavior="inside"
         >
             <Portal>

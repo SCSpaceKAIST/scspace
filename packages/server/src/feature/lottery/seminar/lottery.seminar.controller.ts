@@ -48,7 +48,7 @@ export class LotterySeminarController {
   ): Promise<ISuccessResponse> {
     // Implementation for deleting existing lottery seminar info
     return {
-      success: await this.lotterySeminarService.deleteSeminarLottery(id)
+      success: await this.lotterySeminarService.deleteSeminarLotteryInfo(id)
     };
   }
 
