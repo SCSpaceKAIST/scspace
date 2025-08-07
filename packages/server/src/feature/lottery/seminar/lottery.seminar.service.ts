@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { OrganizationPublicService } from "@scspace-server/feature/organization/organization.public.service";
 import { LotterySeminarRepository } from "./lottery.seminar.repository";
 import { LotterySeminarInfoRepository } from "./lottery.seminar.info.repository";
@@ -34,16 +34,16 @@ export class LotterySeminarService {
     }): Promise<MSeminarLotteryInfo> {
         const now = getNow();
         if (params.lotteryInfo.timeLotteryStart < now) {
-            throw new Error("Lottery time cannot be in the past");
+            throw new BadRequestException("Lottery time cannot be in the past");
         }
         if (params.lotteryInfo.timeLotteryEnd < params.lotteryInfo.timeLotteryStart) {
-            throw new Error("Lottery end time cannot be before start time");
+            throw new BadRequestException("Lottery end time cannot be before start time");
         }
         if (params.lotteryInfo.timeStart < params.lotteryInfo.timeLotteryEnd) {
-            throw new Error("Start time cannot be before lottery end time");
+            throw new BadRequestException("Start time cannot be before lottery end time");
         }
         if (params.lotteryInfo.timeEnd < params.lotteryInfo.timeStart) {
-            throw new Error("Start time cannot be after end time");
+            throw new BadRequestException("Start time cannot be after end time");
         }
         // Implementation for inserting a new seminar lottery info
         const createdLotteryInfo = await this.lotterySeminarInfoRepository.insert(
@@ -60,21 +60,21 @@ export class LotterySeminarService {
             id: params.id
         });
         if (!seminarLotteryInfo) {
-            throw new Error("Seminar lottery info not found");
+            throw new BadRequestException("Seminar lottery info not found");
         }
 
         const now = getNow();
         if (params.updateLotteryInfo.timeLotteryStart < now) {
-            throw new Error("Lottery time cannot be in the past");
+            throw new BadRequestException("Lottery time cannot be in the past");
         }
         if (params.updateLotteryInfo.timeLotteryEnd < params.updateLotteryInfo.timeLotteryStart) {
-            throw new Error("Lottery end time cannot be before start time");
+            throw new BadRequestException("Lottery end time cannot be before start time");
         }
         if (params.updateLotteryInfo.timeStart < params.updateLotteryInfo.timeLotteryEnd) {
-            throw new Error("Start time cannot be before lottery end time");
+            throw new BadRequestException("Start time cannot be before lottery end time");
         }
         if (params.updateLotteryInfo.timeEnd < params.updateLotteryInfo.timeStart) {
-            throw new Error("Start time cannot be after end time");
+            throw new BadRequestException("Start time cannot be after end time");
         }
         // Implementation for updating seminar lottery info
         const updatedLotteryInfo = await this.lotterySeminarInfoRepository.update(params);
@@ -105,10 +105,10 @@ export class LotterySeminarService {
     }): Promise<MSeminarLottery> {
         const organization = await this.organizationPublicService.fetchById(params.lottery.organizationId);
         if (!organization) {
-            throw new Error("Organization not found");
+            throw new BadRequestException("Organization not found");
         }
         if (organization.status !== OrganizationStatusEnum.VERIFIED) {
-            throw new Error("Only verified organizations can create seminar lotteries");
+            throw new BadRequestException("Only verified organizations can create seminar lotteries");
         }
 
         const pastLotteries = await this.lotterySeminarRepository.fetch({
@@ -117,7 +117,7 @@ export class LotterySeminarService {
             infoId: params.lottery.infoId
         });
         if (pastLotteries.length >= 6) {
-            throw new Error("Maximum number of seminar lotteries is 6. Cannot create more.");
+            throw new BadRequestException("Maximum number of seminar lotteries is 6. Cannot create more.");
         }
         // Implementation for inserting a new seminar lottery
         const createdLottery = await this.lotterySeminarRepository.insert(params.lottery);
@@ -130,7 +130,7 @@ export class LotterySeminarService {
     }): Promise<MSeminarLottery> {
         const seminarLottery = await this.lotterySeminarRepository.fetch({ id: params.id });
         if (!seminarLottery) {
-            throw new Error("Seminar lottery not found");
+            throw new BadRequestException("Seminar lottery not found");
         }
 
         // Implementation for updating seminar lottery data
@@ -142,6 +142,10 @@ export class LotterySeminarService {
     }
 
     async deleteSeminarLottery(id: number): Promise<boolean> {
+        const seminarLottery = await this.lotterySeminarRepository.fetch({ id });
+        if (!seminarLottery) {
+            throw new BadRequestException("Seminar lottery not found");
+        }
         // Implementation for deleting seminar lottery data
         return await this.lotterySeminarRepository.delete(id);
     }

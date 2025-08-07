@@ -34,8 +34,8 @@ export default function InfoDetailModal({ id, open, setOpen, refetch }: {
 
     return (
         <SimpleDialog
-            open={true}
-            setOpen={() => { }}
+            open={open}
+            setOpen={setOpen}
         >
             <Dialog.Header>
                 <Dialog.Title>
