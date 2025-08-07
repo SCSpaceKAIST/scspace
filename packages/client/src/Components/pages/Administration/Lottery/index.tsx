@@ -15,7 +15,7 @@ import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useDate } from "@scspace-client/Hooks/utils";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import { HiPlus } from "react-icons/hi";
-import InfoDetailModal from "@scspace-client/Components/organisms/Lottery/Info/AddInfoModal";
+import InfoDetailModal from "@scspace-client/Components/organisms/Lottery/Info/InfoDetailModal";
 
 export default function LotteryManagement() {
     const { needAdmin } = useAuth();
