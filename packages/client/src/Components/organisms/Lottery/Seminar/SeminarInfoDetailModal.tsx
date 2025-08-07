@@ -24,19 +24,19 @@ export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, ref
     } = useLotteryInfoAPI(info?.id || 0);
 
     const today = new Date();
-    const { getTime, getDateString } = useDate();
+    const { getTime, getDateString, getDate } = useDate();
 
     const [dateLotteryStart, setDateLotteryStart] = useState<Date>(
-        info ? new Date(info.timeLotteryStart) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
+        info ? new Date(getDate(info.timeLotteryStart)) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
     );
     const [dateLotteryEnd, setDateLotteryEnd] = useState<Date>(
-        info ? new Date(info.timeLotteryEnd) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
+        info ? new Date(getDate(info.timeLotteryEnd)) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
     );
     const [dateStart, setDateStart] = useState<Date>(
-        info ? new Date(info.timeStart) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
+        info ? new Date(getDate(info.timeStart)) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
     );
     const [dateEnd, setDateEnd] = useState<Date>(
-        info ? new Date(info.timeEnd) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
+        info ? new Date(getDate(info.timeEnd)) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
     );
 
     const [isError, setIsError] = useState<boolean>(false);
