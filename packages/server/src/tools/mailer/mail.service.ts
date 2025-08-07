@@ -24,6 +24,7 @@ export class MailService {
         }
         ).catch((error) => {
             console.error('템플릿 메일 전송 실패:', error);
+            this.reportError(error, "MailService.sendMail Error").then()
             throw new Error('템플릿 메일 전송에 실패했습니다.');
         });
     }
