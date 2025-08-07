@@ -88,20 +88,19 @@ export const OrgStatusMeta = {
 
 
 export const ReservationMeta = {
-    ReservationCompleted : {
-        color : '#4CAF50',
-        emoji: '📅',
+    ReservationCompleted: {
+        color: '#4CAF50',
         header: {
             kr: "예약 완료 안내",
             en: "Reservation Confirmed"
         },
-        body : {
-            kr : "귀하의 예약이 아래와 같이 정상적으로 처리되었습니다. ",
-            en : "Your reservation request has been processed successfully. "
+        body: {
+            kr: "귀하의 예약이 아래와 같이 정상적으로 처리되었습니다. ",
+            en: "Your reservation request has been processed successfully. "
         },
         contentUpperDesc: {
-            kr : "신규 예약",
-            en : "New Reservation"
+            kr: "신규 예약",
+            en: "New Reservation"
         }
 
     }

@@ -1,71 +1,67 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="utf-8" />
-  <title>{{meta.header.kr}} / {{meta.header.en}}</title>
-  <style>
-    body {
-      font-family: 'Malgun Gothic', Arial, sans-serif;
-      background: #f4f4f4; margin: 0; padding: 0; color: #333;
-    }
-    .container {
-      max-width: 600px; margin: 0 auto; background: #fff;
-      border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,.08);
-    }
-    .header {
-      background: {{meta.color}};
-      color: #fff; text-align: center; padding: 30px 20px;
-      border-radius: 8px 8px 0 0;
-    }
-    .header h1 { margin: 0; font-size: 24px; }
-    .content { padding: 30px 20px; }
-    .informations{margin:20px 0;background:#f8f9fa;padding:20px;border-radius:6px;}
-    .informations li{margin:6px 0;}
-    .footer {
-      background: #f8f9fa; border-top: 1px solid #e9ecef;
-      padding: 20px; text-align: center; font-size: 14px; color: #6c757d;
-      border-radius: 0 0 8px 8px;
-    }
-  </style>
-</head>
-<body>
-<div class="container">
-  <!-- ─── 헤더 ─── -->
-  <div class="header">
-    <h1>{{meta.emoji}} {{meta.header.kr}}</h1>
-    <h2 style="margin:8px 0 0 0; font-weight:400">{{meta.header.en}}</h2>
-    <p style="margin-top:18px">
-      {{meta.body.kr}}<br/>
-      {{meta.body.en}}
-    </p>
-  </div>
-
-  <!-- ─── 본문 ─── -->
-  <div class="content">
-    <p>
-      <strong>{{reservation.title}}</strong> —
-      {{meta.contentUpperDesc.kr}} / {{meta.contentUpperDesc.en}}
-    </p>
-
-    <div class="informations">
-        <strong>⏰ 상세 정보 / Details</strong>
-        <ul>
-          <li>예약명 / Reservation Title : {{reservation.title}}</li>
-          <li>예약자 / Reserved by : {{reservation.user.studentNumber}} {{reservation.user.nameKr}}</li>
-          <li>소속 / Organization : {{reservation.organization.name}}</li>
-          <li>공간 / Space : {{reservation.space.nameKr}} / {{reservation.space.nameEn}}</li>
-          <li>시작 시간 / Start Time : {{meta.timeFrom}} KST</li>
-          <li>종료 시간 / End Time : {{meta.timeTo}} KST</li>
-        </ul>
+<html lang='ko'>
+  <head>
+    <meta charset='utf-8' />
+    <title>{{meta.header.kr}} / {{meta.header.en}}</title>
+    <style>
+      body { font-family: 'Malgun Gothic', Arial, sans-serif; background:
+      #f4f4f4; margin: 0; padding: 0; color: #333; } .container { max-width:
+      600px; margin: 0 auto; background: #fff; border-radius: 8px; box-shadow: 0
+      2px 10px rgba(0,0,0,.08); } .header { background:
+      {{meta.color}}; color: #fff; text-align: center; padding: 30px 20px;
+      border-radius: 8px 8px 0 0; } .header h1 { margin: 0; font-size: 24px; }
+      .content { padding: 30px 20px; } .informations{margin:20px
+      0;background:#f8f9fa;padding:20px;border-radius:6px;} .informations
+      li{margin:6px 0;} .footer { background: #f8f9fa; border-top: 1px solid
+      #e9ecef; padding: 20px; text-align: center; font-size: 14px; color:
+      #6c757d; border-radius: 0 0 8px 8px; }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <!-- ─── 헤더 ─── -->
+      <div class='header'>
+        <h1>{{meta.header.kr}}</h1>
+        <h2 style='margin:8px 0 0 0; font-weight:400'>{{meta.header.en}}</h2>
+        <p style='margin-top:18px'>
+          {{meta.body.kr}}<br />
+          {{meta.body.en}}
+        </p>
       </div>
-  </div>
 
-  <!-- ─── 푸터 ─── -->
-  <div class="footer">
-    <p><strong>학생문화공간위원회 / Student Culture and Space Committee</strong></p>
-    <p>{{meta.templateFooter}}<br/>
-      {{meta.templateFooterEn}}</p>
-  </div>
-</div>
-</body>
+      <!-- ─── 본문 ─── -->
+      <div class='content'>
+        <p>
+          <strong>{{reservation.title}}</strong>
+          —
+          {{meta.contentUpperDesc.kr}}
+          /
+          {{meta.contentUpperDesc.en}}
+        </p>
+
+        <div class='informations'>
+          <strong>⏰ 상세 정보 / Details</strong>
+          <ul>
+            <li>예약명 / Reservation Title : {{reservation.title}}</li>
+            <li>예약자 / Reserved by :
+              {{reservation.user.studentNumber}}
+              {{reservation.user.nameKr}}</li>
+            <li>소속 / Organization : {{reservation.organization.name}}</li>
+            <li>공간 / Space :
+              {{reservation.space.nameKr}}
+              /
+              {{reservation.space.nameEn}}</li>
+            <li>시작 시간 / Start Time : {{meta.timeFrom}} KST</li>
+            <li>종료 시간 / End Time : {{meta.timeTo}} KST</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ─── 푸터 ─── -->
+      <div class='footer'>
+        <p><strong>학생문화공간위원회 / Student Culture and Space Committee</strong></p>
+        <p>{{meta.templateFooter}}<br />
+          {{meta.templateFooterEn}}</p>
+      </div>
+    </div>
+  </body>
 </html>
