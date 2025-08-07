@@ -43,9 +43,10 @@ export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, ref
 
     useEffect(() => {
         setIsError(
+            today >= dateLotteryStart ||
             dateLotteryStart >= dateLotteryEnd ||
-            dateStart < dateLotteryEnd ||
-            dateEnd <= dateStart
+            dateLotteryEnd >= dateStart ||
+            dateStart >= dateEnd
         )
     }, [dateLotteryStart, dateLotteryEnd, dateStart, dateEnd,]);
 
@@ -58,9 +59,11 @@ export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, ref
                 <Dialog.Title>
                     세미나실 정기 예약 추첨 정보
                 </Dialog.Title>
-                <Dialog.Description>
-
-                </Dialog.Description>
+                {isError && (
+                    <Dialog.Description color="red" fontWeight={"bold"}>
+                        날짜 설정에 오류가 있습니다. 날짜 순서를 확인해주세요.
+                    </Dialog.Description>
+                )}
             </Dialog.Header>
             <Dialog.Body>
                 <Wrap justify="center">
@@ -138,25 +141,24 @@ export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, ref
             </Dialog.Body>
             <Dialog.Footer>
                 {info ? (<>
-                    <Dialog.ActionTrigger asChild>
-                        <DeleteBtn onDelete={() => {
-                            deleteLotteryInfo({}, {
-                                onSuccess: () => {
-                                    toaster.success({
-                                        title: "추첨 정보 삭제 완료",
-                                        description: "추첨 정보가 성공적으로 삭제되었습니다.",
-                                    });
-                                    refetch();
-                                },
-                                onError: (error) => {
-                                    toaster.error({
-                                        title: "추첨 정보 삭제 실패",
-                                        description: error.message || "추첨 정보 삭제에 실패했습니다.",
-                                    });
-                                },
-                            })
-                        }} />
-                    </Dialog.ActionTrigger>
+                    <DeleteBtn onDelete={() => {
+                        deleteLotteryInfo({}, {
+                            onSuccess: () => {
+                                toaster.success({
+                                    title: "추첨 정보 삭제 완료",
+                                    description: "추첨 정보가 성공적으로 삭제되었습니다.",
+                                });
+                                refetch();
+                                setOpen(false);
+                            },
+                            onError: (error) => {
+                                toaster.error({
+                                    title: "추첨 정보 삭제 실패",
+                                    description: error.message || "추첨 정보 삭제에 실패했습니다.",
+                                });
+                            },
+                        })
+                    }} />
                     <Button
                         disabled={isError}
                         colorPalette="blue"

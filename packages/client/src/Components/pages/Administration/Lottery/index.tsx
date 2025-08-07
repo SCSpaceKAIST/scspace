@@ -1,97 +1,30 @@
-"use client"
-
-import React, { useEffect, useState } from "react";
-import { useAuth } from "@scspace-client/Hooks/auth";
-import {
-    Stack,
-    Text,
-    Alert,
-    HStack,
-    IconButton,
-} from "@chakra-ui/react";
-import { useLotteryInfo } from "@scspace-client/Hooks/lottery";
+import { Tabs } from "@chakra-ui/react";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
-import LoadingComponent from "@scspace-client/Components/atoms/Loading";
-import { useDate } from "@scspace-client/Hooks/utils";
-import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
-import { HiPlus } from "react-icons/hi";
-import SeminarLotteryInfoDetailModal from "@scspace-client/Components/organisms/Lottery/Info/SeminarInfoDetailModal";
-import { ILotteryInfo } from "@scspace-depot/types/lottery/lottery.info.type";
+import SeminarLottery from "@scspace-client/Components/organisms/Lottery/Seminar/SeminarLottery";
+import React from "react";
 
-export default function LotteryManagement() {
-    const { needAdmin } = useAuth();
-    needAdmin();
-    const { lotteryInfos, isLoading, refetch } = useLotteryInfo();
-
-    const { getDateString } = useDate();
-
-    const [open, setOpen] = useState<boolean>(false);
-    const [selectedId, setSelectedId] = useState<number>(0);
-    const [selectedInfo, setSelectedInfo] = useState<ILotteryInfo | null>(null);
-    useEffect(() => {
-        if (selectedId === 0) {
-            setSelectedInfo(null);
-        } else {
-            setSelectedInfo(lotteryInfos?.find(info => info.id === selectedId) || null);
-        }
-    }, [selectedId, lotteryInfos]);
+export default function ManageLottery() {
+    const tabList: { [key: string]: React.ReactNode } = {
+        "공연집중기간 추첨": <p>Under Development</p>,
+        "세미나실 정기예약 추첨": <SeminarLottery />,
+    };
 
     return (
-        <>
-            <SeminarLotteryInfoDetailModal
-                info={selectedInfo}
-                open={open}
-                setOpen={setOpen}
-                refetch={refetch}
-            />
-            <Scroll>
-                {isLoading ? (<LoadingComponent />) : (
-                    <Stack gap={6}>
-                        <HStack justify="space-between">
-                            <Text fontSize="2xl" fontWeight="bold">세미나실 정기 예약 추첨</Text>
-                            <IconButton
-                                variant={"outline"}
-                                onClick={() => {
-                                    setSelectedId(0);
-                                    setOpen(true);
-                                }}
-                            >
-                                <HiPlus />
-                            </IconButton>
-                        </HStack>
-
-                        {!lotteryInfos || lotteryInfos.length === 0 ? (
-                            <Alert.Root status="info">
-                                <Alert.Indicator />
-                                <Alert.Title>등록된 추첨 정보가 없습니다.</Alert.Title>
-                            </Alert.Root>
-                        ) : (
-                            <SimpleTable
-                                onIdChange={(id: number) => {
-                                    setSelectedId(id);
-                                    setOpen(true);
-                                }}
-                                header={[
-                                    "추첨 시작 날짜",
-                                    "추첨 종료 날짜",
-                                    "학기 시작 날짜",
-                                    "학기 종료 날짜",
-                                ]}
-                                content={lotteryInfos.map(info => ({
-                                    id: info.id,
-                                    row: [
-                                        getDateString(info.timeLotteryStart),
-                                        getDateString(info.timeLotteryEnd),
-                                        getDateString(info.timeStart),
-                                        getDateString(info.timeEnd),
-                                    ],
-                                }))}
-                            />
-                        )}
-
-                    </Stack>
-                )}
-            </Scroll>
-        </>
+        <Scroll>
+            <Tabs.Root defaultValue={Object.keys(tabList)[0]} fitted minHeight={"full"}>
+                <Tabs.List>
+                    {Object.keys(tabList).map((key) => (
+                        <Tabs.Trigger key={key} value={key}>
+                            {key}
+                        </Tabs.Trigger>
+                    ))}
+                </Tabs.List>
+                {Object.entries(tabList).map(([key, content]) => (
+                    <Tabs.Content key={key} value={key} minHeight={"full"}>
+                        {content}
+                    </Tabs.Content>
+                ))}
+            </Tabs.Root>
+        </Scroll>
     );
 }
