@@ -382,11 +382,11 @@ export class ReservationService {
 
     //조직의 경우 모든 구성원에게 발송함 Notif
     const templateFooter: string =
-      id === 1
+      organization.id === 1
         ? '문의사항이 있으시면 언제든 연락해 주세요.'
         : '이 메일은 예약자 본인 및 조직에 등록된 모든 구성원에게 발송되었습니다.';
     const templateFooterEn: string =
-      id === 1
+      organization.id === 1
         ? 'Please feel free to contact us if you have any questions.'
         : 'This email has been sent to the reservation holder and all members registered with the organization.';
     const meta = {

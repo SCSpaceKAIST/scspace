@@ -13,8 +13,8 @@
       20px;} .reservation-info{
       background:#f8f9fa;padding:20px;border-radius:6px;margin:20px 0;
       border-left:4px solid
-      {{meta.color}}; } .reservation-title{ color:{{meta.color}};font-size:20px;font-weight:600;
-      margin:10px 0; } .informations{ margin:20px
+      {{meta.color}}; } .reservation-title{ color:{{meta.color}};font-size:18px;font-weight:600;
+      margin:5px 0; } .informations{ margin:20px
       0;background:#f8f9fa;padding:20px;border-radius:6px; border-left:4px solid
       #17a2b8; } .informations ul{ list-style:none;padding:0;margin:10px 0; }
       .informations li{ margin:10px
@@ -42,14 +42,18 @@
       <!-- ─── 본문 ─── -->
       <div class='content'>
         <!-- 예약 정보 요약 -->
+<!--        <div class='reservation-info'>-->
+<!--        <strong>대상 예약 / Target Reservation</strong>-->
+<!--        <div class='reservation-title'>{{reservation.title}}</div>-->
+<!--        <p style='margin:8px 0;color:#6c757d;'>-->
+<!--          {{meta.contentUpperDesc.kr}}-->
+<!--          /-->
+<!--          {{meta.contentUpperDesc.en}}-->
+<!--        </p>-->
+<!--      </div>-->
         <div class='reservation-info'>
-          <strong>대상 예약 / Target </strong>
-          <div class='reservation-title'>{{reservation.title}}</div>
-          <p style='margin:8px 0;color:#6c757d;'>
-            {{meta.contentUpperDesc.kr}}
-            /
-            {{meta.contentUpperDesc.en}}
-          </p>
+          <strong>변동 유형 / Target Reservation</strong>
+          <div class='reservation-title'>{{meta.contentUpperDesc.kr}} / {{meta.contentUpperDesc.en}}</div>
         </div>
 
         <!-- 상세 정보 -->
@@ -104,7 +108,7 @@
         <p><strong>학생문화공간위원회 / Student Cultural Space Committee</strong></p>
         <p>{{meta.templateFooter}}<br />
           {{meta.templateFooterEn}}</p>
-        <p style='margin-top:15px;color:#999;'>Contact : ✉️scspace@kaist.ac.kr</p>
+        <p style='margin-top:15px;color:#999;'>Contact : ✉️ scspace@kaist.ac.kr</p>
       </div>
     </div>
   </body>
