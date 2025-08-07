@@ -16,7 +16,7 @@ export default function InfoDetailModal({ id, open, setOpen, refetch }: {
     setOpen: Dispatch<SetStateAction<boolean>>;
     refetch: () => void;
 }) {
-    const { createLotteryInfo } = useLotteryInfoAPI();
+    const { createLotteryInfo, deleteLotteryInfo } = useLotteryInfoAPI();
 
     const today = new Date();
     const { getTime, getDateString } = useDate();
@@ -46,6 +46,7 @@ export default function InfoDetailModal({ id, open, setOpen, refetch }: {
 
     return (
         <SimpleDialog
+            size="xl"
             open={open}
             setOpen={setOpen}
         >
@@ -68,9 +69,9 @@ export default function InfoDetailModal({ id, open, setOpen, refetch }: {
                         </Card.Header>
                         <Card.Body>
                             <Stack align={"center"}>
-                                <Text>
+                                <Card.Title>
                                     {getDateString(getTime(dateLotteryStart))} ~ {getDateString(getTime(dateLotteryEnd))}
-                                </Text>
+                                </Card.Title>
                                 <Wrap justify="center">
                                     <DatePicker
                                         wrapperClassName="datepicker"
@@ -97,12 +98,15 @@ export default function InfoDetailModal({ id, open, setOpen, refetch }: {
                     <Card.Root>
                         <Card.Header>
                             <Card.Title>행사 날짜</Card.Title>
+                            <Card.Description>
+                                추첨 결과가 반영되는 날짜입니다.
+                            </Card.Description>
                         </Card.Header>
                         <Card.Body>
                             <Stack align={"center"}>
-                                <Text>
+                                <Card.Title>
                                     {getDateString(getTime(dateStart))} ~ {getDateString(getTime(dateEnd))}
-                                </Text>
+                                </Card.Title>
                                 <Wrap justify="center">
                                     <DatePicker
                                         wrapperClassName="datepicker"
@@ -129,9 +133,28 @@ export default function InfoDetailModal({ id, open, setOpen, refetch }: {
                 </Wrap>
             </Dialog.Body>
             <Dialog.Footer>
-                <Dialog.ActionTrigger asChild>
-                    <DeleteBtn onDelete={() => alert("delete")} />
-                </Dialog.ActionTrigger>
+                {id && (
+                    <Dialog.ActionTrigger asChild>
+                        <DeleteBtn onDelete={() => {
+                            deleteLotteryInfo({ id }, {
+                                onSuccess: () => {
+                                    toaster.success({
+                                        title: "추첨 정보 삭제 완료",
+                                        description: "추첨 정보가 성공적으로 삭제되었습니다.",
+                                    });
+                                    refetch();
+                                    setOpen(false);
+                                },
+                                onError: (error) => {
+                                    toaster.error({
+                                        title: "추첨 정보 삭제 실패",
+                                        description: error.message || "추첨 정보 삭제에 실패했습니다.",
+                                    });
+                                },
+                            })
+                        }} />
+                    </Dialog.ActionTrigger>
+                )}
                 <Button
                     disabled={isError}
                     colorPalette="blue"
