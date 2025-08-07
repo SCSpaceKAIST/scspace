@@ -8,9 +8,10 @@ import { UserModule } from 'src/feature/user/user.module';
 import { ReservationPublicService } from './reservation.public.service';
 import { OrganizationModule } from 'src/feature/organization/organization.module';
 import { MailModule } from 'src/tools/mailer/mail.module';
+import { LotterySeminarModule } from '../lottery/seminar/lottery.seminar.module';
 
 @Module({
-  imports: [DBModule, SpaceModule, UserModule, OrganizationModule, MailModule],
+  imports: [DBModule, SpaceModule, UserModule, OrganizationModule, MailModule, LotterySeminarModule],
   controllers: [ReservationController],
   providers: [
     ReservationRepository,
@@ -19,4 +20,4 @@ import { MailModule } from 'src/tools/mailer/mail.module';
   ],
   exports: [ReservationPublicService],
 })
-export class ReservationModule {}
+export class ReservationModule { }
