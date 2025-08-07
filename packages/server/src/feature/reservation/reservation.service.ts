@@ -24,7 +24,7 @@ import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { getNow } from '@scspace-server/common/utils';
 import { MailService } from '@scspace-server/tools/mailer/mail.service';
 import { ReservationMeta } from '@scspace-depot/enums/mail.enum';
-import { getString } from '@scspace-server/common/utils'
+import { getString } from '@scspace-server/common/utils';
 
 @Injectable()
 export class ReservationService {
@@ -192,6 +192,9 @@ export class ReservationService {
     if (!organization) throw new BadRequestException('Organization not found');
     if (!space) throw new BadRequestException('Space not found');
 
+    // 세미나실 추첨 기간 겹침 검증
+    await this.reservationPublicService.validateSeminarLotteryConflict(reservationInput.userId, space, reservationInput.timeFrom, reservationInput.timeTo);
+
     if (user.type !== UserTypeEnum.MANAGER && user.type !== UserTypeEnum.ADMIN) {
       const userOrganizations = await this.organizationPublicService.fetchByUserId(reservationInput.userId);
       if (!userOrganizations.some(org => org.id === reservationInput.organizationId)) {
@@ -324,6 +327,12 @@ export class ReservationService {
       reservationInput.timeTo,
       reservationInput.id
     );
+
+    // 공간 정보 조회하여 세미나실 추첨 기간 겹침 검증
+    const space = await this.spacePublicService.fetchById(reservation[0].spaceId);
+    if (!space) throw new BadRequestException('Space not found');
+
+    await this.reservationPublicService.validateSeminarLotteryConflict(reservation[0].userId, space, reservationInput.timeFrom, reservationInput.timeTo);
 
     const [
       reservationUpdated,

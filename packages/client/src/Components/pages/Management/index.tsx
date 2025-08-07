@@ -8,7 +8,7 @@ import ManageReservation from "./Reservation";
 
 export default function Management() {
   const { needManager } = useAuth();
-  // needManager();
+  needManager();
 
   const pages: IPage[] = [
     {

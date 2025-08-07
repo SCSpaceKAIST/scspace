@@ -24,15 +24,65 @@ export class LotterySeminarService {
     ) { }
 
     async getAllSeminarLotteryInfo(): Promise<MSeminarLotteryInfo[]> {
-        // Implementation for fetching all seminar lottery info
+        // 자동 정렬된 모든 세미나 추첨 정보 조회
         const seminarLotteryInfo = await this.lotterySeminarInfoRepository.fetchAll();
         return seminarLotteryInfo;
+    }
+
+    async getActiveSeminarLotteryInfo(): Promise<MSeminarLotteryInfo[]> {
+        // 현재 진행 중인 추첨 정보들 조회 (시간 순 정렬)
+        const now = getNow();
+        return await this.lotterySeminarInfoRepository.fetchActiveLotteries(now);
+    }
+
+    async getUpcomingSeminarLotteryInfo(): Promise<MSeminarLotteryInfo[]> {
+        // 예정된 추첨 정보들 조회 (시간 순 정렬)
+        const now = getNow();
+        return await this.lotterySeminarInfoRepository.fetchUpcomingLotteries(now);
+    }
+
+    /**
+     * 시간 겹침 검증 - 추첨 시작 시간부터 행사 끝 시간까지 겹치는지 확인
+     */
+    private async validateTimeConflict(
+        lotteryInfo: ILotteryInfoCreate | ILotteryInfoUpdate,
+        excludeId?: number
+    ): Promise<void> {
+        const allLotteries = await this.lotterySeminarInfoRepository.fetchAll();
+
+        // 현재 수정 중인 항목은 제외
+        const otherLotteries = excludeId
+            ? allLotteries.filter(lottery => lottery.id !== excludeId)
+            : allLotteries;
+
+        const newStartTime = lotteryInfo.timeLotteryStart!;
+        const newEndTime = lotteryInfo.timeEnd!;
+
+        for (const existingLottery of otherLotteries) {
+            const existingStartTime = existingLottery.timeLotteryStart;
+            const existingEndTime = existingLottery.timeEnd;
+
+            // 시간 겹침 검사: 새로운 기간과 기존 기간이 겹치는지 확인
+            // A: [newStartTime ---- newEndTime]
+            // B: [existingStartTime ---- existingEndTime]
+            // 겹치지 않는 조건: newEndTime <= existingStartTime OR newStartTime >= existingEndTime
+            // 겹치는 조건: !(겹치지 않는 조건)
+            const isOverlapping = !(newEndTime <= existingStartTime || newStartTime >= existingEndTime);
+
+            if (isOverlapping) {
+                throw new BadRequestException(
+                    `Time conflict detected. The period from lottery start to event end overlaps with existing lottery (ID: ${existingLottery.id})`
+                );
+            }
+        }
     }
 
     async postSeminarLotteryInfo(params: {
         lotteryInfo: ILotteryInfoCreate
     }): Promise<MSeminarLotteryInfo> {
         const now = getNow();
+
+        // 시간 유효성 검증
         if (params.lotteryInfo.timeLotteryStart < now) {
             throw new BadRequestException("Lottery time cannot be in the past");
         }
@@ -45,7 +95,11 @@ export class LotterySeminarService {
         if (params.lotteryInfo.timeEnd < params.lotteryInfo.timeStart) {
             throw new BadRequestException("Start time cannot be after end time");
         }
-        // Implementation for inserting a new seminar lottery info
+
+        // 시간 겹침 검증
+        await this.validateTimeConflict(params.lotteryInfo);
+
+        // 추첨 정보 생성 (자동 정렬됨)
         const createdLotteryInfo = await this.lotterySeminarInfoRepository.insert(
             params.lotteryInfo
         );
@@ -64,19 +118,33 @@ export class LotterySeminarService {
         }
 
         const now = getNow();
-        if (params.updateLotteryInfo.timeLotteryStart < now) {
+
+        // 업데이트할 값들을 기존 값과 병합
+        const mergedLotteryInfo = {
+            timeLotteryStart: params.updateLotteryInfo.timeLotteryStart ?? seminarLotteryInfo.timeLotteryStart,
+            timeLotteryEnd: params.updateLotteryInfo.timeLotteryEnd ?? seminarLotteryInfo.timeLotteryEnd,
+            timeStart: params.updateLotteryInfo.timeStart ?? seminarLotteryInfo.timeStart,
+            timeEnd: params.updateLotteryInfo.timeEnd ?? seminarLotteryInfo.timeEnd,
+        };
+
+        // 시간 유효성 검증
+        if (mergedLotteryInfo.timeLotteryStart < now) {
             throw new BadRequestException("Lottery time cannot be in the past");
         }
-        if (params.updateLotteryInfo.timeLotteryEnd < params.updateLotteryInfo.timeLotteryStart) {
+        if (mergedLotteryInfo.timeLotteryEnd < mergedLotteryInfo.timeLotteryStart) {
             throw new BadRequestException("Lottery end time cannot be before start time");
         }
-        if (params.updateLotteryInfo.timeStart < params.updateLotteryInfo.timeLotteryEnd) {
+        if (mergedLotteryInfo.timeStart < mergedLotteryInfo.timeLotteryEnd) {
             throw new BadRequestException("Start time cannot be before lottery end time");
         }
-        if (params.updateLotteryInfo.timeEnd < params.updateLotteryInfo.timeStart) {
+        if (mergedLotteryInfo.timeEnd < mergedLotteryInfo.timeStart) {
             throw new BadRequestException("Start time cannot be after end time");
         }
-        // Implementation for updating seminar lottery info
+
+        // 시간 겹침 검증 (현재 수정 중인 항목 제외)
+        await this.validateTimeConflict(mergedLotteryInfo, params.id);
+
+        // 추첨 정보 업데이트 (자동 정렬됨)
         const updatedLotteryInfo = await this.lotterySeminarInfoRepository.update(params);
         return updatedLotteryInfo;
     }

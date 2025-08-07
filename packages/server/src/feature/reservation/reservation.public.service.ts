@@ -1,12 +1,21 @@
 import { Logger, Injectable, BadRequestException } from '@nestjs/common';
 import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
+import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 import { ReservationRepository } from './reservation.repository';
-import { reservationMaxDate, reservationMaxDayTime, reservationMaxWeekTime, reservationMinDate, reservationTimeWeightOrg } from '@scspace-depot/consts/reservation.const';
+import {
+  reservationMaxDate,
+  reservationMaxDayTime,
+  reservationMaxWeekTime,
+  reservationMinDate,
+  reservationTimeWeightOrg
+} from '@scspace-depot/consts/reservation.const';
 import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
 import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
 import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
-import { getDateDiffInMinute, getNow, timeRangeCheck } from '@scspace-server/common/utils';
+import { getDateDiffInMinute, getDateString, getNow, timeRangeCheck } from '@scspace-server/common/utils';
 import { IReservationContent, IReservationSimple } from '@scspace-depot/types/reservation';
+import { ISpace } from '@scspace-depot/types/space';
+import { LotterySeminarService } from '../lottery/seminar/lottery.seminar.service';
 import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
@@ -20,6 +29,7 @@ export class ReservationPublicService {
     private readonly reservationRepository: ReservationRepository,
     private readonly spacePublicService: SpacePublicService,
     private readonly userPublicService: UserPublicService,
+    private readonly lotterySeminarService: LotterySeminarService,
   ) { }
 
   async fetchById(id: number): Promise<IReservationSimple | null> {
@@ -378,6 +388,54 @@ export class ReservationPublicService {
     } catch (error) {
       Logger.error('Failed to backup reservations:', error);
       throw new BadRequestException('Failed to backup reservations');
+    }
+  }
+
+  /**
+   * 세미나실 예약 시 추첨 기간과 겹치는지 검증
+   * @param userId 사용자 ID
+   * @param space 예약하려는 공간 정보
+   * @param timeFrom 예약 시작 시간 (timestamp)
+   * @param timeTo 예약 종료 시간 (timestamp)
+   */
+  async validateSeminarLotteryConflict(
+    userId: number,
+    space: ISpace,
+    timeFrom: number,
+    timeTo: number
+  ): Promise<void> {
+    // 세미나실이 아니면 검증하지 않음
+    if (space.spaceType !== SpaceTypeEnum.SEMINAR) {
+      return;
+    }
+
+    // 공간위원이면 추첨 기간과 겹쳐도 예약 가능
+    // if (await this.userPublicService.isManager(userId)) {
+    //   return;
+    // }
+
+    // 모든 추첨 정보 조회 (시간 순으로 정렬됨)
+    const allLotteries = await this.lotterySeminarService.getAllSeminarLotteryInfo();
+
+    for (const lottery of allLotteries) {
+      // 추첨 시작 시간부터 행사 끝 시간까지의 기간
+      const lotteryStartTime = lottery.timeLotteryStart;
+      const eventEndTime = lottery.timeEnd;
+
+      // 예약 시간과 추첨 기간이 겹치는지 확인
+      // A: [timeFrom ---- timeTo] (예약)
+      // B: [lotteryStartTime ---- eventEndTime] (추첨 기간)
+      // 겹치지 않는 조건: timeTo <= lotteryStartTime OR timeFrom >= eventEndTime
+      // 겹치는 조건: !(겹치지 않는 조건)
+      const isOverlapping = !(timeTo <= lotteryStartTime || timeFrom >= eventEndTime);
+
+      if (isOverlapping) {
+        const startDate = getDateString(lottery.timeStart);
+        const endDate = getDateString(lottery.timeEnd);
+        throw new BadRequestException(
+          `This period is reserved for seminar lottery from ${startDate} to ${endDate}. Reservation cannot be made until the lottery is completed.`
+        );
+      }
     }
   }
 }

@@ -15,8 +15,20 @@ export class LotterySeminarController {
 
   @Get("info")
   async getInfo(): Promise<MSeminarLotteryInfo[]> {
-    // Implementation for fetching lottery seminar info
+    // 모든 추첨 정보 조회 (시간 순 자동 정렬)
     return await this.lotterySeminarService.getAllSeminarLotteryInfo();
+  }
+
+  @Get("info/active")
+  async getActiveInfo(): Promise<MSeminarLotteryInfo[]> {
+    // 현재 진행 중인 추첨 정보 조회 (시간 순 정렬)
+    return await this.lotterySeminarService.getActiveSeminarLotteryInfo();
+  }
+
+  @Get("info/upcoming")
+  async getUpcomingInfo(): Promise<MSeminarLotteryInfo[]> {
+    // 예정된 추첨 정보 조회 (시간 순 정렬)
+    return await this.lotterySeminarService.getUpcomingSeminarLotteryInfo();
   }
 
   @UseGuards(AdminGuard)
@@ -24,7 +36,7 @@ export class LotterySeminarController {
   async postInfo(
     @Body() lotteryInfo: ILotteryInfoCreate
   ): Promise<MSeminarLotteryInfo> {
-    // Implementation for posting new lottery seminar info
+    // 새 추첨 정보 생성 (시간 겹침 검증 + 자동 정렬)
     return await this.lotterySeminarService.postSeminarLotteryInfo({ lotteryInfo });
   }
 
@@ -34,7 +46,7 @@ export class LotterySeminarController {
     @Param('id') id: number,
     @Body() updateLotteryInfo: ILotteryInfoUpdate
   ): Promise<MSeminarLotteryInfo> {
-    // Implementation for updating existing lottery seminar info
+    // 추첨 정보 업데이트 (시간 겹침 검증 + 자동 정렬)
     return await this.lotterySeminarService.updateSeminarLotteryInfo({
       id,
       updateLotteryInfo
@@ -46,7 +58,7 @@ export class LotterySeminarController {
   async deleteInfo(
     @Param('id') id: number
   ): Promise<ISuccessResponse> {
-    // Implementation for deleting existing lottery seminar info
+    // 추첨 정보 삭제
     return {
       success: await this.lotterySeminarService.deleteSeminarLotteryInfo(id)
     };
