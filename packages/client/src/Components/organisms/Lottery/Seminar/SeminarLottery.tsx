@@ -14,7 +14,7 @@ import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useDate } from "@scspace-client/Hooks/utils";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
-import { HiPlus } from "react-icons/hi";
+import { HiPlus } from "react-icons/hi2";
 import SeminarLotteryInfoDetailModal from "@scspace-client/Components/organisms/Lottery/Seminar/SeminarInfoDetailModal";
 import { ILotteryInfo } from "@scspace-depot/types/lottery/lottery.info.type";
 

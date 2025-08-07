@@ -27,16 +27,16 @@ export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, ref
     const { getTime, getDateString } = useDate();
 
     const [dateLotteryStart, setDateLotteryStart] = useState<Date>(
-        new Date(today.getFullYear(), today.getMonth(), today.getDate())
+        info ? new Date(info.timeLotteryStart) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
     );
     const [dateLotteryEnd, setDateLotteryEnd] = useState<Date>(
-        new Date(today.getFullYear(), today.getMonth(), today.getDate())
+        info ? new Date(info.timeLotteryEnd) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
     );
     const [dateStart, setDateStart] = useState<Date>(
-        new Date(today.getFullYear(), today.getMonth(), today.getDate())
+        info ? new Date(info.timeStart) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
     );
     const [dateEnd, setDateEnd] = useState<Date>(
-        new Date(today.getFullYear(), today.getMonth(), today.getDate())
+        info ? new Date(info.timeEnd) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
     );
 
     const [isError, setIsError] = useState<boolean>(false);
