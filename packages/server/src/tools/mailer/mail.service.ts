@@ -27,4 +27,25 @@ export class MailService {
             throw new Error('템플릿 메일 전송에 실패했습니다.');
         });
     }
+
+  async reportError(error: Error, additionalContext?: string): Promise<ISuccessResponse> {
+    const errorMeta = {
+      timestamp: new Date().toISOString(),
+      errorName: error.name,
+      errorMessage: error.message,
+      stackTrace: error.stack,
+      additionalContext: additionalContext || 'No additional context provided'
+    };
+
+    return this.sendMail({
+      to: ['jhlee012@kaist.ac.kr', 'scspace.kaist@gmail.com'],
+      subject: `[SCSpace-DEV] Error Report - ${error.name}`,
+      template: 'errorLog',
+      context: {
+        meta: errorMeta
+      },
+    });
+  }
+
+
 }

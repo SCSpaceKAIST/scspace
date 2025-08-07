@@ -339,16 +339,66 @@ export class ReservationService {
       reservationInput.id,
     );
 
-    // 공간 정보 조회하여 세미나실 추첨 기간 겹침 검증
-    const space = await this.spacePublicService.fetchById(reservation[0].spaceId);
+
+    const [user, space, organization] = await Promise.all([
+      this.userPublicService.fetchById(reservation[0].userId),
+      this.spacePublicService.fetchById(reservation[0].spaceId),
+      this.organizationPublicService.fetchById(reservation[0].organizationId)
+    ]);
+
+    if (!user) throw new BadRequestException('User not found');
+    if (!organization) throw new BadRequestException('Organization not found');
     if (!space) throw new BadRequestException('Space not found');
 
-    await this.reservationPublicService.validateSeminarLotteryConflict(reservation[0].userId, space, reservationInput.timeFrom, reservationInput.timeTo);
+    // 공간 정보 조회하여 세미나실 추첨 기간 겹침 검증
+    await this.reservationPublicService.validateSeminarLotteryConflict(
+      reservation[0].userId, space, reservationInput.timeFrom, reservationInput.timeTo
+    );
 
-    const [
-      reservationUpdated,
-      reservationContentUpdated
-    ] = await this.reservationRepository.update(reservationInput);
+    const [reservationUpdated, reservationContentUpdated] = await this.reservationRepository.update(reservationInput);
+
+    const timeFrom = getString(reservationUpdated.timeFrom)
+    const timeTo = getString(reservationUpdated.timeTo)
+    const templateFooter: string =
+      organization.id === 1
+        ? '문의사항이 있으시면 언제든 연락해 주세요.'
+        : '이 메일은 예약자 본인 및 조직에 등록된 모든 구성원에게 발송되었습니다.';
+    const templateFooterEn: string =
+      organization.id === 1
+        ? 'Please feel free to contact us if you have any questions.'
+        : 'This email has been sent to the reservation holder and all members registered with the organization.';
+    const meta = {
+      ...ReservationMeta.ReservationUpdated,
+      timeFrom,
+      timeTo,
+      templateFooter,
+      templateFooterEn,
+    };
+
+    const organizationWithMembers =
+      organization.id !== 1
+        ? await this.organizationPublicService.fetchDeepById(organization.id)
+        : undefined;
+
+    await this.mailService.sendMail({
+      to:
+        organization.id === 1
+          ? user.email
+          : organizationWithMembers.members.map((member) => member.user.email),
+      subject: `[SCSpace] Reservation Updated - ${reservation[0].title}`,
+      bcc: 'scspace.kaist@gmail.com',
+      template: 'reservationPosted',
+      replyTo: 'scspace@kaist.ac.kr',
+      context: {
+        reservation: {
+          ...reservation[0],
+          user,
+          space,
+          organization,
+        },
+        meta,
+      },
+    });
 
     return MReservation.fromDB(reservationUpdated, reservationContentUpdated);
   }

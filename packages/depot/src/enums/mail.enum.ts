@@ -118,8 +118,38 @@ export const ReservationMeta = {
             en: "Your reservation has been deleted successfully. "
         },
         contentUpperDesc: {
-            kr: "예약 취소됨",
-            en: "Reservation Cancelled"
+            kr: "예약 취소",
+            en: "Reservation Cancellation"
         }
-    }
+    },
+    ReservationUpdated: {
+        color : '#34b4eb',
+        emoji: '📅',
+        header : {
+            kr: "예약 수정 완료 안내",
+            en: "Reservation Updated"
+        },
+        body: {
+            kr: "귀하의 예약이 정상적으로 변경되었습니다. ",
+            en: "Your reservation has been updated successfully. "
+        },
+        contentUpperDesc: {
+            kr: "예약 수정",
+            en: "Reservation Modification"
+        }
+    },
 } as const
+
+// NON-USAGE
+// export const ErrorMeta = {
+//     color: '#dc3545',
+//     emoji: '🚨',
+//     header: {
+//         kr: '에러 발생',
+//         en: 'Error Occurred'
+//     },
+//     body: {
+//         kr: '시스템에서 오류가 발생했습니다.',
+//         en: 'An error has occurred in the system.'
+//     },
+// }
