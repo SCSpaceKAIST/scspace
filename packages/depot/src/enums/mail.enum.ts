@@ -90,6 +90,7 @@ export const OrgStatusMeta = {
 export const ReservationMeta = {
     ReservationCompleted: {
         color: '#4CAF50',
+        emoji: '📅',
         header: {
             kr: "예약 완료 안내",
             en: "Reservation Confirmed"
@@ -107,6 +108,7 @@ export const ReservationMeta = {
 
     ReservationDeleted: {
         color : '#eb4034',
+        emoji: '📅',
         header : {
             kr: "예약 취소 안내",
             en: "Reservation Cancelled"
