@@ -410,7 +410,7 @@ export class ReservationService {
       replyTo: 'scspace@kaist.ac.kr',
       context: {
         reservation: {
-          ...reservation,
+          ...reservation[0],
           user,
           space,
           organization,

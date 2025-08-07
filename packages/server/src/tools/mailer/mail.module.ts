@@ -5,6 +5,12 @@ import { join } from 'path';
 import { MailService } from './mail.service';
 import { MailController } from './mail.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as handlebars from 'handlebars';
+
+handlebars.registerHelper('eq', function(arg1, arg2):boolean   {
+  return arg1 === arg2;
+});
+
 
 @Module({
     imports: [

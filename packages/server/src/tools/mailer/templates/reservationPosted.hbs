@@ -8,7 +8,7 @@
       .container{ max-width:600px;margin:0 auto;background:#fff;
       border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.08); } .header{
       background:{{meta.color}}; color:#fff;text-align:center;padding:30px 20px;
-      border-radius:8px 8px 0 0; } .header h1{margin:0;font-size:24px;} .header
+      border-radius:8px 8px 0 0; } .header h1{margin:0;font-size:24px;} .header,
       h2{margin:8px 0 0 0;font-weight:400;font-size:16px;} .content{padding:30px
       20px;} .reservation-info{
       background:#f8f9fa;padding:20px;border-radius:6px;margin:20px 0;
@@ -28,8 +28,8 @@
       border-radius:0 0 8px 8px; } .highlight{ color:{{meta.color}};font-weight:600;
       } @media only screen and (max-width: 600px) {
       .container{margin:10px;border-radius:4px;} .header{padding:20px 15px;}
-      .content{padding:20px 15px;} .informations
-      li{flex-direction:column;align-items:flex-start;} .informations li
+      .content{padding:20px 15px;} .informations,
+      li{flex-direction:column;align-items:flex-start;} .informations li,
       strong{min-width:auto;margin-bottom:5px;} }
     </style>
   </head>
@@ -37,7 +37,7 @@
     <div class='container'>
       <!-- ─── 헤더 ─── -->
       <div class='header' style='background:{{meta.color}}'>
-        <h1>{{meta.header.kr}}</h1>
+        <h1>{{meta.emoji}} {{meta.header.kr}}</h1>
         <h2>{{meta.header.en}}</h2>
         <p style='margin-top:18px'>
           {{meta.body.kr}}<br />
@@ -73,7 +73,13 @@
             </li>
             <li>
               <strong>소속 조직:</strong>
-              <span>{{reservation.organization.name}}</span>
+              <span>
+                {{#if (eq reservation.organization.name "individual")}}
+                  개인 / Individual
+                {{else}}
+                  {{reservation.organization.name}}
+                {{/if}}
+              </span>
             </li>
             <li>
               <strong>예약 공간:</strong>
@@ -91,12 +97,12 @@
             </li>
           </ul>
         </div>
-
-        <div class='status-info'>
-          <p style='margin:0;'><strong>📢 안내사항:</strong></p>
-          <p style='margin:8px 0 0 0;'>예약이 성공적으로 등록되었습니다. 예약
-            시간에 맞춰 공간을 이용해 주세요.</p>
-        </div>
+<!-- 임시 -->
+<!--        <div class='status-info'>-->
+<!--          <p style='margin:0;'><strong>📢 안내사항:</strong></p>-->
+<!--          <p style='margin:8px 0 0 0;'>예약이 성공적으로 등록되었습니다. 예약-->
+<!--            시간에 맞춰 공간을 이용해 주세요.</p>-->
+<!--        </div>-->
       </div>
 
       <!-- ─── 푸터 ─── -->
@@ -104,8 +110,7 @@
         <p><strong>학생문화공간위원회 / Student Cultural Space Committee</strong></p>
         <p>{{meta.templateFooter}}<br />
           {{meta.templateFooterEn}}</p>
-        <p style='margin-top:15px;color:#999;'>예약 관련 문의사항이 있으시면
-          언제든 연락해 주세요.</p>
+        <p style='margin-top:15px;color:#999;'>Contact : ✉️scspace@kaist.ac.kr</p>
       </div>
     </div>
   </body>
