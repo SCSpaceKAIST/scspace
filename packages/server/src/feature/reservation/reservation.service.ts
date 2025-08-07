@@ -219,25 +219,39 @@ export class ReservationService {
       throw new BadRequestException('Organization fetch error : Please Contact by Email.')
     }
 
-
-    await this.mailService.sendMail({
-      to: organization.id === 1 ? user.email : organizationWithMembers.members.map(member => member.user.email),
-      subject: `[SCSpace] Reservation Confirmed - ${reservation.title}`,
-      bcc: 'scspace.kaist@gmail.com',
-      template: "reservationPosted",
-      replyTo: "scspace@kaist.ac.kr",
-      context: {
-        reservation: {
-          ...reservation,
-          user,
-          space,
-          organization
-        },
-        meta
+    try {
+      await this.mailService.sendMail({
+        to: organization.id === 1 ? user.email : organizationWithMembers.members.map(member => member.user.email),
+        subject: `[SCSpace] Reservation Confirmed - ${reservation.title}`,
+        bcc: 'scspace.kaist@gmail.com',
+        template: "reservationPosted",
+        replyTo: "scspace@kaist.ac.kr",
+        context: {
+          reservation: {
+            ...reservation,
+            user,
+            space,
+            organization
+          },
+          meta
+        }
+      })
+    }
+    catch (e) {
+        await this.mailService.reportError(
+          e instanceof Error ? e : new Error(String(e)),
+          `메일 발송 실패:\n` +
+          `예약 ID: ${reservation.id}\n` +
+          `사용자: ${user.nameKr} (${user.email})\n` +
+          `공간: ${space.nameKr}\n` +
+          `시간: ${timeFrom} - ${timeTo}\n` +
+          `조직: ${organization.name}`
+        );
       }
-    })
 
-    return MReservation.fromDB(
+
+
+      return MReservation.fromDB(
       reservation,
       reservationContent,
     );
