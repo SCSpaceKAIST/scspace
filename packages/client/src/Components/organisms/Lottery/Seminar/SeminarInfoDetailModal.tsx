@@ -27,19 +27,28 @@ export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, ref
     const { getTime, getDateString, getDate } = useDate();
 
     const [dateLotteryStart, setDateLotteryStart] = useState<Date>(
-        info ? new Date(getDate(info.timeLotteryStart)) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
+        new Date(today.getFullYear(), today.getMonth(), today.getDate())
     );
     const [dateLotteryEnd, setDateLotteryEnd] = useState<Date>(
-        info ? new Date(getDate(info.timeLotteryEnd)) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
+        new Date(today.getFullYear(), today.getMonth(), today.getDate())
     );
     const [dateStart, setDateStart] = useState<Date>(
-        info ? new Date(getDate(info.timeStart)) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
+        new Date(today.getFullYear(), today.getMonth(), today.getDate())
     );
     const [dateEnd, setDateEnd] = useState<Date>(
-        info ? new Date(getDate(info.timeEnd)) : new Date(today.getFullYear(), today.getMonth(), today.getDate())
+        new Date(today.getFullYear(), today.getMonth(), today.getDate())
     );
 
     const [isError, setIsError] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (info) {
+            setDateLotteryStart(getDate(info.timeLotteryStart));
+            setDateLotteryEnd(getDate(info.timeLotteryEnd));
+            setDateStart(getDate(info.timeStart));
+            setDateEnd(getDate(info.timeEnd));
+        }
+    }, [info]);
 
     useEffect(() => {
         setIsError(
