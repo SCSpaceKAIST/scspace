@@ -219,23 +219,31 @@ export class ReservationService {
       throw new BadRequestException('Organization fetch error : Please Contact by Email.')
     }
 
-    await this.mailService.sendMail({
-      to: organization.id === 1 ? user.email : organizationWithMembers.members.map(member => member.user.email),
-      subject: `[SCSpace] Reservation Confirmed - ${reservation.title}`,
-      bcc: 'scspace.kaist@gmail.com',
-      template: "reservationPosted",
-      replyTo: "scspace@kaist.ac.kr",
-      context: {
-        reservation: {
-          ...reservation,
-          user,
-          space,
-          organization
-        },
-        meta
-      }
-    })
-
+    try {
+      await this.mailService.sendMail({
+        to: organization.id === 1 ? user.email : organizationWithMembers.members.map(member => member.user.email),
+        subject: `[SCSpace] Reservation Confirmed - ${reservation.title}`,
+        bcc: 'scspace.kaist@gmail.com',
+        template: "reservationPosted",
+        replyTo: "scspace@kaist.ac.kr",
+        context: {
+          reservation: {
+            ...reservation,
+            user,
+            space,
+            organization
+          },
+          meta
+        }
+      })
+    } catch (error) {
+      console.log(error)
+      await this.mailService.reportError(
+        error instanceof Error
+          ? error
+          : new Error(String(error)),
+        "Post New Reservation - Mail Sector")
+    }
 
     return MReservation.fromDB(
       reservation,
@@ -357,48 +365,60 @@ export class ReservationService {
 
     const [reservationUpdated, reservationContentUpdated] = await this.reservationRepository.update(reservationInput);
 
-    const timeFrom = getString(reservationUpdated.timeFrom)
-    const timeTo = getString(reservationUpdated.timeTo)
-    const templateFooter: string =
-      organization.id === 1
-        ? '문의사항이 있으시면 언제든 연락해 주세요.'
-        : '이 메일은 예약자 본인 및 조직에 등록된 모든 구성원에게 발송되었습니다.';
-    const templateFooterEn: string =
-      organization.id === 1
-        ? 'Please feel free to contact us if you have any questions.'
-        : 'This email has been sent to the reservation holder and all members registered with the organization.';
-    const meta = {
-      ...ReservationMeta.ReservationUpdated,
-      timeFrom,
-      timeTo,
-      templateFooter,
-      templateFooterEn,
-    };
-
-    const organizationWithMembers =
-      organization.id !== 1
-        ? await this.organizationPublicService.fetchDeepById(organization.id)
-        : undefined;
-
-    await this.mailService.sendMail({
-      to:
+    //Mail 관련은 작동하지 않아도 상관없도록 try-catch with await
+    try {
+      const timeFrom = getString(reservationUpdated.timeFrom)
+      const timeTo = getString(reservationUpdated.timeTo)
+      const templateFooter: string =
         organization.id === 1
-          ? user.email
-          : organizationWithMembers.members.map((member) => member.user.email),
-      subject: `[SCSpace] Reservation Updated - ${reservation[0].title}`,
-      bcc: 'scspace.kaist@gmail.com',
-      template: 'reservationPosted',
-      replyTo: 'scspace@kaist.ac.kr',
-      context: {
-        reservation: {
-          ...reservation[0],
-          user,
-          space,
-          organization,
+          ? '문의사항이 있으시면 언제든 연락해 주세요.'
+          : '이 메일은 예약자 본인 및 조직에 등록된 모든 구성원에게 발송되었습니다.';
+      const templateFooterEn: string =
+        organization.id === 1
+          ? 'Please feel free to contact us if you have any questions.'
+          : 'This email has been sent to the reservation holder and all members registered with the organization.';
+      const meta = {
+        ...ReservationMeta.ReservationUpdated,
+        timeFrom,
+        timeTo,
+        templateFooter,
+        templateFooterEn,
+      };
+
+      const organizationWithMembers =
+        organization.id !== 1
+          ? await this.organizationPublicService.fetchDeepById(organization.id)
+          : undefined;
+
+
+
+      await this.mailService.sendMail({
+        to:
+          organization.id === 1
+            ? user.email
+            : organizationWithMembers.members.map((member) => member.user.email),
+        subject: `[SCSpace] Reservation Updated - ${reservation[0].title}`,
+        bcc: 'scspace.kaist@gmail.com',
+        template: 'reservationPosted',
+        replyTo: 'scspace@kaist.ac.kr',
+        context: {
+          reservation: {
+            ...reservation[0],
+            user,
+            space,
+            organization,
+          },
+          meta,
         },
-        meta,
-      },
-    });
+      });
+    } catch (error) {
+      console.log(error)
+      await this.mailService.reportError(
+        error instanceof Error
+          ? error
+          : new Error(String(error)),
+        "Update Reservation - Mail Sector")
+    }
 
     return MReservation.fromDB(reservationUpdated, reservationContentUpdated);
   }
@@ -427,51 +447,61 @@ export class ReservationService {
       throw new NotFoundException('Reservation not found');
     }
 
-    const timeFrom = getString(reservation[0].timeFrom);
-    const timeTo = getString(reservation[0].timeTo);
+    //Mail관련은 전부 try-catch with await for Error Control
+    try {
+      const timeFrom = getString(reservation[0].timeFrom);
 
-    //조직의 경우 모든 구성원에게 발송함 Notif
-    const templateFooter: string =
-      organization.id === 1
-        ? '문의사항이 있으시면 언제든 연락해 주세요.'
-        : '이 메일은 예약자 본인 및 조직에 등록된 모든 구성원에게 발송되었습니다.';
-    const templateFooterEn: string =
-      organization.id === 1
-        ? 'Please feel free to contact us if you have any questions.'
-        : 'This email has been sent to the reservation holder and all members registered with the organization.';
-    const meta = {
-      ...ReservationMeta.ReservationDeleted,
-      timeFrom,
-      timeTo,
-      templateFooter,
-      templateFooterEn,
-    };
+      const timeTo = getString(reservation[0].timeTo);
 
-    // organizations의 모든 멤버 가져오기 when org.id !== 1 >> 성능 개선
-    const organizationWithMembers =
-      organization.id !== 1
-        ? await this.organizationPublicService.fetchDeepById(organization.id)
-        : undefined;
-
-    await this.mailService.sendMail({
-      to:
+      //조직의 경우 모든 구성원에게 발송함 Notif
+      const templateFooter: string =
         organization.id === 1
-          ? user.email
-          : organizationWithMembers.members.map((member) => member.user.email),
-      subject: `[SCSpace] Reservation Deleted - ${reservation[0].title}`,
-      bcc: 'scspace.kaist@gmail.com',
-      template: 'reservationPosted',
-      replyTo: 'scspace@kaist.ac.kr',
-      context: {
-        reservation: {
-          ...reservation[0],
-          user,
-          space,
-          organization,
+          ? '문의사항이 있으시면 언제든 연락해 주세요.'
+          : '이 메일은 예약자 본인 및 조직에 등록된 모든 구성원에게 발송되었습니다.';
+      const templateFooterEn: string =
+        organization.id === 1
+          ? 'Please feel free to contact us if you have any questions.'
+          : 'This email has been sent to the reservation holder and all members registered with the organization.';
+      const meta = {
+        ...ReservationMeta.ReservationDeleted,
+        timeFrom,
+        timeTo,
+        templateFooter,
+        templateFooterEn,
+      };
+
+      const organizationWithMembers =
+        organization.id !== 1
+          ? await this.organizationPublicService.fetchDeepById(organization.id)
+          : undefined;
+
+      await this.mailService.sendMail({
+        to:
+          organization.id === 1
+            ? user.email
+            : organizationWithMembers.members.map((member) => member.user.email),
+        subject: `[SCSpace] Reservation Deleted - ${reservation[0].title}`,
+        bcc: 'scspace.kaist@gmail.com',
+        template: 'reservationPosted',
+        replyTo: 'scspace@kaist.ac.kr',
+        context: {
+          reservation: {
+            ...reservation[0],
+            user,
+            space,
+            organization,
+          },
+          meta,
         },
-        meta,
-      },
-    });
+      });
+    } catch (error) {
+      console.log(error)
+      await this.mailService.reportError(
+        error instanceof Error
+          ? error
+          : new Error(String(error)),
+        "Delete Reservation - Mail Sector")
+    }
     return {
       success: true,
     };
