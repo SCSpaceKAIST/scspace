@@ -24,7 +24,7 @@ import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { getNow } from '@scspace-server/common/utils';
 import { MailService } from '@scspace-server/tools/mailer/mail.service';
 import { ReservationMeta } from '@scspace-depot/enums/mail.enum';
-import { getString } from '@scspace-server/common/utils';
+import { getString } from '@scspace-server/common/utils'
 
 @Injectable()
 export class ReservationService {
@@ -215,28 +215,40 @@ export class ReservationService {
     // organizations의 모든 멤버 가져오기 when org.id !== 1 >> 성능 개선
     const organizationWithMembers = organization.id !== 1 ? await this.organizationPublicService.fetchDeepById(organization.id) : undefined
 
+    if (!organizationWithMembers  && organization.id !== 1) {
+      throw new BadRequestException('Organization fetch error : Please Contact by Email.')
+    }
 
-    await this.mailService.sendMail({
-      to: organization.id === 1 ? user.email : organizationWithMembers.members.map(member => member.user.email),
-      subject: `[SCSpace] Reservation Confirmed - ${reservation.title}`,
-      bcc: 'scspace.kaist@gmail.com',
-      template: "reservationPosted",
-      replyTo: "scspace@kaist.ac.kr",
-      context: {
-        reservation: {
-          ...reservation,
-          user,
-          space,
-          organization
-        },
-        meta
-      }
-    })
+    try {
+      await this.mailService.sendMail({
+        to: organization.id === 1 ? user.email : organizationWithMembers.members.map(member => member.user.email),
+        subject: `[SCSpace] Reservation Confirmed - ${reservation.title}`,
+        bcc: 'scspace.kaist@gmail.com',
+        template: "reservationPosted",
+        replyTo: "scspace@kaist.ac.kr",
+        context: {
+          reservation: {
+            ...reservation,
+            user,
+            space,
+            organization
+          },
+          meta
+        }
+      })
+    } catch (error) {
+      console.log(error)
+      await this.mailService.reportError(
+        error instanceof Error
+          ? error
+          : new Error(String(error)),
+        "Post New Reservation - Mail Sector")
+    }
 
     return MReservation.fromDB(
       reservation,
       reservationContent,
-    );
+    )
   }
 
   async postMultipleReservation(
@@ -268,12 +280,19 @@ export class ReservationService {
 
     for (const time of reservationInput.time) {
       try {
-        await this.reservationPublicService.checkWholeTime(reservationInput.userId, reservationInput.organizationId, reservationInput.spaceId, time.timeFrom, time.timeTo);
+        await this.reservationPublicService.checkWholeTime(
+          reservationInput.userId,
+          reservationInput.organizationId,
+          reservationInput.spaceId,
+          time.timeFrom,
+          time.timeTo,
+        );
+
         const [reservation, _] = await this.reservationRepository.insert({
           ...reservationInput,
           timeFrom: time.timeFrom,
           timeTo: time.timeTo,
-          content: reservationInput.content
+          content: reservationInput.content,
         } as IReservationCreate);
 
         if (!reservation) {
@@ -325,24 +344,83 @@ export class ReservationService {
       reservation[0].spaceId,
       reservationInput.timeFrom,
       reservationInput.timeTo,
-      reservationInput.id
+      reservationInput.id,
     );
 
-    // 공간 정보 조회하여 세미나실 추첨 기간 겹침 검증
-    const space = await this.spacePublicService.fetchById(reservation[0].spaceId);
+
+    const [user, space, organization] = await Promise.all([
+      this.userPublicService.fetchById(reservation[0].userId),
+      this.spacePublicService.fetchById(reservation[0].spaceId),
+      this.organizationPublicService.fetchById(reservation[0].organizationId)
+    ]);
+
+    if (!user) throw new BadRequestException('User not found');
+    if (!organization) throw new BadRequestException('Organization not found');
     if (!space) throw new BadRequestException('Space not found');
 
-    await this.reservationPublicService.validateSeminarLotteryConflict(reservation[0].userId, space, reservationInput.timeFrom, reservationInput.timeTo);
-
-    const [
-      reservationUpdated,
-      reservationContentUpdated
-    ] = await this.reservationRepository.update(reservationInput);
-
-    return MReservation.fromDB(
-      reservationUpdated,
-      reservationContentUpdated,
+    // 공간 정보 조회하여 세미나실 추첨 기간 겹침 검증
+    await this.reservationPublicService.validateSeminarLotteryConflict(
+      reservation[0].userId, space, reservationInput.timeFrom, reservationInput.timeTo
     );
+
+    const [reservationUpdated, reservationContentUpdated] = await this.reservationRepository.update(reservationInput);
+
+    //Mail 관련은 작동하지 않아도 상관없도록 try-catch with await
+    try {
+      const timeFrom = getString(reservationUpdated.timeFrom)
+      const timeTo = getString(reservationUpdated.timeTo)
+      const templateFooter: string =
+        organization.id === 1
+          ? '문의사항이 있으시면 언제든 연락해 주세요.'
+          : '이 메일은 예약자 본인 및 조직에 등록된 모든 구성원에게 발송되었습니다.';
+      const templateFooterEn: string =
+        organization.id === 1
+          ? 'Please feel free to contact us if you have any questions.'
+          : 'This email has been sent to the reservation holder and all members registered with the organization.';
+      const meta = {
+        ...ReservationMeta.ReservationUpdated,
+        timeFrom,
+        timeTo,
+        templateFooter,
+        templateFooterEn,
+      };
+
+      const organizationWithMembers =
+        organization.id !== 1
+          ? await this.organizationPublicService.fetchDeepById(organization.id)
+          : undefined;
+
+
+
+      await this.mailService.sendMail({
+        to:
+          organization.id === 1
+            ? user.email
+            : organizationWithMembers.members.map((member) => member.user.email),
+        subject: `[SCSpace] Reservation Updated - ${reservation[0].title}`,
+        bcc: 'scspace.kaist@gmail.com',
+        template: 'reservationPosted',
+        replyTo: 'scspace@kaist.ac.kr',
+        context: {
+          reservation: {
+            ...reservation[0],
+            user,
+            space,
+            organization,
+          },
+          meta,
+        },
+      });
+    } catch (error) {
+      console.log(error)
+      await this.mailService.reportError(
+        error instanceof Error
+          ? error
+          : new Error(String(error)),
+        "Update Reservation - Mail Sector")
+    }
+
+    return MReservation.fromDB(reservationUpdated, reservationContentUpdated);
   }
 
   async deleteReservation(id: number, user: IUser): Promise<ISuccessResponse> {
@@ -355,13 +433,74 @@ export class ReservationService {
     // individual
     if (id === 1) {
       if (reservation[0].userId !== user.id) {
-        throw new BadRequestException('User does not have permission to delete this reservation');
+        throw new BadRequestException(
+          'User does not have permission to delete this reservation',
+        );
       }
     }
-
+    const [space, organization] = await Promise.all([
+      this.spacePublicService.fetchById(reservation[0].spaceId),
+      this.organizationPublicService.fetchById(reservation[0].organizationId),
+    ]);
     const result = await this.reservationRepository.delete(id);
     if (!result) {
       throw new NotFoundException('Reservation not found');
+    }
+
+    //Mail관련은 전부 try-catch with await for Error Control
+    try {
+      const timeFrom = getString(reservation[0].timeFrom);
+
+      const timeTo = getString(reservation[0].timeTo);
+
+      //조직의 경우 모든 구성원에게 발송함 Notif
+      const templateFooter: string =
+        organization.id === 1
+          ? '문의사항이 있으시면 언제든 연락해 주세요.'
+          : '이 메일은 예약자 본인 및 조직에 등록된 모든 구성원에게 발송되었습니다.';
+      const templateFooterEn: string =
+        organization.id === 1
+          ? 'Please feel free to contact us if you have any questions.'
+          : 'This email has been sent to the reservation holder and all members registered with the organization.';
+      const meta = {
+        ...ReservationMeta.ReservationDeleted,
+        timeFrom,
+        timeTo,
+        templateFooter,
+        templateFooterEn,
+      };
+
+      const organizationWithMembers =
+        organization.id !== 1
+          ? await this.organizationPublicService.fetchDeepById(organization.id)
+          : undefined;
+
+      await this.mailService.sendMail({
+        to:
+          organization.id === 1
+            ? user.email
+            : organizationWithMembers.members.map((member) => member.user.email),
+        subject: `[SCSpace] Reservation Deleted - ${reservation[0].title}`,
+        bcc: 'scspace.kaist@gmail.com',
+        template: 'reservationPosted',
+        replyTo: 'scspace@kaist.ac.kr',
+        context: {
+          reservation: {
+            ...reservation[0],
+            user,
+            space,
+            organization,
+          },
+          meta,
+        },
+      });
+    } catch (error) {
+      console.log(error)
+      await this.mailService.reportError(
+        error instanceof Error
+          ? error
+          : new Error(String(error)),
+        "Delete Reservation - Mail Sector")
     }
     return {
       success: true,
@@ -374,15 +513,22 @@ export class ReservationService {
     });
 
     const userIds = reservations.map((reservation) => reservation.userId);
-    const organizationIds = reservations.map((reservation) => reservation.organizationId);
+    const organizationIds = reservations.map(
+      (reservation) => reservation.organizationId,
+    );
     const spaceIds = reservations.map((reservation) => reservation.spaceId);
 
-    const [users, organizations, spaces, reservationContents] = await Promise.all([
-      this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
-      this.organizationPublicService.fetchByIds(organizationIds),
-      this.spacePublicService.fetchAllByIds(spaceIds),
-      this.reservationPublicService.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
-    ]) as [IUser[], IOrganization[], ISpace[], IReservationContent[]];
+    const [users, organizations, spaces, reservationContents] =
+      (await Promise.all([
+        this.userPublicService
+          .fetchAllByIds(userIds)
+          .then(takeAll(userIds, 'users')),
+        this.organizationPublicService.fetchByIds(organizationIds),
+        this.spacePublicService.fetchAllByIds(spaceIds),
+        this.reservationPublicService.getReservationContentByIds(
+          reservations.map((reservation) => reservation.id),
+        ),
+      ])) as [IUser[], IOrganization[], ISpace[], IReservationContent[]];
 
     checkContainAllId(userIds, users, 'users');
     checkContainAllId(organizationIds, organizations, 'organizations');
@@ -390,10 +536,14 @@ export class ReservationService {
 
     return reservations.map((reservation) => ({
       ...reservation,
-      user: users.find(user => user.id === reservation.userId)!,
-      organization: organizations.find(org => org.id === reservation.organizationId)!,
-      space: spaces.find(space => space.id === reservation.spaceId)!,
-      content: reservationContents.find(content => content.id === reservation.id)!,
+      user: users.find((user) => user.id === reservation.userId)!,
+      organization: organizations.find(
+        (org) => org.id === reservation.organizationId,
+      )!,
+      space: spaces.find((space) => space.id === reservation.spaceId)!,
+      content: reservationContents.find(
+        (content) => content.id === reservation.id,
+      )!,
     }));
   }
 }

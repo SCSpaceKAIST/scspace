@@ -6,7 +6,7 @@ import { IUser } from "../user";
 
 export interface IMail {
     subject: string;
-    template: "orgStatusUpdate" | "welcome" | "orgDelegatorUpdate" | "reservationPosted";
+    template: "orgStatusUpdate" | "welcome" | "orgDelegatorUpdate" | "reservationPosted" | "errorLog";
     to: string | string[];
     cc?: string | string[];
     bcc?: string | string[];

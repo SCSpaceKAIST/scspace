@@ -24,7 +24,31 @@ export class MailService {
         }
         ).catch((error) => {
             console.error('템플릿 메일 전송 실패:', error);
-            throw new Error('템플릿 메일 전송에 실패했습니다.');
+            this.reportError(error, "Error from sendMail()").then();
+            const err = new Error ("템플릿 메일 전송에 실패했습니다.");
+            err.name = "MailSendError";
+            throw err;
         });
     }
+
+  async reportError(error: Error, additionalContext?: string): Promise<ISuccessResponse> {
+    const errorMeta = {
+      timestamp: new Date().toISOString(),
+      errorName: error.name,
+      errorMessage: error.message == '템플릿 메일 전송에 실패했습니다.' ? "템플릿 메일 전송에 실패했습니다. 추가 Error Report를 참고하십시오." : error.message,
+      stackTrace: error.stack,
+      additionalContext: additionalContext || 'No additional context provided'
+    };
+
+    return this.sendMail({
+      to: ['jhlee012@kaist.ac.kr', 'scspace.kaist@gmail.com'],
+      subject: `[SCSpace-DEV] Error Report - ${error.name}`,
+      template: 'errorLog',
+      context: {
+        meta: errorMeta
+      },
+    });
+  }
+
+
 }

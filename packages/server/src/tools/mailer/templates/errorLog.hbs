@@ -1,0 +1,56 @@
+<html lang='ko'>
+<head>
+  <style>
+    body {
+      font-family: monospace;
+      margin: 40px;
+      line-height: 1.5;
+      background: #f4f4f4;
+    }
+    .error-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    }
+    .error-header {
+      color: #dc3545;
+      font-size: 24px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #dc3545;
+      padding-bottom: 10px;
+    }
+    .error-section {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #f8f8f8;
+      border-left: 4px solid #666;
+    }
+    .stack-trace {
+      white-space: pre-wrap;
+      font-size: 13px;
+    }
+  </style>
+  <title></title>
+</head>
+<body>
+<div class="error-container">
+  <div class="error-header">
+    Error Report : {{meta.errorName}}
+  </div>
+
+  <div class="error-section">
+    <strong>Timestamp:</strong> {{meta.timestamp}}<br>
+    <strong>Message:</strong> {{meta.errorMessage}}<br>
+    <strong>Context:</strong> {{meta.additionalContext}}
+  </div>
+
+  <div class="error-section">
+    <strong>Stack Trace:</strong><br>
+    <div class="stack-trace">{{meta.stackTrace}}</div>
+  </div>
+</div>
+</body>
+</html>
