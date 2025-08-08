@@ -173,7 +173,7 @@ export function TimeSelector({ orgId, spaceId }: {
         <VStack align="stretch">
             <ActionBar.Root open={selectedTime !== null}>
                 <Portal>
-                    <ActionBar.Positioner zIndex={1500}>
+                    <ActionBar.Positioner zIndex={100}>
                         <ActionBar.Content>
                             <VStack separator={<StackSeparator />}>
                                 <Text>
