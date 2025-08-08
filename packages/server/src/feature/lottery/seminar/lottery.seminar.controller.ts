@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { LotterySeminarService } from "./lottery.seminar.service";
 import { AdminGuard, DelegatorGuard } from "@scspace-server/feature/auth/jwt/jwt.guard";
 import { ILotteryInfo, ILotteryInfoCreate, ILotteryInfoUpdate } from "@scspace-depot/types/lottery/lottery.info.type";
@@ -41,7 +41,7 @@ export class LotterySeminarController {
   @UseGuards(AdminGuard)
   @Put("info/:id")
   async updateInfo(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateLotteryInfo: ILotteryInfoUpdate
   ): Promise<ILotteryInfo> {
     // 추첨 정보 업데이트 (시간 겹침 검증 + 자동 정렬)
