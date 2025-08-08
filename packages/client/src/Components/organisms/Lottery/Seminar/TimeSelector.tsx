@@ -16,16 +16,19 @@ import { useState, useMemo, useEffect } from "react";
 import { TimeSlot } from "./TimeSlot";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useSeminarLotteryAPI, useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
-import { count } from "console";
 
 export function TimeSelector({ orgId, spaceId }: {
     orgId: number;
     spaceId: number;
 }) {
     const [readOnly, setReadOnly] = useState<boolean>(false);
+    const {
+        data: activeLotteryInfo
+    } = useSeminarLotteryInfoAPI().activeLotteryInfo
+
     useEffect(() => {
-        setReadOnly(orgId === -1);
-    }, [orgId]);
+        setReadOnly(orgId === -1 || !activeLotteryInfo || activeLotteryInfo.length === 0);
+    }, [orgId, activeLotteryInfo]);
 
     const [selectedTime, setSelectedTime] = useState<number | null>(null);
     const [selectedTimeString, setSelectedTimeString] = useState<string>("");
@@ -36,10 +39,6 @@ export function TimeSelector({ orgId, spaceId }: {
             setSelectedTimeString(`${dayLabel} ${hour}:00 - ${hour + 1}:00`);
         }
     }, [selectedTime]);
-
-    const {
-        data: activeLotteryInfo
-    } = useSeminarLotteryInfoAPI().activeLotteryInfo
 
     const {
         createSeminarLottery,

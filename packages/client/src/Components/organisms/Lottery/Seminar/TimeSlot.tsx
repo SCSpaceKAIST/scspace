@@ -94,7 +94,7 @@ export function TimeSlot({
                         </Text>
                     ) : (
                         <Text>
-                            No applied
+                            No applications
                         </Text>
                     )}
                 </Flex>
