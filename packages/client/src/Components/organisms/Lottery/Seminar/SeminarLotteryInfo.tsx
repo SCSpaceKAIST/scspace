@@ -9,7 +9,7 @@ import {
     HStack,
     IconButton,
 } from "@chakra-ui/react";
-import { useLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
+import { useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useDate } from "@scspace-client/Hooks/utils";
@@ -21,7 +21,7 @@ import { ILotteryInfo } from "@scspace-depot/types/lottery/lottery.info.type";
 export default function SeminarLotteryInfo() {
     const { needAdmin } = useAuth();
     needAdmin();
-    const { data: lotteryInfos, isLoading, refetch } = useLotteryInfoAPI().allLotteryInfo;
+    const { data: lotteryInfos, isLoading, refetch } = useSeminarLotteryInfoAPI().allLotteryInfo;
 
     const { getDateString } = useDate();
 

@@ -10,7 +10,7 @@ export interface ISeminarLottery {
 
 export type ISeminarLotteryCreate = Omit<
     ISeminarLottery,
-    "id" | "timeUpdate"
+    "id" | "timeUpdate" | "lotteryWin"
 >;
 
 export type ISeminarLotteryUpdate = Partial<ISeminarLotteryCreate>;

@@ -1,10 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { LotterySeminarService } from "./lottery.seminar.service";
-import { MSeminarLotteryInfo } from "./lottery.seminar.info.model";
 import { AdminGuard, DelegatorGuard } from "@scspace-server/feature/auth/jwt/jwt.guard";
-import { ILotteryInfoCreate, ILotteryInfoUpdate } from "@scspace-depot/types/lottery/lottery.info.type";
-import { MSeminarLottery } from "./lottery.seminar.model";
-import { ISeminarLotteryCreate, ISeminarLotteryUpdate } from "@scspace-depot/types/lottery/lottery.seminar.type";
+import { ILotteryInfo, ILotteryInfoCreate, ILotteryInfoUpdate } from "@scspace-depot/types/lottery/lottery.info.type";
+import { ISeminarLottery, ISeminarLotteryCreate, ISeminarLotteryUpdate } from "@scspace-depot/types/lottery/lottery.seminar.type";
 import { ISuccessResponse } from "@scspace-depot/types/common";
 
 @Controller('lottery/seminar')
@@ -14,19 +12,19 @@ export class LotterySeminarController {
   ) { }
 
   @Get("info")
-  async getInfo(): Promise<MSeminarLotteryInfo[]> {
+  async getInfo(): Promise<ILotteryInfo[]> {
     // 모든 추첨 정보 조회 (시간 순 자동 정렬)
     return await this.lotterySeminarService.getAllSeminarLotteryInfo();
   }
 
   @Get("info/active")
-  async getActiveInfo(): Promise<MSeminarLotteryInfo[]> {
+  async getActiveInfo(): Promise<ILotteryInfo[]> {
     // 현재 진행 중인 추첨 정보 조회 (시간 순 정렬)
     return await this.lotterySeminarService.getActiveSeminarLotteryInfo();
   }
 
   @Get("info/upcoming")
-  async getUpcomingInfo(): Promise<MSeminarLotteryInfo[]> {
+  async getUpcomingInfo(): Promise<ILotteryInfo[]> {
     // 예정된 추첨 정보 조회 (시간 순 정렬)
     return await this.lotterySeminarService.getUpcomingSeminarLotteryInfo();
   }
@@ -35,7 +33,7 @@ export class LotterySeminarController {
   @Post("info")
   async postInfo(
     @Body() lotteryInfo: ILotteryInfoCreate
-  ): Promise<MSeminarLotteryInfo> {
+  ): Promise<ILotteryInfo> {
     // 새 추첨 정보 생성 (시간 겹침 검증 + 자동 정렬)
     return await this.lotterySeminarService.postSeminarLotteryInfo({ lotteryInfo });
   }
@@ -45,7 +43,7 @@ export class LotterySeminarController {
   async updateInfo(
     @Param('id') id: number,
     @Body() updateLotteryInfo: ILotteryInfoUpdate
-  ): Promise<MSeminarLotteryInfo> {
+  ): Promise<ILotteryInfo> {
     // 추첨 정보 업데이트 (시간 겹침 검증 + 자동 정렬)
     return await this.lotterySeminarService.updateSeminarLotteryInfo({
       id,
@@ -69,7 +67,7 @@ export class LotterySeminarController {
     @Query('organizationId') organizationId: number,
     @Query('spaceId') spaceId: number,
     @Query('infoId') infoId: number
-  ): Promise<MSeminarLottery[]> {
+  ): Promise<ISeminarLottery[]> {
     // Implementation for fetching seminar lottery by organization
     return await this.lotterySeminarService.getSeminarLotteryByOrganization({
       organizationId,
@@ -83,7 +81,7 @@ export class LotterySeminarController {
     @Query('time') time: number,
     @Query('spaceId') spaceId: number,
     @Query('infoId') infoId: number
-  ): Promise<MSeminarLottery[]> {
+  ): Promise<ISeminarLottery[]> {
     // Implementation for fetching seminar lottery by time
     return await this.lotterySeminarService.getSeminarLotteryByTime({
       time,
@@ -92,11 +90,20 @@ export class LotterySeminarController {
     });
   }
 
+  @Get("time/count")
+  async getTimeSlotCounts(
+    @Query('spaceId') spaceId: number,
+    @Query('infoId') infoId: number
+  ): Promise<{ time: number; count: number }[]> {
+    // 모든 시간대에 대해 신청한 조직 수 조회
+    return await this.lotterySeminarService.getSeminarLotteryTimeSlotCounts(spaceId, infoId);
+  }
+
   @UseGuards(DelegatorGuard)
   @Post()
   async postSeminarLottery(
     @Body() lottery: ISeminarLotteryCreate
-  ): Promise<MSeminarLottery> {
+  ): Promise<ISeminarLottery> {
     // Implementation for posting new seminar lottery
     return await this.lotterySeminarService.postSeminarLottery({ lottery });
   }
@@ -106,7 +113,7 @@ export class LotterySeminarController {
   async updateSeminarLottery(
     @Param('id') id: number,
     @Body() updateLottery: ISeminarLotteryUpdate
-  ): Promise<MSeminarLottery> {
+  ): Promise<ISeminarLottery> {
     // Implementation for updating existing seminar lottery
     return await this.lotterySeminarService.updateSeminarLottery({
       id,

@@ -226,4 +226,9 @@ export class LotterySeminarService {
         // Implementation for deleting seminar lottery data
         return await this.lotterySeminarRepository.delete(id);
     }
+
+    async getSeminarLotteryTimeSlotCounts(spaceId: number, infoId: number): Promise<{ time: number; count: number }[]> {
+        // 모든 시간대에 대해 신청한 조직 수 반환
+        return await this.lotterySeminarRepository.fetchTimeSlotCounts(spaceId, infoId);
+    }
 }

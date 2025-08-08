@@ -11,7 +11,7 @@ import { useAllSpace } from "@scspace-client/Hooks/space";
 import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
 import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 import { ISpace } from "@scspace-depot/types/space";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SeminarLottery() {
     const { userInfo, needLogin } = useAuth();
@@ -31,8 +31,19 @@ export default function SeminarLottery() {
     ) ?? [];
 
     const [spaceId, setSpaceId] = useState<number>(1);
-    const [orgId, setOrgId] = useState<number>(1);
+    const [orgId, setOrgId] = useState<number>(-1);
     const [selectedTime, setSelectedTime] = useState<number[]>([]);
+
+    useEffect(() => {
+        if (verifiedOrganizations.length > 0) {
+            setOrgId(verifiedOrganizations[0].id);
+        }
+    }, [verifiedOrganizations]);
+    useEffect(() => {
+        if (seminarRoom.length > 0) {
+            setSpaceId(seminarRoom[0].id);
+        }
+    }, [seminarRoom]);
 
     return (
         <Scroll>
@@ -84,12 +95,8 @@ export default function SeminarLottery() {
                     )}
                     <GridItem colSpan={6}>
                         <TimeSelector
-                            selectedSlots={selectedTime}
-                            onSelectionChange={setSelectedTime}
-                            maxSelections={6}
-                            disabledSlots={[0]}
-                            // readOnly={verifiedOrganizations.length === 0}
-                            existingSelections={[1, 2, 3]}
+                            orgId={orgId}
+                            spaceId={spaceId}
                         />
                     </GridItem>
                 </Grid>

@@ -12,6 +12,7 @@ interface TimeSlotProps {
     isSelected: boolean;
     isDisabled?: boolean;
     onSelect: (day: string, hour: number) => void;
+    orgCount: number;
 }
 
 export function TimeSlot({
@@ -19,7 +20,8 @@ export function TimeSlot({
     hour,
     isSelected,
     isDisabled = false,
-    onSelect
+    onSelect,
+    orgCount
 }: TimeSlotProps) {
     const [isHovered, setIsHovered] = useState(false);
 
@@ -76,19 +78,25 @@ export function TimeSlot({
                     alignItems="center"
                     justifyContent="center"
                     opacity={isDisabled && !isSelected ? 0.5 : 1}
+
+                    fontSize="xs"
+                    fontWeight={isSelected ? "semibold" : "normal"}
+                    color={
+                        isSelected
+                            ? (isDisabled ? "blue.700" : "blue.600")
+                            : "gray.600"
+                    }
+                    textAlign="center"
                 >
-                    <Text
-                        fontSize="xs"
-                        fontWeight={isSelected ? "semibold" : "normal"}
-                        color={
-                            isSelected
-                                ? (isDisabled ? "blue.700" : "blue.600")
-                                : "gray.600"
-                        }
-                        textAlign="center"
-                    >
-                        {formatHour(hour)}
-                    </Text>
+                    {orgCount > 0 ? (
+                        <Text>
+                            {orgCount} counts of organization
+                        </Text>
+                    ) : (
+                        <Text>
+                            No applied
+                        </Text>
+                    )}
                 </Flex>
             </Button>
         </GridItem>

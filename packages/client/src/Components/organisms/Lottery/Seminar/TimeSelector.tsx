@@ -7,30 +7,51 @@ import {
     VStack,
     HStack,
     Button,
+    ActionBar,
     Float,
+    Portal,
+    StackSeparator,
 } from "@chakra-ui/react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { TimeSlot } from "./TimeSlot";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
+import { useSeminarLotteryAPI, useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
+import { count } from "console";
 
-interface TimeSelectorProps {
-    selectedSlots?: number[];
-    onSelectionChange?: (slots: number[]) => void;
-    disabledSlots?: number[];
-    maxSelections?: number;
-    readOnly?: boolean;
-    existingSelections?: number[];
-}
+export function TimeSelector({ orgId, spaceId }: {
+    orgId: number;
+    spaceId: number;
+}) {
+    const [readOnly, setReadOnly] = useState<boolean>(false);
+    useEffect(() => {
+        setReadOnly(orgId === -1);
+    }, [orgId]);
 
-export function TimeSelector({
-    selectedSlots = [],
-    onSelectionChange,
-    disabledSlots = [],
-    maxSelections = 10,
-    readOnly = false,
-    existingSelections = []
-}: TimeSelectorProps) {
-    const [internalSelectedSlots, setInternalSelectedSlots] = useState<number[]>(existingSelections.length > 0 ? existingSelections : selectedSlots);
+    const [selectedTime, setSelectedTime] = useState<number | null>(null);
+    const [selectedTimeString, setSelectedTimeString] = useState<string>("");
+    useEffect(() => {
+        if (selectedTime !== null) {
+            const { dayIndex, hour } = decodeTimeSlot(selectedTime);
+            const dayLabel = weekDays[dayIndex].label;
+            setSelectedTimeString(`${dayLabel} ${hour}:00 - ${hour + 1}:00`);
+        }
+    }, [selectedTime]);
+
+    const {
+        data: activeLotteryInfo
+    } = useSeminarLotteryInfoAPI().activeLotteryInfo
+
+    const {
+        createSeminarLottery,
+        timeSlotCounts: {
+            data: timeSlotCounts,
+            refetch: refetchTimeSlotCounts
+        }
+    } = useSeminarLotteryAPI({
+        organizationId: orgId,
+        spaceId,
+        infoId: activeLotteryInfo ? activeLotteryInfo[0].id : 0,
+    });
 
     // 요일 배열 (월 ~ 일) - 인덱스가 날짜 번호 (0~6)
     const weekDays = [
@@ -68,60 +89,116 @@ export function TimeSelector({
         return weekDays.find(d => d.index === dayIndex)?.key ?? "monday";
     };
 
-    // 선택된 슬롯인지 확인
-    const isSlotSelected = (day: string, hour: number): boolean => {
-        const dayIndex = getDayIndex(day);
-        const encoded = encodeTimeSlot(dayIndex, hour);
-        return internalSelectedSlots.includes(encoded);
-    };
+    const createSeminarLotteryHandler = () => {
+        if (!activeLotteryInfo) return;
+        if (orgId === -1) return;
+        if (!selectedTime) return;
 
-    // 비활성화된 슬롯인지 확인
-    const isSlotDisabled = (day: string, hour: number): boolean => {
-        const dayIndex = getDayIndex(day);
-        const encoded = encodeTimeSlot(dayIndex, hour);
-        return disabledSlots.includes(encoded);
-    };
-
-    // 슬롯 선택/해제 핸들러
-    const handleSlotSelect = (day: string, hour: number) => {
-        if (readOnly) return;
-
-        const dayIndex = getDayIndex(day);
-        const encoded = encodeTimeSlot(dayIndex, hour);
-        const isCurrentlySelected = isSlotSelected(day, hour);
-        let newSelectedSlots: number[];
-
-        if (isCurrentlySelected) {
-            // 선택 해제
-            newSelectedSlots = internalSelectedSlots.filter(slot => slot !== encoded);
-        } else {
-            // 새로 선택
-            if (internalSelectedSlots.length >= maxSelections) {
-                toaster.warning({
-                    title: "선택 제한",
-                    description: `최대 ${maxSelections}개까지만 선택할 수 있습니다.`,
-                    duration: 3000,
+        createSeminarLottery({
+            organizationId: orgId,
+            spaceId,
+            infoId: activeLotteryInfo ? activeLotteryInfo[0].id : 0,
+            time: selectedTime,
+        }, {
+            onSuccess: () => {
+                toaster.success({
+                    title: "추첨 생성 성공",
+                    description: "새로운 추첨이 생성되었습니다.",
                 });
-                return;
+                refetchTimeSlotCounts();
+                setSelectedTime(null);
+            },
+            onError: (error) => {
+                toaster.error({
+                    title: "추첨 생성 실패",
+                    description: error.message || "추첨 생성에 실패했습니다.",
+                });
             }
-            newSelectedSlots = [...internalSelectedSlots, encoded];
-        }
+        });
+    }
 
-        setInternalSelectedSlots(newSelectedSlots);
-        onSelectionChange?.(newSelectedSlots);
-    };
+    // // 선택된 슬롯인지 확인
+    // const isSlotSelected = (day: string, hour: number): boolean => {
+    //     const dayIndex = getDayIndex(day);
+    //     const encoded = encodeTimeSlot(dayIndex, hour);
+    //     return internalSelectedSlots.includes(encoded);
+    // };
 
-    // 모든 선택 해제
-    const clearAllSelections = () => {
-        setInternalSelectedSlots([]);
-        onSelectionChange?.([]);
-    };
+    // // 비활성화된 슬롯인지 확인
+    // const isSlotDisabled = (day: string, hour: number): boolean => {
+    //     const dayIndex = getDayIndex(day);
+    //     const encoded = encodeTimeSlot(dayIndex, hour);
+    //     return disabledSlots.includes(encoded);
+    // };
 
-    // 선택된 슬롯 수 표시
-    const selectedCount = internalSelectedSlots.length;
+    // // 슬롯 선택/해제 핸들러
+    // const handleSlotSelect = (day: string, hour: number) => {
+    //     if (readOnly) return;
+
+    //     const dayIndex = getDayIndex(day);
+    //     const encoded = encodeTimeSlot(dayIndex, hour);
+    //     const isCurrentlySelected = isSlotSelected(day, hour);
+    //     let newSelectedSlots: number[];
+
+    //     if (isCurrentlySelected) {
+    //         // 선택 해제
+    //         newSelectedSlots = internalSelectedSlots.filter(slot => slot !== encoded);
+    //     } else {
+    //         // 새로 선택
+    //         if (internalSelectedSlots.length >= maxSelections) {
+    //             toaster.warning({
+    //                 title: "선택 제한",
+    //                 description: `최대 ${maxSelections}개까지만 선택할 수 있습니다.`,
+    //                 duration: 3000,
+    //             });
+    //             return;
+    //         }
+    //         newSelectedSlots = [...internalSelectedSlots, encoded];
+    //     }
+
+    //     setInternalSelectedSlots(newSelectedSlots);
+    //     onSelectionChange?.(newSelectedSlots);
+    // };
+
+    // // 모든 선택 해제
+    // const clearAllSelections = () => {
+    //     setInternalSelectedSlots([]);
+    //     onSelectionChange?.([]);
+    // };
+
+    // // 선택된 슬롯 수 표시
+    // const selectedCount = internalSelectedSlots.length;
 
     return (
         <VStack align="stretch">
+            <ActionBar.Root open={selectedTime !== null}>
+                <Portal>
+                    <ActionBar.Positioner zIndex={1500}>
+                        <ActionBar.Content>
+                            <VStack separator={<StackSeparator />}>
+                                <Text>
+                                    test
+                                </Text>
+                                <HStack separator={<StackSeparator />}>
+                                    <ActionBar.SelectionTrigger>
+                                        {selectedTimeString}
+                                    </ActionBar.SelectionTrigger>
+                                    {!readOnly && (
+                                        <Button
+                                            variant={"outline"}
+                                            size={"xs"}
+                                            colorPalette={"blue"}
+                                            onClick={createSeminarLotteryHandler}
+                                        >
+                                            Apply
+                                        </Button>
+                                    )}
+                                </HStack>
+                            </VStack>
+                        </ActionBar.Content>
+                    </ActionBar.Positioner>
+                </Portal>
+            </ActionBar.Root>
             {/* 헤더 정보 */}
             <HStack justify="space-between" align="center">
                 <VStack align="start">
@@ -129,10 +206,10 @@ export function TimeSelector({
                         시간 선택
                     </Text>
                     <Text fontSize="sm" color="gray.600">
-                        원하는 시간대를 선택하세요 ({selectedCount}/{maxSelections})
+                        원하는 시간대를 선택하세요
                     </Text>
                 </VStack>
-                {selectedCount > 0 && (
+                {/* {selectedCount > 0 && (
                     <Button
                         size="sm"
                         variant="outline"
@@ -141,7 +218,7 @@ export function TimeSelector({
                     >
                         모두 해제
                     </Button>
-                )}
+                )} */}
             </HStack>
 
             {/* 플래너 그리드 */}
@@ -227,9 +304,18 @@ export function TimeSelector({
                                     key={`${day.key}-${hour}`}
                                     day={day.key}
                                     hour={hour}
-                                    isSelected={isSlotSelected(day.key, hour)}
-                                    isDisabled={isSlotDisabled(day.key, hour) || readOnly}
-                                    onSelect={handleSlotSelect}
+                                    // isSelected={isSlotSelected(day.key, hour)}
+                                    // isDisabled={isSlotDisabled(day.key, hour) || readOnly}
+                                    isSelected={selectedTime === encodeTimeSlot(day.index, hour)}
+                                    isDisabled={false}
+                                    onSelect={() => {
+                                        if (selectedTime !== encodeTimeSlot(day.index, hour)) {
+                                            setSelectedTime(encodeTimeSlot(day.index, hour));
+                                        } else {
+                                            setSelectedTime(null);
+                                        }
+                                    }}
+                                    orgCount={timeSlotCounts?.find(s => s.time === encodeTimeSlot(day.index, hour))?.count || 0}
                                 />
                             ))}
                         </>
@@ -238,7 +324,7 @@ export function TimeSelector({
             </Box>
 
             {/* 선택된 시간 요약 */}
-            {selectedCount > 0 && (
+            {/* {selectedCount > 0 && (
                 <Box
                     p={4}
                     bg="blue.50"
@@ -271,7 +357,7 @@ export function TimeSelector({
                         })}
                     </Box>
                 </Box>
-            )}
+            )} */}
         </VStack>
     );
 }

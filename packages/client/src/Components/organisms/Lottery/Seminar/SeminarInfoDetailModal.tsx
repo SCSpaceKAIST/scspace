@@ -4,7 +4,7 @@ import { Button, Card, Dialog, Stack, Text, VStack, Wrap } from "@chakra-ui/reac
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
-import { useLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
+import { useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import { useDate } from "@scspace-client/Hooks/utils";
 import { ILotteryInfo } from "@scspace-depot/types/lottery/lottery.info.type";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -21,7 +21,7 @@ export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, ref
         createLotteryInfo,
         deleteLotteryInfo,
         updateLotteryInfo
-    } = useLotteryInfoAPI(info?.id || 0);
+    } = useSeminarLotteryInfoAPI(info?.id || 0);
 
     const today = new Date();
     const { getTime, getDateString, getDate } = useDate();

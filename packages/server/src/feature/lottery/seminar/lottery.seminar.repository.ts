@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DBAsyncProvider } from "@scspace-server/db/db.provider";
 import { schema, SeminarLottery } from "@scspace-server/db/schema";
-import { and, eq, InferInsertModel, SQL } from "drizzle-orm";
+import { and, eq, InferInsertModel, SQL, count } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { MSeminarLottery } from "./lottery.seminar.model";
 import { ISeminarLotteryCreate, ISeminarLotteryFetch } from "@scspace-depot/types/lottery";
@@ -48,6 +48,26 @@ export class LotterySeminarRepository {
             .select()
             .from(SeminarLottery);
         return result;
+    }
+
+    async fetchTimeSlotCounts(spaceId: number, infoId: number): Promise<{ time: number; count: number }[]> {
+        // Implementation for fetching organization count per time slot
+        const result = await this.db
+            .select({
+                time: SeminarLottery.time,
+                count: count(SeminarLottery.organizationId).as('count')
+            })
+            .from(SeminarLottery)
+            .where(and(
+                eq(SeminarLottery.spaceId, spaceId),
+                eq(SeminarLottery.infoId, infoId)
+            ))
+            .groupBy(SeminarLottery.time);
+
+        return result.map(row => ({
+            time: row.time,
+            count: Number(row.count)
+        }));
     }
 
     async insert(lottery: ISeminarLotteryCreate): Promise<MSeminarLottery> {
