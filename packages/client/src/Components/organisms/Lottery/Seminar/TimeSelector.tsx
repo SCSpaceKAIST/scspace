@@ -7,6 +7,7 @@ import {
     VStack,
     HStack,
     Button,
+    Float,
 } from "@chakra-ui/react";
 import { useState, useMemo } from "react";
 import { TimeSlot } from "./TimeSlot";
@@ -17,29 +18,33 @@ interface TimeSelectorProps {
     onSelectionChange?: (slots: number[]) => void;
     disabledSlots?: number[];
     maxSelections?: number;
+    readOnly?: boolean;
+    existingSelections?: number[];
 }
 
 export function TimeSelector({
     selectedSlots = [],
     onSelectionChange,
     disabledSlots = [],
-    maxSelections = 10
+    maxSelections = 10,
+    readOnly = false,
+    existingSelections = []
 }: TimeSelectorProps) {
-    const [internalSelectedSlots, setInternalSelectedSlots] = useState<number[]>(selectedSlots);
+    const [internalSelectedSlots, setInternalSelectedSlots] = useState<number[]>(existingSelections.length > 0 ? existingSelections : selectedSlots);
 
     // 요일 배열 (월 ~ 일) - 인덱스가 날짜 번호 (0~6)
     const weekDays = [
-        { key: "monday", label: "월", fullLabel: "월요일", index: 0 },
-        { key: "tuesday", label: "화", fullLabel: "화요일", index: 1 },
-        { key: "wednesday", label: "수", fullLabel: "수요일", index: 2 },
-        { key: "thursday", label: "목", fullLabel: "목요일", index: 3 },
-        { key: "friday", label: "금", fullLabel: "금요일", index: 4 },
-        { key: "saturday", label: "토", fullLabel: "토요일", index: 5 },
-        { key: "sunday", label: "일", fullLabel: "일요일", index: 6 },
+        { key: "monday", label: "Mon", index: 0 },
+        { key: "tuesday", label: "Tue", index: 1 },
+        { key: "wednesday", label: "Wed", index: 2 },
+        { key: "thursday", label: "Thu", index: 3 },
+        { key: "friday", label: "Fri", index: 4 },
+        { key: "saturday", label: "Sat", index: 5 },
+        { key: "sunday", label: "Sun", index: 6 },
     ];
 
     // 시간 배열 (18 ~ 3시: 18,19,20,21,22,23,0,1,2,3)
-    const timeHours = [18, 19, 20, 21, 22, 23, 0, 1, 2, 3];
+    const timeHours = Array.from({ length: 24 }, (_, i) => i);
 
     // 날짜와 시간을 number로 인코딩: (시간) + (날짜) * 24
     const encodeTimeSlot = (dayIndex: number, hour: number): number => {
@@ -79,6 +84,8 @@ export function TimeSelector({
 
     // 슬롯 선택/해제 핸들러
     const handleSlotSelect = (day: string, hour: number) => {
+        if (readOnly) return;
+
         const dayIndex = getDayIndex(day);
         const encoded = encodeTimeSlot(dayIndex, hour);
         const isCurrentlySelected = isSlotSelected(day, hour);
@@ -157,7 +164,7 @@ export function TimeSelector({
                     <GridItem
                         bg="gray.50"
                         borderRightWidth="1px"
-                        borderBottomWidth="1px"
+                        // borderBottomWidth="1px"
                         borderColor="gray.200"
                     />
 
@@ -175,7 +182,6 @@ export function TimeSelector({
                                 <Text
                                     fontWeight="semibold"
                                     fontSize="sm"
-                                    title={day.fullLabel}
                                 >
                                     {day.label}
                                 </Text>
@@ -192,18 +198,26 @@ export function TimeSelector({
                                 key={`time-${hour}`}
                                 bg="gray.50"
                                 borderRightWidth="1px"
-                                borderBottomWidth="1px"
+                                // borderBottomWidth="1px"
                                 borderColor="gray.200"
                                 height="48px"
+                                zIndex={1}
+                                position={"sticky"}
+                                left={0}
                             >
                                 <Center height="100%">
-                                    <Text
-                                        fontSize="sm"
-                                        fontWeight="medium"
-                                        color="gray.700"
+                                    <Text fontSize="sm" margin={0} padding={0}
+                                        visibility="hidden"
                                     >
-                                        {hour === 0 ? "24:00" : `${hour.toString().padStart(2, "0")}:00`}
+                                        00:00
                                     </Text>
+                                    {(hour > 0) && (
+                                        <Float placement="top-center">
+                                            <Text fontSize="sm" margin={0} padding={0} color="black">
+                                                {hour.toString().padStart(2, "0")}:00
+                                            </Text>
+                                        </Float>
+                                    )}
                                 </Center>
                             </GridItem>
 
@@ -214,7 +228,7 @@ export function TimeSelector({
                                     day={day.key}
                                     hour={hour}
                                     isSelected={isSlotSelected(day.key, hour)}
-                                    isDisabled={isSlotDisabled(day.key, hour)}
+                                    isDisabled={isSlotDisabled(day.key, hour) || readOnly}
                                     onSelect={handleSlotSelect}
                                 />
                             ))}
@@ -239,7 +253,7 @@ export function TimeSelector({
                         {internalSelectedSlots.map((encodedSlot, index) => {
                             const { dayIndex, hour } = decodeTimeSlot(encodedSlot);
                             const dayData = weekDays.find(d => d.index === dayIndex);
-                            const dayLabel = dayData?.fullLabel || "알 수 없음";
+                            const dayLabel = dayData?.label || "알 수 없음";
                             const timeLabel = hour === 0 ? "24:00" : `${hour.toString().padStart(2, "0")}:00`;
                             return (
                                 <Text

@@ -14,15 +14,15 @@ interface TimeSlotProps {
     onSelect: (day: string, hour: number) => void;
 }
 
-export function TimeSlot({ 
-    day, 
-    hour, 
-    isSelected, 
-    isDisabled = false, 
-    onSelect 
+export function TimeSlot({
+    day,
+    hour,
+    isSelected,
+    isDisabled = false,
+    onSelect
 }: TimeSlotProps) {
     const [isHovered, setIsHovered] = useState(false);
-    
+
     // 시간 형식화 (18시 이후는 그대로, 0~3시는 다음날)
     const formatHour = (hour: number) => {
         if (hour === 0) return "24:00";
@@ -30,14 +30,14 @@ export function TimeSlot({
     };
 
     const getBgColor = () => {
-        if (isDisabled) return "gray.100";
-        if (isSelected) return "blue.100";
-        if (isHovered) return "gray.50";
+        if (isDisabled && !isSelected) return "gray.100";
+        if (isSelected) return isDisabled ? "blue.200" : "blue.100"; // readOnly일 때 더 진한 색
+        if (isHovered && !isDisabled) return "gray.50";
         return "white";
     };
 
     const getBorderColor = () => {
-        if (isSelected) return "blue.300";
+        if (isSelected) return isDisabled ? "blue.400" : "blue.300"; // readOnly일 때 더 진한 테두리
         return "gray.200";
     };
 
@@ -60,8 +60,9 @@ export function TimeSlot({
                 rounded="none"
                 disabled={isDisabled}
                 onClick={() => !isDisabled && onSelect(day, hour)}
-                onMouseEnter={() => setIsHovered(true)}
+                onMouseEnter={() => !isDisabled && setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
+                cursor={isDisabled ? (isSelected ? "default" : "not-allowed") : "pointer"}
                 _hover={{
                     bg: "transparent"
                 }}
@@ -74,12 +75,16 @@ export function TimeSlot({
                     height="100%"
                     alignItems="center"
                     justifyContent="center"
-                    opacity={isDisabled ? 0.5 : 1}
+                    opacity={isDisabled && !isSelected ? 0.5 : 1}
                 >
                     <Text
                         fontSize="xs"
                         fontWeight={isSelected ? "semibold" : "normal"}
-                        color={isSelected ? "blue.600" : "gray.600"}
+                        color={
+                            isSelected
+                                ? (isDisabled ? "blue.700" : "blue.600")
+                                : "gray.600"
+                        }
                         textAlign="center"
                     >
                         {formatHour(hour)}
