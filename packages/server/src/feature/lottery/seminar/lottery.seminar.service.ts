@@ -45,7 +45,7 @@ export class LotterySeminarService {
      * 시간 겹침 검증 - 추첨 시작 시간부터 행사 끝 시간까지 겹치는지 확인
      */
     private async validateTimeConflict(
-        lotteryInfo: ILotteryInfoCreate | ILotteryInfoUpdate,
+        lotteryInfo: { timeLotteryStart: number; timeEnd: number },
         excludeId?: number
     ): Promise<void> {
         const allLotteries = await this.lotterySeminarInfoRepository.fetchAll();
@@ -55,8 +55,8 @@ export class LotterySeminarService {
             ? allLotteries.filter(lottery => lottery.id !== excludeId)
             : allLotteries;
 
-        const newStartTime = lotteryInfo.timeLotteryStart!;
-        const newEndTime = lotteryInfo.timeEnd!;
+        const newStartTime = lotteryInfo.timeLotteryStart;
+        const newEndTime = lotteryInfo.timeEnd;
 
         for (const existingLottery of otherLotteries) {
             const existingStartTime = existingLottery.timeLotteryStart;
@@ -97,7 +97,10 @@ export class LotterySeminarService {
         }
 
         // 시간 겹침 검증
-        await this.validateTimeConflict(params.lotteryInfo);
+        await this.validateTimeConflict({
+            timeLotteryStart: params.lotteryInfo.timeLotteryStart,
+            timeEnd: params.lotteryInfo.timeEnd
+        });
 
         // 추첨 정보 생성 (자동 정렬됨)
         const createdLotteryInfo = await this.lotterySeminarInfoRepository.insert(
@@ -128,9 +131,9 @@ export class LotterySeminarService {
         };
 
         // 시간 유효성 검증
-        if (mergedLotteryInfo.timeLotteryStart < now) {
-            throw new BadRequestException("Lottery time cannot be in the past");
-        }
+        // if (mergedLotteryInfo.timeLotteryStart < now) {
+        //     throw new BadRequestException("Lottery time cannot be in the past");
+        // }
         if (mergedLotteryInfo.timeLotteryEnd < mergedLotteryInfo.timeLotteryStart) {
             throw new BadRequestException("Lottery end time cannot be before start time");
         }
@@ -142,7 +145,10 @@ export class LotterySeminarService {
         }
 
         // 시간 겹침 검증 (현재 수정 중인 항목 제외)
-        await this.validateTimeConflict(mergedLotteryInfo, params.id);
+        await this.validateTimeConflict({
+            timeLotteryStart: mergedLotteryInfo.timeLotteryStart,
+            timeEnd: mergedLotteryInfo.timeEnd
+        }, params.id);
 
         // 추첨 정보 업데이트 (자동 정렬됨)
         const updatedLotteryInfo = await this.lotterySeminarInfoRepository.update(params);
