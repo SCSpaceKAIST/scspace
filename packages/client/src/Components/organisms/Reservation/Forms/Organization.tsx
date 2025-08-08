@@ -1,4 +1,4 @@
-import { useOrganization } from "@scspace-client/Hooks/organization";
+import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import SelectComponent, { ISelectOption } from "@scspace-client/Components/molecules/forms/Select";
 import { Dispatch, SetStateAction } from "react";
 import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
@@ -7,7 +7,7 @@ export function OrganizationForm({ id, setOrgId }: {
   id: number;
   setOrgId: Dispatch<SetStateAction<number>>;
 }) {
-  const { organization } = useOrganization({ uid: id });
+  const { data: organization } = useOrganizationAPI({ uid: id }).userOrganizations;
   const organizations: ISelectOption[] = [
     {
       label: "개인 예약",

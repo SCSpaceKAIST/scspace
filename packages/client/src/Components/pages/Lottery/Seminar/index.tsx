@@ -1,8 +1,81 @@
+"use client"
+
+import { Alert, Grid, GridItem, Stack, Text } from "@chakra-ui/react";
+import SelectComponent from "@scspace-client/Components/molecules/forms/Select";
+import Scroll from "@scspace-client/Components/molecules/page/Scroll";
+import { useAuth } from "@scspace-client/Hooks/auth";
+import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
+import { useAllSpace } from "@scspace-client/Hooks/space";
+import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
+import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
+import { ISpace } from "@scspace-depot/types/space";
+import { useState } from "react";
+
 export default function SeminarLottery() {
+    const { userInfo, needLogin } = useAuth();
+    needLogin();
+
+    const { spaces } = useAllSpace();
+    const { data: organizations } = useOrganizationAPI({
+        uid: userInfo?.id
+    }).userOrganizations;
+
+    const seminarRoom: ISpace[] = spaces?.filter(space =>
+        space.spaceType === SpaceTypeEnum.SEMINAR
+    ) ?? [];
+    const verifiedOrganizations = organizations?.filter(org =>
+        (org.status === OrganizationStatusEnum.VERIFIED) &&
+        (org.delegatorId === userInfo?.id)
+    ) ?? [];
+
+    const [spaceId, setSpaceId] = useState<number>(1);
+    const [orgId, setOrgId] = useState<number>(1);
+
     return (
-        <div>
-            <h1>세미나실 정기예약 추첨 </h1>
-            <p> 세미나실 정기예약 추첨 신청 페이지입니다.</p>
-        </div>
+        <Scroll>
+            <Stack>
+                <Text>
+                    Information for the seminar lottery will be displayed here.
+                </Text>
+                <Grid
+                    templateColumns="repeat(6, 1fr)"
+                    gap={8}
+                    py={2}
+                >
+                    {(verifiedOrganizations.length > 0) ? (<>
+                        <GridItem colSpan={{ base: 6, md: 3 }}>
+                            <SelectComponent
+                                label="Seminar Room"
+                                optionList={seminarRoom.map(room => ({
+                                    value: room.id.toString(),
+                                    label: room.nameKr,
+                                    description: room.nameEn,
+                                }))}
+                                onChange={e => setSpaceId(parseInt(e.value))}
+                            />
+                        </GridItem>
+                        <GridItem colSpan={{ base: 6, md: 3 }}>
+                            <SelectComponent
+                                label="Verified Organization"
+                                optionList={verifiedOrganizations.map(org => ({
+                                    value: org.id.toString(),
+                                    label: org.name,
+                                }))}
+                                onChange={e => setOrgId(parseInt(e.value))}
+                            />
+                        </GridItem>
+                    </>) : (
+                        <GridItem colSpan={6}>
+                            <Alert.Root>
+                                <Alert.Indicator />
+                                <Alert.Title>
+                                    You are NOT a delegator of any verified organization.
+                                </Alert.Title>
+                            </Alert.Root>
+                        </GridItem>
+                    )}
+                </Grid>
+            </Stack>
+        </Scroll>
     );
 }  

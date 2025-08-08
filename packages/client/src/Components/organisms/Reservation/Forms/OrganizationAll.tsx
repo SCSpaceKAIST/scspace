@@ -1,6 +1,6 @@
 "use client";
 
-import { useAllOrganization } from "@scspace-client/Hooks/organization";
+import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import SelectComponent, { ISelectOption } from "@scspace-client/Components/molecules/forms/Select";
 import { Dispatch, SetStateAction } from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
@@ -12,7 +12,7 @@ export function AllOrganizationForm({ setOrgId }: {
   const { needManager } = useAuth();
   needManager();
 
-  const { organization } = useAllOrganization();
+  const { data: organization } = useOrganizationAPI().allOrganizations;
 
   function onChange(e: ISelectOption) {
     setOrgId(parseInt(e.value));

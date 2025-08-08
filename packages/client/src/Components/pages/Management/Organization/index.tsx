@@ -1,7 +1,7 @@
 "use client"
 
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { useAllOrganization, } from "@scspace-client/Hooks/organization";
+import { useOrganizationAPI, } from "@scspace-client/Hooks/organization";
 
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
@@ -11,7 +11,7 @@ export default function ManageOrganization() {
     const { needManager } = useAuth();
     needManager();
 
-    const { organization, refetch } = useAllOrganization();
+    const { data: organization, refetch } = useOrganizationAPI().allOrganizations;
 
     return (
         <Scroll>

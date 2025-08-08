@@ -13,13 +13,13 @@ import {
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { useAllReservation, useUserReservation } from "@scspace-client/Hooks/reservation";
+import { useAllReservation } from "@scspace-client/Hooks/reservation";
 import { useEffect, useState } from "react";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import { useDate } from "@scspace-client/Hooks/utils";
 import ReservationDetail from "@scspace-client/Components/organisms/Reservation/Detail";
-import { useAllOrganization } from "@scspace-client/Hooks/organization";
+import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import OrgSelect from "@scspace-client/Components/organisms/Reservation/Listing/OrgSelect";
@@ -31,7 +31,7 @@ export default function AllReservation() {
     needManager();
 
     const [oid, setOid] = useState<number>(0);
-    const { organization: allOrganization } = useAllOrganization();
+    const { data: allOrganization } = useOrganizationAPI().allOrganizations;
     const organization = allOrganization ? allOrganization.filter((o) =>
         o.status !== OrganizationStatusEnum.REGISTER_REQUEST && o.status !== OrganizationStatusEnum.REJECTED
     ) : [];

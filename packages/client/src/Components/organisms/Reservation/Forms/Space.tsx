@@ -18,13 +18,11 @@ export function SpaceForm({ setSpaceId, setCheck }: {
   return (spaces ? (
     <SelectComponent
       label="Space Name"
-      optionList={spaces.map((s): ISelectOption => {
-        return {
-          label: s.nameKr,
-          description: s.nameEn,
-          value: s.id.toString()
-        }
-      })}
+      optionList={spaces.map((s): ISelectOption => ({
+        label: s.nameKr,
+        description: s.nameEn,
+        value: s.id.toString()
+      }))}
       checkboxLabel={{
         "오픈스페이스": "use Busking Zone"
       }}

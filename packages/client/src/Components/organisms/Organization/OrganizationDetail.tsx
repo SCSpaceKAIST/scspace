@@ -10,7 +10,7 @@ import {
     Text,
     useBreakpointValue,
 } from "@chakra-ui/react";
-import { useOrganizationAPI, useOrganizationDetail } from "@scspace-client/Hooks/organization";
+import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { HiOutlineRefresh } from "react-icons/hi";
 
@@ -36,7 +36,7 @@ export default function OrganizationDialog({ open, setOpen, id, refetchList }: {
     id: number;
     refetchList: () => any;
 }) {
-    const { organizationDetail, refetch: refetchDetail } = useOrganizationDetail({ id: id });
+    const { data: organizationDetail, refetch: refetchDetail } = useOrganizationAPI({ id }).organizationDetail;
     const { userInfo, isManager, isAdmin } = useAuth();
     const [isDelegator, setIsDelegator] = useState<boolean>(false);
     const { getString } = useDate();

@@ -9,105 +9,63 @@ import {
     IOrganizationUpdateDelegator,
     IOrganizationUser,
 } from "@scspace-depot/types/organization";
-import { useEffect, useState } from "react";
 import { useMutationApi, useQueryApi } from "./api";
 import { ISuccessResponse } from "@scspace-depot/types/common/common.type";
 import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
 
-export function useAllOrganization() {
-    const [organization, setOrganization] = useState<IOrganizationDelegator[] | null>(null);
-    const { data, isLoading, refetch } = useQueryApi<IOrganizationDelegator[]>("/organization/");
+// 통합 Organization API Hook
+export function useOrganizationAPI(params?: { id?: number; uid?: number }) {
+    const id = params?.id ?? 0;
+    const uid = params?.uid ?? 0;
 
-    useEffect(() => {
-        if (!data) {
-            setOrganization(null);
-            return;
-        }
+    // GET Hook들을 최상위에서 호출
+    const allOrganizations = useQueryApi<IOrganizationDelegator[]>("/organization/");
+    const verifiedOrganizations = useQueryApi<IOrganizationDelegator[]>("/organization/verified/");
+    const userOrganizations = useQueryApi<IOrganizationDelegator[]>(`/organization/user/${uid}`);
+    const organizationDetail = useQueryApi<IOrganizationAll>(`/organization/${id}`);
 
-        setOrganization(data);
-    }, [data])
-
-    return { organization, isLoading, refetch };
-}
-
-export function useVerifiedOrganization() {
-    const [organization, setOrganization] = useState<IOrganizationDelegator[] | null>(null);
-    const { data, isLoading, refetch } = useQueryApi<IOrganizationDelegator[]>("/organization/verified/");
-
-    useEffect(() => {
-        if (!data) {
-            setOrganization(null);
-            return;
-        }
-
-        setOrganization(data);
-    }, [data])
-
-    return { organization, isLoading, refetch };
-}
-
-export function useOrganization({ uid }: { uid?: number }) {
-    const [organization, setOrganization] = useState<IOrganizationDelegator[] | null>(null);
-    const { data, isLoading, refetch } = useQueryApi<IOrganizationDelegator[]>(
-        `/organization/user/${uid}`
-    );
-
-    useEffect(() => {
-        if (!data) {
-            setOrganization(null);
-            return;
-        }
-
-        setOrganization(data);
-    }, [data])
-
-    return { organization, isLoading, refetch };
-}
-
-export function useOrganizationDetail({ id }: { id: number }) {
-    const [organizationDetail, setOrganizationDetail] = useState<IOrganizationAll | null>(null);
-    const { data, isLoading, refetch } = useQueryApi<IOrganizationAll>(`/organization/${id}`);
-
-    useEffect(() => {
-        if (!data) {
-            setOrganizationDetail(null);
-            return;
-        }
-
-        setOrganizationDetail(data);
-    }, [data])
-
-    return { organizationDetail, isLoading, refetch };
-}
-
-export function useOrganizationAPI(oid?: { id: number }) {
-    const id = oid?.id ?? null;
-
+    // POST/PUT/DELETE 메서드들
     const createOrg = useMutationApi<IOrganization, IOrganizationCreate>(
         "/organization/",
         "POST"
     ).mutate;
 
     const updateOrg = useMutationApi<IOrganization, IOrganizationUpdateDelegator>(
-        `/organization/${id}`,
+        `/organization/${id || ''}`,
         "PUT"
     ).mutate;
 
     const addMember = useMutationApi<IOrganizationMember, IOrganizationUser>(
-        `/organization/member/${id}`,
+        `/organization/member/${id || ''}`,
         "POST"
     ).mutate;
 
     const deleteMember = useMutationApi<ISuccessResponse, IOrganizationUser>(
-        `/organization/member/${id}`,
+        `/organization/member/${id || ''}`,
         "DELETE"
     ).mutate;
 
     const deleteOrg = useMutationApi<ISuccessResponse, {}>(
-        `/organization/${id}`,
+        `/organization/${id || ''}`,
         "DELETE"
     ).mutate;
 
+    const requestVerification = useMutationApi<IOrganization, {}>(
+        `/organization/verify/${id || ''}`,
+        "PUT"
+    ).mutate;
+
+    const updateStatus = useMutationApi<IOrganization, { status: OrganizationStatusEnum }>(
+        `/organization/status/${id || ''}`,
+        "PUT"
+    ).mutate;
+
+    const updateDelegator = useMutationApi<IOrganization, { delegatorId: number }>(
+        `/organization/delegator/${id || ''}`,
+        "PUT"
+    ).mutate;
+
+    // 유틸리티 함수
     function getOrganizationStatusCode(status: OrganizationStatusEnum) {
         switch (status) {
             case OrganizationStatusEnum.REGISTER_REQUEST:
@@ -123,30 +81,26 @@ export function useOrganizationAPI(oid?: { id: number }) {
         }
     }
 
-    const requestVerification = useMutationApi<IOrganization, {}>(
-        `/organization/verify/${id}`,
-        "PUT"
-    ).mutate;
-
-    const updateStatus = useMutationApi<IOrganization, { status: OrganizationStatusEnum }>(
-        `/organization/status/${id}`,
-        "PUT"
-    ).mutate;
-
-    const updateDelegator = useMutationApi<IOrganization, { delegatorId: number }>(
-        `/organization/delegator/${id}`,
-        "PUT"
-    ).mutate;
-
     return {
+        // GET 데이터와 상태들
+        allOrganizations,
+        verifiedOrganizations,
+        userOrganizations,
+        organizationDetail,
+
+        // CUD 메서드들
         createOrg,
         updateOrg,
         deleteOrg,
+
+        // 멤버 관리
         member: {
-            updateDelegator,
-            deleteMember,
             addMember,
+            deleteMember,
+            updateDelegator,
         },
+
+        // 상태 관리
         status: {
             getOrganizationStatusCode,
             requestVerification,

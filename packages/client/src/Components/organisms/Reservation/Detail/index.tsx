@@ -12,7 +12,7 @@ import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import ChangeTimeBtn from "./ChangeTimeBtn";
-import { useOrganizationDetail } from "@scspace-client/Hooks/organization";
+import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 
 export default function ReservationDetail({ open, setOpen, selectedRes, refetch }: {
     open: boolean;
@@ -23,7 +23,7 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
     const { getString } = useDate();
     const { userInfo, isManager } = useAuth();
 
-    const { organizationDetail } = useOrganizationDetail({ id: selectedRes?.organizationId ?? 0 });
+    const { data: organizationDetail } = useOrganizationAPI({ id: selectedRes?.organizationId ?? 0 }).organizationDetail;
 
     const isMember = organizationDetail?.members.some(member => member.userId === userInfo?.id) ?? false;
 

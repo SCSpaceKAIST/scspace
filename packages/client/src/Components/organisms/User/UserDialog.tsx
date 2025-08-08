@@ -8,7 +8,7 @@ import { useUserAPI } from "@scspace-client/Hooks/user";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import UpdateType from "./UpdateType";
-import { useOrganization } from "@scspace-client/Hooks/organization";
+import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import OrganizationTable from "../Organization/OrganizationTable";
 import { useUserReservation } from "@scspace-client/Hooks/reservation";
 import { IReservationAll } from "@scspace-depot/types/reservation";
@@ -29,7 +29,7 @@ export default function UserDialog({
     refetchList: () => any;
 }) {
     const { getUserTypeCode } = useUserAPI({ uid: user?.id ?? 0 });
-    const { organization, refetch: refetchOrg } = useOrganization({ uid: user?.id ?? 0 });
+    const { data: organization, refetch: refetchOrg } = useOrganizationAPI({ uid: user?.id ?? 0 }).userOrganizations;
     const isWide = useBreakpointValue({ base: false, md: true });
 
     const [page, setPage] = useState<number>(1);

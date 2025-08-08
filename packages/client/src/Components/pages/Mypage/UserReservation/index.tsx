@@ -19,7 +19,7 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import { useDate } from "@scspace-client/Hooks/utils";
 import ReservationDetail from "@scspace-client/Components/organisms/Reservation/Detail";
-import { useOrganization } from "@scspace-client/Hooks/organization";
+import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import TooltipComponent from "../../../atoms/Tooptip";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import OrgSelect from "@scspace-client/Components/organisms/Reservation/Listing/OrgSelect";
@@ -30,7 +30,7 @@ export default function UserReservation() {
     needLogin();
 
     const [oid, setOid] = useState<number>(0);
-    const { organization } = useOrganization({ uid: userInfo?.id ?? -1 });
+    const { data: organization } = useOrganizationAPI({ uid: userInfo?.id ?? -1 }).userOrganizations;
 
     const [page, setPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(10);
