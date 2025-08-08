@@ -50,7 +50,7 @@ export function TimeSelector({ orgId, spaceId }: {
     } = useSeminarLotteryAPI({
         organizationId: orgId,
         spaceId,
-        infoId: activeLotteryInfo ? activeLotteryInfo[0].id : 0,
+        infoId: (activeLotteryInfo && activeLotteryInfo.length > 0) ? activeLotteryInfo[0].id : 0,
     });
 
     // 요일 배열 (월 ~ 일) - 인덱스가 날짜 번호 (0~6)
@@ -90,14 +90,14 @@ export function TimeSelector({ orgId, spaceId }: {
     };
 
     const createSeminarLotteryHandler = () => {
-        if (!activeLotteryInfo) return;
+        if (!activeLotteryInfo || activeLotteryInfo?.length === 0) return;
         if (orgId === -1) return;
         if (!selectedTime) return;
 
         createSeminarLottery({
             organizationId: orgId,
             spaceId,
-            infoId: activeLotteryInfo ? activeLotteryInfo[0].id : 0,
+            infoId: activeLotteryInfo[0].id,
             time: selectedTime,
         }, {
             onSuccess: () => {
