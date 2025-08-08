@@ -1,8 +1,10 @@
 "use client"
 
 import { Alert, Grid, GridItem, Stack, Text } from "@chakra-ui/react";
+import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import SelectComponent from "@scspace-client/Components/molecules/forms/Select";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
+import { TimeSelector } from "@scspace-client/Components/organisms/Lottery/Seminar/TimeSelector";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import { useAllSpace } from "@scspace-client/Hooks/space";
@@ -15,8 +17,8 @@ export default function SeminarLottery() {
     const { userInfo, needLogin } = useAuth();
     needLogin();
 
-    const { spaces } = useAllSpace();
-    const { data: organizations } = useOrganizationAPI({
+    const { spaces, isLoading: spaceLoading } = useAllSpace();
+    const { data: organizations, isLoading: orgLoading } = useOrganizationAPI({
         uid: userInfo?.id
     }).userOrganizations;
 
@@ -30,52 +32,67 @@ export default function SeminarLottery() {
 
     const [spaceId, setSpaceId] = useState<number>(1);
     const [orgId, setOrgId] = useState<number>(1);
+    const [selectedTime, setSelectedTime] = useState<number[]>([]);
 
     return (
         <Scroll>
-            <Stack>
-                <Text>
-                    Information for the seminar lottery will be displayed here.
-                </Text>
-                <Grid
-                    templateColumns="repeat(6, 1fr)"
-                    gap={8}
-                    py={2}
-                >
-                    {(verifiedOrganizations.length > 0) ? (<>
-                        <GridItem colSpan={{ base: 6, md: 3 }}>
-                            <SelectComponent
-                                label="Seminar Room"
-                                optionList={seminarRoom.map(room => ({
-                                    value: room.id.toString(),
-                                    label: room.nameKr,
-                                    description: room.nameEn,
-                                }))}
-                                onChange={e => setSpaceId(parseInt(e.value))}
-                            />
-                        </GridItem>
-                        <GridItem colSpan={{ base: 6, md: 3 }}>
-                            <SelectComponent
-                                label="Verified Organization"
-                                optionList={verifiedOrganizations.map(org => ({
-                                    value: org.id.toString(),
-                                    label: org.name,
-                                }))}
-                                onChange={e => setOrgId(parseInt(e.value))}
-                            />
-                        </GridItem>
-                    </>) : (
+            {(spaceLoading || orgLoading) ? (
+                <LoadingComponent />
+            ) : (
+                <Stack>
+                    <Grid
+                        templateColumns="repeat(6, 1fr)"
+                        gap={8}
+                        py={2}
+                    >
+                        {(verifiedOrganizations.length > 0) ? (<>
+                            <GridItem colSpan={6}>
+                                <Text>
+                                    Information for the seminar lottery will be displayed here.
+                                </Text>
+                            </GridItem>
+                            <GridItem colSpan={{ base: 6, md: 3 }}>
+                                <SelectComponent
+                                    label="Seminar Room"
+                                    optionList={seminarRoom.map(room => ({
+                                        value: room.id.toString(),
+                                        label: room.nameKr,
+                                        description: room.nameEn,
+                                    }))}
+                                    onChange={e => setSpaceId(parseInt(e.value))}
+                                />
+                            </GridItem>
+                            <GridItem colSpan={{ base: 6, md: 3 }}>
+                                <SelectComponent
+                                    label="Verified Organization"
+                                    optionList={verifiedOrganizations.map(org => ({
+                                        value: org.id.toString(),
+                                        label: org.name,
+                                    }))}
+                                    onChange={e => setOrgId(parseInt(e.value))}
+                                />
+                            </GridItem>
+                        </>) : (
+                            <GridItem colSpan={6}>
+                                <Alert.Root>
+                                    <Alert.Indicator />
+                                    <Alert.Title>
+                                        You are NOT a delegator of any verified organization.
+                                    </Alert.Title>
+                                </Alert.Root>
+                            </GridItem>
+                        )}
                         <GridItem colSpan={6}>
-                            <Alert.Root>
-                                <Alert.Indicator />
-                                <Alert.Title>
-                                    You are NOT a delegator of any verified organization.
-                                </Alert.Title>
-                            </Alert.Root>
+                            <TimeSelector
+                                selectedSlots={selectedTime}
+                                onSelectionChange={setSelectedTime}
+                                maxSelections={6}
+                                disabledSlots={[]}
+                            />
                         </GridItem>
-                    )}
-                </Grid>
-            </Stack>
+                    </Grid>
+                </Stack>
+            )}
         </Scroll>
     );
 }  
