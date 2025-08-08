@@ -55,8 +55,6 @@ export class LotterySeminarService {
             ? allLotteries.filter(lottery => lottery.id !== excludeId)
             : allLotteries;
 
-        console.log(otherLotteries, allLotteries, excludeId);
-
         const newStartTime = lotteryInfo.timeLotteryStart;
         const newEndTime = lotteryInfo.timeEnd;
 
