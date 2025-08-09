@@ -88,13 +88,9 @@ export function TimeSlot({
                     }
                     textAlign="center"
                 >
-                    {orgCount > 0 ? (
+                    {orgCount > 0 && (
                         <Text>
-                            {orgCount} counts of organization
-                        </Text>
-                    ) : (
-                        <Text>
-                            No applications
+                            {orgCount}
                         </Text>
                     )}
                 </Flex>

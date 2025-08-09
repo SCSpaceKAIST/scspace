@@ -88,28 +88,6 @@ export class LotterySeminarRepository {
         return seminarLotteryCreated[0];
     }
 
-    async update({ id, updateLottery }: {
-        id: number;
-        updateLottery: Partial<ISeminarLotteryCreate>;
-    }): Promise<MSeminarLottery> {
-        // Implementation for updating seminar lottery data
-        const [result] = await this.db
-            .update(SeminarLottery)
-            .set({
-                ...updateLottery,
-                timeUpdate: getNow()
-            } as InferInsertModel<typeof SeminarLottery>)
-            .where(eq(SeminarLottery.id, id));
-        if (!result.affectedRows) {
-            throw new Error("Failed to update seminar lottery");
-        }
-        const seminarLotteryUpdated = await this.fetch({ id });
-        if (!seminarLotteryUpdated) {
-            throw new Error("Updated seminar lottery not found");
-        }
-        return seminarLotteryUpdated[0];
-    }
-
     async delete(id: number): Promise<boolean> {
         // Implementation for deleting seminar lottery data
         const [result] = await this.db

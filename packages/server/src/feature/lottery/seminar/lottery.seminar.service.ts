@@ -9,7 +9,6 @@ import {
     ILotteryInfoCreate,
     ILotteryInfoUpdate,
     ISeminarLotteryCreate,
-    ISeminarLotteryUpdate
 } from "@scspace-depot/types/lottery";
 import { getNow } from "@scspace-server/common/utils";
 
@@ -199,29 +198,15 @@ export class LotterySeminarService {
             spaceId: params.lottery.spaceId,
             infoId: params.lottery.infoId
         });
+        if (pastLotteries.find(lottery => lottery.time === params.lottery.time)) {
+            throw new BadRequestException("A seminar lottery with the same time already exists.");
+        }
         if (pastLotteries.length >= 6) {
             throw new BadRequestException("Maximum number of seminar lotteries is 6. Cannot create more.");
         }
         // Implementation for inserting a new seminar lottery
         const createdLottery = await this.lotterySeminarRepository.insert(params.lottery);
         return createdLottery;
-    }
-
-    async updateSeminarLottery(params: {
-        id: number;
-        updateLottery: ISeminarLotteryUpdate;
-    }): Promise<MSeminarLottery> {
-        const seminarLottery = await this.lotterySeminarRepository.fetch({ id: params.id });
-        if (!seminarLottery) {
-            throw new BadRequestException("Seminar lottery not found");
-        }
-
-        // Implementation for updating seminar lottery data
-        const updatedLottery = await this.lotterySeminarRepository.update({
-            id: params.id,
-            updateLottery: params.updateLottery
-        });
-        return updatedLottery;
     }
 
     async deleteSeminarLottery(id: number): Promise<boolean> {

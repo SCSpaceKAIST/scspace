@@ -2,7 +2,7 @@
 
 import { useMutationApi, useQueryApi } from "./api";
 import { ILotteryInfo, ILotteryInfoCreate, ILotteryInfoUpdate } from "@scspace-depot/types/lottery/lottery.info.type";
-import { ISeminarLottery, ISeminarLotteryCreate, ISeminarLotteryUpdate } from "@scspace-depot/types/lottery/lottery.seminar.type";
+import { ISeminarLottery, ISeminarLotteryCreate } from "@scspace-depot/types/lottery/lottery.seminar.type";
 import { ISuccessResponse } from "@scspace-depot/types/common/common.type";
 
 // 통합 Lottery Info API Hook (추첨 정보 관리)
@@ -70,11 +70,6 @@ export function useSeminarLotteryAPI(params?: {
         "POST"
     ).mutate;
 
-    const updateSeminarLottery = useMutationApi<ISeminarLottery, ISeminarLotteryUpdate>(
-        `/lottery/seminar/${id || ''}`,
-        "PUT"
-    ).mutate;
-
     const deleteSeminarLottery = useMutationApi<ISuccessResponse, {}>(
         `/lottery/seminar/${id || ''}`,
         "DELETE"
@@ -88,7 +83,6 @@ export function useSeminarLotteryAPI(params?: {
 
         // CUD 메서드들
         createSeminarLottery,
-        updateSeminarLottery,
         deleteSeminarLottery
     };
 }

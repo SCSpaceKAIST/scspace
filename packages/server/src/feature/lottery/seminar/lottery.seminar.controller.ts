@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, U
 import { LotterySeminarService } from "./lottery.seminar.service";
 import { AdminGuard, DelegatorGuard } from "@scspace-server/feature/auth/jwt/jwt.guard";
 import { ILotteryInfo, ILotteryInfoCreate, ILotteryInfoUpdate } from "@scspace-depot/types/lottery/lottery.info.type";
-import { ISeminarLottery, ISeminarLotteryCreate, ISeminarLotteryUpdate } from "@scspace-depot/types/lottery/lottery.seminar.type";
+import { ISeminarLottery, ISeminarLotteryCreate } from "@scspace-depot/types/lottery/lottery.seminar.type";
 import { ISuccessResponse } from "@scspace-depot/types/common";
 
 @Controller('lottery/seminar')
@@ -106,19 +106,6 @@ export class LotterySeminarController {
   ): Promise<ISeminarLottery> {
     // Implementation for posting new seminar lottery
     return await this.lotterySeminarService.postSeminarLottery({ lottery });
-  }
-
-  @UseGuards(DelegatorGuard)
-  @Put(":id")
-  async updateSeminarLottery(
-    @Param('id') id: number,
-    @Body() updateLottery: ISeminarLotteryUpdate
-  ): Promise<ISeminarLottery> {
-    // Implementation for updating existing seminar lottery
-    return await this.lotterySeminarService.updateSeminarLottery({
-      id,
-      updateLottery
-    });
   }
 
   @UseGuards(DelegatorGuard)

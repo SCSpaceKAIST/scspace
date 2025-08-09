@@ -11,6 +11,7 @@ import {
     Float,
     Portal,
     StackSeparator,
+    CloseButton,
 } from "@chakra-ui/react";
 import { useState, useMemo, useEffect } from "react";
 import { TimeSlot } from "./TimeSlot";
@@ -22,9 +23,11 @@ export function TimeSelector({ orgId, spaceId }: {
     spaceId: number;
 }) {
     const [readOnly, setReadOnly] = useState<boolean>(false);
+    const [appliedId, setAppliedId] = useState<number | null>(null);
+
     const {
         data: activeLotteryInfo
-    } = useSeminarLotteryInfoAPI().activeLotteryInfo
+    } = useSeminarLotteryInfoAPI().activeLotteryInfo;
 
     useEffect(() => {
         setReadOnly(orgId === -1 || !activeLotteryInfo || activeLotteryInfo.length === 0);
@@ -42,15 +45,30 @@ export function TimeSelector({ orgId, spaceId }: {
 
     const {
         createSeminarLottery,
+        deleteSeminarLottery,
         timeSlotCounts: {
             data: timeSlotCounts,
             refetch: refetchTimeSlotCounts
+        },
+        lotteryByTime: {
+            data: lotteryByTime,
+            refetch: refetchLotteryByTime
         }
     } = useSeminarLotteryAPI({
+        id: appliedId || 0,
         organizationId: orgId,
         spaceId,
         infoId: (activeLotteryInfo && activeLotteryInfo.length > 0) ? activeLotteryInfo[0].id : 0,
+        time: selectedTime || 0,
     });
+
+    useEffect(() => { refetchLotteryByTime() }, [selectedTime]);
+
+    useEffect(() => {
+        if (lotteryByTime) {
+            setAppliedId(lotteryByTime.find(l => l.organizationId === orgId)?.id || null);
+        }
+    }, [lotteryByTime]);
 
     // 요일 배열 (월 ~ 일) - 인덱스가 날짜 번호 (0~6)
     const weekDays = [
@@ -91,7 +109,7 @@ export function TimeSelector({ orgId, spaceId }: {
     const createSeminarLotteryHandler = () => {
         if (!activeLotteryInfo || activeLotteryInfo?.length === 0) return;
         if (orgId === -1) return;
-        if (!selectedTime) return;
+        if (selectedTime === null) return;
 
         createSeminarLottery({
             organizationId: orgId,
@@ -111,6 +129,27 @@ export function TimeSelector({ orgId, spaceId }: {
                 toaster.error({
                     title: "추첨 생성 실패",
                     description: error.message || "추첨 생성에 실패했습니다.",
+                });
+            }
+        });
+    }
+
+    const deleteSeminarLotteryHandler = () => {
+        if (!appliedId) return;
+
+        deleteSeminarLottery({}, {
+            onSuccess: () => {
+                toaster.success({
+                    title: "추첨 삭제 성공",
+                    description: "선택한 추첨이 삭제되었습니다.",
+                });
+                refetchTimeSlotCounts();
+                setAppliedId(null);
+            },
+            onError: (error) => {
+                toaster.error({
+                    title: "추첨 삭제 실패",
+                    description: error.message || "추첨 삭제에 실패했습니다.",
                 });
             }
         });
@@ -176,13 +215,13 @@ export function TimeSelector({ orgId, spaceId }: {
                         <ActionBar.Content>
                             <VStack separator={<StackSeparator />}>
                                 <Text>
-                                    test
+                                    {JSON.stringify(lotteryByTime)}
                                 </Text>
                                 <HStack separator={<StackSeparator />}>
                                     <ActionBar.SelectionTrigger>
                                         {selectedTimeString}
                                     </ActionBar.SelectionTrigger>
-                                    {!readOnly && (
+                                    {!readOnly && !appliedId && (
                                         <Button
                                             variant={"outline"}
                                             size={"xs"}
@@ -192,6 +231,19 @@ export function TimeSelector({ orgId, spaceId }: {
                                             Apply
                                         </Button>
                                     )}
+                                    {appliedId && (
+                                        <Button
+                                            variant={"outline"}
+                                            size={"xs"}
+                                            colorPalette={"red"}
+                                            onClick={deleteSeminarLotteryHandler}
+                                        >
+                                            Delete
+                                        </Button>
+                                    )}
+                                    <ActionBar.CloseTrigger asChild>
+                                        <CloseButton />
+                                    </ActionBar.CloseTrigger>
                                 </HStack>
                             </VStack>
                         </ActionBar.Content>
