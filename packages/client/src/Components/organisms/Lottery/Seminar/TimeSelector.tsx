@@ -13,10 +13,12 @@ import {
     StackSeparator,
     CloseButton,
 } from "@chakra-ui/react";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { TimeSlot } from "./TimeSlot";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useSeminarLotteryAPI, useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
+import { useLinkPush } from "@scspace-client/Hooks/api";
+import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 
 export function TimeSelector({ orgId, spaceId }: {
     orgId: number;
@@ -24,10 +26,18 @@ export function TimeSelector({ orgId, spaceId }: {
 }) {
     const [readOnly, setReadOnly] = useState<boolean>(false);
     const [appliedId, setAppliedId] = useState<number | null>(null);
+    const { linkPush } = useLinkPush();
 
     const {
         data: activeLotteryInfo
     } = useSeminarLotteryInfoAPI().activeLotteryInfo;
+
+    if (activeLotteryInfo && activeLotteryInfo.length === 0) {
+        alert("This is NOT a seminar room lottery period");
+        linkPush("/");
+    }
+
+    const { data: verifiedOrganizations } = useOrganizationAPI().verifiedOrganizations;
 
     useEffect(() => {
         setReadOnly(orgId === -1 || !activeLotteryInfo || activeLotteryInfo.length === 0);
@@ -62,7 +72,7 @@ export function TimeSelector({ orgId, spaceId }: {
         time: selectedTime || 0,
     });
 
-    useEffect(() => { refetchLotteryByTime() }, [selectedTime]);
+    useEffect(() => { if (selectedTime !== null) refetchLotteryByTime() }, [selectedTime]);
 
     useEffect(() => {
         if (lotteryByTime) {
@@ -209,14 +219,16 @@ export function TimeSelector({ orgId, spaceId }: {
 
     return (
         <VStack align="stretch">
-            <ActionBar.Root open={selectedTime !== null}>
+            <ActionBar.Root open={selectedTime !== null} onOpenChange={() => setSelectedTime(null)}>
                 <Portal>
                     <ActionBar.Positioner zIndex={100}>
                         <ActionBar.Content>
                             <VStack separator={<StackSeparator />}>
-                                <Text>
-                                    {JSON.stringify(lotteryByTime)}
-                                </Text>
+                                {lotteryByTime && lotteryByTime.length > 0 && (
+                                    <Text>
+                                        {JSON.stringify(lotteryByTime)}
+                                    </Text>
+                                )}
                                 <HStack separator={<StackSeparator />}>
                                     <ActionBar.SelectionTrigger>
                                         {selectedTimeString}

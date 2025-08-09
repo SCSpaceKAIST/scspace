@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 
 export default function SeminarLottery() {
     const { userInfo, needLogin } = useAuth();
-    // needLogin();
+    needLogin();
 
     const { spaces, isLoading: spaceLoading } = useAllSpace();
     const { data: organizations, isLoading: orgLoading } = useOrganizationAPI({
@@ -47,61 +47,61 @@ export default function SeminarLottery() {
 
     return (
         <Scroll>
-            {/* {(spaceLoading || orgLoading) ? (
+            {(spaceLoading || orgLoading) ? (
                 <LoadingComponent />
-            ) : ( */}
-            <Stack>
-                <Grid
-                    templateColumns="repeat(6, 1fr)"
-                    gap={8}
-                    py={2}
-                >
-                    {(verifiedOrganizations.length > 0) ? (<>
+            ) : (
+                <Stack>
+                    <Grid
+                        templateColumns="repeat(6, 1fr)"
+                        gap={8}
+                        py={2}
+                    >
+                        {(verifiedOrganizations.length > 0) ? (<>
+                            <GridItem colSpan={6}>
+                                <Text>
+                                    Information for the seminar lottery will be displayed here.
+                                </Text>
+                            </GridItem>
+                            <GridItem colSpan={{ base: 6, md: 3 }}>
+                                <SelectComponent
+                                    label="Seminar Room"
+                                    optionList={seminarRoom.map(room => ({
+                                        value: room.id.toString(),
+                                        label: room.nameKr,
+                                        description: room.nameEn,
+                                    }))}
+                                    onChange={e => setSpaceId(parseInt(e.value))}
+                                />
+                            </GridItem>
+                            <GridItem colSpan={{ base: 6, md: 3 }}>
+                                <SelectComponent
+                                    label="Verified Organization"
+                                    optionList={verifiedOrganizations.map(org => ({
+                                        value: org.id.toString(),
+                                        label: org.name,
+                                    }))}
+                                    onChange={e => setOrgId(parseInt(e.value))}
+                                />
+                            </GridItem>
+                        </>) : (
+                            <GridItem colSpan={6}>
+                                <Alert.Root>
+                                    <Alert.Indicator />
+                                    <Alert.Title>
+                                        You are NOT a delegator of any verified organization.
+                                    </Alert.Title>
+                                </Alert.Root>
+                            </GridItem>
+                        )}
                         <GridItem colSpan={6}>
-                            <Text>
-                                Information for the seminar lottery will be displayed here.
-                            </Text>
-                        </GridItem>
-                        <GridItem colSpan={{ base: 6, md: 3 }}>
-                            <SelectComponent
-                                label="Seminar Room"
-                                optionList={seminarRoom.map(room => ({
-                                    value: room.id.toString(),
-                                    label: room.nameKr,
-                                    description: room.nameEn,
-                                }))}
-                                onChange={e => setSpaceId(parseInt(e.value))}
+                            <TimeSelector
+                                orgId={orgId}
+                                spaceId={spaceId}
                             />
                         </GridItem>
-                        <GridItem colSpan={{ base: 6, md: 3 }}>
-                            <SelectComponent
-                                label="Verified Organization"
-                                optionList={verifiedOrganizations.map(org => ({
-                                    value: org.id.toString(),
-                                    label: org.name,
-                                }))}
-                                onChange={e => setOrgId(parseInt(e.value))}
-                            />
-                        </GridItem>
-                    </>) : (
-                        <GridItem colSpan={6}>
-                            <Alert.Root>
-                                <Alert.Indicator />
-                                <Alert.Title>
-                                    You are NOT a delegator of any verified organization.
-                                </Alert.Title>
-                            </Alert.Root>
-                        </GridItem>
-                    )}
-                    <GridItem colSpan={6}>
-                        <TimeSelector
-                            orgId={orgId}
-                            spaceId={spaceId}
-                        />
-                    </GridItem>
-                </Grid>
-            </Stack>
-            {/* )} */}
+                    </Grid>
+                </Stack>
+            )}
         </Scroll>
     );
 }  
