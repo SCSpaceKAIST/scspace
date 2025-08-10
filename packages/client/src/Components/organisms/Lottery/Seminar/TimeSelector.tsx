@@ -53,6 +53,11 @@ export function TimeSelector({ orgId, spaceId }: {
         }
     }, [selectedTime]);
 
+    const [open, setOpen] = useState<boolean>(false);
+    useEffect(() => {
+        setOpen(selectedTime !== null);
+    }, [selectedTime]);
+
     const {
         createSeminarLottery,
         deleteSeminarLottery,
@@ -65,14 +70,15 @@ export function TimeSelector({ orgId, spaceId }: {
             refetch: refetchLotteryByTime
         }
     } = useSeminarLotteryAPI({
-        id: appliedId || 0,
+        id: appliedId || -1,
         organizationId: orgId,
         spaceId,
-        infoId: (activeLotteryInfo && activeLotteryInfo.length > 0) ? activeLotteryInfo[0].id : 0,
-        time: selectedTime || 0,
+        infoId: (activeLotteryInfo && activeLotteryInfo.length > 0) ? activeLotteryInfo[0].id : -1,
+        time: selectedTime || -1,
     });
 
     useEffect(() => { if (selectedTime !== null) refetchLotteryByTime() }, [selectedTime]);
+    useEffect(() => { alert(`appliedId: ${appliedId}, orgId: ${orgId}, spaceId: ${spaceId}, infoId: ${activeLotteryInfo}, selectedTime: ${selectedTime}`) }, [selectedTime]);
 
     useEffect(() => {
         if (lotteryByTime) {
@@ -219,7 +225,7 @@ export function TimeSelector({ orgId, spaceId }: {
 
     return (
         <VStack align="stretch">
-            <ActionBar.Root open={selectedTime !== null} onOpenChange={() => setSelectedTime(null)}>
+            <ActionBar.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
                 <Portal>
                     <ActionBar.Positioner zIndex={100}>
                         <ActionBar.Content>
@@ -306,6 +312,7 @@ export function TimeSelector({ orgId, spaceId }: {
                         borderRightWidth="1px"
                         // borderBottomWidth="1px"
                         borderColor="gray.200"
+                        zIndex={100}
                     />
 
                     {/* 요일 헤더 */}
