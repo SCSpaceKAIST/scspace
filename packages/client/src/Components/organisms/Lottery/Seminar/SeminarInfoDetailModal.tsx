@@ -23,21 +23,12 @@ export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, ref
         updateLotteryInfo
     } = useSeminarLotteryInfoAPI(info?.id || 0);
 
-    const today = new Date();
     const { getTime, getDateString, getDate } = useDate();
 
-    const [dateLotteryStart, setDateLotteryStart] = useState<Date>(
-        new Date(today.getFullYear(), today.getMonth(), today.getDate())
-    );
-    const [dateLotteryEnd, setDateLotteryEnd] = useState<Date>(
-        new Date(today.getFullYear(), today.getMonth(), today.getDate())
-    );
-    const [dateStart, setDateStart] = useState<Date>(
-        new Date(today.getFullYear(), today.getMonth(), today.getDate())
-    );
-    const [dateEnd, setDateEnd] = useState<Date>(
-        new Date(today.getFullYear(), today.getMonth(), today.getDate())
-    );
+    const [dateLotteryStart, setDateLotteryStart] = useState<Date>(new Date());
+    const [dateLotteryEnd, setDateLotteryEnd] = useState<Date>(new Date());
+    const [dateStart, setDateStart] = useState<Date>(new Date());
+    const [dateEnd, setDateEnd] = useState<Date>(new Date());
 
     const [isError, setIsError] = useState<boolean>(false);
 
