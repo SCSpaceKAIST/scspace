@@ -142,3 +142,11 @@ export function getOrganizationStatusString(status: OrganizationStatusEnum): {
       };
   }
 }
+
+export function getDateBegin(time: number): number {
+  return time - (time % (24 * 60));
+}
+
+export function getDateEnd(time: number): number {
+  return time - (time % (24 * 60)) + 24 * 60 - 1;
+}

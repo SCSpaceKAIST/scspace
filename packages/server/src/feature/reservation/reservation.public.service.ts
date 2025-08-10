@@ -420,7 +420,7 @@ export class ReservationPublicService {
     for (const lottery of allLotteries) {
       // 추첨 시작 시간부터 행사 끝 시간까지의 기간
       const lotteryStartTime = BigInt(lottery.timeLotteryStart);
-      const eventEndTime = BigInt(lottery.timeEnd) + BigInt(24 * 60 - 1);
+      const eventEndTime = BigInt(lottery.timeEnd);
 
       // 예약 시간과 추첨 기간이 겹치는지 확인
       // A: [timeFrom ---- timeTo] (예약)

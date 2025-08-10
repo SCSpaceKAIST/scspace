@@ -10,7 +10,7 @@ import {
     ILotteryInfoUpdate,
     ISeminarLotteryCreate,
 } from "@scspace-depot/types/lottery";
-import { getNow } from "@scspace-server/common/utils";
+import { getDateBegin, getDateEnd, getNow } from "@scspace-server/common/utils";
 
 @Injectable()
 export class LotterySeminarService {
@@ -102,9 +102,12 @@ export class LotterySeminarService {
         });
 
         // 추첨 정보 생성 (자동 정렬됨)
-        const createdLotteryInfo = await this.lotterySeminarInfoRepository.insert(
-            params.lotteryInfo
-        );
+        const createdLotteryInfo = await this.lotterySeminarInfoRepository.insert({
+            timeStart: getDateBegin(params.lotteryInfo.timeStart),
+            timeEnd: getDateEnd(params.lotteryInfo.timeEnd),
+            timeLotteryStart: getDateBegin(params.lotteryInfo.timeLotteryStart),
+            timeLotteryEnd: getDateEnd(params.lotteryInfo.timeLotteryEnd)
+        });
         return createdLotteryInfo;
     }
 
@@ -191,6 +194,11 @@ export class LotterySeminarService {
         }
         if (organization.status !== OrganizationStatusEnum.VERIFIED) {
             throw new BadRequestException("Only verified organizations can create seminar lotteries");
+        }
+
+        const activeLottery = await this.lotterySeminarInfoRepository.fetchActiveLotteries(getNow());
+        if (activeLottery.length === 0 || activeLottery[0].id !== params.lottery.infoId) {
+            throw new BadRequestException("Active lottery not found");
         }
 
         const pastLotteries = await this.lotterySeminarRepository.fetch({
