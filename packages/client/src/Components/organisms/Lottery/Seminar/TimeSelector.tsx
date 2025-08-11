@@ -62,8 +62,6 @@ export function TimeSelector({ orgId, spaceId }: {
         setOpen(selectedTime !== -1);
     }, [selectedTime]);
 
-    useEffect(() => { if (!open) { setSelectedTime(-1); } }, [open]);
-
     const {
         createSeminarLottery,
         deleteSeminarLottery,
