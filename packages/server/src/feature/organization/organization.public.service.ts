@@ -18,6 +18,9 @@ export class OrganizationPublicService {
 
   async fetchDeepById(organizationId: number): Promise<IOrganizationAll> {
     const organization = await this.fetchById(organizationId);
+    if (!organization) {
+      throw new NotFoundException(`Organization with ID ${organizationId} not found`);
+    }
     const delegator = await this.userPublicService.fetchById(organization.delegatorId);
     const members = await this.organizationMemberRepository.fetch({ organizationId: organizationId });
 
