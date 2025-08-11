@@ -62,6 +62,8 @@ export function TimeSelector({ orgId, spaceId }: {
         setOpen(selectedTime !== -1);
     }, [selectedTime]);
 
+    useEffect(() => { if (!open) { setSelectedTime(-1); } }, [open]);
+
     const {
         createSeminarLottery,
         deleteSeminarLottery,
@@ -81,7 +83,8 @@ export function TimeSelector({ orgId, spaceId }: {
         time: selectedTime,
     });
 
-    useEffect(() => { if (selectedTime !== -1) refetchLotteryByTime() }, [selectedTime]);
+    useEffect(() => { refetchTimeSlotCounts() }, [spaceId]);
+    useEffect(() => { if (selectedTime !== -1) refetchLotteryByTime() }, [selectedTime, orgId, spaceId]);
 
     useEffect(() => {
         if (lotteryByTime) {
@@ -217,7 +220,7 @@ export function TimeSelector({ orgId, spaceId }: {
                                         </Button>
                                     )}
                                     <ActionBar.CloseTrigger asChild>
-                                        <CloseButton onClick={() => setSelectedTime(-1)} />
+                                        <CloseButton />
                                     </ActionBar.CloseTrigger>
                                 </HStack>
                             </VStack>

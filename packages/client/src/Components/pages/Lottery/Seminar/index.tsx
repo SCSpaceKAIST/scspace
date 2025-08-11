@@ -44,6 +44,10 @@ export default function SeminarLottery() {
         }
     }, [seminarRoom]);
 
+    useEffect(() => {
+        console.log(orgId, spaceId);
+    }, [orgId, spaceId]);
+
     return (
         <Scroll>
             {(spaceLoading || orgLoading) ? (
