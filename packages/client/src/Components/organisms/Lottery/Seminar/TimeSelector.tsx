@@ -229,12 +229,7 @@ export function TimeSelector({ orgId, spaceId }: {
                 </Portal>
             </ActionBar.Root>
             {/* 헤더 정보 */}
-            <FieldComponent
-                options={{
-                    label: "Time Selector",
-                    helpertext: "Select a time slot for seminar lottery.",
-                }}
-            >
+            <FieldComponent options={{ label: "Time Selector", }}>
                 {/* 플래너 그리드 */}
                 <Box
                     overflowX="auto"
@@ -243,6 +238,7 @@ export function TimeSelector({ orgId, spaceId }: {
                     borderWidth="1px"
                     borderColor="gray.200"
                     bg="white"
+                    width={"full"}
                 >
                     <Grid
                         templateColumns={`60px repeat(${weekDays.length}, 1fr)`}
@@ -259,6 +255,7 @@ export function TimeSelector({ orgId, spaceId }: {
                             borderColor="gray.200"
                             zIndex={1}
                             position={"sticky"}
+                            left={0}
                         />
 
                         {/* 요일 헤더 */}
