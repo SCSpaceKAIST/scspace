@@ -70,11 +70,11 @@ export function TimeSelector({ orgId, spaceId }: {
             refetch: refetchLotteryByTime
         }
     } = useSeminarLotteryAPI({
-        id: appliedId || -1,
+        id: appliedId,
         organizationId: orgId,
         spaceId,
         infoId: (activeLotteryInfo && activeLotteryInfo.length > 0) ? activeLotteryInfo[0].id : -1,
-        time: selectedTime || -1,
+        time: selectedTime,
     });
 
     useEffect(() => { if (selectedTime !== -1) refetchLotteryByTime() }, [selectedTime]);
