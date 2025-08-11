@@ -12,6 +12,8 @@ import {
     Portal,
     StackSeparator,
     CloseButton,
+    Wrap,
+    Tag,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { TimeSlot } from "./TimeSlot";
@@ -231,9 +233,19 @@ export function TimeSelector({ orgId, spaceId }: {
                         <ActionBar.Content>
                             <VStack separator={<StackSeparator />}>
                                 {lotteryByTime && lotteryByTime.length > 0 && (
-                                    <Text>
-                                        {JSON.stringify(lotteryByTime)}
-                                    </Text>
+                                    <Wrap>
+                                        {lotteryByTime.map(l => {
+                                            const org = verifiedOrganizations?.find(org => org.id === l.organizationId);
+                                            if (!org) return null;
+                                            return (
+                                                <Tag.Root colorPalette={org.hasRoom ? "blue" : "green"}>
+                                                    <Tag.Label>
+                                                        {org.name}
+                                                    </Tag.Label>
+                                                </Tag.Root>
+                                            );
+                                        })}
+                                    </Wrap>
                                 )}
                                 <HStack separator={<StackSeparator />}>
                                     <ActionBar.SelectionTrigger>
@@ -260,7 +272,7 @@ export function TimeSelector({ orgId, spaceId }: {
                                         </Button>
                                     )}
                                     <ActionBar.CloseTrigger asChild>
-                                        <CloseButton />
+                                        <CloseButton onClick={() => setSelectedTime(-1)} />
                                     </ActionBar.CloseTrigger>
                                 </HStack>
                             </VStack>
