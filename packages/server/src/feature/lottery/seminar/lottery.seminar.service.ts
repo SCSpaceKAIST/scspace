@@ -244,7 +244,7 @@ export class LotterySeminarService {
         return await this.lotterySeminarRepository.fetchTimeSlotCounts(param.spaceId, param.infoId);
     }
 
-    async getDrawedSeminarLottery(param: { spaceId: number; infoId: number }): Promise<MSeminarLottery[]> {
+    async getDrawnSeminarLottery(param: { spaceId: number; infoId: number }): Promise<MSeminarLottery[]> {
         return await this.lotterySeminarRepository.fetch({
             spaceId: param.spaceId,
             infoId: param.infoId,

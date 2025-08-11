@@ -90,13 +90,13 @@ export class LotterySeminarController {
     });
   }
 
-  @Get("time/drawed")
-  async getDrawedSeminarLottery(
+  @Get("time/drawn")
+  async getDrawnSeminarLottery(
     @Query('spaceId') spaceId: number,
     @Query('infoId') infoId: number,
   ): Promise<ISeminarLottery[]> {
     // Implementation for fetching drawn seminar lottery
-    return await this.lotterySeminarService.getDrawedSeminarLottery({ spaceId, infoId });
+    return await this.lotterySeminarService.getDrawnSeminarLottery({ spaceId, infoId });
   }
 
   @Get("time/count")

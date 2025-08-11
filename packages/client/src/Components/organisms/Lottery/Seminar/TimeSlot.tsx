@@ -25,15 +25,8 @@ export function TimeSlot({
 }: TimeSlotProps) {
     const [isHovered, setIsHovered] = useState(false);
 
-    // 시간 형식화 (18시 이후는 그대로, 0~3시는 다음날)
-    const formatHour = (hour: number) => {
-        if (hour === 0) return "24:00";
-        return `${hour.toString().padStart(2, "0")}:00`;
-    };
-
     const getBgColor = () => {
         if (drawnOrgName !== null) return "green.100";
-        if (!isSelected) return "gray.100";
         if (isSelected) return "blue.100"; // readOnly일 때 더 진한 색
         if (isHovered) return "gray.50";
         return "white";
