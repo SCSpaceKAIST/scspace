@@ -1,6 +1,6 @@
 "use client"
 
-import { Alert, Grid, GridItem, Stack, Text } from "@chakra-ui/react";
+import { Alert, Grid, GridItem, List, Stack, Tag, Text } from "@chakra-ui/react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import SelectComponent from "@scspace-client/Components/molecules/forms/Select";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
@@ -58,9 +58,20 @@ export default function SeminarLottery() {
                     >
                         {(verifiedOrganizations.length > 0) ? (<>
                             <GridItem colSpan={6}>
-                                <Text>
-                                    Information for the seminar lottery will be displayed here.
-                                </Text>
+                                <List.Root>
+                                    <List.Item>
+                                        You can select a time slot to apply for the seminar lottery.
+                                    </List.Item>
+                                    <List.Item>
+                                        The number in each column represents the number of organizations that applied during that time.
+                                    </List.Item>
+                                    <List.Item>
+                                        Organization names are represented by <Tag.Root colorPalette={"blue"}><Tag.Label>Has Room</Tag.Label></Tag.Root> or <Tag.Root colorPalette={"green"}><Tag.Label>No Room</Tag.Label></Tag.Root>, depending on whether the organization has a group room.
+                                    </List.Item>
+                                    <List.Item fontWeight={"semibold"} color={"blue"}>
+                                        Organizations without group rooms have priority in the lottery.
+                                    </List.Item>
+                                </List.Root>
                             </GridItem>
                             <GridItem colSpan={{ base: 6, md: 3 }}>
                                 <SelectComponent

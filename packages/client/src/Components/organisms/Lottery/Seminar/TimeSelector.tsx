@@ -21,6 +21,7 @@ import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useSeminarLotteryAPI, useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
+import FieldComponent from "@scspace-client/Components/atoms/Field";
 
 export function TimeSelector({ orgId, spaceId }: {
     orgId: number;
@@ -80,7 +81,6 @@ export function TimeSelector({ orgId, spaceId }: {
     });
 
     useEffect(() => { if (selectedTime !== -1) refetchLotteryByTime() }, [selectedTime]);
-    useEffect(() => { alert(`appliedId: ${appliedId}, orgId: ${orgId}, spaceId: ${spaceId}, infoId: ${activeLotteryInfo}, selectedTime: ${selectedTime}`) }, [selectedTime]);
 
     useEffect(() => {
         if (lotteryByTime) {
@@ -173,60 +173,8 @@ export function TimeSelector({ orgId, spaceId }: {
         });
     }
 
-    // // 선택된 슬롯인지 확인
-    // const isSlotSelected = (day: string, hour: number): boolean => {
-    //     const dayIndex = getDayIndex(day);
-    //     const encoded = encodeTimeSlot(dayIndex, hour);
-    //     return internalSelectedSlots.includes(encoded);
-    // };
-
-    // // 비활성화된 슬롯인지 확인
-    // const isSlotDisabled = (day: string, hour: number): boolean => {
-    //     const dayIndex = getDayIndex(day);
-    //     const encoded = encodeTimeSlot(dayIndex, hour);
-    //     return disabledSlots.includes(encoded);
-    // };
-
-    // // 슬롯 선택/해제 핸들러
-    // const handleSlotSelect = (day: string, hour: number) => {
-    //     if (readOnly) return;
-
-    //     const dayIndex = getDayIndex(day);
-    //     const encoded = encodeTimeSlot(dayIndex, hour);
-    //     const isCurrentlySelected = isSlotSelected(day, hour);
-    //     let newSelectedSlots: number[];
-
-    //     if (isCurrentlySelected) {
-    //         // 선택 해제
-    //         newSelectedSlots = internalSelectedSlots.filter(slot => slot !== encoded);
-    //     } else {
-    //         // 새로 선택
-    //         if (internalSelectedSlots.length >= maxSelections) {
-    //             toaster.warning({
-    //                 title: "선택 제한",
-    //                 description: `최대 ${maxSelections}개까지만 선택할 수 있습니다.`,
-    //                 duration: 3000,
-    //             });
-    //             return;
-    //         }
-    //         newSelectedSlots = [...internalSelectedSlots, encoded];
-    //     }
-
-    //     setInternalSelectedSlots(newSelectedSlots);
-    //     onSelectionChange?.(newSelectedSlots);
-    // };
-
-    // // 모든 선택 해제
-    // const clearAllSelections = () => {
-    //     setInternalSelectedSlots([]);
-    //     onSelectionChange?.([]);
-    // };
-
-    // // 선택된 슬롯 수 표시
-    // const selectedCount = internalSelectedSlots.length;
-
     return (
-        <VStack align="stretch">
+        <>
             <ActionBar.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
                 <Portal>
                     <ActionBar.Positioner zIndex={100}>
@@ -254,7 +202,7 @@ export function TimeSelector({ orgId, spaceId }: {
                                     {!readOnly && !appliedId && (
                                         <Button
                                             variant={"outline"}
-                                            size={"xs"}
+                                            size={"sm"}
                                             colorPalette={"blue"}
                                             onClick={createSeminarLotteryHandler}
                                         >
@@ -264,7 +212,7 @@ export function TimeSelector({ orgId, spaceId }: {
                                     {appliedId && (
                                         <Button
                                             variant={"outline"}
-                                            size={"xs"}
+                                            size={"sm"}
                                             colorPalette={"red"}
                                             onClick={deleteSeminarLotteryHandler}
                                         >
@@ -281,166 +229,116 @@ export function TimeSelector({ orgId, spaceId }: {
                 </Portal>
             </ActionBar.Root>
             {/* 헤더 정보 */}
-            <HStack justify="space-between" align="center">
-                <VStack align="start">
-                    <Text fontSize="lg" fontWeight="bold">
-                        시간 선택
-                    </Text>
-                    <Text fontSize="sm" color="gray.600">
-                        원하는 시간대를 선택하세요
-                    </Text>
-                </VStack>
-                {/* {selectedCount > 0 && (
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        colorScheme="red"
-                        onClick={clearAllSelections}
-                    >
-                        모두 해제
-                    </Button>
-                )} */}
-            </HStack>
-
-            {/* 플래너 그리드 */}
-            <Box
-                overflowX="auto"
-                overflowY="auto"
-                rounded="md"
-                borderWidth="1px"
-                borderColor="gray.200"
-                bg="white"
+            <FieldComponent
+                options={{
+                    label: "Time Selector",
+                    helpertext: "Select a time slot for seminar lottery.",
+                }}
             >
-                <Grid
-                    templateColumns={`60px repeat(${weekDays.length}, 1fr)`}
-                    templateRows={`40px repeat(${timeHours.length}, 1fr)`}
-                    gap={0}
-                    minW="600px"
-                    width="100%"
+                {/* 플래너 그리드 */}
+                <Box
+                    overflowX="auto"
+                    overflowY="auto"
+                    rounded="md"
+                    borderWidth="1px"
+                    borderColor="gray.200"
+                    bg="white"
                 >
-                    {/* 좌상단 빈 칸 */}
-                    <GridItem
-                        bg="gray.50"
-                        borderRightWidth="1px"
-                        borderBottomWidth="1px"
-                        borderColor="gray.200"
-                        zIndex={1}
-                        position={"sticky"}
-                    />
-
-                    {/* 요일 헤더 */}
-                    {weekDays.map((day) => (
+                    <Grid
+                        templateColumns={`60px repeat(${weekDays.length}, 1fr)`}
+                        templateRows={`40px repeat(${timeHours.length}, 1fr)`}
+                        gap={0}
+                        minW="600px"
+                        width="100%"
+                    >
+                        {/* 좌상단 빈 칸 */}
                         <GridItem
-                            key={day.key}
                             bg="gray.50"
                             borderRightWidth="1px"
                             borderBottomWidth="1px"
                             borderColor="gray.200"
-                            height="40px"
-                        >
-                            <Center height="100%">
-                                <Text
-                                    fontWeight="semibold"
-                                    fontSize="sm"
-                                >
-                                    {day.label}
-                                </Text>
-                            </Center>
-                        </GridItem>
-                    ))}
+                            zIndex={1}
+                            position={"sticky"}
+                        />
 
-                    {/* 시간 라벨 + 시간 슬롯들 */}
-                    {timeHours.map((hour, hourIndex) => (
-                        // 각 시간대별로 행을 만듦
-                        <>
-                            {/* 시간 라벨 (좌측) */}
+                        {/* 요일 헤더 */}
+                        {weekDays.map((day) => (
                             <GridItem
-                                key={`time-${hour}`}
+                                key={day.key}
                                 bg="gray.50"
                                 borderRightWidth="1px"
-                                // borderBottomWidth="1px"
+                                borderBottomWidth="1px"
                                 borderColor="gray.200"
-                                height="48px"
-                                zIndex={1}
-                                position={"sticky"}
-                                left={0}
+                                height="40px"
                             >
                                 <Center height="100%">
-                                    <Text fontSize="sm" margin={0} padding={0}
-                                        visibility="hidden"
+                                    <Text
+                                        fontWeight="semibold"
+                                        fontSize="sm"
                                     >
-                                        00:00
+                                        {day.label}
                                     </Text>
-                                    {(hour > 0) && (
-                                        <Float placement="top-center">
-                                            <Text fontSize="sm" margin={0} padding={0} color="black">
-                                                {hour.toString().padStart(2, "0")}:00
-                                            </Text>
-                                        </Float>
-                                    )}
                                 </Center>
                             </GridItem>
+                        ))}
 
-                            {/* 각 요일별 시간 슬롯 */}
-                            {weekDays.map((day) => (
-                                <TimeSlot
-                                    key={`${day.key}-${hour}`}
-                                    day={day.key}
-                                    hour={hour}
-                                    // isSelected={isSlotSelected(day.key, hour)}
-                                    // isDisabled={isSlotDisabled(day.key, hour) || readOnly}
-                                    isSelected={selectedTime === encodeTimeSlot(day.index, hour)}
-                                    isDisabled={false}
-                                    onSelect={() => {
-                                        if (selectedTime !== encodeTimeSlot(day.index, hour)) {
-                                            setSelectedTime(encodeTimeSlot(day.index, hour));
-                                        } else {
-                                            setSelectedTime(-1);
-                                        }
-                                    }}
-                                    orgCount={timeSlotCounts?.find(s => s.time === encodeTimeSlot(day.index, hour))?.count || 0}
-                                />
-                            ))}
-                        </>
-                    ))}
-                </Grid>
-            </Box>
-
-            {/* 선택된 시간 요약 */}
-            {/* {selectedCount > 0 && (
-                <Box
-                    p={4}
-                    bg="blue.50"
-                    rounded="md"
-                    borderWidth="1px"
-                    borderColor="blue.200"
-                >
-                    <Text fontSize="sm" fontWeight="semibold" mb={2}>
-                        선택된 시간:
-                    </Text>
-                    <Box>
-                        {internalSelectedSlots.map((encodedSlot, index) => {
-                            const { dayIndex, hour } = decodeTimeSlot(encodedSlot);
-                            const dayData = weekDays.find(d => d.index === dayIndex);
-                            const dayLabel = dayData?.label || "알 수 없음";
-                            const timeLabel = hour === 0 ? "24:00" : `${hour.toString().padStart(2, "0")}:00`;
-                            return (
-                                <Text
-                                    key={encodedSlot}
-                                    fontSize="xs"
-                                    color="blue.600"
-                                    display="inline-block"
-                                    mr={2}
-                                    mb={1}
+                        {/* 시간 라벨 + 시간 슬롯들 */}
+                        {timeHours.map((hour, hourIndex) => (
+                            // 각 시간대별로 행을 만듦
+                            <>
+                                {/* 시간 라벨 (좌측) */}
+                                <GridItem
+                                    key={`time-${hour}`}
+                                    bg="gray.50"
+                                    borderRightWidth="1px"
+                                    // borderBottomWidth="1px"
+                                    borderColor="gray.200"
+                                    height="48px"
+                                    zIndex={1}
+                                    position={"sticky"}
+                                    left={0}
                                 >
-                                    {dayLabel} {timeLabel}
-                                    {index < selectedCount - 1 ? "," : ""}
-                                </Text>
-                            );
-                        })}
-                    </Box>
+                                    <Center height="100%">
+                                        <Text fontSize="sm" margin={0} padding={0}
+                                            visibility="hidden"
+                                        >
+                                            00:00
+                                        </Text>
+                                        {(hour > 0) && (
+                                            <Float placement="top-center">
+                                                <Text fontSize="sm" margin={0} padding={0} color="black">
+                                                    {hour.toString().padStart(2, "0")}:00
+                                                </Text>
+                                            </Float>
+                                        )}
+                                    </Center>
+                                </GridItem>
+
+                                {/* 각 요일별 시간 슬롯 */}
+                                {weekDays.map((day) => (
+                                    <TimeSlot
+                                        key={`${day.key}-${hour}`}
+                                        day={day.key}
+                                        hour={hour}
+                                        // isSelected={isSlotSelected(day.key, hour)}
+                                        // isDisabled={isSlotDisabled(day.key, hour) || readOnly}
+                                        isSelected={selectedTime === encodeTimeSlot(day.index, hour)}
+                                        isDisabled={false}
+                                        onSelect={() => {
+                                            if (selectedTime !== encodeTimeSlot(day.index, hour)) {
+                                                setSelectedTime(encodeTimeSlot(day.index, hour));
+                                            } else {
+                                                setSelectedTime(-1);
+                                            }
+                                        }}
+                                        orgCount={timeSlotCounts?.find(s => s.time === encodeTimeSlot(day.index, hour))?.count || 0}
+                                    />
+                                ))}
+                            </>
+                        ))}
+                    </Grid>
                 </Box>
-            )} */}
-        </VStack>
+            </FieldComponent>
+        </>
     );
 }
