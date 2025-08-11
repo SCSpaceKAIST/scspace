@@ -12,6 +12,7 @@ import { IOrganization, IOrganizationCreate } from '@scspace-depot/types/organiz
 import { OrganizationPublicService } from './feature/organization/organization.public.service';
 import { getNow } from '@scspace-server/common/utils';
 import { ReservationPublicService } from './feature/reservation/reservation.public.service';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class AppService {
@@ -157,6 +158,7 @@ export class AppService {
     }
   }
 
+  @Cron(CronExpression.EVERY_WEEK, { name: 'backupReservations' })
   async save(): Promise<string> {
     const filename = await this.reservationPublicService.backupReservations();
     Logger.log(filename);

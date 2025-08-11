@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { OrganizationPublicService } from "@scspace-server/feature/organization/organization.public.service";
 import { LotterySeminarRepository } from "./lottery.seminar.repository";
 import { LotterySeminarInfoRepository } from "./lottery.seminar.info.repository";
@@ -11,6 +11,7 @@ import {
     ISeminarLotteryCreate,
 } from "@scspace-depot/types/lottery";
 import { getDateBegin, getDateEnd, getNow } from "@scspace-server/common/utils";
+import { Cron, CronExpression } from "@nestjs/schedule";
 
 @Injectable()
 export class LotterySeminarService {
@@ -229,5 +230,10 @@ export class LotterySeminarService {
     async getSeminarLotteryTimeSlotCounts(spaceId: number, infoId: number): Promise<{ time: number; count: number }[]> {
         // 모든 시간대에 대해 신청한 조직 수 반환
         return await this.lotterySeminarRepository.fetchTimeSlotCounts(spaceId, infoId);
+    }
+
+    @Cron(CronExpression.EVERY_10_SECONDS, { name: "drawing" })
+    async drawing() {
+        Logger.log("Drawing seminar lottery...");
     }
 }

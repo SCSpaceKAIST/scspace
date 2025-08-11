@@ -10,7 +10,8 @@ import { ReservationModule } from './feature/reservation/reservation.module';
 import { OrganizationModule } from './feature/organization/organization.module';
 import { join } from 'path';
 import { MailModule } from './tools/mailer/mail.module';
-import { LotterySeminarModule } from './feature/lottery/seminar/lottery.seminar.module';
+import { LotteryModule } from './feature/lottery/lottery.module';
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { LotterySeminarModule } from './feature/lottery/seminar/lottery.seminar.
       isGlobal: true,
       envFilePath: [join(__dirname, '../../.env')],
     }),
+    ScheduleModule.forRoot(),
     UserModule,
     DBModule,
     AuthModule,
@@ -25,7 +27,7 @@ import { LotterySeminarModule } from './feature/lottery/seminar/lottery.seminar.
     ReservationModule,
     OrganizationModule,
     MailModule,
-    LotterySeminarModule
+    LotteryModule
   ],
   controllers: [AppController],
   providers: [AppService],
