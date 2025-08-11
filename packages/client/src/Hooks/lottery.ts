@@ -70,6 +70,10 @@ export function useSeminarLotteryAPI(params?: {
         `/lottery/seminar/time/count?spaceId=${spaceId}&infoId=${infoId}`
     );
 
+    const drawnLottery = useQueryApi<ISeminarLottery[]>(
+        `/lottery/seminar/time/drawn?spaceId=${spaceId}&infoId=${infoId}`
+    );
+
     // POST/PUT/DELETE 메서드들
     const createSeminarLottery = useMutationApi<ISeminarLottery, ISeminarLotteryCreate>(
         "/lottery/seminar",
@@ -86,6 +90,7 @@ export function useSeminarLotteryAPI(params?: {
         lotteryByOrganization,
         lotteryByTime,
         timeSlotCounts,
+        drawnLottery,
 
         // CUD 메서드들
         createSeminarLottery,

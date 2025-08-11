@@ -90,13 +90,22 @@ export class LotterySeminarController {
     });
   }
 
+  @Get("time/drawed")
+  async getDrawedSeminarLottery(
+    @Query('spaceId') spaceId: number,
+    @Query('infoId') infoId: number,
+  ): Promise<ISeminarLottery[]> {
+    // Implementation for fetching drawn seminar lottery
+    return await this.lotterySeminarService.getDrawedSeminarLottery({ spaceId, infoId });
+  }
+
   @Get("time/count")
   async getTimeSlotCounts(
     @Query('spaceId') spaceId: number,
     @Query('infoId') infoId: number
   ): Promise<{ time: number; count: number }[]> {
     // 모든 시간대에 대해 신청한 조직 수 조회
-    return await this.lotterySeminarService.getSeminarLotteryTimeSlotCounts(spaceId, infoId);
+    return await this.lotterySeminarService.getSeminarLotteryTimeSlotCounts({ spaceId, infoId });
   }
 
   @UseGuards(DelegatorGuard)

@@ -70,6 +70,10 @@ export function TimeSelector({ orgId, spaceId }: {
         lotteryByTime: {
             data: lotteryByTime,
             refetch: refetchLotteryByTime
+        },
+        drawnLottery: {
+            data: drawnLottery,
+            refetch: refetchDrawnLottery
         }
     } = useSeminarLotteryAPI({
         id: appliedId,
@@ -80,13 +84,21 @@ export function TimeSelector({ orgId, spaceId }: {
     });
 
     useEffect(() => { refetchTimeSlotCounts() }, [spaceId]);
-    useEffect(() => { if (selectedTime !== -1) refetchLotteryByTime() }, [selectedTime, orgId, spaceId]);
+    useEffect(() => { if (selectedTime !== -1) { refetchLotteryByTime(); } }, [selectedTime, orgId, spaceId]);
+    useEffect(() => { refetchDrawnLottery(); }, [orgId, spaceId]);
+
+    const [available, setAvailable] = useState<boolean>(true);
 
     useEffect(() => {
-        if (lotteryByTime) {
-            setAppliedId(lotteryByTime.find(l => l.organizationId === orgId)?.id || -1);
-        }
+        if (!lotteryByTime) return;
+        setAppliedId(lotteryByTime.find(l => l.organizationId === orgId)?.id || -1);
     }, [lotteryByTime]);
+
+    useEffect(() => {
+        if (!drawnLottery) return;
+        if (selectedTime === -1) return;
+        setAvailable(drawnLottery.find(l => l.time === selectedTime) === undefined);
+    }, [drawnLottery, selectedTime]);
 
     // 요일 배열 (월 ~ 일) - 인덱스가 날짜 번호 (0~6)
     const weekDays = [
@@ -112,16 +124,6 @@ export function TimeSelector({ orgId, spaceId }: {
         const dayIndex = Math.floor(encoded / 24);
         const hour = encoded % 24;
         return { dayIndex, hour };
-    };
-
-    // day key를 dayIndex로 변환
-    const getDayIndex = (dayKey: string): number => {
-        return weekDays.find(d => d.key === dayKey)?.index ?? 0;
-    };
-
-    // dayIndex를 day key로 변환
-    const getDayKey = (dayIndex: number): string => {
-        return weekDays.find(d => d.index === dayIndex)?.key ?? "monday";
     };
 
     const createSeminarLotteryHandler = () => {
@@ -197,7 +199,7 @@ export function TimeSelector({ orgId, spaceId }: {
                                     <ActionBar.SelectionTrigger>
                                         {selectedTimeString}
                                     </ActionBar.SelectionTrigger>
-                                    {!readOnly && (appliedId === -1) && (
+                                    {available && !readOnly && (appliedId === -1) && (
                                         <Button
                                             variant={"outline"}
                                             colorPalette={"blue"}
@@ -206,7 +208,7 @@ export function TimeSelector({ orgId, spaceId }: {
                                             Apply
                                         </Button>
                                     )}
-                                    {(appliedId !== -1) && (
+                                    {!readOnly && (appliedId !== -1) && (
                                         <Button
                                             variant={"outline"}
                                             colorPalette={"red"}
@@ -316,7 +318,6 @@ export function TimeSelector({ orgId, spaceId }: {
                                         // isSelected={isSlotSelected(day.key, hour)}
                                         // isDisabled={isSlotDisabled(day.key, hour) || readOnly}
                                         isSelected={selectedTime === encodeTimeSlot(day.index, hour) && open}
-                                        isDisabled={false}
                                         onSelect={() => {
                                             if (selectedTime !== encodeTimeSlot(day.index, hour)) {
                                                 setSelectedTime(encodeTimeSlot(day.index, hour));
@@ -327,6 +328,7 @@ export function TimeSelector({ orgId, spaceId }: {
                                             }
                                         }}
                                         orgCount={timeSlotCounts?.find(s => s.time === encodeTimeSlot(day.index, hour))?.count || 0}
+                                        drawnOrgName={verifiedOrganizations?.find(o => o.id === drawnLottery?.find(l => l.time === encodeTimeSlot(day.index, hour))?.organizationId)?.name || null}
                                     />
                                 ))}
                             </>

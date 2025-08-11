@@ -13,4 +13,8 @@ export type ISeminarLotteryCreate = Omit<
     "id" | "timeUpdate" | "lotteryWin"
 >;
 
+export type ISeminarLotteryUpdate = {
+    lotteryWin: number;
+}
+
 export type ISeminarLotteryFetch = Partial<Omit<ISeminarLottery, "timeUpdate">>;

@@ -4,7 +4,7 @@ import { schema, SeminarLottery } from "@scspace-server/db/schema";
 import { and, eq, InferInsertModel, SQL, count } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { MSeminarLottery } from "./lottery.seminar.model";
-import { ISeminarLotteryCreate, ISeminarLotteryFetch } from "@scspace-depot/types/lottery";
+import { ISeminarLotteryCreate, ISeminarLotteryFetch, ISeminarLotteryUpdate } from "@scspace-depot/types/lottery";
 import { getNow } from "@scspace-server/common/utils";
 
 @Injectable()
@@ -86,6 +86,22 @@ export class LotterySeminarRepository {
             throw new Error("Created seminar lottery not found");
         }
         return seminarLotteryCreated[0];
+    }
+
+    async update(id: number, lotteryUpdate: ISeminarLotteryUpdate): Promise<MSeminarLottery> {
+        // Implementation for updating seminar lottery data
+        const [result] = await this.db
+            .update(SeminarLottery)
+            .set(lotteryUpdate)
+            .where(eq(SeminarLottery.id, id));
+        if (!result.affectedRows) {
+            throw new Error("Failed to update seminar lottery");
+        }
+        const seminarLotteryUpdated = await this.fetch({ id });
+        if (!seminarLotteryUpdated) {
+            throw new Error("Updated seminar lottery not found");
+        }
+        return seminarLotteryUpdated[0];
     }
 
     async delete(id: number): Promise<boolean> {

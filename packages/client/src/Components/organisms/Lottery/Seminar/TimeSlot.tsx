@@ -10,16 +10,16 @@ interface TimeSlotProps {
     day: string;
     hour: number;
     isSelected: boolean;
-    isDisabled?: boolean;
     onSelect: (day: string, hour: number) => void;
     orgCount: number;
+    drawnOrgName: string | null;
 }
 
 export function TimeSlot({
+    drawnOrgName,
     day,
     hour,
     isSelected,
-    isDisabled = false,
     onSelect,
     orgCount
 }: TimeSlotProps) {
@@ -32,14 +32,16 @@ export function TimeSlot({
     };
 
     const getBgColor = () => {
-        if (isDisabled && !isSelected) return "gray.100";
-        if (isSelected) return isDisabled ? "blue.200" : "blue.100"; // readOnly일 때 더 진한 색
-        if (isHovered && !isDisabled) return "gray.50";
+        if (drawnOrgName !== null) return "green.100";
+        if (!isSelected) return "gray.100";
+        if (isSelected) return "blue.100"; // readOnly일 때 더 진한 색
+        if (isHovered) return "gray.50";
         return "white";
     };
 
     const getBorderColor = () => {
-        if (isSelected) return isDisabled ? "blue.400" : "blue.300"; // readOnly일 때 더 진한 테두리
+        if (drawnOrgName !== null) return "green.300";
+        if (isSelected) return "blue.300"; // readOnly일 때 더 진한 테두리
         return "gray.200";
     };
 
@@ -60,11 +62,10 @@ export function TimeSlot({
                 minW={0}
                 padding={1}
                 rounded="none"
-                disabled={isDisabled}
-                onClick={() => !isDisabled && onSelect(day, hour)}
-                onMouseEnter={() => !isDisabled && setIsHovered(true)}
+                onClick={() => onSelect(day, hour)}
+                onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
-                cursor={isDisabled ? (isSelected ? "default" : "not-allowed") : "pointer"}
+                cursor={drawnOrgName !== null ? "default" : "pointer"}
                 _hover={{
                     bg: "transparent"
                 }}
@@ -77,22 +78,22 @@ export function TimeSlot({
                     height="100%"
                     alignItems="center"
                     justifyContent="center"
-                    opacity={isDisabled && !isSelected ? 0.5 : 1}
-
                     fontSize="xs"
                     fontWeight={isSelected ? "semibold" : "normal"}
                     color={
-                        isSelected
-                            ? (isDisabled ? "blue.700" : "blue.600")
-                            : "gray.600"
+                        (drawnOrgName !== null) ?
+                            "green.600" :
+                            (isSelected ? "blue.600" : "gray.600")
                     }
                     textAlign="center"
                 >
-                    {orgCount > 0 && (
-                        <Text>
-                            {orgCount}
-                        </Text>
-                    )}
+                    {drawnOrgName ? <Text>{drawnOrgName}</Text> :
+                        (orgCount > 0 ? (
+                            <Text>
+                                {orgCount}
+                            </Text>
+                        ) : null)
+                    }
                 </Flex>
             </Button>
         </GridItem>

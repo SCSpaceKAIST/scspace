@@ -157,3 +157,7 @@ export function getWeekPeriod(time: number): { weekStart: number; weekEnd: numbe
   const weekEnd = getDateEnd(getTime(date) + ((6 - date.getDay()) * 24 * 60));
   return { weekStart, weekEnd };
 }
+
+export function getRandomIndex(length: number): number {
+  return Math.floor(Math.random() * length);
+}

@@ -10,8 +10,10 @@ import {
     ILotteryInfoUpdate,
     ISeminarLotteryCreate,
 } from "@scspace-depot/types/lottery";
-import { getDateBegin, getDateEnd, getNow } from "@scspace-server/common/utils";
+import { getDateBegin, getDateEnd, getNow, getRandomIndex } from "@scspace-server/common/utils";
 import { Cron, CronExpression } from "@nestjs/schedule";
+import { SpacePublicService } from "@scspace-server/feature/space/space.public.service";
+import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 
 @Injectable()
 export class LotterySeminarService {
@@ -19,6 +21,7 @@ export class LotterySeminarService {
     // Currently, no specific methods are defined
     constructor(
         private readonly organizationPublicService: OrganizationPublicService,
+        private readonly spacePublicService: SpacePublicService,
         private readonly lotterySeminarRepository: LotterySeminarRepository,
         private readonly lotterySeminarInfoRepository: LotterySeminarInfoRepository
     ) { }
@@ -227,13 +230,79 @@ export class LotterySeminarService {
         return await this.lotterySeminarRepository.delete(id);
     }
 
-    async getSeminarLotteryTimeSlotCounts(spaceId: number, infoId: number): Promise<{ time: number; count: number }[]> {
-        // 모든 시간대에 대해 신청한 조직 수 반환
-        return await this.lotterySeminarRepository.fetchTimeSlotCounts(spaceId, infoId);
+    async drawSeminarLottery(id: number): Promise<void> {
+        const seminarLottery = await this.lotterySeminarRepository.fetch({ id });
+        if (!seminarLottery) {
+            throw new BadRequestException("Seminar lottery not found");
+        }
+        // Implementation for drawing seminar lottery
+        await this.lotterySeminarRepository.update(id, { lotteryWin: 1 });
     }
 
-    @Cron(CronExpression.EVERY_10_SECONDS, { name: "drawing" })
+    async getSeminarLotteryTimeSlotCounts(param: { spaceId: number; infoId: number }): Promise<{ time: number; count: number }[]> {
+        // 모든 시간대에 대해 신청한 조직 수 반환
+        return await this.lotterySeminarRepository.fetchTimeSlotCounts(param.spaceId, param.infoId);
+    }
+
+    async getDrawedSeminarLottery(param: { spaceId: number; infoId: number }): Promise<MSeminarLottery[]> {
+        return await this.lotterySeminarRepository.fetch({
+            spaceId: param.spaceId,
+            infoId: param.infoId,
+            lotteryWin: 1
+        });
+    }
+
+    // @Cron(CronExpression.EVERY_DAY_AT_6PM, { name: "drawing" })
+    @Cron(CronExpression.EVERY_5_MINUTES, { name: "test" })
     async drawing() {
+        const activeLottery = await this.lotterySeminarInfoRepository.fetchActiveLotteries(getNow());
+        if (!activeLottery) {
+            throw new BadRequestException("No active lottery found");
+        }
+
         Logger.log("Drawing seminar lottery...");
+        const seminarRooms = await this.spacePublicService.fetchAllBySpaceType(SpaceTypeEnum.SEMINAR);
+        const verifiedOrganizations = await this.organizationPublicService.fetchVerified();
+
+        seminarRooms.map(s => s.id).forEach(async (spaceId) => {
+            Array.from({ length: 168 }, (_, i) => i + 1).forEach(async (_, j) => {
+                const lotteries = await this.getSeminarLotteryByTime({ time: j, spaceId, infoId: activeLottery[0].id });
+                // Implementation for drawing the lottery
+                if (lotteries.length === 0) {
+                    return;
+                }
+
+                if (lotteries.length === 1) {
+                    if (lotteries[0].lotteryWin === 1) return;
+
+                    await this.drawSeminarLottery(lotteries[0].id);
+                    return;
+                }
+
+                const lotteriesWithOrg = lotteries.map(lottery => ({
+                    ...lottery,
+                    organization: verifiedOrganizations.find(org => org.id === lottery.organizationId)
+                }));
+
+                const hasRoomLotteries = lotteriesWithOrg.filter(lottery => lottery.organization!.hasRoom);
+                const hasNoRoomLotteries = lotteriesWithOrg.filter(lottery => !lottery.organization!.hasRoom);
+
+                let winner = 0;
+                if (hasRoomLotteries.length > 0) {
+                    winner = hasRoomLotteries[getRandomIndex(hasRoomLotteries.length)].id;
+                    await this.drawSeminarLottery(winner);
+                } else {
+                    winner = hasNoRoomLotteries[getRandomIndex(hasNoRoomLotteries.length)].id;
+                    await this.drawSeminarLottery(winner);
+                }
+
+                lotteries.forEach(async lottery => {
+                    if (lottery.id !== winner) {
+                        await this.deleteSeminarLottery(lottery.id);
+                    }
+                });
+            });
+        });
+        Logger.log("Seminar lottery drawing completed");
     }
 }
