@@ -14,6 +14,7 @@ import {
     CloseButton,
     Wrap,
     Tag,
+    Badge,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { TimeSlot } from "./TimeSlot";
@@ -186,11 +187,9 @@ export function TimeSelector({ orgId, spaceId }: {
                                             const org = verifiedOrganizations?.find(org => org.id === l.organizationId);
                                             if (!org) return null;
                                             return (
-                                                <Tag.Root colorPalette={org.hasRoom ? "blue" : "green"} key={l.id}>
-                                                    <Tag.Label>
-                                                        {org.name}
-                                                    </Tag.Label>
-                                                </Tag.Root>
+                                                <Badge colorPalette={org.hasRoom ? "blue" : "green"} key={l.id}>
+                                                    {org.name}
+                                                </Badge>
                                             );
                                         })}
                                     </Wrap>
