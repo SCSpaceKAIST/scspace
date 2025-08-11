@@ -12,7 +12,7 @@ import {
 import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
 import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
 import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
-import { getDateDiffInMinute, getDateString, getNow, timeRangeCheck } from '@scspace-server/common/utils';
+import { getDate, getDateDiffInMinute, getDateString, getNow, timeRangeCheck } from '@scspace-server/common/utils';
 import { IReservationContent, IReservationSimple } from '@scspace-depot/types/reservation';
 import { ISpace } from '@scspace-depot/types/space';
 import { LotterySeminarService } from '../lottery/seminar/lottery.seminar.service';
@@ -92,6 +92,8 @@ export class ReservationPublicService {
         timeTo: Number(endOfWeek),
       },
     });
+
+    console.log(weeklyReservations);
 
     const totalReservedTime = weeklyReservations.reduce((acc, reservation) => {
       return (
@@ -181,8 +183,14 @@ export class ReservationPublicService {
     timeTo: number,
   ): Promise<boolean> {
     // 공간위원이면 최대 시간 제한 없음
-    if (await this.userPublicService.isManager(userId)) {
-      return true;
+    // if (await this.userPublicService.isManager(userId)) {
+    //   return true;
+    // }
+
+    const dateFrom = getDate(timeFrom);
+    const dateTo = getDate(timeTo);
+    if (dateFrom.getDate() !== dateTo.getDate()) {
+      throw new BadRequestException('Cross-day reservations are not allowed. If you need to reserve across days, please create separate reservations for each day.');
     }
 
     const space = await this.spacePublicService.fetchById(spaceId);
@@ -199,8 +207,8 @@ export class ReservationPublicService {
     }
 
     const newReservationTime = getDateDiffInMinute(timeFrom, timeTo);
-    const maxDayTime = reservationMaxDayTime[space.spaceType];
-    const maxWeekTime = reservationMaxWeekTime[space.spaceType];
+    let maxDayTime = reservationMaxDayTime[space.spaceType];
+    let maxWeekTime = reservationMaxWeekTime[space.spaceType];
     const orgWeight = reservationTimeWeightOrg[space.spaceType];
 
     // Check if the new reservation itself exceeds daily limit
@@ -222,10 +230,12 @@ export class ReservationPublicService {
       isWithinDailyLimits = daily + newReservationTime <= maxDayTime;
       isWithinWeeklyLimits = weekly + newReservationTime <= maxWeekTime;
     } else {
+      maxDayTime *= orgWeight;
+      maxWeekTime *= orgWeight;
       daily = await this.getDailyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
       weekly = await this.getWeeklyReservationTimeByOrganization(organizationId, spaceId, timeFrom);
-      isWithinDailyLimits = daily + newReservationTime <= maxDayTime * orgWeight;
-      isWithinWeeklyLimits = weekly + newReservationTime <= maxWeekTime * orgWeight;
+      isWithinDailyLimits = daily + newReservationTime <= maxDayTime;
+      isWithinWeeklyLimits = weekly + newReservationTime <= maxWeekTime;
     }
 
     if (!isWithinDailyLimits) {

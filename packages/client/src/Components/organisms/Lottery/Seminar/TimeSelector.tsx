@@ -58,9 +58,7 @@ export function TimeSelector({ orgId, spaceId }: {
     }, [selectedTime]);
 
     const [open, setOpen] = useState<boolean>(false);
-    useEffect(() => {
-        setOpen(selectedTime !== -1);
-    }, [selectedTime]);
+    useEffect(() => { if (selectedTime !== -1) setOpen(true); }, [selectedTime]);
 
     const {
         createSeminarLottery,
