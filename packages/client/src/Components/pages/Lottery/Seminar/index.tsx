@@ -34,11 +34,13 @@ export default function SeminarLottery() {
     const [orgId, setOrgId] = useState<number>(-1);
 
     useEffect(() => {
+        alert("verifiedOrganizations");
         if (verifiedOrganizations.length > 0) {
             setOrgId(verifiedOrganizations[0].id);
         }
     }, [verifiedOrganizations]);
     useEffect(() => {
+        alert("seminarRoom");
         if (seminarRoom.length > 0) {
             setSpaceId(seminarRoom[0].id);
         }
