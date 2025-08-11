@@ -78,7 +78,9 @@ export default function SeminarLottery() {
                         {(verifiedOrganizations.length > 0) ? (<>
                             <GridItem colSpan={{ base: 6, md: 3 }}>
                                 <SelectComponent
+                                    key={`space-${spaceId}`}
                                     label="Seminar Room"
+                                    defaultValue={spaceId.toString()}
                                     optionList={seminarRoom.map(room => ({
                                         value: room.id.toString(),
                                         label: room.nameKr,
@@ -89,7 +91,9 @@ export default function SeminarLottery() {
                             </GridItem>
                             <GridItem colSpan={{ base: 6, md: 3 }}>
                                 <SelectComponent
+                                    key={`org-${orgId}`}
                                     label="Verified Organization"
+                                    defaultValue={orgId.toString()}
                                     optionList={verifiedOrganizations.map(org => ({
                                         value: org.id.toString(),
                                         label: org.name,
