@@ -253,7 +253,7 @@ export class LotterySeminarService {
     }
 
     // @Cron(CronExpression.EVERY_DAY_AT_6PM, { name: "drawing" })
-    @Cron(CronExpression.EVERY_5_MINUTES, { name: "test" })
+    @Cron(CronExpression.EVERY_30_SECONDS, { name: "test" })
     async drawing() {
         const activeLottery = await this.lotterySeminarInfoRepository.fetchActiveLotteries(getNow());
         if (!activeLottery) {
@@ -284,8 +284,12 @@ export class LotterySeminarService {
                     organization: verifiedOrganizations.find(org => org.id === lottery.organizationId)
                 }));
 
+                Logger.log(JSON.stringify(lotteriesWithOrg, null, 2));
+
                 const hasRoomLotteries = lotteriesWithOrg.filter(lottery => lottery.organization!.hasRoom);
                 const hasNoRoomLotteries = lotteriesWithOrg.filter(lottery => !lottery.organization!.hasRoom);
+
+                Logger.log(`Has room lotteries: ${hasRoomLotteries.length}, Has no room lotteries: ${hasNoRoomLotteries.length}`);
 
                 let winner = 0;
                 if (hasRoomLotteries.length > 0) {
@@ -295,6 +299,7 @@ export class LotterySeminarService {
                     winner = hasNoRoomLotteries[getRandomIndex(hasNoRoomLotteries.length)].id;
                     await this.drawSeminarLottery(winner);
                 }
+                Logger.log(`Winner drawn: ${winner}`);
 
                 lotteries.forEach(async lottery => {
                     if (lottery.id !== winner) {
