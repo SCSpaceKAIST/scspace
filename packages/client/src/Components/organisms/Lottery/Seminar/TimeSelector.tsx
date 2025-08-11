@@ -317,10 +317,10 @@ export function TimeSelector({ orgId, spaceId }: {
                                         hour={hour}
                                         // isSelected={isSlotSelected(day.key, hour)}
                                         // isDisabled={isSlotDisabled(day.key, hour) || readOnly}
-                                        isSelected={selectedTime === encodeTimeSlot(day.index, hour)}
+                                        isSelected={selectedTime === encodeTimeSlot(day.index, hour) && open}
                                         isDisabled={false}
                                         onSelect={() => {
-                                            if (selectedTime !== encodeTimeSlot(day.index, hour)) {
+                                            if (selectedTime !== encodeTimeSlot(day.index, hour) || !open) {
                                                 setSelectedTime(encodeTimeSlot(day.index, hour));
                                             } else {
                                                 setSelectedTime(-1);
