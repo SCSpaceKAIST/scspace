@@ -198,7 +198,7 @@ export function TimeSelector({ orgId, spaceId }: {
                                     <ActionBar.SelectionTrigger>
                                         {selectedTimeString}
                                     </ActionBar.SelectionTrigger>
-                                    {!readOnly && (appliedId !== -1) && (
+                                    {!readOnly && (appliedId === -1) && (
                                         <Button
                                             variant={"outline"}
                                             colorPalette={"blue"}
@@ -207,7 +207,7 @@ export function TimeSelector({ orgId, spaceId }: {
                                             Apply
                                         </Button>
                                     )}
-                                    {(appliedId === -1) && (
+                                    {(appliedId !== -1) && (
                                         <Button
                                             variant={"outline"}
                                             colorPalette={"red"}
