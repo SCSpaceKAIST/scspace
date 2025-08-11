@@ -93,6 +93,7 @@ export class ReservationPublicService {
       },
     });
 
+    console.log(getDateString(Number(startOfWeek)), getDateString(Number(endOfWeek)));
     console.log(weeklyReservations);
 
     const totalReservedTime = weeklyReservations.reduce((acc, reservation) => {
