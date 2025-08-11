@@ -63,6 +63,7 @@ export default function SelectComponent({
         _setValue(e.value[0]);
         _setDscrp(e.items[0].description ?? "");
         _setLabel(e.items[0].label);
+        console.log(e);
         onChange(e.items[0]);
       }}
     >
