@@ -78,25 +78,29 @@ export default function SeminarLottery() {
                         {(verifiedOrganizations.length > 0) ? (<>
                             <GridItem colSpan={{ base: 6, md: 3 }}>
                                 <SelectComponent
-                                    key={`space-${spaceId}`}
                                     label="Seminar Room"
                                     optionList={seminarRoom.map(room => ({
                                         value: room.id.toString(),
                                         label: room.nameKr,
                                         description: room.nameEn,
                                     }))}
-                                    onChange={e => setSpaceId(parseInt(e.value))}
+                                    onChange={e => {
+                                        console.log(e);
+                                        setSpaceId(parseInt(e.value));
+                                    }}
                                 />
                             </GridItem>
                             <GridItem colSpan={{ base: 6, md: 3 }}>
                                 <SelectComponent
-                                    key={`org-${orgId}`}
                                     label="Verified Organization"
                                     optionList={verifiedOrganizations.map(org => ({
                                         value: org.id.toString(),
                                         label: org.name,
                                     }))}
-                                    onChange={e => setOrgId(parseInt(e.value))}
+                                    onChange={e => {
+                                        console.log(e);
+                                        setOrgId(parseInt(e.value));
+                                    }}
                                 />
                             </GridItem>
                         </>) : (
