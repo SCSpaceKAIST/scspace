@@ -43,7 +43,7 @@ export function TimeSelector({ orgId, spaceId }: {
         setReadOnly(orgId === -1 || !activeLotteryInfo || activeLotteryInfo.length === 0);
     }, [orgId, activeLotteryInfo]);
 
-    const [selectedTime, setSelectedTime] = useState<number | null>(null);
+    const [selectedTime, setSelectedTime] = useState<number>(-1);
     const [selectedTimeString, setSelectedTimeString] = useState<string>("");
     useEffect(() => {
         if (selectedTime !== null) {
@@ -125,7 +125,7 @@ export function TimeSelector({ orgId, spaceId }: {
     const createSeminarLotteryHandler = () => {
         if (!activeLotteryInfo || activeLotteryInfo?.length === 0) return;
         if (orgId === -1) return;
-        if (selectedTime === null) return;
+        if (selectedTime === -1) return;
 
         createSeminarLottery({
             organizationId: orgId,
@@ -139,7 +139,7 @@ export function TimeSelector({ orgId, spaceId }: {
                     description: "새로운 추첨이 생성되었습니다.",
                 });
                 refetchTimeSlotCounts();
-                setSelectedTime(null);
+                setSelectedTime(-1);
             },
             onError: (error) => {
                 toaster.error({
@@ -160,7 +160,7 @@ export function TimeSelector({ orgId, spaceId }: {
                     description: "선택한 추첨이 삭제되었습니다.",
                 });
                 refetchTimeSlotCounts();
-                setAppliedId(null);
+                setAppliedId(-1);
             },
             onError: (error) => {
                 toaster.error({
@@ -382,7 +382,7 @@ export function TimeSelector({ orgId, spaceId }: {
                                         if (selectedTime !== encodeTimeSlot(day.index, hour)) {
                                             setSelectedTime(encodeTimeSlot(day.index, hour));
                                         } else {
-                                            setSelectedTime(null);
+                                            setSelectedTime(-1);
                                         }
                                     }}
                                     orgCount={timeSlotCounts?.find(s => s.time === encodeTimeSlot(day.index, hour))?.count || 0}
