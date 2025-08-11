@@ -25,7 +25,7 @@ export function TimeSelector({ orgId, spaceId }: {
     spaceId: number;
 }) {
     const [readOnly, setReadOnly] = useState<boolean>(false);
-    const [appliedId, setAppliedId] = useState<number | null>(null);
+    const [appliedId, setAppliedId] = useState<number>(-1);
     const { linkPush } = useLinkPush();
 
     const {
@@ -46,7 +46,7 @@ export function TimeSelector({ orgId, spaceId }: {
     const [selectedTime, setSelectedTime] = useState<number>(-1);
     const [selectedTimeString, setSelectedTimeString] = useState<string>("");
     useEffect(() => {
-        if (selectedTime !== null) {
+        if (selectedTime !== -1) {
             const { dayIndex, hour } = decodeTimeSlot(selectedTime);
             const dayLabel = weekDays[dayIndex].label;
             setSelectedTimeString(`${dayLabel} ${hour}:00 - ${hour + 1}:00`);
@@ -55,7 +55,7 @@ export function TimeSelector({ orgId, spaceId }: {
 
     const [open, setOpen] = useState<boolean>(false);
     useEffect(() => {
-        setOpen(selectedTime !== null);
+        setOpen(selectedTime !== -1);
     }, [selectedTime]);
 
     const {
@@ -77,12 +77,12 @@ export function TimeSelector({ orgId, spaceId }: {
         time: selectedTime || -1,
     });
 
-    useEffect(() => { if (selectedTime !== null) refetchLotteryByTime() }, [selectedTime]);
+    useEffect(() => { if (selectedTime !== -1) refetchLotteryByTime() }, [selectedTime]);
     useEffect(() => { alert(`appliedId: ${appliedId}, orgId: ${orgId}, spaceId: ${spaceId}, infoId: ${activeLotteryInfo}, selectedTime: ${selectedTime}`) }, [selectedTime]);
 
     useEffect(() => {
         if (lotteryByTime) {
-            setAppliedId(lotteryByTime.find(l => l.organizationId === orgId)?.id || null);
+            setAppliedId(lotteryByTime.find(l => l.organizationId === orgId)?.id || -1);
         }
     }, [lotteryByTime]);
 
