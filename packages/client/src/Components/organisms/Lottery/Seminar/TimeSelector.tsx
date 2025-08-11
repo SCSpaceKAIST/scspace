@@ -238,7 +238,7 @@ export function TimeSelector({ orgId, spaceId }: {
                                             const org = verifiedOrganizations?.find(org => org.id === l.organizationId);
                                             if (!org) return null;
                                             return (
-                                                <Tag.Root colorPalette={org.hasRoom ? "blue" : "green"}>
+                                                <Tag.Root colorPalette={org.hasRoom ? "blue" : "green"} key={l.id}>
                                                     <Tag.Label>
                                                         {org.name}
                                                     </Tag.Label>
@@ -312,7 +312,7 @@ export function TimeSelector({ orgId, spaceId }: {
                 bg="white"
             >
                 <Grid
-                    templateColumns={`80px repeat(${weekDays.length}, 1fr)`}
+                    templateColumns={`60px repeat(${weekDays.length}, 1fr)`}
                     templateRows={`40px repeat(${timeHours.length}, 1fr)`}
                     gap={0}
                     minW="600px"
@@ -322,9 +322,10 @@ export function TimeSelector({ orgId, spaceId }: {
                     <GridItem
                         bg="gray.50"
                         borderRightWidth="1px"
-                        // borderBottomWidth="1px"
+                        borderBottomWidth="1px"
                         borderColor="gray.200"
-                        zIndex={100}
+                        zIndex={1}
+                        position={"sticky"}
                     />
 
                     {/* 요일 헤더 */}
