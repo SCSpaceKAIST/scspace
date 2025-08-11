@@ -17,6 +17,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { CalendarView } from "../../../../organisms/Reservation/Calendar";
+import { HiOutlineRefresh } from "react-icons/hi";
 
 export default function Calendar({ spaceId }: { spaceId: number }) {
   const [date, setDate] = useState<Date>(() => new Date());
@@ -47,6 +48,7 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
   }, [spaceId, date.getTime()]);
 
   const isWide = useBreakpointValue({ base: false, md: true });
+  const [refetchCounter, setRefetchCounter] = useState(0);
 
   return (
     <Scroll>
@@ -56,7 +58,7 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
         gap={2}
       >
         <Dialog.Root size={isWide ? "xs" : "full"} open={open} onOpenChange={(e) => setOpen(e.open)}>
-          <Grid templateColumns="auto 1fr auto" gap={2}>
+          <Grid templateColumns="auto 1fr auto auto" gap={2}>
             <IconButton variant="outline" bg={{ base: "bg", _hover: "bg.muted" }} onClick={() => setDate((d) => {
               const _d = new Date(d);
               _d.setDate(d.getDate() - 7);
@@ -75,6 +77,13 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
               return _d;
             })}>
               <HiChevronRight />
+            </IconButton>
+            <IconButton
+              rounded="sm"
+              variant="ghost"
+              onClick={() => setRefetchCounter(c => c + 1)}
+            >
+              <HiOutlineRefresh color="gray" />
             </IconButton>
           </Grid>
           <Portal>
@@ -109,6 +118,7 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
         </Dialog.Root>
         {searchData ? (
           <CalendarView
+            refetchCounter={refetchCounter}
             spaceId={searchData.spaceId}
             dateFrom={searchData.dateFrom}
             dateTo={searchData.dateTo}
