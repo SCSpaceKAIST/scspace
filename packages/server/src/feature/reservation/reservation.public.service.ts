@@ -188,7 +188,7 @@ export class ReservationPublicService {
     // }
 
     const dateFrom = getDate(timeFrom);
-    const dateTo = getDate(timeTo);
+    const dateTo = getDate(timeTo - 1);
     if (dateFrom.getDate() !== dateTo.getDate()) {
       throw new BadRequestException('Cross-day reservations are not allowed. If you need to reserve across days, please create separate reservations for each day.');
     }
