@@ -45,7 +45,7 @@ export default function SeminarLottery() {
     }, [seminarRoom]);
 
     useEffect(() => {
-        console.log(orgId, spaceId);
+        alert(`Organization ID: ${orgId}, Space ID: ${spaceId}`);
     }, [orgId, spaceId]);
 
     return (
@@ -85,7 +85,7 @@ export default function SeminarLottery() {
                                     description: room.nameEn,
                                 }))}
                                 onChange={e => {
-                                    console.log(e);
+                                    alert(JSON.stringify(e));
                                     setSpaceId(parseInt(e.value));
                                 }}
                             />
@@ -98,7 +98,7 @@ export default function SeminarLottery() {
                                     label: org.name,
                                 }))}
                                 onChange={e => {
-                                    console.log(e);
+                                    alert(JSON.stringify(e));
                                     setOrgId(parseInt(e.value));
                                 }}
                             />
