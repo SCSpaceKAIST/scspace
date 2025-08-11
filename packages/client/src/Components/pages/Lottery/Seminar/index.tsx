@@ -34,21 +34,15 @@ export default function SeminarLottery() {
     const [orgId, setOrgId] = useState<number>(-1);
 
     useEffect(() => {
-        alert("verifiedOrganizations");
-        if (verifiedOrganizations.length > 0) {
+        if (verifiedOrganizations.length > 0 && orgId === -1) {
             setOrgId(verifiedOrganizations[0].id);
         }
     }, [verifiedOrganizations]);
     useEffect(() => {
-        alert("seminarRoom");
-        if (seminarRoom.length > 0) {
+        if (seminarRoom.length > 0 && spaceId === 1) {
             setSpaceId(seminarRoom[0].id);
         }
     }, [seminarRoom]);
-
-    useEffect(() => {
-        alert(`Organization ID: ${orgId}, Space ID: ${spaceId}`);
-    }, [orgId, spaceId]);
 
     return (
         <Scroll>
@@ -87,7 +81,6 @@ export default function SeminarLottery() {
                                     description: room.nameEn,
                                 }))}
                                 onChange={e => {
-                                    alert(JSON.stringify(e));
                                     setSpaceId(parseInt(e.value));
                                 }}
                             />
@@ -100,7 +93,6 @@ export default function SeminarLottery() {
                                     label: org.name,
                                 }))}
                                 onChange={e => {
-                                    alert(JSON.stringify(e));
                                     setOrgId(parseInt(e.value));
                                 }}
                             />
