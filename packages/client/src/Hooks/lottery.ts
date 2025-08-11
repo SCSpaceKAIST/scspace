@@ -49,19 +49,25 @@ export function useSeminarLotteryAPI(params?: {
     infoId?: number;
     time?: number
 }) {
-    const { id, organizationId, spaceId, infoId, time } = params || {};
+    const { id, organizationId, spaceId, infoId, time } = params || {
+        id: -1,
+        organizationId: -1,
+        spaceId: -1,
+        infoId: -1,
+        time: -1
+    };
 
     // GET Hook들을 최상위에서 호출
     const lotteryByOrganization = useQueryApi<ISeminarLottery[]>(
-        `/lottery/seminar?organizationId=${organizationId || ''}&spaceId=${spaceId || ''}&infoId=${infoId || ''}`
+        `/lottery/seminar?organizationId=${organizationId}&spaceId=${spaceId}&infoId=${infoId}`
     );
 
     const lotteryByTime = useQueryApi<ISeminarLottery[]>(
-        `/lottery/seminar/time?time=${time || ''}&spaceId=${spaceId || ''}&infoId=${infoId || ''}`
+        `/lottery/seminar/time?time=${time}&spaceId=${spaceId}&infoId=${infoId}`
     );
 
     const timeSlotCounts = useQueryApi<{ time: number; count: number }[]>(
-        `/lottery/seminar/time/count?spaceId=${spaceId || ''}&infoId=${infoId || ''}`
+        `/lottery/seminar/time/count?spaceId=${spaceId}&infoId=${infoId}`
     );
 
     // POST/PUT/DELETE 메서드들
@@ -71,7 +77,7 @@ export function useSeminarLotteryAPI(params?: {
     ).mutate;
 
     const deleteSeminarLottery = useMutationApi<ISuccessResponse, {}>(
-        `/lottery/seminar/${id || ''}`,
+        `/lottery/seminar/${id}`,
         "DELETE"
     ).mutate;
 
