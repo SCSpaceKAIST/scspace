@@ -75,44 +75,44 @@ export default function SeminarLottery() {
                                 </List.Item>
                             </List.Root>
                         </GridItem>
-                        {(verifiedOrganizations.length > 0) ? (<>
-                            <GridItem colSpan={{ base: 6, md: 3 }}>
-                                <SelectComponent
-                                    label="Seminar Room"
-                                    optionList={seminarRoom.map(room => ({
-                                        value: room.id.toString(),
-                                        label: room.nameKr,
-                                        description: room.nameEn,
-                                    }))}
-                                    onChange={e => {
-                                        console.log(e);
-                                        setSpaceId(parseInt(e.value));
-                                    }}
-                                />
-                            </GridItem>
-                            <GridItem colSpan={{ base: 6, md: 3 }}>
-                                <SelectComponent
-                                    label="Verified Organization"
-                                    optionList={verifiedOrganizations.map(org => ({
-                                        value: org.id.toString(),
-                                        label: org.name,
-                                    }))}
-                                    onChange={e => {
-                                        console.log(e);
-                                        setOrgId(parseInt(e.value));
-                                    }}
-                                />
-                            </GridItem>
-                        </>) : (
-                            <GridItem colSpan={6}>
-                                <Alert.Root>
-                                    <Alert.Indicator />
-                                    <Alert.Title>
-                                        You are NOT a delegator of any verified organization.
-                                    </Alert.Title>
-                                </Alert.Root>
-                            </GridItem>
-                        )}
+                        {/* {(verifiedOrganizations.length > 0) ? (<> */}
+                        <GridItem colSpan={{ base: 6, md: 3 }}>
+                            <SelectComponent
+                                label="Seminar Room"
+                                optionList={seminarRoom.map(room => ({
+                                    value: room.id.toString(),
+                                    label: room.nameKr,
+                                    description: room.nameEn,
+                                }))}
+                                onChange={e => {
+                                    console.log(e);
+                                    setSpaceId(parseInt(e.value));
+                                }}
+                            />
+                        </GridItem>
+                        <GridItem colSpan={{ base: 6, md: 3 }}>
+                            <SelectComponent
+                                label="Verified Organization"
+                                optionList={verifiedOrganizations.map(org => ({
+                                    value: org.id.toString(),
+                                    label: org.name,
+                                }))}
+                                onChange={e => {
+                                    console.log(e);
+                                    setOrgId(parseInt(e.value));
+                                }}
+                            />
+                        </GridItem>
+                        {/* </>) : ( */}
+                        <GridItem colSpan={6}>
+                            <Alert.Root>
+                                <Alert.Indicator />
+                                <Alert.Title>
+                                    You are NOT a delegator of any verified organization.
+                                </Alert.Title>
+                            </Alert.Root>
+                        </GridItem>
+                        {/* )} */}
                         <GridItem colSpan={6}>
                             <TimeSelector
                                 orgId={orgId}
