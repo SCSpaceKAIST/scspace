@@ -131,7 +131,7 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
                                     <Text>
                                         {selectedRes.user.nameKr}
                                     </Text>
-                                    {selectedRes.user.type === UserTypeEnum.ADMIN || selectedRes.user.type === UserTypeEnum.MANAGER && (
+                                    {(selectedRes.user.type === UserTypeEnum.ADMIN || selectedRes.user.type === UserTypeEnum.MANAGER) && (
                                         <Badge colorPalette={"blue"}>SCSpace</Badge>
                                     )}
                                 </HStack>
