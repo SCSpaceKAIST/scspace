@@ -12,7 +12,7 @@ import {
 import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
 import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
 import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
-import { getDate, getDateDiffInMinute, getDateString, getNow, timeRangeCheck } from '@scspace-server/common/utils';
+import { getDate, getDateDiffInMinute, getDateString, getNow, getWeekPeriod, timeRangeCheck } from '@scspace-server/common/utils';
 import { IReservationContent, IReservationSimple } from '@scspace-depot/types/reservation';
 import { ISpace } from '@scspace-depot/types/space';
 import { LotterySeminarService } from '../lottery/seminar/lottery.seminar.service';
@@ -80,20 +80,19 @@ export class ReservationPublicService {
     spaceId: number,
     timeFrom: number,
   ): Promise<number> {
-    const startOfWeek = BigInt(~~(timeFrom / (60 * 24 * 7))) * BigInt(60 * 24 * 7);
-    const endOfWeek = startOfWeek + BigInt(60 * 24 * 7) - BigInt(1);
+    const { weekStart, weekEnd } = getWeekPeriod(timeFrom);
 
     const { data: weeklyReservations } = await this.reservationRepository.fetch({
       organizationId: organizationId,
       spaceId: spaceId,
       state: ReservationStateEnum.GRANT,
       timeRange: {
-        timeFrom: Number(startOfWeek),
-        timeTo: Number(endOfWeek),
+        timeFrom: weekStart,
+        timeTo: weekEnd,
       },
     });
 
-    console.log(getDateString(Number(startOfWeek)), getDateString(Number(endOfWeek)));
+    console.log(getDateString(Number(weekStart)), getDateString(Number(weekEnd)));
     console.log(weeklyReservations);
 
     const totalReservedTime = weeklyReservations.reduce((acc, reservation) => {

@@ -150,3 +150,10 @@ export function getDateBegin(time: number): number {
 export function getDateEnd(time: number): number {
   return time - (time % (24 * 60)) + 24 * 60 - 1;
 }
+
+export function getWeekPeriod(time: number): { weekStart: number; weekEnd: number } {
+  const date = getDate(time);
+  const weekStart = getDateBegin(getTime(date) - (date.getDay() * 24 * 60));
+  const weekEnd = getDateEnd(getTime(date) + ((6 - date.getDay()) * 24 * 60));
+  return { weekStart, weekEnd };
+}
