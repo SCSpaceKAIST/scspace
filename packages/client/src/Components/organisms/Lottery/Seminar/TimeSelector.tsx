@@ -198,20 +198,18 @@ export function TimeSelector({ orgId, spaceId }: {
                                     <ActionBar.SelectionTrigger>
                                         {selectedTimeString}
                                     </ActionBar.SelectionTrigger>
-                                    {!readOnly && !appliedId && (
+                                    {!readOnly && (appliedId !== -1) && (
                                         <Button
                                             variant={"outline"}
-                                            size={"sm"}
                                             colorPalette={"blue"}
                                             onClick={createSeminarLotteryHandler}
                                         >
                                             Apply
                                         </Button>
                                     )}
-                                    {appliedId && (
+                                    {(appliedId === -1) && (
                                         <Button
                                             variant={"outline"}
-                                            size={"sm"}
                                             colorPalette={"red"}
                                             onClick={deleteSeminarLotteryHandler}
                                         >
