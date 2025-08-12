@@ -94,7 +94,7 @@ export class LotterySeminarInfoRepository {
             .where(
                 and(
                     lte(SeminarLotteryInfo.timeLotteryStart, currentTime),
-                    gte(SeminarLotteryInfo.timeLotteryEnd, currentTime)
+                    gte(SeminarLotteryInfo.timeEnd, currentTime)
                 )
             )
             .orderBy(asc(SeminarLotteryInfo.timeLotteryStart));

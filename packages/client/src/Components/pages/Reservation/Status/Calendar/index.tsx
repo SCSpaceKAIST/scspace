@@ -18,6 +18,7 @@ import DatePicker from "react-datepicker";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { CalendarView } from "../../../../organisms/Reservation/Calendar";
 import { HiOutlineRefresh } from "react-icons/hi";
+import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
 
 export default function Calendar({ spaceId }: { spaceId: number }) {
   const [date, setDate] = useState<Date>(() => new Date());
@@ -78,13 +79,7 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
             })}>
               <HiChevronRight />
             </IconButton>
-            <IconButton
-              rounded="sm"
-              variant="ghost"
-              onClick={() => setRefetchCounter(c => c + 1)}
-            >
-              <HiOutlineRefresh color="gray" />
-            </IconButton>
+            <RefetchBtn refetch={() => setRefetchCounter(c => c + 1)} />
           </Grid>
           <Portal>
             <Dialog.Backdrop />

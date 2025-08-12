@@ -15,6 +15,9 @@ import {
     Wrap,
     Tag,
     Badge,
+    Stack,
+    Flex,
+    IconButton,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { TimeSlot } from "./TimeSlot";
@@ -24,6 +27,8 @@ import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import FieldComponent from "@scspace-client/Components/atoms/Field";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
+import { useDate } from "@scspace-client/Hooks/utils";
+import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
 
 export function TimeSelector({ orgId, spaceId, editable }: {
     orgId: number;
@@ -33,20 +38,27 @@ export function TimeSelector({ orgId, spaceId, editable }: {
     const [readOnly, setReadOnly] = useState<boolean>(false);
     const [appliedId, setAppliedId] = useState<number>(-1);
     const { linkPush } = useLinkPush();
+    const { getTime } = useDate();
 
     const {
         data: activeLotteryInfo
     } = useSeminarLotteryInfoAPI().activeLotteryInfo;
 
     if (activeLotteryInfo && activeLotteryInfo.length === 0) {
-        alert("This is NOT a seminar room lottery period");
+        alert("It is NOT a seminar room lottery period");
         linkPush("/");
     }
 
     const { data: verifiedOrganizations } = useOrganizationAPI().verifiedOrganizations;
 
     useEffect(() => {
-        setReadOnly(orgId === -1 || !activeLotteryInfo || activeLotteryInfo.length === 0 || !editable);
+        setReadOnly(
+            orgId === -1 ||
+            !activeLotteryInfo ||
+            activeLotteryInfo.length === 0 ||
+            activeLotteryInfo[0].timeLotteryEnd < getTime(new Date()) ||
+            !editable
+        );
     }, [orgId, activeLotteryInfo, editable]);
 
     const [selectedTime, setSelectedTime] = useState<number>(-1);
@@ -242,9 +254,11 @@ export function TimeSelector({ orgId, spaceId, editable }: {
                     </ActionBar.Positioner>
                 </Portal>
             </ActionBar.Root>
-            {/* 헤더 정보 */}
-            <FieldComponent options={{ label: "Time Selector", }}>
-                {/* 플래너 그리드 */}
+            {/* 플래너 그리드 */}
+            <Stack>
+                <Flex direction={"row"} justify={"flex-end"}>
+                    <RefetchBtn refetch={refetchAll} />
+                </Flex>
                 <Box
                     overflowX="auto"
                     overflowY="auto"
@@ -352,7 +366,7 @@ export function TimeSelector({ orgId, spaceId, editable }: {
                         ))}
                     </Grid>
                 </Box>
-            </FieldComponent>
+            </Stack>
         </>
     );
 }

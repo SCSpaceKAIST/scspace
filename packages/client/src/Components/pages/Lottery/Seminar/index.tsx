@@ -8,7 +8,6 @@ import { TimeSelector } from "@scspace-client/Components/organisms/Lottery/Semin
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import { useAllSpace } from "@scspace-client/Hooks/space";
-import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
 import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 import { ISpace } from "@scspace-depot/types/space";
 import { useEffect, useState } from "react";
