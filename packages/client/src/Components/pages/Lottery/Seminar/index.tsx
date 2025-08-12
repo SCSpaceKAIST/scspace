@@ -72,10 +72,10 @@ export default function SeminarLottery() {
                                                 The lottery will be automatically conducted every day at 6 PM during the lottery period, and the results will be notified via email.
                                             </List.Item>
                                             <List.Item>
-                                                The winning time slot displays the name of the winning organization, and you can select an organization to highlight only that organization's time slot.
+                                                The winning time slot displays the name of the winning organization, and you can select an organization to highlight only that organization&apos;s time slot.
                                             </List.Item>
                                             <List.Item fontWeight={"semibold"} color={"red"}>
-                                                You can delete and reapply after winning the lottery, but you can't revert to winning status after deleting.
+                                                You can delete and reapply after winning the lottery, but you CANNOT revert to winning status after deleting.
                                             </List.Item>
                                         </List.Root>
                                     </Blockquote.Content>
