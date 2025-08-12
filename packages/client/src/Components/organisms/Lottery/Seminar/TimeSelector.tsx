@@ -167,6 +167,7 @@ export function TimeSelector({ orgId, spaceId, editable }: {
                     description: "선택한 추첨이 삭제되었습니다.",
                 });
                 refetchTimeSlotCounts();
+                refetchLotteryByTime();
                 refetchDrawnLottery();
                 setAppliedId(-1);
             },
