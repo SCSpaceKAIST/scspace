@@ -205,6 +205,16 @@ export class LotterySeminarService {
             throw new BadRequestException("Active lottery not found");
         }
 
+        const drawnLotteries = await this.lotterySeminarRepository.fetch({
+            spaceId: params.lottery.spaceId,
+            time: params.lottery.time,
+            infoId: params.lottery.infoId,
+            lotteryWin: 1
+        });
+        if (drawnLotteries.length > 0) {
+            throw new BadRequestException("A seminar lottery with the same time has already been drawn.");
+        }
+
         const pastLotteries = await this.lotterySeminarRepository.fetch({
             organizationId: params.lottery.organizationId,
             infoId: params.lottery.infoId

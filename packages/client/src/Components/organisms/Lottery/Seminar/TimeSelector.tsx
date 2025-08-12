@@ -133,6 +133,13 @@ export function TimeSelector({ orgId, spaceId, editable }: {
         return { dayIndex, hour };
     };
 
+    const refetchAll = () => {
+        refetchTimeSlotCounts();
+        refetchLotteryByTime();
+        refetchLotteryByOrganization();
+        refetchDrawnLottery();
+    };
+
     const createSeminarLotteryHandler = () => {
         if (!activeLotteryInfo || activeLotteryInfo?.length === 0) return;
         if (orgId === -1) return;
@@ -146,19 +153,17 @@ export function TimeSelector({ orgId, spaceId, editable }: {
         }, {
             onSuccess: () => {
                 toaster.success({
-                    title: "추첨 생성 성공",
-                    description: "새로운 추첨이 생성되었습니다.",
+                    title: "Successfully created",
+                    description: "The seminar lottery has been created successfully.",
                 });
-                refetchTimeSlotCounts();
-                refetchLotteryByTime();
-                refetchLotteryByOrganization();
             },
             onError: (error) => {
                 toaster.error({
-                    title: "추첨 생성 실패",
-                    description: error.message || "추첨 생성에 실패했습니다.",
+                    title: "Failed to create seminar lottery",
+                    description: error.message || "Failed to create seminar lottery.",
                 });
-            }
+            },
+            onSettled: refetchAll
         });
     }
 
@@ -168,21 +173,18 @@ export function TimeSelector({ orgId, spaceId, editable }: {
         deleteSeminarLottery({}, {
             onSuccess: () => {
                 toaster.success({
-                    title: "추첨 삭제 성공",
-                    description: "선택한 추첨이 삭제되었습니다.",
+                    title: "Successfully deleted seminar lottery",
+                    description: "The selected seminar lottery has been deleted successfully.",
                 });
-                refetchTimeSlotCounts();
-                refetchLotteryByTime();
-                refetchLotteryByOrganization();
-                refetchDrawnLottery();
                 setAppliedId(-1);
             },
             onError: (error) => {
                 toaster.error({
-                    title: "추첨 삭제 실패",
-                    description: error.message || "추첨 삭제에 실패했습니다.",
+                    title: "Failed to delete seminar lottery",
+                    description: error.message || "Failed to delete seminar lottery.",
                 });
-            }
+            },
+            onSettled: refetchAll
         });
     }
 
