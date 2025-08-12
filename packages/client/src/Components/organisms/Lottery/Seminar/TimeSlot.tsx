@@ -13,6 +13,7 @@ interface TimeSlotProps {
     onSelect: (day: string, hour: number) => void;
     orgCount: number;
     drawnOrgName: string | null;
+    isOrgRequested: boolean;
 }
 
 export function TimeSlot({
@@ -21,11 +22,13 @@ export function TimeSlot({
     hour,
     isSelected,
     onSelect,
-    orgCount
+    orgCount,
+    isOrgRequested
 }: TimeSlotProps) {
     const [isHovered, setIsHovered] = useState(false);
 
     const getBgColor = () => {
+        if (isOrgRequested) return "cyan.100"; // 이미 추첨된 조직이 선택된 경우
         if (drawnOrgName !== null) return "green.100";
         if (isSelected) return "blue.100"; // readOnly일 때 더 진한 색
         if (isHovered) return "gray.50";
@@ -33,6 +36,7 @@ export function TimeSlot({
     };
 
     const getBorderColor = () => {
+        if (isOrgRequested) return "cyan.300"; // 이미 추첨된 조직이 선택된 경우
         if (drawnOrgName !== null) return "green.300";
         if (isSelected) return "blue.300"; // readOnly일 때 더 진한 테두리
         return "gray.200";

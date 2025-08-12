@@ -1,7 +1,7 @@
 "use client"
 
 import { Alert, Badge, Blockquote, Grid, GridItem, List, Separator, Stack, StackSeparator } from "@chakra-ui/react";
-import LoadingComponent from "@scspace-client/Components/atoms/Loading";
+import LoadingComponent, { SmallLoading } from "@scspace-client/Components/atoms/Loading";
 import SelectComponent from "@scspace-client/Components/molecules/forms/Select";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import { TimeSelector } from "@scspace-client/Components/organisms/Lottery/Seminar/TimeSelector";
@@ -18,22 +18,18 @@ export default function SeminarLottery() {
     needLogin();
 
     const { spaces, isLoading: spaceLoading } = useAllSpace();
-    const { data: organizations, isLoading: orgLoading } = useOrganizationAPI({
+    const { data: verifiedOrganizations, isLoading: orgLoading } = useOrganizationAPI({
         uid: userInfo?.id
-    }).userOrganizations;
+    }).verifiedOrganizations;
 
     const seminarRoom: ISpace[] = spaces?.filter(space =>
         space.spaceType === SpaceTypeEnum.SEMINAR
     ) ?? [];
-    const verifiedOrganizations = organizations?.filter(org =>
-        (org.status === OrganizationStatusEnum.VERIFIED) &&
-        (org.delegatorId === userInfo?.id)
-    ) ?? [];
-
     const [spaceId, setSpaceId] = useState<number>(1);
     const [orgId, setOrgId] = useState<number>(-1);
 
     useEffect(() => {
+        if (!verifiedOrganizations) return;
         if (verifiedOrganizations.length > 0 && orgId === -1) {
             setOrgId(verifiedOrganizations[0].id);
         }
@@ -72,6 +68,15 @@ export default function SeminarLottery() {
                                             <List.Item fontWeight={"semibold"} color={"blue"}>
                                                 Organizations without group rooms have priority in the lottery.
                                             </List.Item>
+                                            <List.Item>
+                                                The lottery will be automatically conducted every day at 6 PM during the lottery period, and the results will be notified via email.
+                                            </List.Item>
+                                            <List.Item>
+                                                The winning time slot displays the name of the winning organization, and you can select an organization to highlight only that organization's time slot.
+                                            </List.Item>
+                                            <List.Item fontWeight={"semibold"} color={"red"}>
+                                                You can delete and reapply after winning the lottery, but you can't revert to winning status after deleting.
+                                            </List.Item>
                                         </List.Root>
                                     </Blockquote.Content>
                                 </Blockquote.Root>
@@ -90,26 +95,35 @@ export default function SeminarLottery() {
                                             <List.Item fontWeight={"semibold"} color={"blue"}>
                                                 단체실이 없는 조직이 추첨에서 우선권을 가집니다.
                                             </List.Item>
+                                            <List.Item>
+                                                추첨은 추첨 기간동안 매일 오후 6시에 자동으로 진행되며, 결과는 메일로 통보됩니다.
+                                            </List.Item>
+                                            <List.Item>
+                                                추첨에 당첨된 시간대에는 당첨된 조직의 이름이 표시되며, 조직을 선택해 해당 조직의 시간대만 강조할 수 있습니다.
+                                            </List.Item>
+                                            <List.Item fontWeight={"semibold"} color={"red"}>
+                                                추첨에 당첨된 후에도 삭제하고 다시 신청할 수 있지만, 삭제한 뒤엔 당첨된 상태로 되돌릴 수 없습니다.
+                                            </List.Item>
                                         </List.Root>
                                     </Blockquote.Content>
                                 </Blockquote.Root>
                             </Stack>
                         </GridItem>
-                        {(verifiedOrganizations.length > 0) ? (<>
-                            <GridItem colSpan={{ base: 6, md: 3 }}>
-                                <SelectComponent
-                                    label="Seminar Room"
-                                    optionList={seminarRoom.map(room => ({
-                                        value: room.id.toString(),
-                                        label: room.nameKr,
-                                        description: room.nameEn,
-                                    }))}
-                                    onChange={e => {
-                                        setSpaceId(parseInt(e.value));
-                                    }}
-                                />
-                            </GridItem>
-                            <GridItem colSpan={{ base: 6, md: 3 }}>
+                        <GridItem colSpan={{ base: 6, md: 3 }}>
+                            <SelectComponent
+                                label="Seminar Room"
+                                optionList={seminarRoom.map(room => ({
+                                    value: room.id.toString(),
+                                    label: room.nameKr,
+                                    description: room.nameEn,
+                                }))}
+                                onChange={e => {
+                                    setSpaceId(parseInt(e.value));
+                                }}
+                            />
+                        </GridItem>
+                        <GridItem colSpan={{ base: 6, md: 3 }}>
+                            {verifiedOrganizations ? (
                                 <SelectComponent
                                     label="Verified Organization"
                                     optionList={verifiedOrganizations.map(org => ({
@@ -120,21 +134,14 @@ export default function SeminarLottery() {
                                         setOrgId(parseInt(e.value));
                                     }}
                                 />
-                            </GridItem>
-                        </>) : (
-                            <GridItem colSpan={6}>
-                                <Alert.Root>
-                                    <Alert.Indicator />
-                                    <Alert.Title>
-                                        You are NOT a delegator of any verified organization.
-                                    </Alert.Title>
-                                </Alert.Root>
-                            </GridItem>
-                        )}
+                            ) : (<SmallLoading />)}
+                        </GridItem>
+
                         <GridItem colSpan={6}>
                             <TimeSelector
                                 orgId={orgId}
                                 spaceId={spaceId}
+                                editable={verifiedOrganizations?.find(v => v.id === orgId)?.delegatorId === userInfo?.id}
                             />
                         </GridItem>
                     </Grid>

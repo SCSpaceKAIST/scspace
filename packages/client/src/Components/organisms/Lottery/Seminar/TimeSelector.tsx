@@ -23,10 +23,12 @@ import { useSeminarLotteryAPI, useSeminarLotteryInfoAPI } from "@scspace-client/
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import FieldComponent from "@scspace-client/Components/atoms/Field";
+import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 
-export function TimeSelector({ orgId, spaceId }: {
+export function TimeSelector({ orgId, spaceId, editable }: {
     orgId: number;
     spaceId: number;
+    editable: boolean;
 }) {
     const [readOnly, setReadOnly] = useState<boolean>(false);
     const [appliedId, setAppliedId] = useState<number>(-1);
@@ -44,8 +46,8 @@ export function TimeSelector({ orgId, spaceId }: {
     const { data: verifiedOrganizations } = useOrganizationAPI().verifiedOrganizations;
 
     useEffect(() => {
-        setReadOnly(orgId === -1 || !activeLotteryInfo || activeLotteryInfo.length === 0);
-    }, [orgId, activeLotteryInfo]);
+        setReadOnly(orgId === -1 || !activeLotteryInfo || activeLotteryInfo.length === 0 || !editable);
+    }, [orgId, activeLotteryInfo, editable]);
 
     const [selectedTime, setSelectedTime] = useState<number>(-1);
     const [selectedTimeString, setSelectedTimeString] = useState<string>("");
@@ -210,7 +212,7 @@ export function TimeSelector({ orgId, spaceId }: {
                                             Apply
                                         </Button>
                                     )}
-                                    {!readOnly && (appliedId !== -1) && (
+                                    {available && !readOnly && (appliedId !== -1) && (
                                         <Button
                                             variant={"outline"}
                                             colorPalette={"red"}
@@ -218,6 +220,9 @@ export function TimeSelector({ orgId, spaceId }: {
                                         >
                                             Delete
                                         </Button>
+                                    )}
+                                    {!available && !readOnly && (appliedId === -1) && (
+                                        <DeleteBtn onDelete={deleteSeminarLotteryHandler} />
                                     )}
                                     <ActionBar.CloseTrigger asChild>
                                         <CloseButton />
@@ -329,8 +334,11 @@ export function TimeSelector({ orgId, spaceId }: {
                                                 setSelectedTime(-1);
                                             }
                                         }}
-                                        orgCount={timeSlotCounts?.find(s => s.time === encodeTimeSlot(day.index, hour))?.count || 0}
-                                        drawnOrgName={verifiedOrganizations?.find(o => o.id === drawnLottery?.find(l => l.time === encodeTimeSlot(day.index, hour))?.organizationId)?.name || null}
+                                        orgCount={timeSlotCounts?.find(s => s.time === encodeTimeSlot(day.index, hour))?.count ?? 0}
+                                        drawnOrgName={verifiedOrganizations?.find(o => o.id === drawnLottery?.find(l => l.time === encodeTimeSlot(day.index, hour))?.organizationId)?.name ?? null}
+                                        isOrgRequested={
+                                            drawnLottery?.some(l => l.time === encodeTimeSlot(day.index, hour) && l.organizationId === orgId) ?? false
+                                        }
                                     />
                                 ))}
                             </>
