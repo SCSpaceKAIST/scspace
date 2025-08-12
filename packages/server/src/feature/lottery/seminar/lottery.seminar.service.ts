@@ -261,6 +261,10 @@ export class LotterySeminarService {
         });
     }
 
+    async applySeminarLottery(): Promise<void> {
+        // Implementation for reflecting seminar lottery results
+    }
+
     // @Cron(CronExpression.EVERY_DAY_AT_6PM, { name: "drawing" })
     @Cron(CronExpression.EVERY_MINUTE, { name: "test" })
     async drawing() {

@@ -17,7 +17,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { CalendarView } from "../../../../organisms/Reservation/Calendar";
-import { HiOutlineRefresh } from "react-icons/hi";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
 
 export default function Calendar({ spaceId }: { spaceId: number }) {
