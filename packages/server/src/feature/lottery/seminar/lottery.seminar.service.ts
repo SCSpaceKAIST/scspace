@@ -207,7 +207,6 @@ export class LotterySeminarService {
 
         const pastLotteries = await this.lotterySeminarRepository.fetch({
             organizationId: params.lottery.organizationId,
-            spaceId: params.lottery.spaceId,
             infoId: params.lottery.infoId
         });
         if (pastLotteries.find(lottery => lottery.time === params.lottery.time)) {

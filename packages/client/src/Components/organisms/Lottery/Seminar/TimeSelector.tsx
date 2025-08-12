@@ -221,7 +221,7 @@ export function TimeSelector({ orgId, spaceId, editable }: {
                                             Delete
                                         </Button>
                                     )}
-                                    {!available && !readOnly && (appliedId === -1) && (
+                                    {!available && !readOnly && (appliedId !== -1) && (
                                         <DeleteBtn onDelete={deleteSeminarLotteryHandler} />
                                     )}
                                     <ActionBar.CloseTrigger asChild>
