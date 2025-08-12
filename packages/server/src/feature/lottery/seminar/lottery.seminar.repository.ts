@@ -27,11 +27,11 @@ export class LotterySeminarRepository {
         if (params.infoId) {
             whereClause.push(eq(SeminarLottery.infoId, params.infoId));
         }
-        if (params.time) {
+        if (params.time !== undefined) {
             whereClause.push(eq(SeminarLottery.time, params.time));
         }
-        if (params.lotteryWin) {
-            whereClause.push(eq(SeminarLottery.lotteryWin, 1));
+        if (params.lotteryWin !== undefined) {
+            whereClause.push(eq(SeminarLottery.lotteryWin, params.lotteryWin));
         }
 
         // Implementation for fetching seminar lottery data

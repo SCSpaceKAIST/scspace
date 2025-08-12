@@ -266,17 +266,28 @@ export class LotterySeminarService {
 
         seminarRooms.map(s => s.id).forEach(async (spaceId) => {
             Array.from({ length: 168 }).forEach(async (_, j) => {
-                const lotteries = await this.getSeminarLotteryByTime({ time: j, spaceId, infoId: activeLottery[0].id });
 
-                Logger.log(`Found ${lotteries.length} lotteries for time ${j}, space ${spaceId}`);
+                const drawnLotteries = await this.lotterySeminarRepository.fetch({
+                    spaceId,
+                    infoId: activeLottery[0].id,
+                    time: j,
+                    lotteryWin: 1
+                });
+                if (drawnLotteries.length === 1) return;
+
+                const lotteries = await this.lotterySeminarRepository.fetch({
+                    spaceId,
+                    infoId: activeLottery[0].id,
+                    time: j,
+                    lotteryWin: 0
+                });
+
                 // Implementation for drawing the lottery
                 if (lotteries.length === 0) {
                     return;
                 }
 
                 if (lotteries.length === 1) {
-                    if (lotteries[0].lotteryWin === 1) return;
-
                     await this.drawSeminarLottery(lotteries[0].id);
                     return;
                 }
