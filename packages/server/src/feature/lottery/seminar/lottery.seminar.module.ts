@@ -7,9 +7,10 @@ import { LotterySeminarController } from "./lottery.seminar.controller";
 import { LotterySeminarRepository } from "./lottery.seminar.repository";
 import { LotterySeminarService } from "./lottery.seminar.service";
 import { LotterySeminarInfoRepository } from "./lottery.seminar.info.repository";
+import { ReservationModule } from "@scspace-server/feature/reservation/reservation.module";
 
 @Module({
-    imports: [DBModule, SpaceModule, UserModule, OrganizationModule],
+    imports: [DBModule, SpaceModule, UserModule, OrganizationModule, ReservationModule],
     controllers: [LotterySeminarController],
     providers: [
         LotterySeminarRepository,
