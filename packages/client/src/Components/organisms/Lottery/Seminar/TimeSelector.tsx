@@ -151,6 +151,7 @@ export function TimeSelector({ orgId, spaceId, editable }: {
                 });
                 refetchTimeSlotCounts();
                 refetchLotteryByTime();
+                refetchLotteryByOrganization();
             },
             onError: (error) => {
                 toaster.error({
@@ -172,6 +173,7 @@ export function TimeSelector({ orgId, spaceId, editable }: {
                 });
                 refetchTimeSlotCounts();
                 refetchLotteryByTime();
+                refetchLotteryByOrganization();
                 refetchDrawnLottery();
                 setAppliedId(-1);
             },

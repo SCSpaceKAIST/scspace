@@ -35,7 +35,7 @@ export class MPerformanceLottery implements IPerformanceLottery {
     priority: IPerformanceLottery['priority'];
     date: IPerformanceLottery['date'];
     lotteryWin: IPerformanceLottery['lotteryWin'];
-    timeUpdate: IPerformanceLottery['timeUpdate'];
+    reservationId: IPerformanceLottery['reservationId'];
 
     constructor(data: IPerformanceLottery) {
         this.id = data.id;
@@ -45,7 +45,7 @@ export class MPerformanceLottery implements IPerformanceLottery {
         this.priority = data.priority;
         this.date = data.date;
         this.lotteryWin = data.lotteryWin;
-        this.timeUpdate = data.timeUpdate;
+        this.reservationId = data.reservationId;
     }
 
     static fromDB(lottery: typeof PerformanceLottery.$inferSelect): IPerformanceLottery {
@@ -57,7 +57,7 @@ export class MPerformanceLottery implements IPerformanceLottery {
             priority: lottery.priority,
             date: lottery.date,
             lotteryWin: lottery.lotteryWin,
-            timeUpdate: lottery.timeUpdate,
+            reservationId: lottery.reservationId,
         };
     }
 }

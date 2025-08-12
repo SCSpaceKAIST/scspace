@@ -23,7 +23,7 @@ export const SeminarLottery = mysqlTable('s_lottery', {
     .references(() => Space.id, { onDelete: 'cascade' }),
   time: int('time').notNull(),
   lotteryWin: int('lottery_win').notNull().default(0), // 0: not winner, 1: winner
-  timeUpdate: bigint('time_update', { mode: 'number' }).notNull(),
+  reservationId: bigint('reservation_id', { mode: 'number' }).default(0),
 });
 
 export const PerformanceLotteryInfo = mysqlTable('p_lottery_info', {
@@ -48,5 +48,5 @@ export const PerformanceLottery = mysqlTable('p_lottery', {
   priority: int('priority').notNull(),
   date: int('time').notNull(),
   lotteryWin: int('lottery_win').notNull().default(0), // 0: not winner, 1: winner
-  timeUpdate: bigint('time_update', { mode: 'number' }).notNull(),
+  reservationId: bigint('reservation_id', { mode: 'number' }).default(0),
 });

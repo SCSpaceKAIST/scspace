@@ -6,5 +6,5 @@ export interface IPerformanceLottery {
     priority: number;
     date: number;
     lotteryWin: number; // 0: not winner, 1: winner
-    timeUpdate: number;
+    reservationId: number; // bigint in the database, but treated as number in TypeScript
 }

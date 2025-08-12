@@ -5,12 +5,12 @@ export interface ISeminarLottery {
     spaceId: number;
     time: number;
     lotteryWin: number; // 0: not winner, 1: winner
-    timeUpdate: number;
+    reservationId: number; // bigint in the database, but treated as number in TypeScript
 }
 
 export type ISeminarLotteryCreate = Omit<
     ISeminarLottery,
-    "id" | "timeUpdate" | "lotteryWin"
+    "id" | "reservationId" | "lotteryWin"
 >;
 
 export type ISeminarLotteryUpdate = {
