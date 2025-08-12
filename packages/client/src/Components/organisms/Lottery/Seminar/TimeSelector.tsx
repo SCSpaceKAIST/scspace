@@ -76,6 +76,10 @@ export function TimeSelector({ orgId, spaceId, editable }: {
         drawnLottery: {
             data: drawnLottery,
             refetch: refetchDrawnLottery
+        },
+        lotteryByOrganization: {
+            data: lotteryByOrganization,
+            refetch: refetchLotteryByOrganization
         }
     } = useSeminarLotteryAPI({
         id: appliedId,
@@ -88,6 +92,7 @@ export function TimeSelector({ orgId, spaceId, editable }: {
     useEffect(() => { refetchTimeSlotCounts() }, [spaceId]);
     useEffect(() => { if (selectedTime !== -1) { refetchLotteryByTime(); } }, [selectedTime, orgId, spaceId]);
     useEffect(() => { refetchDrawnLottery(); }, [orgId, spaceId]);
+    useEffect(() => { refetchLotteryByOrganization(); }, [orgId, spaceId]);
 
     const [available, setAvailable] = useState<boolean>(true);
 
@@ -336,9 +341,7 @@ export function TimeSelector({ orgId, spaceId, editable }: {
                                         }}
                                         orgCount={timeSlotCounts?.find(s => s.time === encodeTimeSlot(day.index, hour))?.count ?? 0}
                                         drawnOrgName={verifiedOrganizations?.find(o => o.id === drawnLottery?.find(l => l.time === encodeTimeSlot(day.index, hour))?.organizationId)?.name ?? null}
-                                        isOrgRequested={
-                                            drawnLottery?.some(l => l.time === encodeTimeSlot(day.index, hour) && l.organizationId === orgId) ?? false
-                                        }
+                                        isOrgRequested={lotteryByOrganization?.some(l => l.time === encodeTimeSlot(day.index, hour)) ?? false}
                                     />
                                 ))}
                             </>

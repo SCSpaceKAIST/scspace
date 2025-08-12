@@ -252,7 +252,7 @@ export class LotterySeminarService {
     }
 
     // @Cron(CronExpression.EVERY_DAY_AT_6PM, { name: "drawing" })
-    @Cron(CronExpression.EVERY_30_SECONDS, { name: "test" })
+    @Cron(CronExpression.EVERY_MINUTE, { name: "test" })
     async drawing() {
         const activeLottery = await this.lotterySeminarInfoRepository.fetchActiveLotteries(getNow());
         if (!activeLottery) {
