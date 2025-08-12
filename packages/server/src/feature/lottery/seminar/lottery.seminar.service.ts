@@ -265,8 +265,10 @@ export class LotterySeminarService {
         const verifiedOrganizations = await this.organizationPublicService.fetchVerified();
 
         seminarRooms.map(s => s.id).forEach(async (spaceId) => {
-            Array.from({ length: 168 }, (_, i) => i + 1).forEach(async (_, j) => {
+            Array.from({ length: 168 }).forEach(async (_, j) => {
                 const lotteries = await this.getSeminarLotteryByTime({ time: j, spaceId, infoId: activeLottery[0].id });
+
+                Logger.log(`Found ${lotteries.length} lotteries for time ${j}, space ${spaceId}`);
                 // Implementation for drawing the lottery
                 if (lotteries.length === 0) {
                     return;
