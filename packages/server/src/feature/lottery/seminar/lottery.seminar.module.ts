@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { DBModule } from "@scspace-server/db/db.module";
 import { SpaceModule } from "../../space/space.module";
 import { UserModule } from "../../user/user.module";
@@ -10,7 +10,13 @@ import { LotterySeminarInfoRepository } from "./lottery.seminar.info.repository"
 import { ReservationModule } from "@scspace-server/feature/reservation/reservation.module";
 
 @Module({
-    imports: [DBModule, SpaceModule, UserModule, OrganizationModule, ReservationModule],
+    imports: [
+        DBModule,
+        SpaceModule,
+        UserModule,
+        OrganizationModule,
+        forwardRef(() => ReservationModule)
+    ],
     controllers: [LotterySeminarController],
     providers: [
         LotterySeminarRepository,

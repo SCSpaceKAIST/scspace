@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 import { ReservationRepository } from './reservation.repository';
 import { DBModule } from 'src/db/db.module';
@@ -11,7 +11,14 @@ import { MailModule } from 'src/tools/mailer/mail.module';
 import { LotterySeminarModule } from '../lottery/seminar/lottery.seminar.module';
 
 @Module({
-  imports: [DBModule, SpaceModule, UserModule, OrganizationModule, MailModule, LotterySeminarModule],
+  imports: [
+    DBModule,
+    SpaceModule,
+    UserModule,
+    OrganizationModule,
+    MailModule,
+    forwardRef(() => LotterySeminarModule)
+  ],
   controllers: [ReservationController],
   providers: [
     ReservationRepository,
