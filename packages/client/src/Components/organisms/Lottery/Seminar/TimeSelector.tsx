@@ -92,7 +92,7 @@ export function TimeSelector({ orgId, spaceId }: {
     useEffect(() => {
         if (!lotteryByTime) return;
         setAppliedId(lotteryByTime.find(l => l.organizationId === orgId)?.id || -1);
-    }, [lotteryByTime]);
+    }, [lotteryByTime, orgId]);
 
     useEffect(() => {
         if (!drawnLottery) return;
@@ -143,6 +143,7 @@ export function TimeSelector({ orgId, spaceId }: {
                     description: "새로운 추첨이 생성되었습니다.",
                 });
                 refetchTimeSlotCounts();
+                refetchLotteryByTime();
                 setSelectedTime(-1);
             },
             onError: (error) => {
@@ -164,6 +165,7 @@ export function TimeSelector({ orgId, spaceId }: {
                     description: "선택한 추첨이 삭제되었습니다.",
                 });
                 refetchTimeSlotCounts();
+                refetchDrawnLottery();
                 setAppliedId(-1);
             },
             onError: (error) => {

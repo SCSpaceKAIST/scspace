@@ -260,7 +260,6 @@ export class LotterySeminarService {
             throw new BadRequestException("No active lottery found");
         }
 
-        Logger.log("Drawing seminar lottery...");
         const seminarRooms = await this.spacePublicService.fetchAllBySpaceType(SpaceTypeEnum.SEMINAR);
         const verifiedOrganizations = await this.organizationPublicService.fetchVerified();
 
@@ -297,12 +296,8 @@ export class LotterySeminarService {
                     organization: verifiedOrganizations.find(org => org.id === lottery.organizationId)
                 }));
 
-                Logger.log(JSON.stringify(lotteriesWithOrg, null, 2));
-
                 const hasRoomLotteries = lotteriesWithOrg.filter(lottery => lottery.organization!.hasRoom);
                 const hasNoRoomLotteries = lotteriesWithOrg.filter(lottery => !lottery.organization!.hasRoom);
-
-                Logger.log(`Has room lotteries: ${hasRoomLotteries.length}, Has no room lotteries: ${hasNoRoomLotteries.length}`);
 
                 let winner = 0;
                 if (hasRoomLotteries.length > 0) {
@@ -321,6 +316,5 @@ export class LotterySeminarService {
                 });
             });
         });
-        Logger.log("Seminar lottery drawing completed");
     }
 }
