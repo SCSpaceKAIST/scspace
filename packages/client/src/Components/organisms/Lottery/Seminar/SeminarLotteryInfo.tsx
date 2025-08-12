@@ -8,8 +8,9 @@ import {
     Alert,
     HStack,
     IconButton,
+    Button,
 } from "@chakra-ui/react";
-import { useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
+import { useSeminarLotteryAPI, useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useDate } from "@scspace-client/Hooks/utils";
@@ -22,6 +23,7 @@ export default function SeminarLotteryInfo() {
     const { needAdmin } = useAuth();
     needAdmin();
     const { data: lotteryInfos, isLoading, refetch } = useSeminarLotteryInfoAPI().allLotteryInfo;
+    const applySeminarLottery = useSeminarLotteryAPI().applySeminarLottery;
 
     const { getDateString } = useDate();
 
@@ -58,6 +60,13 @@ export default function SeminarLotteryInfo() {
                             >
                                 <HiPlus />
                             </IconButton>
+                            <Button onClick={() => applySeminarLottery({}, {
+                                onSuccess: () => {
+                                    alert("check server logs");
+                                }
+                            })}>
+                                Apply Test
+                            </Button>
                         </HStack>
 
                         {!lotteryInfos || lotteryInfos.length === 0 ? (

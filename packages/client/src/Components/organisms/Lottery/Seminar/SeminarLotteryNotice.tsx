@@ -10,7 +10,13 @@ export default function SeminarLotteryNotice() {
         eng: [
             { content: "You can select a time slot to apply for the seminar lottery.", },
             { content: "The number in each column represents the number of organizations that applied during that time.", },
-            { content: `Organization names are represented by ${<Badge colorPalette={'blue'}>Org has Room</Badge>} or ${<Badge colorPalette={'green'}>Org has no Room</Badge>}, depending on whether the organization has a group room.`, },
+            {
+                content: (
+                    <>
+                        Organization names are represented by <Badge colorPalette={'blue'}>Org has Room</Badge> or <Badge colorPalette={'green'}>Org has no Room</Badge>, depending on whether the organization has a group room.
+                    </>
+                )
+            },
             {
                 content: "Organizations without group rooms have priority in the lottery.",
                 color: "blue"
@@ -25,7 +31,13 @@ export default function SeminarLotteryNotice() {
         kor: [
             { content: "세미나 추첨을 신청할 시간대를 선택할 수 있습니다.", },
             { content: "각 열의 숫자는 해당 시간에 신청한 조직의 수를 나타냅니다.", },
-            { content: `조직의 이름은 단체실 소유 여부에 따라 ${<Badge colorPalette={'blue'}>Org has room</Badge>} 또는 ${<Badge colorPalette={'green'}>Org has no room</Badge>}으로 표시됩니다.`, },
+            {
+                content: (
+                    <>
+                        조직의 이름은 단체실 소유 여부에 따라 <Badge colorPalette={'blue'}>Org has room</Badge> 또는 <Badge colorPalette={'green'}>Org has no room</Badge>으로 표시됩니다.
+                    </>
+                )
+            },
             {
                 content: "단체실이 없는 조직이 추첨에서 우선권을 가집니다.",
                 color: "blue"
@@ -46,7 +58,7 @@ export default function SeminarLotteryNotice() {
                     <Accordion.ItemTrigger>
                         Notice ({lang})
                     </Accordion.ItemTrigger>
-                    <Accordion.ItemContent>
+                    <Accordion.ItemContent rounded={"none"}>
                         <Blockquote.Root variant={"solid"}>
                             <Blockquote.Content>
                                 <List.Root listStyle={"none"}>

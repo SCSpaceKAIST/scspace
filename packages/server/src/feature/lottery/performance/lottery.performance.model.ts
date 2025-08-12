@@ -7,6 +7,7 @@ export class MPerformanceLotteryInfo implements ILotteryInfo {
     timeLotteryEnd: ILotteryInfo['timeLotteryEnd'];
     timeStart: ILotteryInfo['timeStart'];
     timeEnd: ILotteryInfo['timeEnd'];
+    applied: ILotteryInfo['applied'];
 
     constructor(data: ILotteryInfo) {
         this.id = data.id;
@@ -14,6 +15,7 @@ export class MPerformanceLotteryInfo implements ILotteryInfo {
         this.timeLotteryEnd = data.timeLotteryEnd;
         this.timeStart = data.timeStart;
         this.timeEnd = data.timeEnd;
+        this.applied = data.applied;
     }
 
     static fromDB(lottery: typeof PerformanceLotteryInfo.$inferSelect): ILotteryInfo {
@@ -23,6 +25,7 @@ export class MPerformanceLotteryInfo implements ILotteryInfo {
             timeLotteryEnd: lottery.timeLotteryEnd,
             timeStart: lottery.timeStart,
             timeEnd: lottery.timeEnd,
+            applied: lottery.applied,
         };
     }
 }
@@ -35,7 +38,6 @@ export class MPerformanceLottery implements IPerformanceLottery {
     priority: IPerformanceLottery['priority'];
     date: IPerformanceLottery['date'];
     lotteryWin: IPerformanceLottery['lotteryWin'];
-    reservationId: IPerformanceLottery['reservationId'];
 
     constructor(data: IPerformanceLottery) {
         this.id = data.id;
@@ -45,7 +47,6 @@ export class MPerformanceLottery implements IPerformanceLottery {
         this.priority = data.priority;
         this.date = data.date;
         this.lotteryWin = data.lotteryWin;
-        this.reservationId = data.reservationId;
     }
 
     static fromDB(lottery: typeof PerformanceLottery.$inferSelect): IPerformanceLottery {
@@ -57,7 +58,6 @@ export class MPerformanceLottery implements IPerformanceLottery {
             priority: lottery.priority,
             date: lottery.date,
             lotteryWin: lottery.lotteryWin,
-            reservationId: lottery.reservationId,
         };
     }
 }

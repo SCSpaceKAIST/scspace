@@ -8,7 +8,6 @@ export class MSeminarLottery implements ISeminarLottery {
     spaceId: ISeminarLottery['spaceId'];
     time: ISeminarLottery['time'];
     lotteryWin: ISeminarLottery['lotteryWin'];
-    reservationId: ISeminarLottery['reservationId'];
 
     constructor(data: ISeminarLottery) {
         this.id = data.id;
@@ -17,7 +16,6 @@ export class MSeminarLottery implements ISeminarLottery {
         this.spaceId = data.spaceId;
         this.time = data.time;
         this.lotteryWin = data.lotteryWin;
-        this.reservationId = data.reservationId;
     }
 
     static fromDB(lottery: typeof SeminarLottery.$inferSelect): ISeminarLottery {
@@ -28,7 +26,6 @@ export class MSeminarLottery implements ISeminarLottery {
             spaceId: lottery.spaceId,
             time: lottery.time,
             lotteryWin: lottery.lotteryWin,
-            reservationId: lottery.reservationId,
         };
     }
 }

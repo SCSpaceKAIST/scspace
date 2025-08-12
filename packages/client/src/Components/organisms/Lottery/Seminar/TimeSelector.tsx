@@ -25,7 +25,6 @@ import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useSeminarLotteryAPI, useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
-import FieldComponent from "@scspace-client/Components/atoms/Field";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import { useDate } from "@scspace-client/Hooks/utils";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
@@ -121,13 +120,13 @@ export function TimeSelector({ orgId, spaceId, editable }: {
 
     // 요일 배열 (월 ~ 일) - 인덱스가 날짜 번호 (0~6)
     const weekDays = [
-        { key: "monday", label: "Mon", index: 0 },
-        { key: "tuesday", label: "Tue", index: 1 },
-        { key: "wednesday", label: "Wed", index: 2 },
-        { key: "thursday", label: "Thu", index: 3 },
-        { key: "friday", label: "Fri", index: 4 },
-        { key: "saturday", label: "Sat", index: 5 },
-        { key: "sunday", label: "Sun", index: 6 },
+        { key: "sunday", label: "Sun", index: 0 },
+        { key: "monday", label: "Mon", index: 1 },
+        { key: "tuesday", label: "Tue", index: 2 },
+        { key: "wednesday", label: "Wed", index: 3 },
+        { key: "thursday", label: "Thu", index: 4 },
+        { key: "friday", label: "Fri", index: 5 },
+        { key: "saturday", label: "Sat", index: 6 },
     ];
 
     // 시간 배열 (18 ~ 3시: 18,19,20,21,22,23,0,1,2,3)

@@ -1,4 +1,4 @@
-import { mysqlTable, int, bigint } from 'drizzle-orm/mysql-core';
+import { mysqlTable, int, bigint, boolean } from 'drizzle-orm/mysql-core';
 import { Organization } from './organization';
 import { Space } from './space';
 
@@ -8,6 +8,7 @@ export const SeminarLotteryInfo = mysqlTable('s_lottery_info', {
   timeLotteryEnd: bigint('time_lottery_end', { mode: 'number' }).notNull(),
   timeStart: bigint('time_start', { mode: 'number' }).notNull(),
   timeEnd: bigint('time_end', { mode: 'number' }).notNull(),
+  applied: boolean('applied').notNull().default(false), // Indicates if the lottery info has been applied
 });
 
 export const SeminarLottery = mysqlTable('s_lottery', {
@@ -23,7 +24,6 @@ export const SeminarLottery = mysqlTable('s_lottery', {
     .references(() => Space.id, { onDelete: 'cascade' }),
   time: int('time').notNull(),
   lotteryWin: int('lottery_win').notNull().default(0), // 0: not winner, 1: winner
-  reservationId: bigint('reservation_id', { mode: 'number' }).default(0),
 });
 
 export const PerformanceLotteryInfo = mysqlTable('p_lottery_info', {
@@ -32,6 +32,7 @@ export const PerformanceLotteryInfo = mysqlTable('p_lottery_info', {
   timeLotteryEnd: bigint('time_lottery_end', { mode: 'number' }).notNull(),
   timeStart: bigint('time_start', { mode: 'number' }).notNull(),
   timeEnd: bigint('time_end', { mode: 'number' }).notNull(),
+  applied: boolean('applied').notNull().default(false), // Indicates if the lottery info has been applied
 });
 
 export const PerformanceLottery = mysqlTable('p_lottery', {
@@ -48,5 +49,4 @@ export const PerformanceLottery = mysqlTable('p_lottery', {
   priority: int('priority').notNull(),
   date: int('time').notNull(),
   lotteryWin: int('lottery_win').notNull().default(0), // 0: not winner, 1: winner
-  reservationId: bigint('reservation_id', { mode: 'number' }).default(0),
 });

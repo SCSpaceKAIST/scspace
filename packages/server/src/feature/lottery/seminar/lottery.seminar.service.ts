@@ -10,10 +10,11 @@ import {
     ILotteryInfoUpdate,
     ISeminarLotteryCreate,
 } from "@scspace-depot/types/lottery";
-import { getDateBegin, getDateEnd, getNow, getRandomIndex } from "@scspace-server/common/utils";
+import { getDate, getDateBegin, getDateEnd, getNow, getRandomIndex, getTime } from "@scspace-server/common/utils";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { SpacePublicService } from "@scspace-server/feature/space/space.public.service";
 import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
+import { ReservationService } from "@scspace-server/feature/reservation/reservation.service";
 
 @Injectable()
 export class LotterySeminarService {
@@ -22,6 +23,7 @@ export class LotterySeminarService {
     constructor(
         private readonly organizationPublicService: OrganizationPublicService,
         private readonly spacePublicService: SpacePublicService,
+        private readonly reservationService: ReservationService,
         private readonly lotterySeminarRepository: LotterySeminarRepository,
         private readonly lotterySeminarInfoRepository: LotterySeminarInfoRepository
     ) { }
@@ -261,8 +263,74 @@ export class LotterySeminarService {
         });
     }
 
-    async applySeminarLottery(): Promise<void> {
-        // Implementation for reflecting seminar lottery results
+    async exchangeSeminarLottery(ids: [number, number]): Promise<void> {
+        const [fromId, toId] = ids;
+        const fromLottery = await this.lotterySeminarRepository.fetch({ id: fromId });
+        const toLottery = await this.lotterySeminarRepository.fetch({ id: toId });
+
+        if (!fromLottery || !toLottery) {
+            throw new BadRequestException("Invalid lottery IDs");
+        }
+
+        // Swap the lottery times
+        const tempTime = fromLottery[0].time;
+        fromLottery[0].time = toLottery[0].time;
+        toLottery[0].time = tempTime;
+
+        await this.lotterySeminarRepository.update(fromId, fromLottery[0]);
+        await this.lotterySeminarRepository.update(toId, toLottery[0]);
+    }
+
+    async applySeminarLottery(): Promise<boolean> {
+        const activeLottery = await this.lotterySeminarInfoRepository.fetchActiveLotteries(getNow());
+        if (!activeLottery) {
+            throw new BadRequestException("No active lottery found");
+        }
+
+        const dateStart = getDate(activeLottery[0].timeStart);
+
+        const verifiedOrganizations = await this.organizationPublicService.fetchVerified();
+
+        verifiedOrganizations.forEach(async (org) => {
+            const drawnLotteries = await this.lotterySeminarRepository.fetch({
+                organizationId: org.id,
+                infoId: activeLottery[0].id,
+                lotteryWin: 1
+            });
+
+            const times: { timeFrom: number; timeTo: number }[] = [];
+            let cur = 0;
+            try {
+                while (true) {
+                    drawnLotteries.forEach(lottery => {
+                        const date = Math.floor(lottery.time / 24);
+                        const hour = lottery.time % 24;
+
+                        const timeFrom = getTime(new Date(
+                            dateStart.getTime() +
+                            (new Date(0, 0, 0, date, hour).getTime()) +
+                            (new Date(0, 0, 0, 7 * cur).getTime())
+                        ));
+                        const timeTo = getTime(new Date(
+                            dateStart.getTime() +
+                            (new Date(0, 0, 0, date, hour + 1).getTime()) +
+                            (new Date(0, 0, 0, 7 * cur).getTime())
+                        ));
+
+                        if (timeTo > activeLottery[0].timeEnd + 1) {
+                            throw new Error(`loop ended: ${JSON.stringify(times, null, 2)}`);
+                        }
+
+                        times.push({ timeFrom, timeTo });
+                    });
+                    cur++;
+                }
+            } catch (error) {
+                Logger.error("Error applying seminar lottery", error);
+            }
+        });
+
+        return true;
     }
 
     // @Cron(CronExpression.EVERY_DAY_AT_6PM, { name: "drawing" })

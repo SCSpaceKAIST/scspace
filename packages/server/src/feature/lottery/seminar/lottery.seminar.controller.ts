@@ -127,4 +127,13 @@ export class LotterySeminarController {
       success: await this.lotterySeminarService.deleteSeminarLottery(id)
     }
   }
+
+  @UseGuards(AdminGuard)
+  @Post("apply")
+  async applyInfo(): Promise<ISuccessResponse> {
+    // Implementation for fetching apply seminar lottery info
+    return {
+      success: await this.lotterySeminarService.applySeminarLottery()
+    };
+  }
 }

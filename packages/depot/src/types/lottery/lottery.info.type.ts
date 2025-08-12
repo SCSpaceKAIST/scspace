@@ -4,11 +4,12 @@ export interface ILotteryInfo {
     timeLotteryEnd: number;
     timeStart: number;
     timeEnd: number;
+    applied: boolean;
 }
 
 export type ILotteryInfoCreate = Omit<
     ILotteryInfo,
-    "id"
+    "id" | "applied"
 >;
 
 export type ILotteryInfoUpdate = Partial<ILotteryInfoCreate>;

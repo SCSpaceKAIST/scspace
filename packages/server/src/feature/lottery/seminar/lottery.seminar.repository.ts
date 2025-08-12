@@ -4,7 +4,7 @@ import { schema, SeminarLottery } from "@scspace-server/db/schema";
 import { and, eq, InferInsertModel, SQL, count } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { MSeminarLottery } from "./lottery.seminar.model";
-import { ISeminarLotteryCreate, ISeminarLotteryFetch, ISeminarLotteryUpdate } from "@scspace-depot/types/lottery";
+import { ISeminarLotteryCreate, ISeminarLotteryFetch, ISeminarLotteryUpdateAdmin } from "@scspace-depot/types/lottery";
 import { getNow } from "@scspace-server/common/utils";
 
 @Injectable()
@@ -88,7 +88,7 @@ export class LotterySeminarRepository {
         return seminarLotteryCreated[0];
     }
 
-    async update(id: number, lotteryUpdate: ISeminarLotteryUpdate): Promise<MSeminarLottery> {
+    async update(id: number, lotteryUpdate: ISeminarLotteryUpdateAdmin): Promise<MSeminarLottery> {
         // Implementation for updating seminar lottery data
         const [result] = await this.db
             .update(SeminarLottery)

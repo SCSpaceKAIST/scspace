@@ -6,6 +6,7 @@ import {
   IReservation,
   IReservationCreateMultiple,
   IReservationMultipleCreateResurt,
+  IReservationSimple,
 } from '@scspace-depot/types/reservation';
 import { IOrganization } from '@scspace-depot/types/organization';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
@@ -215,7 +216,7 @@ export class ReservationService {
     // organizations의 모든 멤버 가져오기 when org.id !== 1 >> 성능 개선
     const organizationWithMembers = organization.id !== 1 ? await this.organizationPublicService.fetchDeepById(organization.id) : undefined
 
-    if (!organizationWithMembers  && organization.id !== 1) {
+    if (!organizationWithMembers && organization.id !== 1) {
       throw new BadRequestException('Organization fetch error : Please Contact by Email.')
     }
 

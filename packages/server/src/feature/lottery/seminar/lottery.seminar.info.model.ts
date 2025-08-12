@@ -7,6 +7,7 @@ export class MSeminarLotteryInfo implements ILotteryInfo {
     timeLotteryEnd: ILotteryInfo['timeLotteryEnd'];
     timeStart: ILotteryInfo['timeStart'];
     timeEnd: ILotteryInfo['timeEnd'];
+    applied: ILotteryInfo['applied'];
 
     constructor(data: ILotteryInfo) {
         this.id = data.id;
@@ -14,6 +15,7 @@ export class MSeminarLotteryInfo implements ILotteryInfo {
         this.timeLotteryEnd = data.timeLotteryEnd;
         this.timeStart = data.timeStart;
         this.timeEnd = data.timeEnd;
+        this.applied = data.applied;
     }
 
     static fromDB(lottery: typeof SeminarLotteryInfo.$inferSelect): ILotteryInfo {
@@ -23,6 +25,7 @@ export class MSeminarLotteryInfo implements ILotteryInfo {
             timeLotteryEnd: lottery.timeLotteryEnd,
             timeStart: lottery.timeStart,
             timeEnd: lottery.timeEnd,
+            applied: lottery.applied,
         };
     }
 }
