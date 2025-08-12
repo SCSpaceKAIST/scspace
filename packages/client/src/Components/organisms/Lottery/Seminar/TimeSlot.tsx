@@ -28,18 +28,25 @@ export function TimeSlot({
     const [isHovered, setIsHovered] = useState(false);
 
     const getBgColor = () => {
+        if (isSelected) return "blue.100"; // readOnly일 때 더 진한 색
         if (isOrgRequested) return "cyan.100"; // 이미 추첨된 조직이 선택된 경우
         if (drawnOrgName !== null) return "green.100";
-        if (isSelected) return "blue.100"; // readOnly일 때 더 진한 색
         if (isHovered) return "gray.50";
         return "white";
     };
 
     const getBorderColor = () => {
+        if (isSelected) return "blue.300"; // readOnly일 때 더 진한 테두리
         if (isOrgRequested) return "cyan.300"; // 이미 추첨된 조직이 선택된 경우
         if (drawnOrgName !== null) return "green.300";
-        if (isSelected) return "blue.300"; // readOnly일 때 더 진한 테두리
         return "gray.200";
+    };
+
+    const getColor = () => {
+        if (isSelected) return "blue.600"; // readOnly일 때 더 진한 색
+        if (isOrgRequested) return "cyan.600"; // 이미 추첨된 조직이 선택된 경우
+        if (drawnOrgName !== null) return "green.600";
+        return "gray.600";
     };
 
     return (
@@ -77,11 +84,7 @@ export function TimeSlot({
                     justifyContent="center"
                     fontSize="xs"
                     fontWeight={isSelected ? "semibold" : "normal"}
-                    color={
-                        (drawnOrgName !== null) ?
-                            "green.600" :
-                            (isSelected ? "blue.600" : "gray.600")
-                    }
+                    color={getColor()}
                     textAlign="center"
                 >
                     {drawnOrgName ? <Text>{drawnOrgName}</Text> :
