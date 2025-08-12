@@ -146,7 +146,6 @@ export function TimeSelector({ orgId, spaceId, editable }: {
                 });
                 refetchTimeSlotCounts();
                 refetchLotteryByTime();
-                setSelectedTime(-1);
             },
             onError: (error) => {
                 toaster.error({
