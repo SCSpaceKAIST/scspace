@@ -42,6 +42,7 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
     const {
         activeLotteryInfo: {
             data: activeLotteryInfo,
+            refetch: refetchActiveLotteryInfo
         },
         drawSeminarLottery,
         applySeminarLottery,
@@ -154,6 +155,7 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
         refetchLotteryByTime();
         refetchLotteryByOrganization();
         refetchDrawnLottery();
+        refetchActiveLotteryInfo();
     };
 
     const createSeminarLotteryHandler = () => {
