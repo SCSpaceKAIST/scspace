@@ -1,85 +1,51 @@
 <html lang='ko'>
 <head>
   <meta charset='utf-8' />
-  <title>예약 완료 안내 / Reservation Confirmed</title>
+  <title>예약 안내 / Reservation Notice</title>
   <style>
-      body{ font-family: 'Malgun Gothic', Arial, sans-serif;
-          background:#f4f4f4;margin:0;padding:0;color:#333; line-height:1.6; }
-      .container{ max-width:600px;margin:0 auto;background:#fff;
-          border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.08); } .header{
-                                                                         background:#4CAF50; color:#fff;text-align:center;padding:30px 20px;
-                                                                         border-radius:8px 8px 0 0; } .header h1{margin:0;font-size:24px;} .header,
-                                                                                                                                           h2{margin:8px 0 0 0;font-weight:400;font-size:16px;} .content{padding:30px
-      20px;} .reservation-info{
-                 background:#f8f9fa;padding:20px;border-radius:6px;margin:20px 0;
-                 border-left:4px solid
-                 #4CAF50; } .reservation-title{ color:#4CAF50;font-size:18px;font-weight:600;
-                                margin:5px 0; } .informations{ margin:20px
-      0;background:#f8f9fa;padding:20px;border-radius:6px; border-left:4px solid
-      #17a2b8; } .informations ul{ list-style:none;padding:0;margin:10px 0; }
-      .informations li{ margin:10px
-      0;padding:10px;background:#fff;border-radius:4px; border-left:3px solid
-      #17a2b8;display:flex;align-items:center; } .informations li strong{
-                                                     color:#17a2b8;min-width:140px; }  @media only screen and (max-width: 600px) {
-          .container{margin:10px;border-radius:4px;} .header{padding:20px 15px;}
-          .content{padding:20px 15px;} .informations,
-                                       li{flex-direction:column;align-items:flex-start;} .informations li,
-                                                                                         strong{min-width:auto;margin-bottom:5px;} }
-      .footer {
-          background: #f8f9fa;
-          border-top: 1px solid #e9ecef;
-          padding: 20px;
-          text-align: center;
-          font-size: 14px;
-          color: #6c757d;
-          border-radius: 0 0 8px 8px;
-      }
+      body { font-family: 'Malgun Gothic', Arial, sans-serif; background:#f4f4f4;margin:0;padding:0;color:#333; line-height:1.6;}
+      .container {max-width:600px;margin:0 auto;background:#fff;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+      .header {color:#fff;text-align:center;padding:30px 20px;border-radius:8px 8px 0 0;}
+      .header h1 {margin:0;font-size:24px;}
+      .header h2 {margin:8px 0 0 0;font-weight:400;font-size:16px;}
+      .content {padding:30px 20px;}
+      .reservation-info {background:#f8f9fa;padding:20px;border-radius:6px;margin:20px 0;border-left:4px solid #dc3545;}
+      .reservation-title {font-size:18px;font-weight:600;margin:5px 0;}
+      .informations {margin:20px 0;background:#f8f9fa;padding:20px;border-radius:6px;border-left:4px solid #17a2b8;}
+      .informations ul {list-style:none;padding:0;margin:10px 0;}
+      .informations li {margin:10px 0;padding:10px;background:#fff;border-radius:4px;border-left:3px solid #17a2b8;display:flex;align-items:center;}
+      .informations li.success {border-left-color:green;}
+      .informations li.fail {border-left-color:red;}
+      .result-success {color:green;font-weight:bold;}
+      .result-fail {color:red;font-weight:bold;}
+      .footer {background:#f8f9fa;border-top:1px solid #e9ecef;padding:20px;text-align:center;font-size:14px;color:#6c757d;border-radius:0 0 8px 8px;}
   </style>
 </head>
 <body>
 <div class='container'>
-  <!-- ─── 헤더 ─── -->
-  <div class='header' style='background:#4CAF50'>
-    <h1>📅 예약 완료 안내</h1>
-    <h2>Reservation Confirmed</h2>
-    <p style='margin-top:18px'>
-      귀하의 예약이 아래와 같이 정상적으로 처리되었습니다. <br />
-      Your reservation request has been processed successfully.
-    </p>
+  <!-- 헤더 (successCount=0이므로 붉은색) -->
+  <div class='header' style='background:#dc3545'>
+    <h1>📅 예약 안내</h1>
+    <h2>Reservation Notice</h2>
+    <p style='margin-top:18px'>예약 진행 결과를 안내드립니다.<br />Here is the result of your reservation.</p>
   </div>
 
-  <!-- ─── 본문 ─── -->
   <div class='content'>
-    <div class='reservation-info'>
+    <!-- 예약 정보 (붉은색) -->
+    <div class='reservation-info' style='border-left:4px solid #dc3545'>
       <strong>변동 유형 / Action Type</strong>
-      <div class='reservation-title'>다중 예약 처리 결과 / Multi-Reservation Results</div>
-      <p style='margin:8px 0;color:#6c757d;'>총 3건 중 2건 성공 / 1건 실패</p>
+      <div class='reservation-title'>신규 예약 / New Reservation</div>
+      <p style='margin:8px 0;color:#6c757d;'>총 3건 중 0건 성공 / 3건 실패</p>
     </div>
 
     <!-- 상세 정보 -->
     <div class='informations'>
       <strong>상세 정보 / Detailed Information</strong>
       <ul>
-        <li>
-          <strong>예약명:</strong>
-          <span>동아리 정기 세션</span>
-        </li>
-        <li>
-          <strong>예약자:</strong>
-          <span>20230001 김가람</span>
-        </li>
-        <li>
-          <strong>소속 조직:</strong>
-          <span>KAIST ABC 동아리</span>
-        </li>
-        <li>
-          <strong>예약 공간:</strong>
-          <span>창의관 세미나실 1 / Creative Hall Seminar Room 1</span>
-        </li>
-        <li>
-          <strong>총 예약 건수:</strong>
-          <span>3건</span>
-        </li>
+        <li><strong>예약명 / Title:</strong> 스터디 그룹 회의</li>
+        <li><strong>조직명 / Organization:</strong> 개인 / Individual</li>
+        <li><strong>예약 공간 / Space:</strong> 세미나실 A / Seminar Room A</li>
+        <li><strong>총 예약 건수 / # :</strong> 3</li>
       </ul>
     </div>
 
@@ -87,27 +53,16 @@
     <div class='informations'>
       <strong>개별 결과 / Per-Slot Results</strong>
       <ul>
-        <li>
-          <strong>시간대:</strong>
-          <span>2025-08-20 10:00 ~ 11:00 KST — 성공 / Success</span>
-        </li>
-        <li>
-          <strong>시간대:</strong>
-          <span>2025-08-20 11:00 ~ 12:00 KST — 성공 / Success</span>
-        </li>
-        <li>
-          <strong>시간대:</strong>
-          <span>2025-08-21 09:00 ~ 10:00 KST — 실패 / Failed</span>
-        </li>
+        <li class="fail"><strong>시간대:</strong> 09:00 ~ 10:00 KST &nbsp;—&nbsp; <span class="result-fail">실패 / Failed</span></li>
+        <li class="fail"><strong>시간대:</strong> 10:00 ~ 11:00 KST &nbsp;—&nbsp; <span class="result-fail">실패 / Failed</span></li>
+        <li class="fail"><strong>시간대:</strong> 11:00 ~ 12:00 KST &nbsp;—&nbsp; <span class="result-fail">실패 / Failed</span></li>
       </ul>
     </div>
   </div>
 
-  <!-- ─── 푸터 ─── -->
   <div class='footer'>
     <p><strong>학생문화공간위원회 / Student Cultural Space Committee</strong></p>
-    <p>본 메일은 요청하신 다중 예약의 처리 결과를 안내합니다.<br />
-      This email summarizes the results of your multi-reservation request.</p>
+    <p>이 메일은 자동 발송되었습니다.<br />This email was sent automatically.</p>
     <p style='margin-top:15px;color:#999;'>Contact : ✉️ scspace@kaist.ac.kr</p>
   </div>
 </div>
