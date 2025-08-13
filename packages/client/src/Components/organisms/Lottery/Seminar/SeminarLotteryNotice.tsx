@@ -1,4 +1,4 @@
-import { Accordion, Badge, Blockquote, Button, List } from "@chakra-ui/react";
+import { Accordion, Badge, Blockquote, Button, List, Stack } from "@chakra-ui/react";
 
 export default function SeminarLotteryNotice() {
     const notice: {
@@ -60,29 +60,31 @@ export default function SeminarLotteryNotice() {
     }
 
     return (
-        <Accordion.Root collapsible multiple>
-            {Object.keys(notice).map((lang) => (
-                <Accordion.Item key={lang} value={lang}>
-                    <Accordion.ItemTrigger asChild>
-                        <Button variant={"subtle"} width={"full"}>
-                            Notice ({lang})
-                        </Button>
-                    </Accordion.ItemTrigger>
-                    <Accordion.ItemContent rounded={"none"}>
-                        <Blockquote.Root variant={"solid"}>
-                            <Blockquote.Content>
-                                <List.Root listStyle={"none"}>
-                                    {notice[lang].map((item, index) => (
-                                        <List.Item key={index} fontWeight={item.color ? "semibold" : undefined} color={item.color}>
-                                            {item.content}
-                                        </List.Item>
-                                    ))}
-                                </List.Root>
-                            </Blockquote.Content>
-                        </Blockquote.Root>
-                    </Accordion.ItemContent>
-                </Accordion.Item>
-            ))}
+        <Accordion.Root collapsible multiple asChild>
+            <Stack>
+                {Object.keys(notice).map((lang) => (
+                    <Accordion.Item key={lang} value={lang}>
+                        <Accordion.ItemTrigger asChild>
+                            <Button variant={"subtle"} width={"full"}>
+                                Notice ({lang})
+                            </Button>
+                        </Accordion.ItemTrigger>
+                        <Accordion.ItemContent rounded={"none"}>
+                            <Blockquote.Root variant={"solid"}>
+                                <Blockquote.Content>
+                                    <List.Root listStyle={"none"}>
+                                        {notice[lang].map((item, index) => (
+                                            <List.Item key={index} fontWeight={item.color ? "semibold" : undefined} color={item.color}>
+                                                {item.content}
+                                            </List.Item>
+                                        ))}
+                                    </List.Root>
+                                </Blockquote.Content>
+                            </Blockquote.Root>
+                        </Accordion.ItemContent>
+                    </Accordion.Item>
+                ))}
+            </Stack>
         </Accordion.Root>
     );
 }

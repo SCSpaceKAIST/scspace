@@ -208,77 +208,77 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
         });
     }
 
-    return ((!activeLotteryInfo || activeLotteryInfo.length === 0) ? (
-        <Alert.Root>
-            <Alert.Indicator />
-            <Alert.Content>
-                <Alert.Title>
-                    No Active Lottery
-                </Alert.Title>
-                <Alert.Description>
-                    There is no active lottery information available.
-                </Alert.Description>
-            </Alert.Content>
-        </Alert.Root>
-    ) : (
-        <>
-            <ActionBar.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
-                <Portal>
-                    <ActionBar.Positioner zIndex={100}>
-                        <ActionBar.Content>
-                            <VStack separator={<StackSeparator />}>
-                                {lotteryByTime && lotteryByTime.length > 0 && (
-                                    <Wrap>
-                                        {lotteryByTime.map(l => {
-                                            const org = verifiedOrganizations?.find(org => org.id === l.organizationId);
-                                            if (!org) return null;
-                                            return (
-                                                <Badge colorPalette={org.hasRoom ? "blue" : "green"} key={l.id}>
-                                                    {org.name}
-                                                </Badge>
-                                            );
-                                        })}
-                                    </Wrap>
+    return (<>
+        <ActionBar.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
+            <Portal>
+                <ActionBar.Positioner zIndex={100}>
+                    <ActionBar.Content>
+                        <VStack separator={<StackSeparator />}>
+                            {lotteryByTime && lotteryByTime.length > 0 && (
+                                <Wrap>
+                                    {lotteryByTime.map(l => {
+                                        const org = verifiedOrganizations?.find(org => org.id === l.organizationId);
+                                        if (!org) return null;
+                                        return (
+                                            <Badge colorPalette={org.hasRoom ? "blue" : "green"} key={l.id}>
+                                                {org.name}
+                                            </Badge>
+                                        );
+                                    })}
+                                </Wrap>
+                            )}
+                            <HStack separator={<StackSeparator />}>
+                                <ActionBar.SelectionTrigger>
+                                    {selectedTimeString}
+                                </ActionBar.SelectionTrigger>
+                                {available && !readOnly && (appliedId === -1) && (
+                                    <Button
+                                        variant={"outline"}
+                                        colorPalette={"blue"}
+                                        onClick={createSeminarLotteryHandler}
+                                    >
+                                        Apply
+                                    </Button>
                                 )}
-                                <HStack separator={<StackSeparator />}>
-                                    <ActionBar.SelectionTrigger>
-                                        {selectedTimeString}
-                                    </ActionBar.SelectionTrigger>
-                                    {available && !readOnly && (appliedId === -1) && (
-                                        <Button
-                                            variant={"outline"}
-                                            colorPalette={"blue"}
-                                            onClick={createSeminarLotteryHandler}
-                                        >
-                                            Apply
-                                        </Button>
-                                    )}
-                                    {available && !readOnly && (appliedId !== -1) && (
-                                        <Button
-                                            variant={"outline"}
-                                            colorPalette={"red"}
-                                            onClick={deleteSeminarLotteryHandler}
-                                        >
-                                            Delete
-                                        </Button>
-                                    )}
-                                    {!available && !readOnly && (appliedId !== -1) && (
-                                        <DeleteBtn onDelete={deleteSeminarLotteryHandler} />
-                                    )}
-                                    <ActionBar.CloseTrigger asChild>
-                                        <CloseButton />
-                                    </ActionBar.CloseTrigger>
-                                </HStack>
-                            </VStack>
-                        </ActionBar.Content>
-                    </ActionBar.Positioner>
-                </Portal>
-            </ActionBar.Root>
-            {/* 플래너 그리드 */}
-            <Stack>
-                <Flex direction={"row"} justify={"flex-end"}>
-                    <RefetchBtn refetch={refetchAll} />
-                </Flex>
+                                {available && !readOnly && (appliedId !== -1) && (
+                                    <Button
+                                        variant={"outline"}
+                                        colorPalette={"red"}
+                                        onClick={deleteSeminarLotteryHandler}
+                                    >
+                                        Delete
+                                    </Button>
+                                )}
+                                {!available && !readOnly && (appliedId !== -1) && (
+                                    <DeleteBtn onDelete={deleteSeminarLotteryHandler} />
+                                )}
+                                <ActionBar.CloseTrigger asChild>
+                                    <CloseButton />
+                                </ActionBar.CloseTrigger>
+                            </HStack>
+                        </VStack>
+                    </ActionBar.Content>
+                </ActionBar.Positioner>
+            </Portal>
+        </ActionBar.Root>
+        {/* 플래너 그리드 */}
+        <Stack>
+            <Flex direction={"row"} justify={"flex-end"}>
+                <RefetchBtn refetch={refetchAll} />
+            </Flex>
+            {(!activeLotteryInfo || activeLotteryInfo.length === 0) ? (
+                <Alert.Root>
+                    <Alert.Indicator />
+                    <Alert.Content>
+                        <Alert.Title>
+                            No Active Lottery
+                        </Alert.Title>
+                        <Alert.Description>
+                            There is no active lottery information available.
+                        </Alert.Description>
+                    </Alert.Content>
+                </Alert.Root>
+            ) : (
                 <Box
                     overflowX="auto"
                     overflowY="auto"
@@ -386,63 +386,63 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
                         ))}
                     </Grid>
                 </Box>
-                {isAdmin && activeLotteryInfo && (
-                    <Stack>
-                        <Button width={"full"} colorPalette={"blue"} size={"xl"} disabled={activeLotteryInfo[0].applied} onClick={() => {
-                            drawSeminarLottery({}, {
+            )}
+            {isAdmin && activeLotteryInfo && activeLotteryInfo.length > 0 && (
+                <Stack>
+                    <Button width={"full"} colorPalette={"blue"} size={"xl"} disabled={activeLotteryInfo[0].applied} onClick={() => {
+                        drawSeminarLottery({}, {
+                            onSuccess: () => {
+                                toaster.success({
+                                    title: "Successfully drawn seminar lottery",
+                                    description: "The seminar lottery has been drawn successfully.",
+                                });
+                                refetchAll();
+                            },
+                            onError: (error) => {
+                                toaster.error({
+                                    title: "Failed to draw seminar lottery",
+                                    description: error.message || "Failed to draw seminar lottery.",
+                                });
+                                refetchAll();
+                            },
+                        })
+                    }}>
+                        추첨 저장하기
+                    </Button>
+                    <AlertBtn
+                        onClick={() => {
+                            applySeminarLottery({}, {
                                 onSuccess: () => {
                                     toaster.success({
-                                        title: "Successfully drawn seminar lottery",
-                                        description: "The seminar lottery has been drawn successfully.",
+                                        title: "세미나 추첨 반영 완료",
+                                        description: "세미나 추첨 반영이 완료되었습니다.",
                                     });
-                                    refetchAll();
                                 },
                                 onError: (error) => {
                                     toaster.error({
-                                        title: "Failed to draw seminar lottery",
-                                        description: error.message || "Failed to draw seminar lottery.",
+                                        title: "세미나 추첨 반영 실패",
+                                        description: error.message || "세미나 추첨 반영에 실패했습니다.",
                                     });
-                                    refetchAll();
                                 },
-                            })
-                        }}>
-                            추첨 저장하기
+                                onSettled: refetchAll
+                            });
+                        }}
+                        dialogTitle="세미나실 정기예약 추첨 반영"
+                        dialogBody={(<>
+                            <Text>
+                                세미나실 정기예약 추첨 정보를 반영하시겠습니까?
+                            </Text>
+                            <Text color={"red"} fontWeight="semibold">
+                                이 작업은 되돌릴 수 없습니다.
+                            </Text>
+                        </>)}
+                    >
+                        <Button size={"xl"} colorPalette="red" disabled={activeLotteryInfo[0].applied}>
+                            {activeLotteryInfo[0].applied ? "이미 반영되었습니다" : "세미나실 정기예약 추첨 반영하기"}
                         </Button>
-                        <AlertBtn
-                            onClick={() => {
-                                applySeminarLottery({}, {
-                                    onSuccess: () => {
-                                        toaster.success({
-                                            title: "세미나 추첨 반영 완료",
-                                            description: "세미나 추첨 반영이 완료되었습니다.",
-                                        });
-                                    },
-                                    onError: (error) => {
-                                        toaster.error({
-                                            title: "세미나 추첨 반영 실패",
-                                            description: error.message || "세미나 추첨 반영에 실패했습니다.",
-                                        });
-                                    },
-                                    onSettled: refetchAll
-                                });
-                            }}
-                            dialogTitle="세미나실 정기예약 추첨 반영"
-                            dialogBody={(<>
-                                <Text>
-                                    세미나실 정기예약 추첨 정보를 반영하시겠습니까?
-                                </Text>
-                                <Text color={"red"} fontWeight="semibold">
-                                    이 작업은 되돌릴 수 없습니다.
-                                </Text>
-                            </>)}
-                        >
-                            <Button size={"xl"} colorPalette="red" disabled={activeLotteryInfo[0].applied}>
-                                {activeLotteryInfo[0].applied ? "이미 반영되었습니다" : "세미나실 정기예약 추첨 반영하기"}
-                            </Button>
-                        </AlertBtn>
-                    </Stack>
-                )}
-            </Stack>
-        </>
-    ));
+                    </AlertBtn>
+                </Stack>
+            )}
+        </Stack>
+    </>);
 }
