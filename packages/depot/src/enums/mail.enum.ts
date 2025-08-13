@@ -138,6 +138,24 @@ export const ReservationMeta = {
             en: "Reservation Modification"
         }
     },
+    MultipleReservationCompleted: {
+        color: '#4CAF50',
+        emoji: '📅',
+        header: {
+            kr: "다중 예약 처리 결과 안내",
+            en: "Multi-Reservation Results"
+        },
+        body: {
+            kr: "귀하의 다중예약 요청 처리 결과를 아래와 같이 안내드립니다.",
+            en: "Your multi-reservation request results are as follows."
+        },
+        contentUpperDesc: {
+            kr: "신규 다중 예약",
+            en: "New Multi-Reservation"
+        },
+        templateFooter : "이 메일은 다중예약 해당 조직의 위임자 (Delegator) 에게 발송되었습니다.",
+        templateFooterEn : "This email is sent to the Delegator of the multi-reservation organization.",
+    },
 } as const
 
 // NON-USAGE

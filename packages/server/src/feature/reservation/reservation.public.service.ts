@@ -12,7 +12,15 @@ import {
 import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
 import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
 import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
-import { getDate, getDateDiffInMinute, getDateString, getNow, getWeekPeriod, timeRangeCheck } from '@scspace-server/common/utils';
+import {
+  getDate,
+  getDateDiffInMinute,
+  getDateString,
+  getNow,
+  getString,
+  getWeekPeriod,
+  timeRangeCheck,
+} from '@scspace-server/common/utils';
 import { IReservationContent, IReservationCreate, IReservationCreateMultiple, IReservationMultipleCreateResurt, IReservationSimple } from '@scspace-depot/types/reservation';
 import { ISpace } from '@scspace-depot/types/space';
 import { LotterySeminarService } from '../lottery/seminar/lottery.seminar.service';
@@ -21,6 +29,9 @@ import * as path from 'path';
 import { promisify } from 'util';
 import { OrganizationPublicService } from '../organization/organization.public.service';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
+import { MailService } from '@scspace-server/tools/mailer/mail.service';
+import { IUser } from '@scspace-depot/types/user';
+import { ReservationMeta } from '@scspace-depot/enums/mail.enum';
 
 const writeFile = promisify(fs.writeFile);
 const mkdir = promisify(fs.mkdir);
@@ -32,20 +43,21 @@ export class ReservationPublicService {
     private readonly spacePublicService: SpacePublicService,
     private readonly userPublicService: UserPublicService,
     private readonly organizationPublicService: OrganizationPublicService,
+    private readonly mailService: MailService,
     @Inject(forwardRef(() => LotterySeminarService)) private readonly lotterySeminarService: LotterySeminarService,
   ) { }
 
   async postMultipleReservation(
     reservationInput: IReservationCreateMultiple,
   ): Promise<IReservationMultipleCreateResurt> {
-    const [user, organizations, space] = await Promise.all([
+    const [user, organization, space] = await Promise.all([
       this.userPublicService.fetchById(reservationInput.userId),
       this.organizationPublicService.fetchById(reservationInput.organizationId),
       this.spacePublicService.fetchById(reservationInput.spaceId),
     ]);
 
     if (!user) throw new BadRequestException('User not found');
-    if (!organizations) throw new BadRequestException('Organization not found');
+    if (!organization) throw new BadRequestException('Organization not found');
     if (!space) throw new BadRequestException('Space not found');
     if (!reservationInput.time) throw new BadRequestException('Time cannot be empty');
 
@@ -101,7 +113,35 @@ export class ReservationPublicService {
         });
       }
     }
-    return {
+
+    //for convertedResult
+    const resultItems = Object.values(result);
+
+    const successCount = resultItems.filter(item => item.success).length;
+    const failCount = result.length - successCount;
+
+    //meta.result ~
+    const convertedResult = (() => {
+      const conv = result.map(item => ({
+        timeFrom: getString(item.timeFrom),
+        timeTo: getString(item.timeTo),
+        success: item.success,
+      }))
+
+      const stats = {
+        length: result.length,
+        successCount: successCount,
+        failCount: failCount
+      }
+
+      return {
+        data: conv,
+        ...stats
+      }
+    })
+
+    //for mailer Context
+    const reservations: IReservationMultipleCreateResurt = {
       userId: reservationInput.userId,
       organizationId: reservationInput.organizationId,
       spaceId: reservationInput.spaceId,
@@ -109,6 +149,44 @@ export class ReservationPublicService {
       result,
       timePost: getNow(),
     } as IReservationMultipleCreateResurt;
+
+    //Target Organization Delegator - Mail Sent to
+    const delegator: IUser = await this.userPublicService.fetchById(organization.delegatorId);
+    const meta = {...ReservationMeta.MultipleReservationCompleted}
+
+    // Send Result Mail
+    try {
+      await this.mailService.sendMail({
+        to: delegator.email,
+        subject: `[SCSpace] Multi-Reservation Created - ${reservations.title}`,
+        bcc: user.email,
+        template: "postMultipleReservation",
+        replyTo: "scspace@kaist.ac.kr",
+        context: {
+          reservations: {
+            ...reservations,
+            user,
+            space,
+            organization
+          },
+          meta,
+          result: convertedResult,
+        }
+      })
+    } catch (error) {
+      console.log(error)
+      await this.mailService.reportError(
+        error instanceof Error
+          ? error
+          : new Error(String(error)),
+        "Post Multiple Reservation - Mail Sector")
+    }
+
+
+
+
+
+    return reservations;
   }
 
   async fetchById(id: number): Promise<IReservationSimple | null> {
