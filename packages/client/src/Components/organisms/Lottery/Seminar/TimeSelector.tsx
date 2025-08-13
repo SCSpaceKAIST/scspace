@@ -16,6 +16,7 @@ import {
     Badge,
     Stack,
     Flex,
+    Alert,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { TimeSlot } from "./TimeSlot";
@@ -207,7 +208,19 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
         });
     }
 
-    return (
+    return ((!activeLotteryInfo || activeLotteryInfo.length === 0) ? (
+        <Alert.Root>
+            <Alert.Indicator />
+            <Alert.Content>
+                <Alert.Title>
+                    No Active Lottery
+                </Alert.Title>
+                <Alert.Description>
+                    There is no active lottery information available.
+                </Alert.Description>
+            </Alert.Content>
+        </Alert.Root>
+    ) : (
         <>
             <ActionBar.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
                 <Portal>
@@ -431,5 +444,5 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
                 )}
             </Stack>
         </>
-    );
+    ));
 }

@@ -6,7 +6,6 @@ import SelectComponent from "@scspace-client/Components/molecules/forms/Select";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import { TimeSelector } from "@scspace-client/Components/organisms/Lottery/Seminar/TimeSelector";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import { useAllSpace } from "@scspace-client/Hooks/space";
 import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
