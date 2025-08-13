@@ -47,7 +47,7 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
         applySeminarLottery,
     } = useSeminarLotteryInfoAPI();
 
-    if (activeLotteryInfo && (activeLotteryInfo.length === 0 || activeLotteryInfo[0].applied)) {
+    if (!isAdmin && activeLotteryInfo && (activeLotteryInfo.length === 0 || activeLotteryInfo[0].applied)) {
         alert("It is NOT a seminar room lottery period");
         linkPush("/");
     }
@@ -60,7 +60,8 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
             !activeLotteryInfo ||
             activeLotteryInfo.length === 0 ||
             activeLotteryInfo[0].timeLotteryEnd < getTime(new Date()) ||
-            !editable
+            !editable ||
+            activeLotteryInfo[0].applied
         );
     }, [orgId, activeLotteryInfo, editable]);
 
@@ -156,7 +157,7 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
     };
 
     const createSeminarLotteryHandler = () => {
-        if (!activeLotteryInfo || activeLotteryInfo?.length === 0) return;
+        if (!activeLotteryInfo || activeLotteryInfo?.length === 0 || activeLotteryInfo[0].applied) return;
         if (orgId === -1) return;
         if (selectedTime === -1) return;
 
@@ -183,6 +184,7 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
     }
 
     const deleteSeminarLotteryHandler = () => {
+        if (!activeLotteryInfo || activeLotteryInfo?.length === 0 || activeLotteryInfo[0].applied) return;
         if (!appliedId) return;
 
         deleteSeminarLottery({}, {

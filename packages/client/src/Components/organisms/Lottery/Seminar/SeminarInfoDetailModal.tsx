@@ -1,7 +1,6 @@
 "use client"
 
 import { Button, Card, Dialog, Stack, Text, VStack, Wrap } from "@chakra-ui/react";
-import AlertBtn from "@scspace-client/Components/atoms/AlertBtn";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
@@ -22,9 +21,6 @@ export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, ref
         createLotteryInfo,
         deleteLotteryInfo,
         updateLotteryInfo,
-        activeLotteryInfo: {
-            data: activeLotteryInfo
-        }
     } = useSeminarLotteryInfoAPI(info?.id || 0);
 
     const { getTime, getDateString, getDate } = useDate();
