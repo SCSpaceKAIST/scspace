@@ -4,6 +4,7 @@ import { useAllSpace } from "@scspace-client/Hooks/space";
 import { useEffect, useState } from "react";
 import { IRedirect, useRedirectStore } from ".";
 import { useAuth } from "@scspace-client/Hooks/auth";
+import { useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 
 export function useRedirects() {
     const { spaces } = useAllSpace();
@@ -33,13 +34,15 @@ export function useRedirects() {
 
     const { update } = useRedirectStore();
 
+    const { data: activeLotteryInfo } = useSeminarLotteryInfoAPI().activeLotteryInfo;
+
     useEffect(() => {
         update([
             {
                 href: "/lottery-seminar",
                 label: "세미나실 정기예약 추첨",
                 helperText: "Seminar Room Lottery",
-                invisible: !isLogined,
+                invisible: !isLogined || !activeLotteryInfo || activeLotteryInfo.length === 0 || activeLotteryInfo[0].applied,
             },
             {
                 href: "/browse",
@@ -154,9 +157,9 @@ export function useRedirects() {
                         helperText: "Rules"
                     },
                     {
-                        href: "/admin/lottery",
-                        label: "추첨 관리",
-                        helperText: "Lottery Management"
+                        href: "/admin/lottery-seminar",
+                        label: "세미나실 정기예약 추첨 관리",
+                        helperText: "Seminar Lottery Management"
                     }
                 ]
             },

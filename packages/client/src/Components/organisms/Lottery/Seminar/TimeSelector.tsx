@@ -29,10 +29,11 @@ import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import { useDate } from "@scspace-client/Hooks/utils";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
 
-export function TimeSelector({ orgId, spaceId, editable }: {
+export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
     orgId: number;
     spaceId: number;
     editable: boolean;
+    isAdmin?: boolean;
 }) {
     const [readOnly, setReadOnly] = useState<boolean>(false);
     const [appliedId, setAppliedId] = useState<number>(-1);
@@ -40,10 +41,13 @@ export function TimeSelector({ orgId, spaceId, editable }: {
     const { getTime } = useDate();
 
     const {
-        data: activeLotteryInfo
-    } = useSeminarLotteryInfoAPI().activeLotteryInfo;
+        activeLotteryInfo: {
+            data: activeLotteryInfo,
+        },
+        drawSeminarLottery
+    } = useSeminarLotteryInfoAPI();
 
-    if (activeLotteryInfo && activeLotteryInfo.length === 0) {
+    if (activeLotteryInfo && (activeLotteryInfo.length === 0 || activeLotteryInfo[0].applied)) {
         alert("It is NOT a seminar room lottery period");
         linkPush("/");
     }
@@ -365,6 +369,27 @@ export function TimeSelector({ orgId, spaceId, editable }: {
                         ))}
                     </Grid>
                 </Box>
+                {isAdmin && (
+                    <Button width={"full"} colorPalette={"blue"} onClick={() => {
+                        drawSeminarLottery({}, {
+                            onSuccess: () => {
+                                toaster.success({
+                                    title: "Successfully drawn seminar lottery",
+                                    description: "The seminar lottery has been drawn successfully.",
+                                });
+                            },
+                            onError: (error) => {
+                                toaster.error({
+                                    title: "Failed to draw seminar lottery",
+                                    description: error.message || "Failed to draw seminar lottery.",
+                                });
+                            },
+                            onSettled: refetchAll
+                        })
+                    }}>
+                        추첨 저장하기
+                    </Button>
+                )}
             </Stack>
         </>
     );

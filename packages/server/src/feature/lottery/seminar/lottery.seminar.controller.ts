@@ -130,6 +130,15 @@ export class LotterySeminarController {
   }
 
   @UseGuards(AdminGuard)
+  @Post('draw')
+  async drawInfo(): Promise<ISuccessResponse> {
+    // Implementation for drawing seminar lottery
+    return {
+      success: await this.lotterySeminarService.drawing()
+    };
+  }
+
+  @UseGuards(AdminGuard)
   @Post("apply")
   async applyInfo(): Promise<IReservationMultipleCreateResurt[]> {
     // Implementation for fetching apply seminar lottery info

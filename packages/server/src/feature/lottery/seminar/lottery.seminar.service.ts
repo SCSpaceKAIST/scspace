@@ -390,7 +390,7 @@ export class LotterySeminarService {
 
     // @Cron(CronExpression.EVERY_DAY_AT_6PM, { name: "drawing" })
     @Cron(CronExpression.EVERY_MINUTE, { name: "test" })
-    async drawing() {
+    async drawing(): Promise<boolean> {
         const activeLottery = await this.lotterySeminarInfoRepository.fetchActiveLotteries(getNow());
         if (!activeLottery || activeLottery.length === 0) {
             throw new BadRequestException("No active lottery found");
@@ -455,5 +455,7 @@ export class LotterySeminarService {
                 });
             });
         });
+
+        return true;
     }
 }

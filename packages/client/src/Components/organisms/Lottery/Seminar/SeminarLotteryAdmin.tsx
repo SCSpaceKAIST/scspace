@@ -1,12 +1,14 @@
 "use client"
 
-import { Grid, GridItem, Stack } from "@chakra-ui/react";
+import { Button, Center, Grid, GridItem, Stack, Text } from "@chakra-ui/react";
 import LoadingComponent, { SmallLoading } from "@scspace-client/Components/atoms/Loading";
+import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import SelectComponent from "@scspace-client/Components/molecules/forms/Select";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import SeminarLotteryNotice from "@scspace-client/Components/organisms/Lottery/Seminar/SeminarLotteryNotice";
 import { TimeSelector } from "@scspace-client/Components/organisms/Lottery/Seminar/TimeSelector";
 import { useAuth } from "@scspace-client/Hooks/auth";
+import { useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import { useAllSpace } from "@scspace-client/Hooks/space";
 import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
@@ -14,11 +16,13 @@ import { ISpace } from "@scspace-depot/types/space";
 import { useEffect, useState } from "react";
 
 export default function SeminarLottery() {
-    const { userInfo, needLogin } = useAuth();
-    needLogin();
+    const { needAdmin } = useAuth();
+    needAdmin();
 
     const { spaces, isLoading: spaceLoading } = useAllSpace();
     const { data: verifiedOrganizations, isLoading: orgLoading } = useOrganizationAPI().verifiedOrganizations;
+
+    const drawSeminarLottery = useSeminarLotteryInfoAPI().drawSeminarLottery;
 
     const seminarRoom: ISpace[] = spaces?.filter(space =>
         space.spaceType === SpaceTypeEnum.SEMINAR
@@ -50,7 +54,11 @@ export default function SeminarLottery() {
                         py={2}
                     >
                         <GridItem colSpan={6}>
-                            <SeminarLotteryNotice />
+                            <Center>
+                                <Text fontSize="xl" fontWeight="semibold" color={"red"}>
+                                    이 페이지의 기능을 악용하지 마시길 바랍니다.
+                                </Text>
+                            </Center>
                         </GridItem>
                         <GridItem colSpan={{ base: 6, md: 3 }}>
                             <SelectComponent
@@ -79,12 +87,12 @@ export default function SeminarLottery() {
                                 />
                             ) : (<SmallLoading />)}
                         </GridItem>
-
                         <GridItem colSpan={6}>
                             <TimeSelector
                                 orgId={orgId}
                                 spaceId={spaceId}
-                                editable={verifiedOrganizations?.find(v => v.id === orgId)?.delegatorId === userInfo?.id}
+                                editable
+                                isAdmin
                             />
                         </GridItem>
                     </Grid>
@@ -92,4 +100,4 @@ export default function SeminarLottery() {
             )}
         </Scroll>
     );
-}  
+}

@@ -33,6 +33,11 @@ export function useSeminarLotteryInfoAPI(id?: number) {
         "POST"
     ).mutate;
 
+    const drawSeminarLottery = useMutationApi<ISuccessResponse, {}>(
+        `/lottery/seminar/draw`,
+        "POST"
+    ).mutate;
+
     return {
         // GET 데이터와 상태들
         allLotteryInfo,
@@ -44,7 +49,8 @@ export function useSeminarLotteryInfoAPI(id?: number) {
         updateLotteryInfo,
         deleteLotteryInfo,
 
-        applySeminarLottery
+        applySeminarLottery,
+        drawSeminarLottery
     };
 }
 
