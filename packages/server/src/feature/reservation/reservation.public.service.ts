@@ -507,13 +507,14 @@ export class ReservationPublicService {
       // 추첨 시작 시간부터 행사 끝 시간까지의 기간
       const lotteryStartTime = BigInt(lottery.timeLotteryStart);
       const eventEndTime = BigInt(lottery.timeEnd);
+      const applied = lottery.applied;
 
       // 예약 시간과 추첨 기간이 겹치는지 확인
       // A: [timeFrom ---- timeTo] (예약)
       // B: [lotteryStartTime ---- eventEndTime] (추첨 기간)
       // 겹치지 않는 조건: timeTo <= lotteryStartTime OR timeFrom >= eventEndTime
       // 겹치는 조건: !(겹치지 않는 조건)
-      const isOverlapping = !(timeTo <= lotteryStartTime || timeFrom >= eventEndTime);
+      const isOverlapping = !(timeTo <= lotteryStartTime || timeFrom >= eventEndTime || applied);
 
       if (isOverlapping) {
         const startDate = getDateString(lottery.timeStart);

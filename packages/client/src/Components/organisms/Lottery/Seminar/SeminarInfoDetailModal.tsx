@@ -1,6 +1,7 @@
 "use client"
 
 import { Button, Card, Dialog, Stack, Text, VStack, Wrap } from "@chakra-ui/react";
+import AlertBtn from "@scspace-client/Components/atoms/AlertBtn";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
@@ -20,7 +21,11 @@ export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, ref
     const {
         createLotteryInfo,
         deleteLotteryInfo,
-        updateLotteryInfo
+        updateLotteryInfo,
+        applySeminarLottery,
+        activeLotteryInfo: {
+            data: activeLotteryInfo
+        }
     } = useSeminarLotteryInfoAPI(info?.id || 0);
 
     const { getTime, getDateString, getDate } = useDate();
@@ -68,78 +73,112 @@ export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, ref
                 </Stack>
             </Dialog.Header>
             <Dialog.Body>
-                <Wrap justify="center">
-                    <Card.Root>
-                        <Card.Header>
-                            <Card.Title>추첨 날짜</Card.Title>
-                            <Card.Description>
-                                추첨 기간동안 매일 오후 6시에 자동으로 추첨이 진행됩니다.
-                            </Card.Description>
-                        </Card.Header>
-                        <Card.Body>
-                            <Stack align={"center"}>
-                                <Card.Title>
-                                    {getDateString(getTime(dateLotteryStart))} ~ {getDateString(getTime(dateLotteryEnd))}
-                                </Card.Title>
-                                <Wrap justify="center">
-                                    <DatePicker
-                                        wrapperClassName="datepicker"
-                                        selected={dateLotteryStart}
-                                        onChange={(date) => {
-                                            if (!date) return;
-                                            setDateLotteryStart(date);
-                                        }}
-                                        inline
-                                    />
-                                    <DatePicker
-                                        wrapperClassName="datepicker"
-                                        selected={dateLotteryEnd}
-                                        onChange={(date) => {
-                                            if (!date) return;
-                                            setDateLotteryEnd(date);
-                                        }}
-                                        inline
-                                    />
-                                </Wrap>
-                            </Stack>
-                        </Card.Body>
-                    </Card.Root>
-                    <Card.Root>
-                        <Card.Header>
-                            <Card.Title>학기 기간</Card.Title>
-                            <Card.Description>
-                                추첨 결과가 반영되는 날짜입니다.
-                            </Card.Description>
-                        </Card.Header>
-                        <Card.Body>
-                            <Stack align={"center"}>
-                                <Card.Title>
-                                    {getDateString(getTime(dateStart))} ~ {getDateString(getTime(dateEnd))}
-                                </Card.Title>
-                                <Wrap justify="center">
-                                    <DatePicker
-                                        wrapperClassName="datepicker"
-                                        selected={dateStart}
-                                        onChange={(date) => {
-                                            if (!date) return;
-                                            setDateStart(date);
-                                        }}
-                                        inline
-                                    />
-                                    <DatePicker
-                                        wrapperClassName="datepicker"
-                                        selected={dateEnd}
-                                        onChange={(date) => {
-                                            if (!date) return;
-                                            setDateEnd(date);
-                                        }}
-                                        inline
-                                    />
-                                </Wrap>
-                            </Stack>
-                        </Card.Body>
-                    </Card.Root>
-                </Wrap>
+                <VStack>
+                    <Wrap justify="center">
+                        <Card.Root>
+                            <Card.Header>
+                                <Card.Title>추첨 날짜</Card.Title>
+                                <Card.Description>
+                                    추첨 기간동안 매일 오후 6시에 자동으로 추첨이 진행됩니다.
+                                </Card.Description>
+                            </Card.Header>
+                            <Card.Body>
+                                <Stack align={"center"}>
+                                    <Card.Title>
+                                        {getDateString(getTime(dateLotteryStart))} ~ {getDateString(getTime(dateLotteryEnd))}
+                                    </Card.Title>
+                                    <Wrap justify="center">
+                                        <DatePicker
+                                            wrapperClassName="datepicker"
+                                            selected={dateLotteryStart}
+                                            onChange={(date) => {
+                                                if (!date) return;
+                                                setDateLotteryStart(date);
+                                            }}
+                                            inline
+                                        />
+                                        <DatePicker
+                                            wrapperClassName="datepicker"
+                                            selected={dateLotteryEnd}
+                                            onChange={(date) => {
+                                                if (!date) return;
+                                                setDateLotteryEnd(date);
+                                            }}
+                                            inline
+                                        />
+                                    </Wrap>
+                                </Stack>
+                            </Card.Body>
+                        </Card.Root>
+                        <Card.Root>
+                            <Card.Header>
+                                <Card.Title>학기 기간</Card.Title>
+                                <Card.Description>
+                                    추첨 결과가 반영되는 날짜입니다.
+                                </Card.Description>
+                            </Card.Header>
+                            <Card.Body>
+                                <Stack align={"center"}>
+                                    <Card.Title>
+                                        {getDateString(getTime(dateStart))} ~ {getDateString(getTime(dateEnd))}
+                                    </Card.Title>
+                                    <Wrap justify="center">
+                                        <DatePicker
+                                            wrapperClassName="datepicker"
+                                            selected={dateStart}
+                                            onChange={(date) => {
+                                                if (!date) return;
+                                                setDateStart(date);
+                                            }}
+                                            inline
+                                        />
+                                        <DatePicker
+                                            wrapperClassName="datepicker"
+                                            selected={dateEnd}
+                                            onChange={(date) => {
+                                                if (!date) return;
+                                                setDateEnd(date);
+                                            }}
+                                            inline
+                                        />
+                                    </Wrap>
+                                </Stack>
+                            </Card.Body>
+                        </Card.Root>
+                        {activeLotteryInfo && activeLotteryInfo.length > 0 && activeLotteryInfo[0].id === info?.id && (
+                            <AlertBtn
+                                onClick={() => {
+                                    applySeminarLottery({}, {
+                                        onSuccess: () => {
+                                            toaster.success({
+                                                title: "세미나 추첨 반영 완료",
+                                                description: "세미나 추첨 반영이 완료되었습니다.",
+                                            });
+                                            refetch();
+                                            setOpen(false);
+                                        },
+                                        onError: (error) => {
+                                            toaster.error({
+                                                title: "세미나 추첨 반영 실패",
+                                                description: error.message || "세미나 추첨 반영에 실패했습니다.",
+                                            });
+                                        },
+                                    });
+                                }}
+                                dialogTitle="세미나실 정기예약 추첨 반영"
+                                dialogBody={(
+                                    <Text>
+                                        세미나실 정기예약 추첨 정보를 반영하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+                                    </Text>
+                                )}
+                            >
+                                <Button size={"xl"} colorPalette="blue" disabled={info.applied} variant={"outline"}>
+                                    {info.applied ? "Already Applied" : "Apply"}
+                                </Button>
+                            </AlertBtn>
+                        )}
+                    </Wrap>
+                </VStack>
             </Dialog.Body>
             <Dialog.Footer>
                 {info ? (<>

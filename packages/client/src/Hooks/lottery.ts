@@ -28,6 +28,11 @@ export function useSeminarLotteryInfoAPI(id?: number) {
         "DELETE"
     ).mutate;
 
+    const applySeminarLottery = useMutationApi<ISuccessResponse, {}>(
+        `/lottery/seminar/apply`,
+        "POST"
+    ).mutate;
+
     return {
         // GET 데이터와 상태들
         allLotteryInfo,
@@ -37,7 +42,9 @@ export function useSeminarLotteryInfoAPI(id?: number) {
         // CUD 메서드들
         createLotteryInfo,
         updateLotteryInfo,
-        deleteLotteryInfo
+        deleteLotteryInfo,
+
+        applySeminarLottery
     };
 }
 
@@ -85,10 +92,7 @@ export function useSeminarLotteryAPI(params?: {
         "DELETE"
     ).mutate;
 
-    const applySeminarLottery = useMutationApi<ISuccessResponse, {}>(
-        `/lottery/seminar/apply`,
-        "POST"
-    ).mutate;
+
 
     return {
         // GET 데이터와 상태들
@@ -100,6 +104,5 @@ export function useSeminarLotteryAPI(params?: {
         // CUD 메서드들
         createSeminarLottery,
         deleteSeminarLottery,
-        applySeminarLottery
     };
 }

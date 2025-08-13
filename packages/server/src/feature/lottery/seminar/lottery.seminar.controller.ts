@@ -4,6 +4,7 @@ import { AdminGuard, DelegatorGuard } from "@scspace-server/feature/auth/jwt/jwt
 import { ILotteryInfo, ILotteryInfoCreate, ILotteryInfoUpdate } from "@scspace-depot/types/lottery/lottery.info.type";
 import { ISeminarLottery, ISeminarLotteryCreate } from "@scspace-depot/types/lottery/lottery.seminar.type";
 import { ISuccessResponse } from "@scspace-depot/types/common";
+import { IReservationMultipleCreateResurt } from "@scspace-depot/types/reservation";
 
 @Controller('lottery/seminar')
 export class LotterySeminarController {
@@ -130,10 +131,8 @@ export class LotterySeminarController {
 
   @UseGuards(AdminGuard)
   @Post("apply")
-  async applyInfo(): Promise<ISuccessResponse> {
+  async applyInfo(): Promise<IReservationMultipleCreateResurt[]> {
     // Implementation for fetching apply seminar lottery info
-    return {
-      success: await this.lotterySeminarService.applySeminarLottery()
-    };
+    return await this.lotterySeminarService.applySeminarLottery()
   }
 }

@@ -35,12 +35,12 @@ export function useRedirects() {
 
     useEffect(() => {
         update([
-            // {
-            //     href: "/lottery-seminar",
-            //     label: "세미나실 정기예약 추첨",
-            //     helperText: "Seminar Room Lottery",
-            //     invisible: !isLogined,
-            // },
+            {
+                href: "/lottery-seminar",
+                label: "세미나실 정기예약 추첨",
+                helperText: "Seminar Room Lottery",
+                invisible: !isLogined,
+            },
             {
                 href: "/browse",
                 label: "찾아보기",

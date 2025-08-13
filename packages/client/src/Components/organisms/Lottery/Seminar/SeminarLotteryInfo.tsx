@@ -22,8 +22,13 @@ import { ILotteryInfo } from "@scspace-depot/types/lottery/lottery.info.type";
 export default function SeminarLotteryInfo() {
     const { needAdmin } = useAuth();
     needAdmin();
-    const { data: lotteryInfos, isLoading, refetch } = useSeminarLotteryInfoAPI().allLotteryInfo;
-    const applySeminarLottery = useSeminarLotteryAPI().applySeminarLottery;
+    const {
+        allLotteryInfo: {
+            data: lotteryInfos,
+            isLoading,
+            refetch
+        }
+    } = useSeminarLotteryInfoAPI();
 
     const { getDateString } = useDate();
 
@@ -60,13 +65,6 @@ export default function SeminarLotteryInfo() {
                             >
                                 <HiPlus />
                             </IconButton>
-                            <Button onClick={() => applySeminarLottery({}, {
-                                onSuccess: () => {
-                                    alert("check server logs");
-                                }
-                            })}>
-                                Apply Test
-                            </Button>
                         </HStack>
 
                         {!lotteryInfos || lotteryInfos.length === 0 ? (

@@ -15,6 +15,7 @@ import { Cron, CronExpression } from "@nestjs/schedule";
 import { SpacePublicService } from "@scspace-server/feature/space/space.public.service";
 import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 import { ReservationPublicService } from "@scspace-server/feature/reservation/reservation.public.service";
+import { IReservationMultipleCreateResurt } from "@scspace-depot/types/reservation";
 
 @Injectable()
 export class LotterySeminarService {
@@ -281,15 +282,20 @@ export class LotterySeminarService {
         await this.lotterySeminarRepository.update(toId, toLottery[0]);
     }
 
-    async applySeminarLottery(): Promise<boolean> {
+    async applySeminarLottery(): Promise<IReservationMultipleCreateResurt[]> {
         const activeLottery = await this.lotterySeminarInfoRepository.fetchActiveLotteries(getNow());
-        if (!activeLottery) {
+        if (!activeLottery || activeLottery.length === 0) {
             throw new BadRequestException("No active lottery found");
+        }
+        if (activeLottery[0].applied) {
+            throw new BadRequestException("You have already applied for this lottery");
         }
 
         const dateStart = getDate(activeLottery[0].timeStart);
 
         const verifiedOrganizations = await this.organizationPublicService.fetchVerified();
+
+        const logs: IReservationMultipleCreateResurt[] = [];
 
         const seminarRooms = await this.spacePublicService.fetchAllBySpaceType(SpaceTypeEnum.SEMINAR);
         for (const space of seminarRooms) {
@@ -342,7 +348,7 @@ export class LotterySeminarService {
                 }
                 if (time.length === 0) continue;
 
-                this.reservationPublicService.postMultipleReservation({
+                const log = await this.reservationPublicService.postMultipleReservation({
                     title: `세미나실 정기예약 [${org.name}]`,
                     spaceId: space.id,
                     userId: 1,
@@ -359,23 +365,38 @@ export class LotterySeminarService {
                         worker: 0,
                     }
                 })
+
+                logs.push(log);
             }
         }
 
-        // await this.lotterySeminarInfoRepository.update({
-        //     id: activeLottery[0].id,
-        //     updateLotteryInfo: { applied: true }
-        // })
+        await this.lotterySeminarInfoRepository.update({
+            id: activeLottery[0].id,
+            updateLotteryInfo: { applied: true }
+        })
 
-        return true;
+        return logs;
+    }
+
+    @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, { name: "auto apply" })
+    async autoApply() {
+        const activeLottery = await this.lotterySeminarInfoRepository.fetchActiveLotteries(getNow());
+        if (!activeLottery || activeLottery.length === 0) return;
+        if (activeLottery[0].applied) return;
+
+        const now = getNow();
+        if (now + 1 > activeLottery[0].timeLotteryEnd) await this.applySeminarLottery();
     }
 
     // @Cron(CronExpression.EVERY_DAY_AT_6PM, { name: "drawing" })
     @Cron(CronExpression.EVERY_MINUTE, { name: "test" })
     async drawing() {
         const activeLottery = await this.lotterySeminarInfoRepository.fetchActiveLotteries(getNow());
-        if (!activeLottery) {
+        if (!activeLottery || activeLottery.length === 0) {
             throw new BadRequestException("No active lottery found");
+        }
+        if (activeLottery[0].applied) {
+            throw new BadRequestException("You have already applied for this lottery");
         }
 
         const seminarRooms = await this.spacePublicService.fetchAllBySpaceType(SpaceTypeEnum.SEMINAR);

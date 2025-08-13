@@ -5,8 +5,8 @@ import React from "react";
 
 export default function ManageLottery() {
     const tabList: { [key: string]: React.ReactNode } = {
-        "공연집중기간 추첨": <p>Under Development</p>,
-        "세미나실 정기예약 추첨": <SeminarLotteryInfo />,
+        "세미나실 정기예약 추첨 날짜": <SeminarLotteryInfo />,
+        "세미나실 정기예약 추첨 결과 변경": <p>Under Development</p>,
     };
 
     return (
