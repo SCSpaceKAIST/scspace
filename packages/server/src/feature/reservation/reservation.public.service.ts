@@ -259,9 +259,9 @@ export class ReservationPublicService {
     timeTo: number,
   ): Promise<boolean> {
     // 공간위원이면 최대 시간 제한 없음
-    // if (await this.userPublicService.isManager(userId)) {
-    //   return true;
-    // }
+    if (await this.userPublicService.isManager(userId)) {
+      return true;
+    }
 
     const dateFrom = getDate(timeFrom);
     const dateTo = getDate(timeTo - 1);
