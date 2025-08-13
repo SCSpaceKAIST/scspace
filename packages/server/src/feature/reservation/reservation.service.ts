@@ -319,7 +319,7 @@ export class ReservationService {
             ? user.email
             : organizationWithMembers.members.map((member) => member.user.email),
         subject: `[SCSpace] Reservation Updated - ${reservation[0].title}`,
-        bcc: 'scspace.kaist@gmail.com',
+        // bcc: 'scspace.kaist@gmail.com',
         template: 'reservationPosted',
         replyTo: 'scspace@kaist.ac.kr',
         context: {
@@ -402,7 +402,7 @@ export class ReservationService {
             ? user.email
             : organizationWithMembers.members.map((member) => member.user.email),
         subject: `[SCSpace] Reservation Deleted - ${reservation[0].title}`,
-        bcc: 'scspace.kaist@gmail.com',
+        // bcc: 'scspace.kaist@gmail.com',
         template: 'reservationPosted',
         replyTo: 'scspace@kaist.ac.kr',
         context: {
