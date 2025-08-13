@@ -371,21 +371,22 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
                 </Box>
                 {isAdmin && activeLotteryInfo && (
                     <Stack>
-                        <Button width={"full"} colorPalette={"blue"} onClick={() => {
+                        <Button width={"full"} colorPalette={"blue"} size={"xl"} onClick={() => {
                             drawSeminarLottery({}, {
                                 onSuccess: () => {
                                     toaster.success({
                                         title: "Successfully drawn seminar lottery",
                                         description: "The seminar lottery has been drawn successfully.",
                                     });
+                                    refetchAll();
                                 },
                                 onError: (error) => {
                                     toaster.error({
                                         title: "Failed to draw seminar lottery",
                                         description: error.message || "Failed to draw seminar lottery.",
                                     });
+                                    refetchAll();
                                 },
-                                onSettled: refetchAll
                             })
                         }}>
                             추첨 저장하기
@@ -398,7 +399,6 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
                                             title: "세미나 추첨 반영 완료",
                                             description: "세미나 추첨 반영이 완료되었습니다.",
                                         });
-                                        refetchAll();
                                     },
                                     onError: (error) => {
                                         toaster.error({
@@ -406,6 +406,7 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
                                             description: error.message || "세미나 추첨 반영에 실패했습니다.",
                                         });
                                     },
+                                    onSettled: refetchAll
                                 });
                             }}
                             dialogTitle="세미나실 정기예약 추첨 반영"
@@ -418,7 +419,7 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
                                 </Text>
                             </>)}
                         >
-                            <Button size={"xl"} colorPalette="blue" disabled={activeLotteryInfo[0].applied} variant={"outline"}>
+                            <Button size={"xl"} colorPalette="red" disabled={activeLotteryInfo[0].applied}>
                                 Apply
                             </Button>
                         </AlertBtn>
