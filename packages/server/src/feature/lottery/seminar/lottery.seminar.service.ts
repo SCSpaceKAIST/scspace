@@ -345,7 +345,7 @@ export class LotterySeminarService {
                 this.reservationPublicService.postMultipleReservation({
                     title: `세미나실 정기예약 [${org.name}]`,
                     spaceId: space.id,
-                    userId: 0,
+                    userId: 1,
                     organizationId: org.id,
                     time,
                     content: {
