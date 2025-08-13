@@ -1,4 +1,4 @@
-import { Logger, Injectable, BadRequestException } from '@nestjs/common';
+import { Logger, Injectable, BadRequestException, Inject, forwardRef } from '@nestjs/common';
 import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
 import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
 import { ReservationRepository } from './reservation.repository';
@@ -13,12 +13,14 @@ import { UserPublicService } from '@scspace-server/feature/user/user.public.serv
 import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
 import { MReservationContent, MReservationSimple } from '@scspace-server/feature/reservation/reservation.model';
 import { getDate, getDateDiffInMinute, getDateString, getNow, getWeekPeriod, timeRangeCheck } from '@scspace-server/common/utils';
-import { IReservationContent, IReservationSimple } from '@scspace-depot/types/reservation';
+import { IReservationContent, IReservationCreate, IReservationCreateMultiple, IReservationMultipleCreateResurt, IReservationSimple } from '@scspace-depot/types/reservation';
 import { ISpace } from '@scspace-depot/types/space';
 import { LotterySeminarService } from '../lottery/seminar/lottery.seminar.service';
 import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
+import { OrganizationPublicService } from '../organization/organization.public.service';
+import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 
 const writeFile = promisify(fs.writeFile);
 const mkdir = promisify(fs.mkdir);
@@ -29,8 +31,85 @@ export class ReservationPublicService {
     private readonly reservationRepository: ReservationRepository,
     private readonly spacePublicService: SpacePublicService,
     private readonly userPublicService: UserPublicService,
-    private readonly lotterySeminarService: LotterySeminarService,
+    private readonly organizationPublicService: OrganizationPublicService,
+    @Inject(forwardRef(() => LotterySeminarService)) private readonly lotterySeminarService: LotterySeminarService,
   ) { }
+
+  async postMultipleReservation(
+    reservationInput: IReservationCreateMultiple,
+  ): Promise<IReservationMultipleCreateResurt> {
+    const [user, organizations, space] = await Promise.all([
+      this.userPublicService.fetchById(reservationInput.userId),
+      this.organizationPublicService.fetchById(reservationInput.organizationId),
+      this.spacePublicService.fetchById(reservationInput.spaceId),
+    ]);
+
+    if (!user) throw new BadRequestException('User not found');
+    if (!organizations) throw new BadRequestException('Organization not found');
+    if (!space) throw new BadRequestException('Space not found');
+    if (!reservationInput.time) throw new BadRequestException('Time cannot be empty');
+
+    if (user.type !== UserTypeEnum.MANAGER && user.type !== UserTypeEnum.ADMIN) {
+      const userOrganizations = await this.organizationPublicService.fetchByUserId(reservationInput.userId);
+      if (!userOrganizations.some(org => org.id === reservationInput.organizationId)) {
+        throw new BadRequestException('User does not belong to the specified organization');
+      }
+    }
+
+    const result: {
+      timeFrom: number;
+      timeTo: number;
+      success: boolean;
+    }[] = [];
+
+    for (const time of reservationInput.time) {
+      try {
+        await this.checkWholeTime(
+          reservationInput.userId,
+          reservationInput.organizationId,
+          reservationInput.spaceId,
+          time.timeFrom,
+          time.timeTo,
+        );
+
+        const [reservation, _] = await this.reservationRepository.insert({
+          ...reservationInput,
+          timeFrom: time.timeFrom,
+          timeTo: time.timeTo,
+          content: reservationInput.content,
+        } as IReservationCreate);
+
+        if (!reservation) {
+          result.push({
+            timeFrom: time.timeFrom,
+            timeTo: time.timeTo,
+            success: false,
+          });
+          continue;
+        }
+
+        result.push({
+          timeFrom: reservation.timeFrom,
+          timeTo: reservation.timeTo,
+          success: true,
+        });
+      } catch {
+        result.push({
+          timeFrom: time.timeFrom,
+          timeTo: time.timeTo,
+          success: false,
+        });
+      }
+    }
+    return {
+      userId: reservationInput.userId,
+      organizationId: reservationInput.organizationId,
+      spaceId: reservationInput.spaceId,
+      title: reservationInput.title,
+      result,
+      timePost: getNow(),
+    } as IReservationMultipleCreateResurt;
+  }
 
   async fetchById(id: number): Promise<IReservationSimple | null> {
     const { data: reservation } = await this.reservationRepository.fetch({ id: id });

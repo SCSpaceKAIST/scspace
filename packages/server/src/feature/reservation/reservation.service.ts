@@ -4,8 +4,6 @@ import {
   IReservationAll,
   IReservationContent,
   IReservation,
-  IReservationCreateMultiple,
-  IReservationMultipleCreateResurt,
 } from '@scspace-depot/types/reservation';
 import { IOrganization } from '@scspace-depot/types/organization';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
@@ -16,7 +14,6 @@ import { ISpace } from '@scspace-depot/types/space';
 import { MReservation } from '@scspace-server/feature/reservation/reservation.model';
 import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
-import { getNow } from '@scspace-server/common/utils';
 import { MailService } from '@scspace-server/tools/mailer/mail.service';
 import { ReservationMeta } from '@scspace-depot/enums/mail.enum';
 import { getString } from '@scspace-server/common/utils'
@@ -249,82 +246,6 @@ export class ReservationService {
       reservation,
       reservationContent,
     )
-  }
-
-  async postMultipleReservation(
-    reservationInput: IReservationCreateMultiple,
-  ): Promise<IReservationMultipleCreateResurt> {
-    const [user, organizations, space] = await Promise.all([
-      this.userPublicService.fetchById(reservationInput.userId),
-      this.organizationPublicService.fetchById(reservationInput.organizationId),
-      this.spacePublicService.fetchById(reservationInput.spaceId),
-    ]);
-
-    if (!user) throw new BadRequestException('User not found');
-    if (!organizations) throw new BadRequestException('Organization not found');
-    if (!space) throw new BadRequestException('Space not found');
-    if (!reservationInput.time) throw new BadRequestException('Time cannot be empty');
-
-    if (user.type !== UserTypeEnum.MANAGER && user.type !== UserTypeEnum.ADMIN) {
-      const userOrganizations = await this.organizationPublicService.fetchByUserId(reservationInput.userId);
-      if (!userOrganizations.some(org => org.id === reservationInput.organizationId)) {
-        throw new BadRequestException('User does not belong to the specified organization');
-      }
-    }
-
-    const result: {
-      timeFrom: number;
-      timeTo: number;
-      success: boolean;
-    }[] = [];
-
-    for (const time of reservationInput.time) {
-      try {
-        await this.reservationPublicService.checkWholeTime(
-          reservationInput.userId,
-          reservationInput.organizationId,
-          reservationInput.spaceId,
-          time.timeFrom,
-          time.timeTo,
-        );
-
-        const [reservation, _] = await this.reservationRepository.insert({
-          ...reservationInput,
-          timeFrom: time.timeFrom,
-          timeTo: time.timeTo,
-          content: reservationInput.content,
-        } as IReservationCreate);
-
-        if (!reservation) {
-          result.push({
-            timeFrom: time.timeFrom,
-            timeTo: time.timeTo,
-            success: false,
-          });
-          continue;
-        }
-
-        result.push({
-          timeFrom: reservation.timeFrom,
-          timeTo: reservation.timeTo,
-          success: true,
-        });
-      } catch {
-        result.push({
-          timeFrom: time.timeFrom,
-          timeTo: time.timeTo,
-          success: false,
-        });
-      }
-    }
-    return {
-      userId: reservationInput.userId,
-      organizationId: reservationInput.organizationId,
-      spaceId: reservationInput.spaceId,
-      title: reservationInput.title,
-      result,
-      timePost: getNow(),
-    } as IReservationMultipleCreateResurt;
   }
 
   async updateReservation(

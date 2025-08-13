@@ -25,10 +25,13 @@ import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
 import { AdminGuard, ManagerGuard, MemberGuard, MemberGuardWithReservation, UserGuard } from '../auth/jwt/jwt.guard';
 import { IUser } from '@scspace-depot/types/user';
 import { SpacePublicService } from '../space/space.public.service';
+import { ReservationPublicService } from './reservation.public.service';
 
 @Controller('reservation')
 export class ReservationController {
-  constructor(private readonly reservationService: ReservationService,
+  constructor(
+    private readonly reservationService: ReservationService,
+    private readonly reservationPublicService: ReservationPublicService,
     private readonly spaceService: SpacePublicService,
   ) { }
 
@@ -112,7 +115,7 @@ export class ReservationController {
   async postMultipleReservation(
     @Body() reservationInput: IReservationCreateMultiple,
   ): Promise<IReservationMultipleCreateResurt> {
-    return await this.reservationService.postMultipleReservation(reservationInput);
+    return await this.reservationPublicService.postMultipleReservation(reservationInput);
   }
 
   // AuthGuard - user

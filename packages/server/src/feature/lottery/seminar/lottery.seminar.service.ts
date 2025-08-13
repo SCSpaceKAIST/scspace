@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from "@nestjs/common";
+import { BadRequestException, forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { OrganizationPublicService } from "@scspace-server/feature/organization/organization.public.service";
 import { LotterySeminarRepository } from "./lottery.seminar.repository";
 import { LotterySeminarInfoRepository } from "./lottery.seminar.info.repository";
@@ -14,7 +14,7 @@ import { getDate, getDateBegin, getDateEnd, getNow, getRandomIndex, getTime } fr
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { SpacePublicService } from "@scspace-server/feature/space/space.public.service";
 import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
-import { ReservationService } from "@scspace-server/feature/reservation/reservation.service";
+import { ReservationPublicService } from "@scspace-server/feature/reservation/reservation.public.service";
 
 @Injectable()
 export class LotterySeminarService {
@@ -23,7 +23,7 @@ export class LotterySeminarService {
     constructor(
         private readonly organizationPublicService: OrganizationPublicService,
         private readonly spacePublicService: SpacePublicService,
-        private readonly reservationService: ReservationService,
+        @Inject(forwardRef(() => ReservationPublicService)) private readonly reservationPublicService: ReservationPublicService,
         private readonly lotterySeminarRepository: LotterySeminarRepository,
         private readonly lotterySeminarInfoRepository: LotterySeminarInfoRepository
     ) { }
