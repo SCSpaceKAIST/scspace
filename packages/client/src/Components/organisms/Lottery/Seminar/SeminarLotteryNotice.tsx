@@ -1,4 +1,4 @@
-import { Accordion, Badge, Blockquote, List } from "@chakra-ui/react";
+import { Accordion, Badge, Blockquote, Button, List } from "@chakra-ui/react";
 
 export default function SeminarLotteryNotice() {
     const notice: {
@@ -26,6 +26,10 @@ export default function SeminarLotteryNotice() {
             {
                 content: "You can delete and reapply after winning the lottery, but you CANNOT revert to winning status after deleting.",
                 color: "red"
+            },
+            {
+                content: "Some time slots may already be booked for Humanity/Leadership classes or other reasons, in which case the time slot win will not apply.",
+                color: "red"
             }
         ],
         kor: [
@@ -42,10 +46,14 @@ export default function SeminarLotteryNotice() {
                 content: "단체실이 없는 조직이 추첨에서 우선권을 가집니다.",
                 color: "blue"
             },
-            { content: "추첨은 매일 오후 6시에 자동으로 진행되며, 결과는 이메일로 통지됩니다." },
+            { content: "추첨은 추첨 기간중 매일 오후 6시에 자동으로 진행되며, 결과는 이메일로 통지됩니다." },
             { content: "당첨된 시간대에는 당첨된 조직의 이름이 표시되며, 조직을 선택하면 해당 조직의 시간대만 강조 표시됩니다." },
             {
                 content: "당첨된 후에는 삭제 및 재신청이 가능하지만, 삭제 후에는 당첨 상태로 되돌릴 수 없습니다.",
+                color: "red"
+            },
+            {
+                content: "인성/리더쉽 수업이나 기타 이유로 이미 예약이 들어가 있는 시간대도 있으며, 이 경우 해당 시간대에 당첨되더라도 반영되지 않으니 유의 바랍니다.",
                 color: "red"
             }
         ]
@@ -55,8 +63,10 @@ export default function SeminarLotteryNotice() {
         <Accordion.Root collapsible multiple>
             {Object.keys(notice).map((lang) => (
                 <Accordion.Item key={lang} value={lang}>
-                    <Accordion.ItemTrigger>
-                        Notice ({lang})
+                    <Accordion.ItemTrigger asChild>
+                        <Button variant={"subtle"} width={"full"}>
+                            Notice ({lang})
+                        </Button>
                     </Accordion.ItemTrigger>
                     <Accordion.ItemContent rounded={"none"}>
                         <Blockquote.Root variant={"solid"}>
