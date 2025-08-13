@@ -1,11 +1,11 @@
 [
     {
-        "title": "Developer",
-        "content": "KAIST 학생문화공간위원회 개발국"
+        "title": "Developed by",
+        "content": "KAIST 학생문화공간위원회 개발팀"
     },
     {
         "title": "Organization",
-        "content": "단체 단위로 예약을 하기 위한 기능입니다. 개인 예약이 아닌 경우 단체를 먼저 생성해 주세요."
+        "content": "조직 단위로 예약을 하기 위한 기능입니다. 단체 예약인 경우 조직를 먼저 생성해 주세요."
     },
     {
         "title" : "Login",

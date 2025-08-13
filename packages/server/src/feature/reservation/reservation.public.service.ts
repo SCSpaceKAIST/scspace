@@ -114,14 +114,18 @@ export class ReservationPublicService {
       }
     }
 
-    //for convertedResult
-    const resultItems = Object.values(result);
 
-    const successCount = resultItems.filter(item => item.success).length;
-    const failCount = result.length - successCount;
 
     //meta.result ~
     const convertedResult = (() => {
+
+      //for convertedResult
+      const resultItems = Object.values(result);
+
+      const successCount = resultItems.filter(item => item.success).length;
+      const failCount = result.length - successCount;
+
+      //main
       const conv = result.map(item => ({
         timeFrom: getString(item.timeFrom),
         timeTo: getString(item.timeTo),
@@ -181,10 +185,6 @@ export class ReservationPublicService {
           : new Error(String(error)),
         "Post Multiple Reservation - Mail Sector")
     }
-
-
-
-
 
     return reservations;
   }
