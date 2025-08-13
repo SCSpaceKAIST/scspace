@@ -4,8 +4,8 @@ import ManageLottery from "@scspace-client/Components/pages/Administration/Lotte
 export default function LotteryPage() {
     return (
         <PageTemplete
-            title="추첨 관리"
-            subtitle="Lottery Management"
+            title="세미나실 정기예약 추첨 관리"
+            subtitle="Seminar-room Lottery Management"
         >
             <ManageLottery />
         </PageTemplete>

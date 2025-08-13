@@ -140,9 +140,9 @@ export class LotterySeminarService {
         };
 
         // 시간 유효성 검증
-        // if (mergedLotteryInfo.timeLotteryStart < now) {
-        //     throw new BadRequestException("Lottery time cannot be in the past");
-        // }
+        if (mergedLotteryInfo.timeLotteryStart < now) {
+            throw new BadRequestException("Lottery time cannot be in the past");
+        }
         if (mergedLotteryInfo.timeLotteryEnd < mergedLotteryInfo.timeLotteryStart) {
             throw new BadRequestException("Lottery end time cannot be before start time");
         }
@@ -385,11 +385,10 @@ export class LotterySeminarService {
         if (activeLottery[0].applied) return;
 
         const now = getNow();
-        if (now + 1 > activeLottery[0].timeLotteryEnd) await this.applySeminarLottery();
+        if (now + 1 > activeLottery[0].timeStart) await this.applySeminarLottery();
     }
 
-    // @Cron(CronExpression.EVERY_DAY_AT_6PM, { name: "drawing" })
-    @Cron(CronExpression.EVERY_MINUTE, { name: "test" })
+    @Cron(CronExpression.EVERY_DAY_AT_6PM, { name: "drawing" })
     async drawing(): Promise<boolean> {
         const activeLottery = await this.lotterySeminarInfoRepository.fetchActiveLotteries(getNow());
         if (!activeLottery || activeLottery.length === 0) {

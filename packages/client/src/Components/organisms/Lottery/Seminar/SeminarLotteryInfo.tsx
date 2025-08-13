@@ -9,6 +9,7 @@ import {
     HStack,
     IconButton,
     Button,
+    Flex,
 } from "@chakra-ui/react";
 import { useSeminarLotteryAPI, useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
@@ -54,8 +55,7 @@ export default function SeminarLotteryInfo() {
             <Scroll>
                 {isLoading ? (<LoadingComponent />) : (
                     <Stack>
-                        <HStack justify="space-between">
-                            <Text fontSize="2xl" fontWeight="bold">세미나실 정기 예약 추첨</Text>
+                        <Flex justify={"flex-end"}>
                             <IconButton
                                 variant={"outline"}
                                 onClick={() => {
@@ -65,7 +65,7 @@ export default function SeminarLotteryInfo() {
                             >
                                 <HiPlus />
                             </IconButton>
-                        </HStack>
+                        </Flex>
 
                         {!lotteryInfos || lotteryInfos.length === 0 ? (
                             <Alert.Root status="info">
