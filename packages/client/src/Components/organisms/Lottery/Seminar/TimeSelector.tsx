@@ -373,7 +373,7 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
                 </Box>
                 {isAdmin && activeLotteryInfo && (
                     <Stack>
-                        <Button width={"full"} colorPalette={"blue"} size={"xl"} onClick={() => {
+                        <Button width={"full"} colorPalette={"blue"} size={"xl"} disabled={activeLotteryInfo[0].applied} onClick={() => {
                             drawSeminarLottery({}, {
                                 onSuccess: () => {
                                     toaster.success({
@@ -422,7 +422,7 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
                             </>)}
                         >
                             <Button size={"xl"} colorPalette="red" disabled={activeLotteryInfo[0].applied}>
-                                Apply
+                                {activeLotteryInfo[0].applied ? "이미 반영되었습니다" : "세미나실 정기예약 추첨 반영하기"}
                             </Button>
                         </AlertBtn>
                     </Stack>
