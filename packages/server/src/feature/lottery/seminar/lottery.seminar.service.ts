@@ -306,19 +306,24 @@ export class LotterySeminarService {
             while (week < MAX_LOOP) {
                 let periodEnd = false;
                 for (const lottery of drawnLotteries) {
-                    const date = Math.floor(lottery.time / 24);
+                    const day = Math.floor(lottery.time / 24);
                     const hour = lottery.time % 24;
+
+                    if (dateStart.getDay() > day && week === 0) {
+                        continue;
+                    }
 
                     const timeFrom = getTime(new Date(
                         dateStart.getFullYear(),
                         dateStart.getMonth(),
-                        dateStart.getDate() + date + 7 * week,
+                        dateStart.getDate() - dateStart.getDay() + day + 7 * week,
                         hour,
                     ));
+
                     const timeTo = getTime(new Date(
                         dateStart.getFullYear(),
                         dateStart.getMonth(),
-                        dateStart.getDate() + date + 7 * week,
+                        dateStart.getDate() - dateStart.getDay() + day + 7 * week,
                         hour + 1,
                     ));
 
