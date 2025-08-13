@@ -98,8 +98,6 @@ export function useSeminarLotteryAPI(params?: {
         "DELETE"
     ).mutate;
 
-
-
     return {
         // GET 데이터와 상태들
         lotteryByOrganization,

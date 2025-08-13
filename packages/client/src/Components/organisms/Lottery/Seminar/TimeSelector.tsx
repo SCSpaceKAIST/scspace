@@ -13,11 +13,9 @@ import {
     StackSeparator,
     CloseButton,
     Wrap,
-    Tag,
     Badge,
     Stack,
     Flex,
-    IconButton,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { TimeSlot } from "./TimeSlot";
@@ -28,6 +26,7 @@ import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import { useDate } from "@scspace-client/Hooks/utils";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
+import AlertBtn from "@scspace-client/Components/atoms/AlertBtn";
 
 export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
     orgId: number;
@@ -44,7 +43,8 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
         activeLotteryInfo: {
             data: activeLotteryInfo,
         },
-        drawSeminarLottery
+        drawSeminarLottery,
+        applySeminarLottery,
     } = useSeminarLotteryInfoAPI();
 
     if (activeLotteryInfo && (activeLotteryInfo.length === 0 || activeLotteryInfo[0].applied)) {
@@ -369,26 +369,60 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
                         ))}
                     </Grid>
                 </Box>
-                {isAdmin && (
-                    <Button width={"full"} colorPalette={"blue"} onClick={() => {
-                        drawSeminarLottery({}, {
-                            onSuccess: () => {
-                                toaster.success({
-                                    title: "Successfully drawn seminar lottery",
-                                    description: "The seminar lottery has been drawn successfully.",
+                {isAdmin && activeLotteryInfo && (
+                    <Stack>
+                        <Button width={"full"} colorPalette={"blue"} onClick={() => {
+                            drawSeminarLottery({}, {
+                                onSuccess: () => {
+                                    toaster.success({
+                                        title: "Successfully drawn seminar lottery",
+                                        description: "The seminar lottery has been drawn successfully.",
+                                    });
+                                },
+                                onError: (error) => {
+                                    toaster.error({
+                                        title: "Failed to draw seminar lottery",
+                                        description: error.message || "Failed to draw seminar lottery.",
+                                    });
+                                },
+                                onSettled: refetchAll
+                            })
+                        }}>
+                            추첨 저장하기
+                        </Button>
+                        <AlertBtn
+                            onClick={() => {
+                                applySeminarLottery({}, {
+                                    onSuccess: () => {
+                                        toaster.success({
+                                            title: "세미나 추첨 반영 완료",
+                                            description: "세미나 추첨 반영이 완료되었습니다.",
+                                        });
+                                        refetchAll();
+                                    },
+                                    onError: (error) => {
+                                        toaster.error({
+                                            title: "세미나 추첨 반영 실패",
+                                            description: error.message || "세미나 추첨 반영에 실패했습니다.",
+                                        });
+                                    },
                                 });
-                            },
-                            onError: (error) => {
-                                toaster.error({
-                                    title: "Failed to draw seminar lottery",
-                                    description: error.message || "Failed to draw seminar lottery.",
-                                });
-                            },
-                            onSettled: refetchAll
-                        })
-                    }}>
-                        추첨 저장하기
-                    </Button>
+                            }}
+                            dialogTitle="세미나실 정기예약 추첨 반영"
+                            dialogBody={(<>
+                                <Text>
+                                    세미나실 정기예약 추첨 정보를 반영하시겠습니까?
+                                </Text>
+                                <Text color={"red"} fontWeight="semibold">
+                                    이 작업은 되돌릴 수 없습니다.
+                                </Text>
+                            </>)}
+                        >
+                            <Button size={"xl"} colorPalette="blue" disabled={activeLotteryInfo[0].applied} variant={"outline"}>
+                                Apply
+                            </Button>
+                        </AlertBtn>
+                    </Stack>
                 )}
             </Stack>
         </>

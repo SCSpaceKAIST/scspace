@@ -1,11 +1,9 @@
 "use client"
 
-import { Button, Center, Grid, GridItem, Stack, Text } from "@chakra-ui/react";
+import { Center, Grid, GridItem, Stack, Text } from "@chakra-ui/react";
 import LoadingComponent, { SmallLoading } from "@scspace-client/Components/atoms/Loading";
-import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import SelectComponent from "@scspace-client/Components/molecules/forms/Select";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
-import SeminarLotteryNotice from "@scspace-client/Components/organisms/Lottery/Seminar/SeminarLotteryNotice";
 import { TimeSelector } from "@scspace-client/Components/organisms/Lottery/Seminar/TimeSelector";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
@@ -15,14 +13,12 @@ import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 import { ISpace } from "@scspace-depot/types/space";
 import { useEffect, useState } from "react";
 
-export default function SeminarLottery() {
+export default function SeminarLotteryAdmin() {
     const { needAdmin } = useAuth();
     needAdmin();
 
     const { spaces, isLoading: spaceLoading } = useAllSpace();
     const { data: verifiedOrganizations, isLoading: orgLoading } = useOrganizationAPI().verifiedOrganizations;
-
-    const drawSeminarLottery = useSeminarLotteryInfoAPI().drawSeminarLottery;
 
     const seminarRoom: ISpace[] = spaces?.filter(space =>
         space.spaceType === SpaceTypeEnum.SEMINAR

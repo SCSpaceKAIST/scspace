@@ -22,7 +22,6 @@ export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, ref
         createLotteryInfo,
         deleteLotteryInfo,
         updateLotteryInfo,
-        applySeminarLottery,
         activeLotteryInfo: {
             data: activeLotteryInfo
         }
@@ -146,41 +145,6 @@ export default function SeminarLotteryInfoDetailModal({ info, open, setOpen, ref
                             </Card.Body>
                         </Card.Root>
                     </Wrap>
-                    {activeLotteryInfo && activeLotteryInfo.length > 0 && activeLotteryInfo[0].id === info?.id && (
-                        <AlertBtn
-                            onClick={() => {
-                                applySeminarLottery({}, {
-                                    onSuccess: () => {
-                                        toaster.success({
-                                            title: "세미나 추첨 반영 완료",
-                                            description: "세미나 추첨 반영이 완료되었습니다.",
-                                        });
-                                        refetch();
-                                        setOpen(false);
-                                    },
-                                    onError: (error) => {
-                                        toaster.error({
-                                            title: "세미나 추첨 반영 실패",
-                                            description: error.message || "세미나 추첨 반영에 실패했습니다.",
-                                        });
-                                    },
-                                });
-                            }}
-                            dialogTitle="세미나실 정기예약 추첨 반영"
-                            dialogBody={(<>
-                                <Text>
-                                    세미나실 정기예약 추첨 정보를 반영하시겠습니까?
-                                </Text>
-                                <Text color={"red"} fontWeight="semibold">
-                                    이 작업은 되돌릴 수 없습니다.
-                                </Text>
-                            </>)}
-                        >
-                            <Button size={"xl"} colorPalette="blue" disabled={info.applied} variant={"outline"}>
-                                {info.applied ? "Already Applied" : "Apply"}
-                            </Button>
-                        </AlertBtn>
-                    )}
                 </VStack>
             </Dialog.Body>
             <Dialog.Footer>

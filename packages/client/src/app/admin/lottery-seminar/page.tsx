@@ -1,5 +1,5 @@
 import PageTemplete from "@scspace-client/Components/molecules/page/PageTemplete";
-import ManageLottery from "@scspace-client/Components/pages/Administration/Lottery";
+import ManageLottery from "@scspace-client/Components/pages/Administration/Lottery/Seminar";
 
 export default function LotteryPage() {
     return (

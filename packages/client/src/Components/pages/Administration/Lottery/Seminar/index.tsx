@@ -1,12 +1,13 @@
 import { Tabs } from "@chakra-ui/react";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
+import SeminarLotteryAdmin from "@scspace-client/Components/organisms/Lottery/Seminar/SeminarLotteryAdmin";
 import SeminarLotteryInfo from "@scspace-client/Components/organisms/Lottery/Seminar/SeminarLotteryInfo";
 import React from "react";
 
 export default function ManageLottery() {
     const tabList: { [key: string]: React.ReactNode } = {
         "세미나실 정기예약 추첨 날짜": <SeminarLotteryInfo />,
-        "세미나실 정기예약 추첨 결과 변경": <p>Under Development</p>,
+        "세미나실 정기예약 추첨 결과 변경": <SeminarLotteryAdmin />,
     };
 
     return (

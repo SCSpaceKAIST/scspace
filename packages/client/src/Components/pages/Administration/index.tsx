@@ -4,7 +4,7 @@ import React from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import PageSelector, { IPage } from "../../molecules/page/PageSelector";
 import ManageUser from "./ManageUser";
-import LotteryManagement from "./Lottery";
+import LotteryManagement from "./Lottery/Seminar";
 
 export default function Administration() {
     const { needAdmin } = useAuth();
