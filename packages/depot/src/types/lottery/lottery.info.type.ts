@@ -12,4 +12,4 @@ export type ILotteryInfoCreate = Omit<
     "id" | "applied"
 >;
 
-export type ILotteryInfoUpdate = Partial<ILotteryInfoCreate>;
+export type ILotteryInfoUpdate = Partial<Omit<ILotteryInfo, "id">>;

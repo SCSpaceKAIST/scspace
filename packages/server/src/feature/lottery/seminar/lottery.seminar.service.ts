@@ -291,56 +291,81 @@ export class LotterySeminarService {
 
         const verifiedOrganizations = await this.organizationPublicService.fetchVerified();
 
-        for (const org of verifiedOrganizations) {
-            const drawnLotteries = await this.lotterySeminarRepository.fetch({
-                organizationId: org.id,
-                infoId: activeLottery[0].id,
-                lotteryWin: 1
-            });
+        const seminarRooms = await this.spacePublicService.fetchAllBySpaceType(SpaceTypeEnum.SEMINAR);
+        for (const space of seminarRooms) {
+            for (const org of verifiedOrganizations) {
+                const drawnLotteries = await this.lotterySeminarRepository.fetch({
+                    organizationId: org.id,
+                    spaceId: space.id,
+                    infoId: activeLottery[0].id,
+                    lotteryWin: 1
+                });
 
-            if (!drawnLotteries || drawnLotteries.length === 0) continue;
+                if (!drawnLotteries || drawnLotteries.length === 0) continue;
 
-            const times: { timeFrom: number; timeTo: number }[] = [];
-            let week = 0;
-            const MAX_LOOP = 100;
-            while (week < MAX_LOOP) {
-                let periodEnd = false;
-                for (const lottery of drawnLotteries) {
-                    const day = Math.floor(lottery.time / 24);
-                    const hour = lottery.time % 24;
+                const time: { timeFrom: number; timeTo: number }[] = [];
+                let week = 0;
+                const MAX_LOOP = 100;
+                while (week < MAX_LOOP) {
+                    let periodEnd = false;
+                    for (const lottery of drawnLotteries) {
+                        const day = Math.floor(lottery.time / 24);
+                        const hour = lottery.time % 24;
 
-                    if (dateStart.getDay() > day && week === 0) {
-                        continue;
+                        if (dateStart.getDay() > day && week === 0) {
+                            continue;
+                        }
+
+                        const timeFrom = getTime(new Date(
+                            dateStart.getFullYear(),
+                            dateStart.getMonth(),
+                            dateStart.getDate() - dateStart.getDay() + day + 7 * week,
+                            hour,
+                        ));
+
+                        const timeTo = getTime(new Date(
+                            dateStart.getFullYear(),
+                            dateStart.getMonth(),
+                            dateStart.getDate() - dateStart.getDay() + day + 7 * week,
+                            hour + 1,
+                        ));
+
+                        if (timeTo > activeLottery[0].timeEnd + 1) {
+                            periodEnd = true;
+                            break;
+                        }
+
+                        time.push({ timeFrom, timeTo });
                     }
-
-                    const timeFrom = getTime(new Date(
-                        dateStart.getFullYear(),
-                        dateStart.getMonth(),
-                        dateStart.getDate() - dateStart.getDay() + day + 7 * week,
-                        hour,
-                    ));
-
-                    const timeTo = getTime(new Date(
-                        dateStart.getFullYear(),
-                        dateStart.getMonth(),
-                        dateStart.getDate() - dateStart.getDay() + day + 7 * week,
-                        hour + 1,
-                    ));
-
-                    if (timeTo > activeLottery[0].timeEnd + 1) {
-                        periodEnd = true;
-                        break;
-                    }
-
-                    times.push({ timeFrom, timeTo });
+                    if (periodEnd) break;
+                    week++;
                 }
-                if (periodEnd) break;
-                week++;
-            }
-            if (times.length > 0) {
-                Logger.log(`Applying seminar lottery for organization ${org.name} with times: ${JSON.stringify(times)}`);
+                if (time.length === 0) continue;
+
+                this.reservationPublicService.postMultipleReservation({
+                    title: `세미나실 정기예약 [${org.name}]`,
+                    spaceId: space.id,
+                    userId: 0,
+                    organizationId: org.id,
+                    time,
+                    content: {
+                        description: `세미나실 정기예약 [${org.name}]`,
+                        innerParticipantNumber: 20,
+                        outerParticipantNumber: 0,
+                        food: "",
+                        desk: 10,
+                        chair: 10,
+                        busking: false,
+                        worker: 0,
+                    }
+                })
             }
         }
+
+        // await this.lotterySeminarInfoRepository.update({
+        //     id: activeLottery[0].id,
+        //     updateLotteryInfo: { applied: true }
+        // })
 
         return true;
     }
