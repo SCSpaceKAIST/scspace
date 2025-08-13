@@ -63,15 +63,11 @@
       <strong>상세 정보 / Detailed Information</strong>
       <ul>
         <li>
-          <strong>예약명:</strong>
+          <strong>예약명 / Title:</strong>
           <span>{{reservations.title}}</span>
         </li>
         <li>
-          <strong>예약자 (담당 공간위원):</strong> <!-- 이 ㅅ끼 담당자 아님? 예약은 공간위원만 할수있다아닌가 -->
-          <span>{{reservations.user.nameKr}}</span> <!-- 일단 학번은 빼 둠 -->
-        </li>
-        <li>
-          <strong>소속 조직:</strong>
+          <strong>조직명 / Organization:</strong>
           <span>
             {{#if (eq reservations.organization.name "individual")}} <!-- 사실 이것도 필요없어보이긴함 -->
               개인 / Individual
@@ -81,12 +77,12 @@
           </span>
         </li>
         <li>
-          <strong>예약 공간:</strong>
+          <strong>예약 공간 / Space:</strong>
           <span>{{reservations.space.nameKr}} / {{reservations.space.nameEn}}</span>
         </li>
         <li>
-          <strong>총 예약 건수:</strong>
-          <span>{{result.length}}건</span>
+          <strong>총 예약 건수 / # :</strong>
+          <span>{{result.length}}</span>
         </li>
       </ul>
     </div>

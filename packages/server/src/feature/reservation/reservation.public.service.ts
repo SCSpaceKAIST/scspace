@@ -163,7 +163,7 @@ export class ReservationPublicService {
     };
 
     const mailResult = {
-      result : conv,
+      data : conv,
       ...stats
     }
 
