@@ -310,14 +310,16 @@ export class LotterySeminarService {
                     const hour = lottery.time % 24;
 
                     const timeFrom = getTime(new Date(
-                        dateStart.getTime() +
-                        (new Date(0, 0, 0, date, hour).getTime()) +
-                        (new Date(0, 0, 0, 7 * week).getTime())
+                        dateStart.getFullYear(),
+                        dateStart.getMonth(),
+                        dateStart.getDate() + date + 7 * week,
+                        hour,
                     ));
                     const timeTo = getTime(new Date(
-                        dateStart.getTime() +
-                        (new Date(0, 0, 0, date, hour + 1).getTime()) +
-                        (new Date(0, 0, 0, 7 * week).getTime())
+                        dateStart.getFullYear(),
+                        dateStart.getMonth(),
+                        dateStart.getDate() + date + 7 * week,
+                        hour + 1,
                     ));
 
                     if (timeTo > activeLottery[0].timeEnd + 1) {
