@@ -41,7 +41,7 @@ export class MailService {
     };
 
     return this.sendMail({
-      to: ['jhlee012@kaist.ac.kr', 'scspace.kaist@gmail.com'],
+      to : 'jhlee012@kaist.ac.kr',
       subject: `[SCSpace-DEV] Error Report - ${error.name}`,
       template: 'errorLog',
       context: {

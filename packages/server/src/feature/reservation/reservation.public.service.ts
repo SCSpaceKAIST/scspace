@@ -143,32 +143,29 @@ export class ReservationPublicService {
       }
     }
 
-    //meta.result ~
-    const convertedResult = () => {
-      //for convertedResult
-      const resultItems = Object.values(result);
+    //result ~
+    const resultItems = Object.values(result);
 
-      const successCount = resultItems.filter((item) => item.success).length;
-      const failCount = result.length - successCount;
+    const successCount = resultItems.filter((item) => item.success).length;
+    const failCount = result.length - successCount;
 
-      //main
-      const conv = result.map((item) => ({
-        timeFrom: getString(item.timeFrom),
-        timeTo: getString(item.timeTo),
-        success: item.success,
-      }));
+    //main
+    const conv = result.map((item) => ({
+      timeFrom: getString(item.timeFrom),
+      timeTo: getString(item.timeTo),
+      success: item.success,
+    }));
 
-      const stats = {
-        length: result.length,
-        successCount: successCount,
-        failCount: failCount,
-      };
-
-      return {
-        data: conv,
-        ...stats,
-      };
+    const stats = {
+      length: result.length,
+      successCount: successCount,
+      failCount: failCount,
     };
+
+    const mailResult = {
+      result : conv,
+      ...stats
+    }
 
     //for mailer Context
     const reservations: IReservationMultipleCreateResurt = {
@@ -202,7 +199,7 @@ export class ReservationPublicService {
             organization,
           },
           meta,
-          result: convertedResult,
+          result: mailResult,
         },
       });
     } catch (error) {
