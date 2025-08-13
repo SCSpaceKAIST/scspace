@@ -6,26 +6,25 @@ import {
   IReservation,
   IReservationCreateMultiple,
   IReservationMultipleCreateResurt,
-  IReservationSimple,
 } from '@scspace-depot/types/reservation';
 import { IOrganization } from '@scspace-depot/types/organization';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { ReservationRepository } from './reservation.repository';
 import { checkContainAllId, takeAll } from '@scspace-server/common/utils';
-import { UserPublicService } from '../user/user.public.service';
-import { SpacePublicService } from '../space/space.public.service';
 import { ReservationStateEnum } from '@scspace-depot/enums/reservation.enum';
-import { ReservationPublicService } from './reservation.public.service';
 import { IUser } from '@scspace-depot/types/user';
 import { ISpace } from '@scspace-depot/types/space';
-import { OrganizationPublicService } from '../organization/organization.public.service';
-import { MReservation } from './reservation.model';
+import { MReservation } from '@scspace-server/feature/reservation/reservation.model';
 import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { getNow } from '@scspace-server/common/utils';
 import { MailService } from '@scspace-server/tools/mailer/mail.service';
 import { ReservationMeta } from '@scspace-depot/enums/mail.enum';
 import { getString } from '@scspace-server/common/utils'
+import { ReservationRepository } from '@scspace-server/feature/reservation/reservation.repository';
+import { ReservationPublicService } from '@scspace-server/feature/reservation/reservation.public.service';
+import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
+import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
+import { OrganizationPublicService } from '@scspace-server/feature/organization/organization.public.service';
 
 @Injectable()
 export class ReservationService {
