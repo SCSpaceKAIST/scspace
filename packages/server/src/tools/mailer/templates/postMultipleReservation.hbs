@@ -39,7 +39,7 @@
       margin: 20px 0;
     }
 
-    .reservation-title { font-size: 18px; font-weight: 600; margin: 5px 0; }
+    .reservation-title { font-size: 18px; font-weight: 600; margin: 5px 0; color: {{meta.color}}; }
 
     .informations {
       margin: 20px 0;
@@ -90,7 +90,7 @@
 <body>
 <div class='container'>
   <!-- 헤더: successCount 0이면 붉은색 -->
-  <div class='header' style='background:{{#if (eq result.successCount 0)}}#dc3545{{else}}{{meta.color}}{{/if}}'>
+  <div class='header' style='background:{{#if (eq result.successCount 0)}}#eb4034{{else}}{{meta.color}}{{/if}}'>
     <h1>{{meta.emoji}} {{meta.header.kr}}</h1>
     <h2>{{meta.header.en}}</h2>
     <p style='margin-top:18px'>
@@ -101,7 +101,7 @@
 
   <div class='content'>
     <!-- 예약 정보: successCount 0이면 붉은색 -->
-    <div class='reservation-info' style='border-left:4px solid {{#if (eq result.successCount 0)}}#dc3545{{else}}{{meta.color}}{{/if}}'>
+    <div class='reservation-info' style='border-left:4px solid {{#if (eq result.successCount 0)}}#eb4034{{else}}{{meta.color}}{{/if}}'>
       <strong>변동 유형 / Action Type</strong>
       <div class='reservation-title'>{{meta.contentUpperDesc.kr}} / {{meta.contentUpperDesc.en}}</div>
       <p style='margin:8px 0;color:#6c757d;'>
@@ -114,11 +114,11 @@
       <strong>상세 정보 / Detailed Information</strong>
       <ul>
         <li>
-          <strong>예약명 / Title:</strong>
-          <span>{{reservations.title}}</span>
+          <strong>예약명 / Title: </strong>
+          <span> {{reservations.title}}</span>
         </li>
         <li>
-          <strong>조직명 / Organization:</strong>
+          <strong>조직명 / Organization:  </strong>
           <span>
             {{#if (eq reservations.organization.name "individual")}}
               개인 / Individual
@@ -128,12 +128,12 @@
           </span>
         </li>
         <li>
-          <strong>예약 공간 / Space:</strong>
-          <span>{{reservations.space.nameKr}} / {{reservations.space.nameEn}}</span>
+          <strong>예약 공간 / Space: </strong>
+          <span> {{reservations.space.nameKr}} / {{reservations.space.nameEn}}</span>
         </li>
         <li>
-          <strong>총 예약 건수 / # :</strong>
-          <span>{{result.length}}</span>
+          <strong>총 예약 건수 / # : </strong>
+          <span> {{result.length}}</span>
         </li>
       </ul>
     </div>
@@ -144,9 +144,9 @@
       <ul>
         {{#each result.data}}
           <li class="{{#if this.success}}success{{else}}fail{{/if}}">
-            <strong>시간대:</strong>
+            <strong>시간대: </strong>
             <span>
-              {{this.timeFrom}} ~ {{this.timeTo}} KST &nbsp;—&nbsp;
+               {{this.timeFrom}} ~ {{this.timeTo}} KST &nbsp;—&nbsp;
               {{#if this.success}}
                 <span class="result-success">성공 / Success</span>
               {{else}}
