@@ -291,44 +291,49 @@ export class LotterySeminarService {
 
         const verifiedOrganizations = await this.organizationPublicService.fetchVerified();
 
-        verifiedOrganizations.forEach(async (org) => {
+        for (const org of verifiedOrganizations) {
             const drawnLotteries = await this.lotterySeminarRepository.fetch({
                 organizationId: org.id,
                 infoId: activeLottery[0].id,
                 lotteryWin: 1
             });
 
+            if (!drawnLotteries || drawnLotteries.length === 0) continue;
+
             const times: { timeFrom: number; timeTo: number }[] = [];
-            let cur = 0;
-            try {
-                while (true) {
-                    drawnLotteries.forEach(lottery => {
-                        const date = Math.floor(lottery.time / 24);
-                        const hour = lottery.time % 24;
+            let week = 0;
+            const MAX_LOOP = 100;
+            while (week < MAX_LOOP) {
+                let periodEnd = false;
+                for (const lottery of drawnLotteries) {
+                    const date = Math.floor(lottery.time / 24);
+                    const hour = lottery.time % 24;
 
-                        const timeFrom = getTime(new Date(
-                            dateStart.getTime() +
-                            (new Date(0, 0, 0, date, hour).getTime()) +
-                            (new Date(0, 0, 0, 7 * cur).getTime())
-                        ));
-                        const timeTo = getTime(new Date(
-                            dateStart.getTime() +
-                            (new Date(0, 0, 0, date, hour + 1).getTime()) +
-                            (new Date(0, 0, 0, 7 * cur).getTime())
-                        ));
+                    const timeFrom = getTime(new Date(
+                        dateStart.getTime() +
+                        (new Date(0, 0, 0, date, hour).getTime()) +
+                        (new Date(0, 0, 0, 7 * week).getTime())
+                    ));
+                    const timeTo = getTime(new Date(
+                        dateStart.getTime() +
+                        (new Date(0, 0, 0, date, hour + 1).getTime()) +
+                        (new Date(0, 0, 0, 7 * week).getTime())
+                    ));
 
-                        if (timeTo > activeLottery[0].timeEnd + 1) {
-                            throw new Error(`loop ended: ${JSON.stringify(times, null, 2)}`);
-                        }
+                    if (timeTo > activeLottery[0].timeEnd + 1) {
+                        periodEnd = true;
+                        break;
+                    }
 
-                        times.push({ timeFrom, timeTo });
-                    });
-                    cur++;
+                    times.push({ timeFrom, timeTo });
                 }
-            } catch (error) {
-                Logger.error("Error applying seminar lottery", error);
+                if (periodEnd) break;
+                week++;
             }
-        });
+            if (times.length > 0) {
+                Logger.log(`Applying seminar lottery for organization ${org.name} with times: ${JSON.stringify(times)}`);
+            }
+        }
 
         return true;
     }
