@@ -1,0 +1,150 @@
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from "@nestjs/common";
+import { LotteryPerformanceService } from "./lottery.performance.service";
+import { AdminGuard, DelegatorGuard } from "@scspace-server/feature/auth/jwt/jwt.guard";
+import { ILotteryInfo, ILotteryInfoCreate, ILotteryInfoUpdate } from "@scspace-depot/types/lottery/lottery.info.type";
+import { IPerformanceLottery, IPerformanceLotteryCreate } from "@scspace-depot/types/lottery/lottery.performance.type";
+import { ISuccessResponse } from "@scspace-depot/types/common";
+
+@Controller('lottery/performance')
+export class LotteryPerformanceController {
+    constructor(
+        private readonly lotteryPerformanceService: LotteryPerformanceService,
+    ) { }
+
+    @Get("info")
+    async getInfo(): Promise<ILotteryInfo[]> {
+        // 모든 추첨 정보 조회 (시간 순 자동 정렬)
+        return await this.lotteryPerformanceService.getAllPerformanceLotteryInfo();
+    }
+
+    @Get("info/active")
+    async getActiveInfo(): Promise<ILotteryInfo[]> {
+        // 현재 진행 중인 추첨 정보 조회 (시간 순 정렬)
+        return await this.lotteryPerformanceService.getActivePerformanceLotteryInfo();
+    }
+
+    @Get("info/upcoming")
+    async getUpcomingInfo(): Promise<ILotteryInfo[]> {
+        // 예정된 추첨 정보 조회 (시간 순 정렬)
+        return await this.lotteryPerformanceService.getUpcomingPerformanceLotteryInfo();
+    }
+
+    @UseGuards(AdminGuard)
+    @Post("info")
+    async postInfo(
+        @Body() lotteryInfo: ILotteryInfoCreate
+    ): Promise<ILotteryInfo> {
+        // 새 추첨 정보 생성 (시간 겹침 검증 + 자동 정렬)
+        return await this.lotteryPerformanceService.postPerformanceLotteryInfo({ lotteryInfo });
+    }
+
+    @UseGuards(AdminGuard)
+    @Put("info/:id")
+    async updateInfo(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() updateLotteryInfo: ILotteryInfoUpdate
+    ): Promise<ILotteryInfo> {
+        // 추첨 정보 업데이트 (시간 겹침 검증 + 자동 정렬)
+        return await this.lotteryPerformanceService.updatePerformanceLotteryInfo({
+            id,
+            updateLotteryInfo
+        });
+    }
+
+    @UseGuards(AdminGuard)
+    @Delete("info/:id")
+    async deleteInfo(
+        @Param('id', ParseIntPipe) id: number
+    ): Promise<ISuccessResponse> {
+        // 추첨 정보 삭제
+        return {
+            success: await this.lotteryPerformanceService.deletePerformanceLotteryInfo(id)
+        };
+    }
+
+    @Get()
+    async getPerformanceLotteryByOrganization(
+        @Query('organizationId', ParseIntPipe) organizationId: number,
+        @Query('spaceId', ParseIntPipe) spaceId: number,
+        @Query('infoId', ParseIntPipe) infoId: number
+    ): Promise<IPerformanceLottery[]> {
+        // Implementation for fetching performance lottery by organization
+        return await this.lotteryPerformanceService.getPerformanceLotteryByOrganization({
+            organizationId,
+            spaceId,
+            infoId
+        });
+    }
+
+    @Get("date")
+    async getPerformanceLotteryByDate(
+        @Query('date', ParseIntPipe) date: number,
+        @Query('spaceId', ParseIntPipe) spaceId: number,
+        @Query('infoId', ParseIntPipe) infoId: number
+    ): Promise<IPerformanceLottery[]> {
+        // Implementation for fetching performance lottery by date
+        return await this.lotteryPerformanceService.getPerformanceLotteryByDate({
+            date,
+            spaceId,
+            infoId
+        });
+    }
+
+    @Get("dateslot-counts")
+    async getDateSlotCounts(
+        @Query('spaceId', ParseIntPipe) spaceId: number,
+        @Query('infoId', ParseIntPipe) infoId: number
+    ): Promise<{ date: number; count: number }[]> {
+        // 모든 날짜에 대해 신청한 조직 수 조회
+        return await this.lotteryPerformanceService.getPerformanceLotteryDateSlotCounts({ spaceId, infoId });
+    }
+
+    @Get("drawn")
+    async getDrawnPerformanceLottery(
+        @Query('spaceId', ParseIntPipe) spaceId: number,
+        @Query('infoId', ParseIntPipe) infoId: number
+    ): Promise<IPerformanceLottery[]> {
+        // 당첨된 공연 추첨 조회
+        return await this.lotteryPerformanceService.getDrawnPerformanceLottery({ spaceId, infoId });
+    }
+
+    @UseGuards(DelegatorGuard)
+    @Post()
+    async postPerformanceLottery(
+        @Body() lottery: IPerformanceLotteryCreate
+    ): Promise<IPerformanceLottery> {
+        // Implementation for posting new performance lottery
+        return await this.lotteryPerformanceService.postPerformanceLottery({ lottery });
+    }
+
+    @UseGuards(DelegatorGuard)
+    @Delete(":id")
+    async deletePerformanceLottery(
+        @Param('id', ParseIntPipe) id: number
+    ): Promise<ISuccessResponse> {
+        // Implementation for deleting existing performance lottery
+        return {
+            success: await this.lotteryPerformanceService.deletePerformanceLottery(id)
+        }
+    }
+
+    @UseGuards(AdminGuard)
+    @Put("draw/:id")
+    async drawPerformanceLottery(
+        @Param('id', ParseIntPipe) id: number
+    ): Promise<ISuccessResponse> {
+        // 수동으로 공연 추첨 당첨 처리
+        await this.lotteryPerformanceService.drawPerformanceLottery(id);
+        return { success: true };
+    }
+
+    @UseGuards(AdminGuard)
+    @Put("exchange")
+    async exchangePerformanceLottery(
+        @Body() { fromId, toId }: { fromId: number; toId: number }
+    ): Promise<ISuccessResponse> {
+        // 공연 추첨 교환
+        await this.lotteryPerformanceService.exchangePerformanceLottery([fromId, toId]);
+        return { success: true };
+    }
+}

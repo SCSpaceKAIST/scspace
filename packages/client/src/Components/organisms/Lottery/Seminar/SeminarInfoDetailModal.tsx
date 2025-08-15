@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, Card, Dialog, Stack, Text, VStack, Wrap } from "@chakra-ui/react";
+import { Button, Card, Dialog, Stack, VStack, Wrap } from "@chakra-ui/react";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";

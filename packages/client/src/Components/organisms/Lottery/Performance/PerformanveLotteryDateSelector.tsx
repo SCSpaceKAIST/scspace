@@ -19,7 +19,6 @@ import {
     Alert,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
-import { TimeSlot } from "./TimeSlot";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useSeminarLotteryAPI, useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import { useLinkPush } from "@scspace-client/Hooks/api";
@@ -28,8 +27,9 @@ import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import { useDate } from "@scspace-client/Hooks/utils";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
 import AlertBtn from "@scspace-client/Components/atoms/AlertBtn";
+import { DateSlot } from "./PerformanceLotteryDateSlot";
 
-export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
+export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
     orgId: number;
     spaceId: number;
     editable: boolean;
@@ -361,7 +361,7 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
 
                                 {/* 각 요일별 시간 슬롯 */}
                                 {weekDays.map((day) => (
-                                    <TimeSlot
+                                    <DateSlot
                                         key={`${day.key}-${hour}`}
                                         day={day.key}
                                         hour={hour}

@@ -7,3 +7,16 @@ export interface IPerformanceLottery {
     date: number;
     lotteryWin: number; // 0: not winner, 1: winner
 }
+
+export type IPerformanceLotteryCreate = Omit<
+    IPerformanceLottery,
+    "id" | "lotteryWin"
+>;
+
+export type IPerformanceLotteryUpdate = {
+    lotteryWin: number;
+}
+
+export type IPerformanceLotteryUpdateAdmin = Partial<IPerformanceLotteryCreate & IPerformanceLotteryUpdate>;
+
+export type IPerformanceLotteryFetch = Partial<Omit<IPerformanceLottery, "reservationId">>;

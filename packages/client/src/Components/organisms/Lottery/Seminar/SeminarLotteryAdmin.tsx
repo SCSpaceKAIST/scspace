@@ -4,7 +4,7 @@ import { Center, Grid, GridItem, Stack, Text } from "@chakra-ui/react";
 import LoadingComponent, { SmallLoading } from "@scspace-client/Components/atoms/Loading";
 import SelectComponent from "@scspace-client/Components/molecules/forms/Select";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
-import { TimeSelector } from "@scspace-client/Components/organisms/Lottery/Seminar/TimeSelector";
+import { TimeSelector } from "@scspace-client/Components/organisms/Lottery/Seminar/SeminarLotteryTimeSelector";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import { useAllSpace } from "@scspace-client/Hooks/space";

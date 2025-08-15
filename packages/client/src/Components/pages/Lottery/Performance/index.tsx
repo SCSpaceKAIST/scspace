@@ -5,6 +5,7 @@ import LoadingComponent, { SmallLoading } from "@scspace-client/Components/atoms
 import SelectComponent from "@scspace-client/Components/molecules/forms/Select";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import PerformanceLotteryNotice from "@scspace-client/Components/organisms/Lottery/Performance/PerformanceLotteryNotice";
+import { DateSelector } from "@scspace-client/Components/organisms/Lottery/Performance/PerformanveLotteryDateSelector";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import { useAllSpace } from "@scspace-client/Hooks/space";
@@ -80,8 +81,11 @@ export default function PerformanceLottery() {
                         </GridItem>
 
                         <GridItem colSpan={6}>
-                            {/* TODO: PerformanceTimeSelector 컴포넌트 구현 예정 */}
-                            <div>Performance Time Selector will be implemented here</div>
+                            <DateSelector
+                                orgId={orgId}
+                                spaceId={spaceId}
+                                editable={verifiedOrganizations?.find(v => v.id === orgId)?.delegatorId === userInfo?.id}
+                            />
                         </GridItem>
                     </Grid>
                 </Stack>

@@ -5,7 +5,7 @@ import LoadingComponent, { SmallLoading } from "@scspace-client/Components/atoms
 import SelectComponent from "@scspace-client/Components/molecules/forms/Select";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import SeminarLotteryNotice from "@scspace-client/Components/organisms/Lottery/Seminar/SeminarLotteryNotice";
-import { TimeSelector } from "@scspace-client/Components/organisms/Lottery/Seminar/TimeSelector";
+import { TimeSelector } from "@scspace-client/Components/organisms/Lottery/Seminar/SeminarLotteryTimeSelector";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import { useAllSpace } from "@scspace-client/Hooks/space";
