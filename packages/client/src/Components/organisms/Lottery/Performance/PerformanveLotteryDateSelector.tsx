@@ -17,6 +17,8 @@ import {
     Stack,
     Flex,
     Alert,
+    ButtonGroup,
+    Group,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
@@ -286,23 +288,12 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                     width={"full"}
                 >
                     <Grid
-                        templateColumns={`60px repeat(${weekDays.length}, 1fr)`}
-                        templateRows={`40px repeat(${timeHours.length}, 1fr)`}
+                        templateColumns={`repeat(${weekDays.length}, 1fr)`}
+                        templateRows={`40px repeat(4, 1fr)`}
                         gap={0}
                         minW="600px"
                         width="100%"
                     >
-                        {/* 좌상단 빈 칸 */}
-                        <GridItem
-                            bg="gray.50"
-                            borderRightWidth="1px"
-                            borderBottomWidth="1px"
-                            borderColor="gray.200"
-                            zIndex={1}
-                            position={"sticky"}
-                            left={0}
-                        />
-
                         {/* 요일 헤더 */}
                         {weekDays.map((day) => (
                             <GridItem
@@ -324,11 +315,40 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                             </GridItem>
                         ))}
 
+                        {Array.from({ length: 25 }).map((_, i) => (
+                            <GridItem
+                                key={`date-${i}`}
+                                borderRightWidth="1px"
+                                borderBottomWidth="1px"
+                                borderColor="gray.200"
+                                height="fit-content"
+                            >
+                                <Stack p={1}>
+                                    <Text fontSize="sm" margin={0} padding={0}>
+                                        {i}
+                                    </Text>
+                                    <Stack gap={0}>
+                                        {[1, 2, 3].map((priority) => (
+                                            <DateSlot
+                                                key={`date-${i}-priority-${priority}`}
+                                                date={0}
+                                                isSelected={false}
+                                                onSelect={() => { }}
+                                                orgCount={0}
+                                                drawnOrgName={null}
+                                                isOrgRequested={false}
+                                                priority={priority}
+                                            />
+                                        ))}
+                                    </Stack>
+                                </Stack>
+                            </GridItem>
+                        ))}
+
                         {/* 시간 라벨 + 시간 슬롯들 */}
-                        {timeHours.map((hour, hourIndex) => (
+                        {/* {timeHours.map((hour, hourIndex) => (
                             // 각 시간대별로 행을 만듦
                             <>
-                                {/* 시간 라벨 (좌측) */}
                                 <GridItem
                                     key={`time-${hour}`}
                                     bg="gray.50"
@@ -356,7 +376,6 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                     </Center>
                                 </GridItem>
 
-                                {/* 각 요일별 시간 슬롯 */}
                                 {weekDays.map((day) => (
                                     <DateSlot
                                         key={`${day.key}-${hour}`}
@@ -389,7 +408,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                     />
                                 ))}
                             </>
-                        ))}
+                        ))} */}
                     </Grid>
                 </Box>
             )}

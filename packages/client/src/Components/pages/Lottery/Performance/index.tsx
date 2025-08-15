@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 
 export default function PerformanceLottery() {
     const { userInfo, needLogin } = useAuth();
-    needLogin();
+    // needLogin();
 
     const { spaces, isLoading: spaceLoading } = useAllSpace();
     const { data: verifiedOrganizations, isLoading: orgLoading } = useOrganizationAPI().verifiedOrganizations;
@@ -40,56 +40,56 @@ export default function PerformanceLottery() {
 
     return (
         <Scroll>
-            {(spaceLoading || orgLoading) ? (
+            {/* {(spaceLoading || orgLoading) ? (
                 <LoadingComponent />
-            ) : (
-                <Stack>
-                    <Grid
-                        templateColumns="repeat(6, 1fr)"
-                        gap={8}
-                        py={2}
-                    >
-                        <GridItem colSpan={6}>
-                            <PerformanceLotteryNotice />
-                        </GridItem>
-                        <GridItem colSpan={{ base: 6, md: 3 }}>
+            ) : ( */}
+            <Stack>
+                <Grid
+                    templateColumns="repeat(6, 1fr)"
+                    gap={8}
+                    py={2}
+                >
+                    <GridItem colSpan={6}>
+                        <PerformanceLotteryNotice />
+                    </GridItem>
+                    <GridItem colSpan={{ base: 6, md: 3 }}>
+                        <SelectComponent
+                            label="Mirae or Sumi Hall"
+                            optionList={performanceRoom.map(room => ({
+                                value: room.id.toString(),
+                                label: room.nameKr,
+                                description: room.nameEn,
+                            }))}
+                            onChange={e => {
+                                setSpaceId(parseInt(e.value));
+                            }}
+                        />
+                    </GridItem>
+                    <GridItem colSpan={{ base: 6, md: 3 }}>
+                        {verifiedOrganizations ? (
                             <SelectComponent
-                                label="Mirae or Sumi Hall"
-                                optionList={performanceRoom.map(room => ({
-                                    value: room.id.toString(),
-                                    label: room.nameKr,
-                                    description: room.nameEn,
+                                label="Verified Organization"
+                                optionList={verifiedOrganizations.map(org => ({
+                                    value: org.id.toString(),
+                                    label: org.name,
                                 }))}
                                 onChange={e => {
-                                    setSpaceId(parseInt(e.value));
+                                    setOrgId(parseInt(e.value));
                                 }}
                             />
-                        </GridItem>
-                        <GridItem colSpan={{ base: 6, md: 3 }}>
-                            {verifiedOrganizations ? (
-                                <SelectComponent
-                                    label="Verified Organization"
-                                    optionList={verifiedOrganizations.map(org => ({
-                                        value: org.id.toString(),
-                                        label: org.name,
-                                    }))}
-                                    onChange={e => {
-                                        setOrgId(parseInt(e.value));
-                                    }}
-                                />
-                            ) : (<SmallLoading />)}
-                        </GridItem>
+                        ) : (<SmallLoading />)}
+                    </GridItem>
 
-                        <GridItem colSpan={6}>
-                            <DateSelector
-                                orgId={orgId}
-                                spaceId={spaceId}
-                                editable={verifiedOrganizations?.find(v => v.id === orgId)?.delegatorId === userInfo?.id}
-                            />
-                        </GridItem>
-                    </Grid>
-                </Stack>
-            )}
+                    <GridItem colSpan={6}>
+                        <DateSelector
+                            orgId={orgId}
+                            spaceId={spaceId}
+                            editable={verifiedOrganizations?.find(v => v.id === orgId)?.delegatorId === userInfo?.id}
+                        />
+                    </GridItem>
+                </Grid>
+            </Stack>
+            {/* )} */}
         </Scroll>
     );
 }

@@ -48,7 +48,8 @@ export function useRedirects() {
                 href: "/lottery-performance",
                 label: "공연집중기간 추첨",
                 helperText: "Performance Intensive Period Lottery",
-                invisible: !isLogined, // TODO: performance lottery info API 연동 후 조건 수정 예정
+                // invisible: !isLogined, // TODO: performance lottery info API 연동 후 조건 수정 예정
+                invisible: true
             },
             {
                 href: "/browse",
