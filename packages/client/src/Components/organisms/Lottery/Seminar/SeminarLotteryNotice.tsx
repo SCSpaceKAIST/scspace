@@ -21,6 +21,10 @@ export default function SeminarLotteryNotice() {
                 content: "Organizations without group rooms have priority in the lottery.",
                 color: "blue"
             },
+            {
+                content: "Please ensure to specify whether your organization has a group room in My Page > My Organization before applying for the lottery.",
+                color: "red"
+            },
             { content: "The lottery will be automatically conducted every day at 6 PM during the lottery period, and the results will be notified via email." },
             { content: "The winning time slot displays the name of the winning organization, and you can select an organization to highlight only that organization's time slot." },
             {
@@ -45,6 +49,10 @@ export default function SeminarLotteryNotice() {
             {
                 content: "단체실이 없는 조직이 추첨에서 우선권을 가집니다.",
                 color: "blue"
+            },
+            {
+                content: "추첨을 신청하기 전에 반드시 마이페이지 > 내 조직 에서 단체실 소유 여부를 지정하시길 바랍니다.",
+                color: "red"
             },
             { content: "추첨은 추첨 기간중 매일 오후 6시에 자동으로 진행되며, 결과는 이메일로 통지됩니다." },
             { content: "당첨된 시간대에는 당첨된 조직의 이름이 표시되며, 조직을 선택하면 해당 조직의 시간대만 강조 표시됩니다." },

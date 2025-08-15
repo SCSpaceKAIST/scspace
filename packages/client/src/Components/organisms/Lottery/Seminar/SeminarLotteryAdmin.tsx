@@ -11,6 +11,7 @@ import { useAllSpace } from "@scspace-client/Hooks/space";
 import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 import { ISpace } from "@scspace-depot/types/space";
 import { useEffect, useState } from "react";
+import SeminarLotteryNotice from "./SeminarLotteryNotice";
 
 export default function SeminarLotteryAdmin() {
     const { needAdmin } = useAuth();
@@ -55,6 +56,10 @@ export default function SeminarLotteryAdmin() {
                                 </Text>
                             </Center>
                         </GridItem>
+                        <GridItem colSpan={6}>
+                            <SeminarLotteryNotice />
+                        </GridItem>
+
                         <GridItem colSpan={{ base: 6, md: 3 }}>
                             <SelectComponent
                                 label="Seminar Room"
