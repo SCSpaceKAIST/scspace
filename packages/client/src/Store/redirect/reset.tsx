@@ -45,6 +45,12 @@ export function useRedirects() {
                 invisible: !isLogined || !activeLotteryInfo || activeLotteryInfo.length === 0 || activeLotteryInfo[0].applied,
             },
             {
+                href: "/lottery-performance",
+                label: "공연집중기간 추첨",
+                helperText: "Performance Intensive Period Lottery",
+                invisible: !isLogined, // TODO: performance lottery info API 연동 후 조건 수정 예정
+            },
+            {
                 href: "/browse",
                 label: "찾아보기",
                 helperText: "Browse",
@@ -160,6 +166,11 @@ export function useRedirects() {
                         href: "/admin/lottery-seminar",
                         label: "세미나실 정기예약 추첨 관리",
                         helperText: "Seminar Lottery Management"
+                    },
+                    {
+                        href: "/admin/lottery-performance",
+                        label: "공연집중기간 추첨 관리",
+                        helperText: "Performance Lottery Management"
                     }
                 ]
             },
