@@ -20,7 +20,6 @@ import {
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
-import { useSeminarLotteryAPI, useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
@@ -40,32 +39,24 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
     const { linkPush } = useLinkPush();
     const { getTime } = useDate();
 
-    const {
-        activeLotteryInfo: {
-            data: activeLotteryInfo,
-            refetch: refetchActiveLotteryInfo
-        },
-        drawSeminarLottery,
-        applySeminarLottery,
-    } = useSeminarLotteryInfoAPI();
 
-    if (!isAdmin && activeLotteryInfo && (activeLotteryInfo.length === 0 || activeLotteryInfo[0].applied)) {
-        alert("It is NOT a seminar room lottery period");
-        linkPush("/");
-    }
+    // if (!isAdmin && activeLotteryInfo && (activeLotteryInfo.length === 0 || activeLotteryInfo[0].applied)) {
+    //     alert("It is NOT a seminar room lottery period");
+    //     linkPush("/");
+    // }
 
     const { data: verifiedOrganizations } = useOrganizationAPI().verifiedOrganizations;
 
-    useEffect(() => {
-        setReadOnly(
-            orgId === -1 ||
-            !activeLotteryInfo ||
-            activeLotteryInfo.length === 0 ||
-            activeLotteryInfo[0].timeLotteryEnd < getTime(new Date()) ||
-            !editable ||
-            activeLotteryInfo[0].applied
-        );
-    }, [orgId, activeLotteryInfo, editable]);
+    // useEffect(() => {
+    //     setReadOnly(
+    //         orgId === -1 ||
+    //         !activeLotteryInfo ||
+    //         activeLotteryInfo.length === 0 ||
+    //         activeLotteryInfo[0].timeLotteryEnd < getTime(new Date()) ||
+    //         !editable ||
+    //         activeLotteryInfo[0].applied
+    //     );
+    // }, [orgId, activeLotteryInfo, editable]);
 
     const [selectedTime, setSelectedTime] = useState<number>(-1);
     const [selectedTimeString, setSelectedTimeString] = useState<string>("");
@@ -80,50 +71,50 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
     const [open, setOpen] = useState<boolean>(false);
     useEffect(() => { if (selectedTime !== -1) setOpen(true); }, [selectedTime]);
 
-    const {
-        createSeminarLottery,
-        deleteSeminarLottery,
-        timeSlotCounts: {
-            data: timeSlotCounts,
-            refetch: refetchTimeSlotCounts
-        },
-        lotteryByTime: {
-            data: lotteryByTime,
-            refetch: refetchLotteryByTime
-        },
-        drawnLottery: {
-            data: drawnLottery,
-            refetch: refetchDrawnLottery
-        },
-        lotteryByOrganization: {
-            data: lotteryByOrganization,
-            refetch: refetchLotteryByOrganization
-        }
-    } = useSeminarLotteryAPI({
-        id: appliedId,
-        organizationId: orgId,
-        spaceId,
-        infoId: (activeLotteryInfo && activeLotteryInfo.length > 0) ? activeLotteryInfo[0].id : -1,
-        time: selectedTime,
-    });
+    // const {
+    //     createSeminarLottery,
+    //     deleteSeminarLottery,
+    //     timeSlotCounts: {
+    //         data: timeSlotCounts,
+    //         refetch: refetchTimeSlotCounts
+    //     },
+    //     lotteryByTime: {
+    //         data: lotteryByTime,
+    //         refetch: refetchLotteryByTime
+    //     },
+    //     drawnLottery: {
+    //         data: drawnLottery,
+    //         refetch: refetchDrawnLottery
+    //     },
+    //     lotteryByOrganization: {
+    //         data: lotteryByOrganization,
+    //         refetch: refetchLotteryByOrganization
+    //     }
+    // } = useSeminarLotteryAPI({
+    //     id: appliedId,
+    //     organizationId: orgId,
+    //     spaceId,
+    //     infoId: (activeLotteryInfo && activeLotteryInfo.length > 0) ? activeLotteryInfo[0].id : -1,
+    //     time: selectedTime,
+    // });
 
-    useEffect(() => { refetchTimeSlotCounts() }, [spaceId]);
-    useEffect(() => { if (selectedTime !== -1) { refetchLotteryByTime(); } }, [selectedTime, orgId, spaceId]);
-    useEffect(() => { refetchDrawnLottery(); }, [orgId, spaceId]);
-    useEffect(() => { refetchLotteryByOrganization(); }, [orgId, spaceId]);
+    // useEffect(() => { refetchTimeSlotCounts() }, [spaceId]);
+    // useEffect(() => { if (selectedTime !== -1) { refetchLotteryByTime(); } }, [selectedTime, orgId, spaceId]);
+    // useEffect(() => { refetchDrawnLottery(); }, [orgId, spaceId]);
+    // useEffect(() => { refetchLotteryByOrganization(); }, [orgId, spaceId]);
 
     const [available, setAvailable] = useState<boolean>(true);
 
-    useEffect(() => {
-        if (!lotteryByTime) return;
-        setAppliedId(lotteryByTime.find(l => l.organizationId === orgId)?.id || -1);
-    }, [lotteryByTime, orgId]);
+    // useEffect(() => {
+    //     if (!lotteryByTime) return;
+    //     setAppliedId(lotteryByTime.find(l => l.organizationId === orgId)?.id || -1);
+    // }, [lotteryByTime, orgId]);
 
-    useEffect(() => {
-        if (!drawnLottery) return;
-        if (selectedTime === -1) return;
-        setAvailable(drawnLottery.find(l => l.time === selectedTime) === undefined);
-    }, [drawnLottery, selectedTime]);
+    // useEffect(() => {
+    //     if (!drawnLottery) return;
+    //     if (selectedTime === -1) return;
+    //     setAvailable(drawnLottery.find(l => l.time === selectedTime) === undefined);
+    // }, [drawnLottery, selectedTime]);
 
     // 요일 배열 (월 ~ 일) - 인덱스가 날짜 번호 (0~6)
     const weekDays = [
@@ -151,62 +142,62 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
         return { dayIndex, hour };
     };
 
-    const refetchAll = () => {
-        refetchTimeSlotCounts();
-        refetchLotteryByTime();
-        refetchLotteryByOrganization();
-        refetchDrawnLottery();
-        refetchActiveLotteryInfo();
-    };
+    // const refetchAll = () => {
+    //     refetchTimeSlotCounts();
+    //     refetchLotteryByTime();
+    //     refetchLotteryByOrganization();
+    //     refetchDrawnLottery();
+    //     refetchActiveLotteryInfo();
+    // };
 
-    const createSeminarLotteryHandler = () => {
-        if (!activeLotteryInfo || activeLotteryInfo?.length === 0 || activeLotteryInfo[0].applied) return;
-        if (orgId === -1) return;
-        if (selectedTime === -1) return;
+    // const createSeminarLotteryHandler = () => {
+    //     if (!activeLotteryInfo || activeLotteryInfo?.length === 0 || activeLotteryInfo[0].applied) return;
+    //     if (orgId === -1) return;
+    //     if (selectedTime === -1) return;
 
-        createSeminarLottery({
-            organizationId: orgId,
-            spaceId,
-            infoId: activeLotteryInfo[0].id,
-            time: selectedTime,
-        }, {
-            onSuccess: () => {
-                toaster.success({
-                    title: "Successfully created",
-                    description: "The seminar lottery has been created successfully.",
-                });
-            },
-            onError: (error) => {
-                toaster.error({
-                    title: "Failed to create seminar lottery",
-                    description: error.message || "Failed to create seminar lottery.",
-                });
-            },
-            onSettled: refetchAll
-        });
-    }
+    //     createSeminarLottery({
+    //         organizationId: orgId,
+    //         spaceId,
+    //         infoId: activeLotteryInfo[0].id,
+    //         time: selectedTime,
+    //     }, {
+    //         onSuccess: () => {
+    //             toaster.success({
+    //                 title: "Successfully created",
+    //                 description: "The seminar lottery has been created successfully.",
+    //             });
+    //         },
+    //         onError: (error) => {
+    //             toaster.error({
+    //                 title: "Failed to create seminar lottery",
+    //                 description: error.message || "Failed to create seminar lottery.",
+    //             });
+    //         },
+    //         onSettled: refetchAll
+    //     });
+    // }
 
-    const deleteSeminarLotteryHandler = () => {
-        if (!activeLotteryInfo || activeLotteryInfo?.length === 0 || activeLotteryInfo[0].applied) return;
-        if (!appliedId) return;
+    // const deleteSeminarLotteryHandler = () => {
+    //     if (!activeLotteryInfo || activeLotteryInfo?.length === 0 || activeLotteryInfo[0].applied) return;
+    //     if (!appliedId) return;
 
-        deleteSeminarLottery({}, {
-            onSuccess: () => {
-                toaster.success({
-                    title: "Successfully deleted seminar lottery",
-                    description: "The selected seminar lottery has been deleted successfully.",
-                });
-                setAppliedId(-1);
-            },
-            onError: (error) => {
-                toaster.error({
-                    title: "Failed to delete seminar lottery",
-                    description: error.message || "Failed to delete seminar lottery.",
-                });
-            },
-            onSettled: refetchAll
-        });
-    }
+    //     deleteSeminarLottery({}, {
+    //         onSuccess: () => {
+    //             toaster.success({
+    //                 title: "Successfully deleted seminar lottery",
+    //                 description: "The selected seminar lottery has been deleted successfully.",
+    //             });
+    //             setAppliedId(-1);
+    //         },
+    //         onError: (error) => {
+    //             toaster.error({
+    //                 title: "Failed to delete seminar lottery",
+    //                 description: error.message || "Failed to delete seminar lottery.",
+    //             });
+    //         },
+    //         onSettled: refetchAll
+    //     });
+    // }
 
     return (<>
         <ActionBar.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
@@ -214,7 +205,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                 <ActionBar.Positioner zIndex={100}>
                     <ActionBar.Content>
                         <VStack separator={<StackSeparator />}>
-                            {lotteryByTime && lotteryByTime.length > 0 && (
+                            {/* {lotteryByTime && lotteryByTime.length > 0 && (
                                 <Wrap>
                                     {lotteryByTime.map(l => {
                                         const org = verifiedOrganizations?.find(org => org.id === l.organizationId);
@@ -226,7 +217,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                         );
                                     })}
                                 </Wrap>
-                            )}
+                            )} */}
                             <HStack separator={<StackSeparator />}>
                                 <ActionBar.SelectionTrigger>
                                     {selectedTimeString}
@@ -235,7 +226,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                     <Button
                                         variant={"outline"}
                                         colorPalette={"blue"}
-                                        onClick={createSeminarLotteryHandler}
+                                    // onClick={createSeminarLotteryHandler}
                                     >
                                         Apply
                                     </Button>
@@ -244,14 +235,14 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                     <Button
                                         variant={"outline"}
                                         colorPalette={"red"}
-                                        onClick={deleteSeminarLotteryHandler}
+                                    // onClick={deleteSeminarLotteryHandler}
                                     >
                                         Delete
                                     </Button>
                                 )}
-                                {!available && !readOnly && (appliedId !== -1) && (
+                                {/* {!available && !readOnly && (appliedId !== -1) && (
                                     <DeleteBtn onDelete={deleteSeminarLotteryHandler} />
-                                )}
+                                )} */}
                                 <ActionBar.CloseTrigger asChild>
                                     <CloseButton />
                                 </ActionBar.CloseTrigger>
@@ -264,9 +255,15 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
         {/* 플래너 그리드 */}
         <Stack>
             <Flex direction={"row"} justify={"flex-end"}>
-                <RefetchBtn refetch={refetchAll} />
+                <RefetchBtn refetch={
+                    // refetchAll
+                    () => alert("Refetch not implemented yet")
+                } />
             </Flex>
-            {(!activeLotteryInfo || activeLotteryInfo.length === 0) ? (
+            {(
+                // !activeLotteryInfo || activeLotteryInfo.length === 0
+                false
+            ) ? (
                 <Alert.Root>
                     <Alert.Indicator />
                     <Alert.Content>
@@ -377,9 +374,18 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                                 setSelectedTime(-1);
                                             }
                                         }}
-                                        orgCount={timeSlotCounts?.find(s => s.time === encodeTimeSlot(day.index, hour))?.count ?? 0}
-                                        drawnOrgName={verifiedOrganizations?.find(o => o.id === drawnLottery?.find(l => l.time === encodeTimeSlot(day.index, hour))?.organizationId)?.name ?? null}
-                                        isOrgRequested={lotteryByOrganization?.some(l => l.time === encodeTimeSlot(day.index, hour)) ?? false}
+                                        orgCount={
+                                            // timeSlotCounts?.find(s => s.time === encodeTimeSlot(day.index, hour))?.count ?? 
+                                            0
+                                        }
+                                        drawnOrgName={
+                                            // verifiedOrganizations?.find(o => o.id === drawnLottery?.find(l => l.time === encodeTimeSlot(day.index, hour))?.organizationId)?.name ?? 
+                                            null
+                                        }
+                                        isOrgRequested={
+                                            // lotteryByOrganization?.some(l => l.time === encodeTimeSlot(day.index, hour)) ??
+                                            false
+                                        }
                                     />
                                 ))}
                             </>
@@ -387,7 +393,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                     </Grid>
                 </Box>
             )}
-            {isAdmin && activeLotteryInfo && activeLotteryInfo.length > 0 && (
+            {/* {isAdmin && activeLotteryInfo && activeLotteryInfo.length > 0 && (
                 <Stack>
                     <Button width={"full"} colorPalette={"blue"} size={"xl"} disabled={activeLotteryInfo[0].applied} onClick={() => {
                         drawSeminarLottery({}, {
@@ -442,7 +448,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                         </Button>
                     </AlertBtn>
                 </Stack>
-            )}
+            )} */}
         </Stack>
     </>);
 }
