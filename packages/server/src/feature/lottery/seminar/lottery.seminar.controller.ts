@@ -5,6 +5,7 @@ import { ILotteryInfo, ILotteryInfoCreate, ILotteryInfoUpdate } from "@scspace-d
 import { ISeminarLottery, ISeminarLotteryCreate } from "@scspace-depot/types/lottery/lottery.seminar.type";
 import { ISuccessResponse } from "@scspace-depot/types/common";
 import { IReservationMultipleCreateResurt } from "@scspace-depot/types/reservation";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller('lottery/seminar')
 export class LotterySeminarController {
@@ -110,7 +111,7 @@ export class LotterySeminarController {
   }
 
   // @UseGuards(DelegatorGuard)
-  // @UseGuards(UserGuard)
+  @UseGuards(AuthGuard)
   @Post()
   async postSeminarLottery(
     @Body() lottery: ISeminarLotteryCreate
@@ -120,7 +121,7 @@ export class LotterySeminarController {
   }
 
   // @UseGuards(DelegatorGuard)
-  // @UseGuards(UserGuard)
+  @UseGuards(AuthGuard)
   @Delete(":id")
   async deleteSeminarLottery(
     @Param('id') id: number
