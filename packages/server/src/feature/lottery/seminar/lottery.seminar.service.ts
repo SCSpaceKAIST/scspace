@@ -560,7 +560,7 @@ export class LotterySeminarService {
                 }
 
                 if (lotteries.length === 1) {
-                    await this.drawSeminarLottery(lotteries[0].id);
+                    await this.drawSeminarLottery(lotteries[0].id, true);
                     continue;
                 }
 
@@ -575,16 +575,16 @@ export class LotterySeminarService {
                 let winner = 0;
                 if (hasRoomLotteries.length > 0) {
                     winner = hasRoomLotteries[getRandomIndex(hasRoomLotteries.length)].id;
-                    await this.drawSeminarLottery(winner);
+                    await this.drawSeminarLottery(winner, true);
                 } else {
                     winner = hasNoRoomLotteries[getRandomIndex(hasNoRoomLotteries.length)].id;
-                    await this.drawSeminarLottery(winner);
+                    await this.drawSeminarLottery(winner, true);
                 }
                 Logger.log(`Winner drawn: ${winner}`);
 
                 for (const lottery of lotteries) {
                     if (lottery.id !== winner) {
-                        await this.deleteSeminarLottery(lottery.id);
+                        await this.deleteSeminarLottery(lottery.id, true);
                     }
                 }
             }
