@@ -8,17 +8,12 @@ import {
     HStack,
     Button,
     ActionBar,
-    Float,
     Portal,
     StackSeparator,
     CloseButton,
-    Wrap,
-    Badge,
     Stack,
     Flex,
     Alert,
-    ButtonGroup,
-    Group,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
@@ -60,18 +55,18 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
     //     );
     // }, [orgId, activeLotteryInfo, editable]);
 
-    const [selectedTime, setSelectedTime] = useState<number>(-1);
+    const [selectedDate, setSelectedDate] = useState<number>(-1);
     const [selectedTimeString, setSelectedTimeString] = useState<string>("");
     useEffect(() => {
-        if (selectedTime !== -1) {
-            const { dayIndex, hour } = decodeTimeSlot(selectedTime);
+        if (selectedDate !== -1) {
+            const { dayIndex, hour } = decodeTimeSlot(selectedDate);
             const dayLabel = weekDays[dayIndex].label;
             setSelectedTimeString(`${dayLabel} ${hour}:00 - ${hour + 1}:00`);
         }
-    }, [selectedTime]);
+    }, [selectedDate]);
 
     const [open, setOpen] = useState<boolean>(false);
-    useEffect(() => { if (selectedTime !== -1) setOpen(true); }, [selectedTime]);
+    useEffect(() => { if (selectedDate !== -1) setOpen(true); }, [selectedDate]);
 
     // const {
     //     createSeminarLottery,
@@ -316,99 +311,17 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                         ))}
 
                         {Array.from({ length: 25 }).map((_, i) => (
-                            <GridItem
-                                key={`date-${i}`}
-                                borderRightWidth="1px"
-                                borderBottomWidth="1px"
-                                borderColor="gray.200"
-                                height="fit-content"
-                            >
-                                <Stack p={1}>
-                                    <Text fontSize="sm" margin={0} padding={0}>
-                                        {i}
-                                    </Text>
-                                    <Stack gap={0}>
-                                        {[1, 2, 3].map((priority) => (
-                                            <DateSlot
-                                                key={`date-${i}-priority-${priority}`}
-                                                date={0}
-                                                isSelected={false}
-                                                onSelect={() => { }}
-                                                orgCount={0}
-                                                drawnOrgName={null}
-                                                isOrgRequested={false}
-                                                priority={priority}
-                                            />
-                                        ))}
-                                    </Stack>
-                                </Stack>
-                            </GridItem>
+                            <DateSlot
+                                date={i}
+                                key={`date-slot-${i}`}
+                                isSelected={selectedDate === i && open}
+                                onSelect={setSelectedDate}
+                                orgCount={[0, 1, 2]}
+                                // drawnOrgName={"12332123132132132132123123123123123123123132"}
+                                drawnOrgName={null}
+                                isOrgRequested={false}
+                            />
                         ))}
-
-                        {/* 시간 라벨 + 시간 슬롯들 */}
-                        {/* {timeHours.map((hour, hourIndex) => (
-                            // 각 시간대별로 행을 만듦
-                            <>
-                                <GridItem
-                                    key={`time-${hour}`}
-                                    bg="gray.50"
-                                    borderRightWidth="1px"
-                                    // borderBottomWidth="1px"
-                                    borderColor="gray.200"
-                                    height="48px"
-                                    zIndex={1}
-                                    position={"sticky"}
-                                    left={0}
-                                >
-                                    <Center height="100%">
-                                        <Text fontSize="sm" margin={0} padding={0}
-                                            visibility="hidden"
-                                        >
-                                            00:00
-                                        </Text>
-                                        {(hour > 0) && (
-                                            <Float placement="top-center">
-                                                <Text fontSize="sm" margin={0} padding={0} color="black">
-                                                    {hour.toString().padStart(2, "0")}:00
-                                                </Text>
-                                            </Float>
-                                        )}
-                                    </Center>
-                                </GridItem>
-
-                                {weekDays.map((day) => (
-                                    <DateSlot
-                                        key={`${day.key}-${hour}`}
-                                        day={day.key}
-                                        hour={hour}
-                                        // isSelected={isSlotSelected(day.key, hour)}
-                                        // isDisabled={isSlotDisabled(day.key, hour) || readOnly}
-                                        isSelected={selectedTime === encodeTimeSlot(day.index, hour) && open}
-                                        onSelect={() => {
-                                            if (selectedTime !== encodeTimeSlot(day.index, hour)) {
-                                                setSelectedTime(encodeTimeSlot(day.index, hour));
-                                            } else if (!open) {
-                                                setOpen(true);
-                                            } else {
-                                                setSelectedTime(-1);
-                                            }
-                                        }}
-                                        orgCount={
-                                            // timeSlotCounts?.find(s => s.time === encodeTimeSlot(day.index, hour))?.count ?? 
-                                            0
-                                        }
-                                        drawnOrgName={
-                                            // verifiedOrganizations?.find(o => o.id === drawnLottery?.find(l => l.time === encodeTimeSlot(day.index, hour))?.organizationId)?.name ?? 
-                                            null
-                                        }
-                                        isOrgRequested={
-                                            // lotteryByOrganization?.some(l => l.time === encodeTimeSlot(day.index, hour)) ??
-                                            false
-                                        }
-                                    />
-                                ))}
-                            </>
-                        ))} */}
                     </Grid>
                 </Box>
             )}

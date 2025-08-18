@@ -1,7 +1,5 @@
-"use client"
-
 import {
-    GridItem,
+    Box,
     Button,
     Flex,
     Text,
@@ -9,30 +7,28 @@ import {
 import { useState } from "react";
 
 interface TimeSlotProps {
-    day: string;
-    hour: number;
+    date: number;
     isSelected: boolean;
-    onSelect: (day: string, hour: number) => void;
+    onSelect: (date: number) => void;
     orgCount: number;
     drawnOrgName: string | null;
     isOrgRequested: boolean;
+    priority: number;
 }
 
-export function TimeSlot({
-    drawnOrgName,
-    day,
-    hour,
+export function DateSlotBtn({
+    date,
     isSelected,
     onSelect,
     orgCount,
-    isOrgRequested
+    isOrgRequested,
+    priority
 }: TimeSlotProps) {
     const [isHovered, setIsHovered] = useState(false);
 
     const getBgColor = () => {
         if (isSelected) return "blue.100"; // readOnly일 때 더 진한 색
         if (isOrgRequested) return "cyan.100"; // 이미 추첨된 조직이 선택된 경우
-        if (drawnOrgName !== null) return "green.100";
         if (isHovered) return "gray.50";
         return "white";
     };
@@ -40,24 +36,20 @@ export function TimeSlot({
     const getBorderColor = () => {
         if (isSelected) return "blue.300"; // readOnly일 때 더 진한 테두리
         if (isOrgRequested) return "cyan.300"; // 이미 추첨된 조직이 선택된 경우
-        if (drawnOrgName !== null) return "green.300";
         return "gray.200";
     };
 
     const getColor = () => {
         if (isSelected) return "blue.600"; // readOnly일 때 더 진한 색
         if (isOrgRequested) return "cyan.600"; // 이미 추첨된 조직이 선택된 경우
-        if (drawnOrgName !== null) return "green.600";
         return "gray.600";
     };
 
     return (
-        <GridItem
+        <Box
             borderRightWidth="1px"
             borderBottomWidth="1px"
             borderColor={getBorderColor()}
-            height="48px"
-            minW={0}
             bg={getBgColor()}
             transition="all 0.2s"
         >
@@ -68,10 +60,9 @@ export function TimeSlot({
                 minW={0}
                 padding={1}
                 rounded="none"
-                onClick={() => onSelect(day, hour)}
+                onClick={() => onSelect(date)}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
-                cursor={drawnOrgName !== null ? "default" : "pointer"}
                 _hover={{
                     bg: "transparent"
                 }}
@@ -89,17 +80,9 @@ export function TimeSlot({
                     color={getColor()}
                     textAlign="center"
                 >
-                    {drawnOrgName ? (
-                        <Text truncate maxW="100%" overflow={"hidden"}>
-                            {drawnOrgName}
-                        </Text>
-                    ) : (orgCount > 0 ? (
-                        <Text>
-                            {orgCount}
-                        </Text>
-                    ) : null)}
+                    Test
                 </Flex>
             </Button>
-        </GridItem>
+        </Box>
     );
 }

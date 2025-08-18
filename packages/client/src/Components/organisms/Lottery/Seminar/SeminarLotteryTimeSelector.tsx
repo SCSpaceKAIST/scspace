@@ -365,8 +365,6 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
                                         key={`${day.key}-${hour}`}
                                         day={day.key}
                                         hour={hour}
-                                        // isSelected={isSlotSelected(day.key, hour)}
-                                        // isDisabled={isSlotDisabled(day.key, hour) || readOnly}
                                         isSelected={selectedTime === encodeTimeSlot(day.index, hour) && open}
                                         onSelect={() => {
                                             if (selectedTime !== encodeTimeSlot(day.index, hour)) {
