@@ -111,7 +111,7 @@ export class LotterySeminarController {
   }
 
   // @UseGuards(DelegatorGuard)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard("jwt"))
   @Post()
   async postSeminarLottery(
     @Body() lottery: ISeminarLotteryCreate
@@ -121,7 +121,7 @@ export class LotterySeminarController {
   }
 
   // @UseGuards(DelegatorGuard)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard("jwt"))
   @Delete(":id")
   async deleteSeminarLottery(
     @Param('id') id: number
