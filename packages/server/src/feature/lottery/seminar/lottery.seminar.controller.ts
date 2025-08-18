@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { LotterySeminarService } from "./lottery.seminar.service";
-import { AdminGuard, DelegatorGuard } from "@scspace-server/feature/auth/jwt/jwt.guard";
+import { AdminGuard, DelegatorGuard, UserGuard } from "@scspace-server/feature/auth/jwt/jwt.guard";
 import { ILotteryInfo, ILotteryInfoCreate, ILotteryInfoUpdate } from "@scspace-depot/types/lottery/lottery.info.type";
 import { ISeminarLottery, ISeminarLotteryCreate } from "@scspace-depot/types/lottery/lottery.seminar.type";
 import { ISuccessResponse } from "@scspace-depot/types/common";
@@ -109,7 +109,8 @@ export class LotterySeminarController {
     return await this.lotterySeminarService.getSeminarLotteryTimeSlotCounts({ spaceId, infoId });
   }
 
-  @UseGuards(DelegatorGuard)
+  // @UseGuards(DelegatorGuard)
+  @UseGuards(UserGuard)
   @Post()
   async postSeminarLottery(
     @Body() lottery: ISeminarLotteryCreate
@@ -118,7 +119,8 @@ export class LotterySeminarController {
     return await this.lotterySeminarService.postSeminarLottery({ lottery });
   }
 
-  @UseGuards(DelegatorGuard)
+  // @UseGuards(DelegatorGuard)
+  @UseGuards(UserGuard)
   @Delete(":id")
   async deleteSeminarLottery(
     @Param('id') id: number
