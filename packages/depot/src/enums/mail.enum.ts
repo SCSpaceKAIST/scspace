@@ -1,5 +1,9 @@
 import { OrganizationStatusEnum } from "./organization.enum";
 
+
+const DEFAULT_EMOJI_RESERVATION = '📅'     //reservation icon
+const DEFAULT_EMOJI_FAIL = '❌'     //fail icon
+
 export const OrgStatusMeta = {
     [OrganizationStatusEnum.REGISTER_REQUEST]: {
         color: '#17a2b8',
@@ -12,6 +16,7 @@ export const OrgStatusMeta = {
             kr: '조직 등록 요청이 접수되었습니다. 관리자의 승인을 기다려 주세요.',
             en: 'Your organization registration request has been received. Please wait for approval.'
         },
+
         benefits: [],
     },
 
@@ -73,7 +78,7 @@ export const OrgStatusMeta = {
 
     [OrganizationStatusEnum.REJECTED]: {
         color: '#dc3545',
-        emoji: '❌',
+        emoji: DEFAULT_EMOJI_FAIL,
         header: {
             kr: '조직 인증이 반려되었습니다',
             en: 'Organization verification rejected'
@@ -90,7 +95,7 @@ export const OrgStatusMeta = {
 export const ReservationMeta = {
     ReservationCompleted: {
         color: '#4CAF50',
-        emoji: '📅',
+        emoji: DEFAULT_EMOJI_RESERVATION,
         header: {
             kr: "예약 완료 안내",
             en: "Reservation Confirmed"
@@ -108,7 +113,7 @@ export const ReservationMeta = {
 
     ReservationDeleted: {
         color : '#eb4034',
-        emoji: '📅',
+        emoji: DEFAULT_EMOJI_RESERVATION,
         header : {
             kr: "예약 취소 안내",
             en: "Reservation Cancelled"
@@ -124,7 +129,7 @@ export const ReservationMeta = {
     },
     ReservationUpdated: {
         color : '#34b4eb',
-        emoji: '📅',
+        emoji: DEFAULT_EMOJI_RESERVATION,
         header : {
             kr: "예약 수정 완료 안내",
             en: "Reservation Updated"
@@ -140,7 +145,7 @@ export const ReservationMeta = {
     },
     MultipleReservationCompleted: {
         color: '#4CAF50',
-        emoji: '📅',
+        emoji: DEFAULT_EMOJI_RESERVATION,
         header: {
             kr: "다중 예약 처리 결과 안내",
             en: "Multi-Reservation Results"
@@ -158,16 +163,45 @@ export const ReservationMeta = {
     },
 } as const
 
-// NON-USAGE
-// export const ErrorMeta = {
-//     color: '#dc3545',
-//     emoji: '🚨',
-//     header: {
-//         kr: '에러 발생',
-//         en: 'Error Occurred'
-//     },
-//     body: {
-//         kr: '시스템에서 오류가 발생했습니다.',
-//         en: 'An error has occurred in the system.'
-//     },
-// }
+
+export const LotteryMeta = {
+    Seminar : {
+        Win : {
+            // color : "#24d7c2",
+            color : "#007bff",
+            emoji : '🎉',
+            header : {
+                kr : "세미나실 예약 추첨 결과 안내",
+                en : "Seminar Room Reservation Lottery Results",
+            },
+            body :  {
+                kr : "귀 조직의 세미나실 정기예약 신청의 추첨 결과를 아래와 같이 안내드립니다.",
+                en : "The results of the lottery for the seminar room reservation of your organization are as follows.",
+            },
+            contentUppderDesc : {
+                kr : "예약 성공 (당첨)",
+                en : "Reservation Successful",      // i hate this
+            },
+            templatefooter :  "이 메일은 정기예약 추첨 신청 조직의 위임자 (Delegator) 에게 발송되었습니다.",
+            templatefooterEn : "This email is sent to the Delegator of the reservation lottery organization.",
+        },
+        Lost : {
+            color : "#d72424",
+            emoji : DEFAULT_EMOJI_RESERVATION,
+            header : {
+                kr : "세미나실 예약 추첨 결과 안내",
+                en : "Seminar Room Reservation Lottery Results",
+            },
+            body :  {
+                kr : "귀 조직의 세미나실 정기예약 신청의 추첨 결과를 아래와 같이 안내드립니다.",
+                en : "The results of the lottery for the seminar room reservation of your organization are as follows.",
+            },
+            contentUppderDesc : {
+                kr : "예약 실패 (낙첨)",
+                en : "Reservation Failed",      // i love this
+            },
+            templatefooter :  "이 메일은 정기예약 추첨 신청 조직의 위임자 (Delegator) 에게 발송되었습니다.",
+            templatefooterEn : "This email is sent to the Delegator of the reservation lottery organization.",
+        }
+    },
+}
