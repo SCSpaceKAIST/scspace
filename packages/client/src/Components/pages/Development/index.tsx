@@ -5,6 +5,7 @@ import { useAuth } from "@scspace-client/Hooks/auth";
 import PageSelector, { IPage } from "../../molecules/page/PageSelector";
 import Atoms from "./Atoms";
 import Molecules from "./Molecules";
+import TestPage from "./Test";
 
 export default function Development() {
     const { needAdmin } = useAuth();
@@ -22,6 +23,12 @@ export default function Development() {
             eng: "Components",
             preview: <Molecules />,
             href: "/dev/molecules"
+        },
+        {
+            kor: "Test",
+            eng: "For Local Test",
+            preview: <TestPage />,
+            href: "/dev/test"
         }
     ]
 
