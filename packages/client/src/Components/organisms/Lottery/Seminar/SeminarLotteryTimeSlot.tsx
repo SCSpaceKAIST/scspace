@@ -87,13 +87,15 @@ export function TimeSlot({
                     color={getColor()}
                     textAlign="center"
                 >
-                    {drawnOrgName ? <Text>{drawnOrgName}</Text> :
-                        (orgCount > 0 ? (
-                            <Text>
-                                {orgCount}
-                            </Text>
-                        ) : null)
-                    }
+                    {drawnOrgName ? (
+                        <Text truncate maxW="100%" overflow={"hidden"}>
+                            {drawnOrgName}
+                        </Text>
+                    ) : (orgCount > 0 ? (
+                        <Text>
+                            {orgCount}
+                        </Text>
+                    ) : null)}
                 </Flex>
             </Button>
         </GridItem>
