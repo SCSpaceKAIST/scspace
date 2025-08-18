@@ -75,7 +75,7 @@ export default function NewOrganizationBtn({ uid, onSuccess }: {
             open={open}
             onOpenChange={(e) => setOpen(e.open)}
             onExitComplete={() => setName("")}
-            size={isWide ? "lg" : "full"}
+            size={isWide ? "xl" : "full"}
         >
             <TooltipComponent content="Add new organization">
                 <Dialog.Trigger asChild>
