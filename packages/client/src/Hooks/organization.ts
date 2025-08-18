@@ -28,7 +28,7 @@ export function useOrganizationAPI(params?: { id?: number; uid?: number }) {
     const createOrg = useMutationApi<IOrganization, IOrganizationCreate>(
         "/organization/",
         "POST"
-    ).mutate;
+    ).mutateAsync;
 
     const updateOrg = useMutationApi<IOrganization, IOrganizationUpdateDelegator>(
         `/organization/${id || ''}`,
