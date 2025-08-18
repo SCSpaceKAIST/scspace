@@ -1,21 +1,37 @@
-import { BadRequestException, forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
-import { OrganizationPublicService } from "@scspace-server/feature/organization/organization.public.service";
-import { LotterySeminarRepository } from "./lottery.seminar.repository";
-import { LotterySeminarInfoRepository } from "./lottery.seminar.info.repository";
-import { MSeminarLottery } from "./lottery.seminar.model";
-import { MSeminarLotteryInfo } from "./lottery.seminar.info.model";
-import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
+import {
+    BadRequestException,
+    forwardRef,
+    Inject,
+    Injectable,
+    Logger,
+} from '@nestjs/common';
+import { OrganizationPublicService } from '@scspace-server/feature/organization/organization.public.service';
+import { LotterySeminarRepository } from './lottery.seminar.repository';
+import { LotterySeminarInfoRepository } from './lottery.seminar.info.repository';
+import { MSeminarLottery } from './lottery.seminar.model';
+import { MSeminarLotteryInfo } from './lottery.seminar.info.model';
+import { OrganizationStatusEnum } from '@scspace-depot/enums/organization.enum';
 import {
     ILotteryInfoCreate,
     ILotteryInfoUpdate,
     ISeminarLotteryCreate,
-} from "@scspace-depot/types/lottery";
-import { getDate, getDateBegin, getDateEnd, getNow, getRandomIndex, getTime } from "@scspace-server/common/utils";
-import { Cron, CronExpression } from "@nestjs/schedule";
-import { SpacePublicService } from "@scspace-server/feature/space/space.public.service";
-import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
-import { ReservationPublicService } from "@scspace-server/feature/reservation/reservation.public.service";
-import { IReservationMultipleCreateResurt } from "@scspace-depot/types/reservation";
+} from '@scspace-depot/types/lottery';
+import {
+    getDate,
+    getDateBegin,
+    getDateEnd,
+    getNow,
+    getRandomIndex,
+    getTime,
+} from '@scspace-server/common/utils';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
+import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
+import { ReservationPublicService } from '@scspace-server/feature/reservation/reservation.public.service';
+import { IReservationMultipleCreateResurt } from '@scspace-depot/types/reservation';
+import { MailService } from '@scspace-server/tools/mailer/mail.service';
+import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
+import { LotteryMeta } from '@scspace-depot/enums/mail.enum';
 
 @Injectable()
 export class LotterySeminarService {
@@ -24,15 +40,17 @@ export class LotterySeminarService {
     constructor(
         private readonly organizationPublicService: OrganizationPublicService,
         private readonly spacePublicService: SpacePublicService,
-        @Inject(forwardRef(() => ReservationPublicService)) private readonly reservationPublicService: ReservationPublicService,
+        @Inject(forwardRef(() => ReservationPublicService))
+        private readonly reservationPublicService: ReservationPublicService,
         private readonly lotterySeminarRepository: LotterySeminarRepository,
-        private readonly lotterySeminarInfoRepository: LotterySeminarInfoRepository
-    ) { }
+        private readonly lotterySeminarInfoRepository: LotterySeminarInfoRepository,
+        private readonly mailService: MailService,
+        private readonly userPublicService: UserPublicService,
+    ) {}
 
     async getAllSeminarLotteryInfo(): Promise<MSeminarLotteryInfo[]> {
         // 자동 정렬된 모든 세미나 추첨 정보 조회
-        const seminarLotteryInfo = await this.lotterySeminarInfoRepository.fetchAll();
-        return seminarLotteryInfo;
+        return await this.lotterySeminarInfoRepository.fetchAll();
     }
 
     async getActiveSeminarLotteryInfo(): Promise<MSeminarLotteryInfo[]> {
@@ -52,13 +70,13 @@ export class LotterySeminarService {
      */
     private async validateTimeConflict(
         lotteryInfo: { timeLotteryStart: number; timeEnd: number },
-        excludeId?: number
+        excludeId?: number,
     ): Promise<void> {
         const allLotteries = await this.lotterySeminarInfoRepository.fetchAll();
 
         // 현재 수정 중인 항목은 제외
         const otherLotteries = excludeId
-            ? allLotteries.filter(lottery => lottery.id !== excludeId)
+            ? allLotteries.filter((lottery) => lottery.id !== excludeId)
             : allLotteries;
 
         const newStartTime = lotteryInfo.timeLotteryStart;
@@ -73,49 +91,56 @@ export class LotterySeminarService {
             // B: [existingStartTime ---- existingEndTime]
             // 겹치지 않는 조건: newEndTime <= existingStartTime OR newStartTime >= existingEndTime
             // 겹치는 조건: !(겹치지 않는 조건)
-            const isOverlapping = !(newEndTime <= existingStartTime || newStartTime >= existingEndTime);
+            const isOverlapping = !(
+                newEndTime <= existingStartTime || newStartTime >= existingEndTime
+            );
 
             if (isOverlapping) {
                 throw new BadRequestException(
-                    `Time conflict detected. The period from lottery start to event end overlaps with existing lottery (ID: ${existingLottery.id})`
+                    `Time conflict detected. The period from lottery start to event end overlaps with existing lottery (ID: ${existingLottery.id})`,
                 );
             }
         }
     }
 
     async postSeminarLotteryInfo(params: {
-        lotteryInfo: ILotteryInfoCreate
+        lotteryInfo: ILotteryInfoCreate;
     }): Promise<MSeminarLotteryInfo> {
         const now = getNow();
 
         // 시간 유효성 검증
         if (params.lotteryInfo.timeLotteryStart < now) {
-            throw new BadRequestException("Lottery time cannot be in the past");
+            throw new BadRequestException('Lottery time cannot be in the past');
         }
-        if (params.lotteryInfo.timeLotteryEnd < params.lotteryInfo.timeLotteryStart) {
-            throw new BadRequestException("Lottery end time cannot be before start time");
+        if (
+            params.lotteryInfo.timeLotteryEnd < params.lotteryInfo.timeLotteryStart
+        ) {
+            throw new BadRequestException(
+                'Lottery end time cannot be before start time',
+            );
         }
         if (params.lotteryInfo.timeStart < params.lotteryInfo.timeLotteryEnd) {
-            throw new BadRequestException("Start time cannot be before lottery end time");
+            throw new BadRequestException(
+                'Start time cannot be before lottery end time',
+            );
         }
         if (params.lotteryInfo.timeEnd < params.lotteryInfo.timeStart) {
-            throw new BadRequestException("Start time cannot be after end time");
+            throw new BadRequestException('Start time cannot be after end time');
         }
 
         // 시간 겹침 검증
         await this.validateTimeConflict({
             timeLotteryStart: params.lotteryInfo.timeLotteryStart,
-            timeEnd: params.lotteryInfo.timeEnd
+            timeEnd: params.lotteryInfo.timeEnd,
         });
 
         // 추첨 정보 생성 (자동 정렬됨)
-        const createdLotteryInfo = await this.lotterySeminarInfoRepository.insert({
+        return await this.lotterySeminarInfoRepository.insert({
             timeStart: getDateBegin(params.lotteryInfo.timeStart),
             timeEnd: getDateEnd(params.lotteryInfo.timeEnd),
             timeLotteryStart: getDateBegin(params.lotteryInfo.timeLotteryStart),
-            timeLotteryEnd: getDateEnd(params.lotteryInfo.timeLotteryEnd)
+            timeLotteryEnd: getDateEnd(params.lotteryInfo.timeLotteryEnd),
         });
-        return createdLotteryInfo;
     }
 
     async updateSeminarLotteryInfo(params: {
@@ -123,25 +148,30 @@ export class LotterySeminarService {
         updateLotteryInfo: ILotteryInfoUpdate;
     }): Promise<MSeminarLotteryInfo> {
         const seminarLotteryInfo = await this.lotterySeminarInfoRepository.fetch({
-            id: params.id
+            id: params.id,
         });
         if (!seminarLotteryInfo) {
-            throw new BadRequestException("Seminar lottery info not found");
+            throw new BadRequestException('Seminar lottery info not found');
         }
 
         const now = getNow();
 
         // 업데이트할 값들을 기존 값과 병합
         const mergedLotteryInfo = {
-            timeLotteryStart: params.updateLotteryInfo.timeLotteryStart ?? seminarLotteryInfo.timeLotteryStart,
-            timeLotteryEnd: params.updateLotteryInfo.timeLotteryEnd ?? seminarLotteryInfo.timeLotteryEnd,
-            timeStart: params.updateLotteryInfo.timeStart ?? seminarLotteryInfo.timeStart,
+            timeLotteryStart:
+                params.updateLotteryInfo.timeLotteryStart ??
+                seminarLotteryInfo.timeLotteryStart,
+            timeLotteryEnd:
+                params.updateLotteryInfo.timeLotteryEnd ??
+                seminarLotteryInfo.timeLotteryEnd,
+            timeStart:
+                params.updateLotteryInfo.timeStart ?? seminarLotteryInfo.timeStart,
             timeEnd: params.updateLotteryInfo.timeEnd ?? seminarLotteryInfo.timeEnd,
         };
 
         // 시간 유효성 검증
         if (mergedLotteryInfo.timeLotteryStart < now) {
-            throw new BadRequestException("Lottery time cannot be in the past");
+            throw new BadRequestException('Lottery time cannot be in the past');
         }
         if (mergedLotteryInfo.timeLotteryEnd < mergedLotteryInfo.timeLotteryStart) {
             throw new BadRequestException("Lottery end time cannot be before start time");
@@ -160,8 +190,7 @@ export class LotterySeminarService {
         }, params.id);
 
         // 추첨 정보 업데이트 (자동 정렬됨)
-        const updatedLotteryInfo = await this.lotterySeminarInfoRepository.update(params);
-        return updatedLotteryInfo;
+        return await this.lotterySeminarInfoRepository.update(params);
     }
 
     async deleteSeminarLotteryInfo(id: number): Promise<boolean> {
@@ -229,27 +258,28 @@ export class LotterySeminarService {
             throw new BadRequestException("Maximum number of seminar lotteries is 6. Cannot create more.");
         }
         // Implementation for inserting a new seminar lottery
-        const createdLottery = await this.lotterySeminarRepository.insert(params.lottery);
-        return createdLottery;
+        return await this.lotterySeminarRepository.insert(params.lottery);
     }
 
-    async deleteSeminarLottery(id: number): Promise<boolean> {
-        const seminarLottery = await this.lotterySeminarRepository.fetch({ id });
-        if (!seminarLottery) {
-            throw new BadRequestException("Seminar lottery not found");
-        }
-        // Implementation for deleting seminar lottery data
-        return await this.lotterySeminarRepository.delete(id);
-    }
+    // OG
+    // async deleteSeminarLottery(id: number): Promise<boolean> {
+    //     const seminarLottery = await this.lotterySeminarRepository.fetch({ id });
+    //     if (!seminarLottery) {
+    //         throw new BadRequestException('Seminar lottery not found');
+    //     }
+    //     // Implementation for deleting seminar lottery data
+    //     return await this.lotterySeminarRepository.delete(id);
+    // }
+    //
+    // async drawSeminarLottery(id: number): Promise<void> {
+    //     const seminarLottery = await this.lotterySeminarRepository.fetch({ id });
+    //     if (!seminarLottery) {
+    //         throw new BadRequestException('Seminar lottery not found');
+    //     }
+    //     // Implementation for drawing seminar lottery
+    //     await this.lotterySeminarRepository.update(id, { lotteryWin: 1 });
+    // }
 
-    async drawSeminarLottery(id: number): Promise<void> {
-        const seminarLottery = await this.lotterySeminarRepository.fetch({ id });
-        if (!seminarLottery) {
-            throw new BadRequestException("Seminar lottery not found");
-        }
-        // Implementation for drawing seminar lottery
-        await this.lotterySeminarRepository.update(id, { lotteryWin: 1 });
-    }
 
     async getSeminarLotteryTimeSlotCounts(param: { spaceId: number; infoId: number }): Promise<{ time: number; count: number }[]> {
         // 모든 시간대에 대해 신청한 조직 수 반환
@@ -280,6 +310,111 @@ export class LotterySeminarService {
 
         await this.lotterySeminarRepository.update(fromId, fromLottery[0]);
         await this.lotterySeminarRepository.update(toId, toLottery[0]);
+    }
+
+    /**
+     * @description After lottery draw, delete the data of non-winners
+     * @param byDraw Check if the action executed by the official draw [optional]
+     * @param id Lottery's ID
+     * */
+    async deleteSeminarLottery(id: number, byDraw?: boolean): Promise<boolean> {
+        const seminarLotteryArr = await this.lotterySeminarRepository.fetch({ id });
+        if (!seminarLotteryArr) {
+            throw new BadRequestException('Seminar lottery not found');
+        }
+        const seminarLottery = seminarLotteryArr[0];
+
+        let res = await this.lotterySeminarRepository.delete(id);
+
+        //send mail
+        if (byDraw) {
+            try {
+                const [organization, space] = await Promise.all([
+                    this.organizationPublicService.fetchById(
+                        seminarLottery.organizationId,
+                    ),
+                    this.spacePublicService.fetchById(seminarLottery.spaceId),
+                ]);
+
+                const delegator = await this.userPublicService.fetchById(
+                    organization.delegatorId,
+                );
+
+                await this.mailService.sendMail({
+                    to: delegator.email,
+                    subject: `[SCSpace] 세미나실 정기예약 추첨 결과 안내`,
+                    bcc: 'scspace.kaist@gmail.com', //need to check
+                    template: 'lotteryResult',
+                    replyTo: 'scspace@kaist.ac.kr',
+                    context: {
+                        meta: LotteryMeta.Seminar.Lost,
+                        lottery: seminarLottery,
+                        space: space,
+                        organization: organization,
+                    },
+                });
+            } catch (error) {
+                console.log(error);
+                await this.mailService.reportError(
+                    error instanceof Error ? error : new Error(String(error)),
+                    'deleteSemniarLottery - Mail Sector',
+                );
+            }
+        }
+
+        return res;
+    }
+
+    /**
+     * @description Draw the lottery
+     * @param byDraw Check if the action executed by the official draw [optional]
+     * @param id Lottery's ID
+     * */
+    async drawSeminarLottery(id: number, byDraw?: boolean): Promise<void> {
+        const seminarLotteryArr = await this.lotterySeminarRepository.fetch({ id });
+        if (!seminarLotteryArr) {
+            throw new BadRequestException('Seminar lottery not found');
+        }
+
+        const seminarLottery = seminarLotteryArr[0];
+        // Implementation for drawing seminar lottery
+        await this.lotterySeminarRepository.update(id, { lotteryWin: 1 });
+
+        //send mail
+        if (byDraw) {
+            try {
+                const [organization, space] = await Promise.all([
+                    this.organizationPublicService.fetchById(
+                        seminarLottery.organizationId,
+                    ),
+                    this.spacePublicService.fetchById(seminarLottery.spaceId),
+                ]);
+
+                const delegator = await this.userPublicService.fetchById(
+                    organization.delegatorId,
+                );
+
+                await this.mailService.sendMail({
+                    to: delegator.email,
+                    subject: `[SCSpace] 세미나실 정기예약 추첨 결과 안내`,
+                    bcc: 'scspace.kaist@gmail.com', //need to check
+                    template: 'lotteryResult',
+                    replyTo: 'scspace@kaist.ac.kr',
+                    context: {
+                        meta: LotteryMeta.Seminar.Win,
+                        lottery: seminarLottery,
+                        space: space,
+                        organization: organization,
+                    },
+                });
+            } catch (error) {
+                console.log(error);
+                await this.mailService.reportError(
+                    error instanceof Error ? error : new Error(String(error)),
+                    'deleteSemniarLottery - Mail Sector',
+                );
+            }
+        }
     }
 
     async applySeminarLottery(): Promise<IReservationMultipleCreateResurt[]> {
@@ -401,32 +536,32 @@ export class LotterySeminarService {
         const seminarRooms = await this.spacePublicService.fetchAllBySpaceType(SpaceTypeEnum.SEMINAR);
         const verifiedOrganizations = await this.organizationPublicService.fetchVerified();
 
-        seminarRooms.map(s => s.id).forEach(async (spaceId) => {
-            Array.from({ length: 168 }).forEach(async (_, j) => {
-
+        for (const spaceId of seminarRooms.map((s) => s.id)) {
+            for (const _ of Array.from({ length: 168 })) {
+                const j = Array.from({ length: 168 }).indexOf(_);
                 const drawnLotteries = await this.lotterySeminarRepository.fetch({
                     spaceId,
                     infoId: activeLottery[0].id,
                     time: j,
-                    lotteryWin: 1
+                    lotteryWin: 1,
                 });
-                if (drawnLotteries.length === 1) return;
+                if (drawnLotteries.length === 1) continue;
 
                 const lotteries = await this.lotterySeminarRepository.fetch({
                     spaceId,
                     infoId: activeLottery[0].id,
                     time: j,
-                    lotteryWin: 0
+                    lotteryWin: 0,
                 });
 
                 // Implementation for drawing the lottery
                 if (lotteries.length === 0) {
-                    return;
+                    continue;
                 }
 
                 if (lotteries.length === 1) {
                     await this.drawSeminarLottery(lotteries[0].id);
-                    return;
+                    continue;
                 }
 
                 const lotteriesWithOrg = lotteries.map(lottery => ({
@@ -447,13 +582,13 @@ export class LotterySeminarService {
                 }
                 Logger.log(`Winner drawn: ${winner}`);
 
-                lotteries.forEach(async lottery => {
+                for (const lottery of lotteries) {
                     if (lottery.id !== winner) {
                         await this.deleteSeminarLottery(lottery.id);
                     }
-                });
-            });
-        });
+                }
+            }
+        }
 
         return true;
     }
