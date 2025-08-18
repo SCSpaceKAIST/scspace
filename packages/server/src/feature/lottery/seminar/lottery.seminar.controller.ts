@@ -110,7 +110,7 @@ export class LotterySeminarController {
   }
 
   // @UseGuards(DelegatorGuard)
-  @UseGuards(UserGuard)
+  // @UseGuards(UserGuard)
   @Post()
   async postSeminarLottery(
     @Body() lottery: ISeminarLotteryCreate
@@ -120,7 +120,7 @@ export class LotterySeminarController {
   }
 
   // @UseGuards(DelegatorGuard)
-  @UseGuards(UserGuard)
+  // @UseGuards(UserGuard)
   @Delete(":id")
   async deleteSeminarLottery(
     @Param('id') id: number
