@@ -396,6 +396,8 @@ export class LotterySeminarService {
                     organization.delegatorId,
                 );
 
+                const meta = LotteryMeta.Seminar.Win;
+
                 await this.mailService.sendMail({
                     to: delegator.email,
                     subject: `[SCSpace] 세미나실 정기예약 추첨 결과 안내`,
@@ -403,7 +405,7 @@ export class LotterySeminarService {
                     template: 'lotteryResult',
                     replyTo: 'scspace@kaist.ac.kr',
                     context: {
-                        meta: LotteryMeta.Seminar.Win,
+                        meta,
                         lottery: seminarLottery,
                         space: space,
                         organization: organization,

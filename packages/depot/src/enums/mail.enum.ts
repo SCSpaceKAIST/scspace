@@ -178,7 +178,7 @@ export const LotteryMeta = {
                 kr : "귀 조직의 세미나실 정기예약 신청의 추첨 결과를 아래와 같이 안내드립니다.",
                 en : "The results of the lottery for the seminar room reservation of your organization are as follows.",
             },
-            contentUppderDesc : {
+            contentUpperDesc : {
                 kr : "예약 성공 (당첨)",
                 en : "Reservation Successful",      // i hate this
             },
