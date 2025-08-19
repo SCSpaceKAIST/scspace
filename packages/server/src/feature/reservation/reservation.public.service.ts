@@ -61,7 +61,7 @@ export class ReservationPublicService {
     private readonly mailService: MailService,
     @Inject(forwardRef(() => LotterySeminarService))
     private readonly lotterySeminarService: LotterySeminarService,
-  ) {}
+  ) { }
 
   async postMultipleReservation(
     reservationInput: IReservationCreateMultiple,
@@ -163,7 +163,7 @@ export class ReservationPublicService {
     };
 
     const mailResult = {
-      data : conv,
+      data: conv,
       ...stats
     }
 
@@ -650,7 +650,7 @@ export class ReservationPublicService {
 
     for (const lottery of allLotteries) {
       // 추첨 시작 시간부터 행사 끝 시간까지의 기간
-      const lotteryStartTime = BigInt(lottery.timeLotteryStart);
+      const eventStartTime = BigInt(lottery.timeStart);
       const eventEndTime = BigInt(lottery.timeEnd);
       const applied = lottery.applied;
 
@@ -660,7 +660,7 @@ export class ReservationPublicService {
       // 겹치지 않는 조건: timeTo <= lotteryStartTime OR timeFrom >= eventEndTime
       // 겹치는 조건: !(겹치지 않는 조건)
       const isOverlapping = !(
-        timeTo <= lotteryStartTime ||
+        timeTo <= eventStartTime ||
         timeFrom >= eventEndTime ||
         applied
       );
