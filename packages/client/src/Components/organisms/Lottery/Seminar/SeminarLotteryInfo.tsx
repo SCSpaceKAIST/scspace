@@ -4,14 +4,11 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import {
     Stack,
-    Text,
     Alert,
-    HStack,
     IconButton,
-    Button,
     Flex,
 } from "@chakra-ui/react";
-import { useSeminarLotteryAPI, useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
+import { useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useDate } from "@scspace-client/Hooks/utils";

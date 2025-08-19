@@ -8,7 +8,7 @@ import { LotterySeminarRepository } from "./lottery.seminar.repository";
 import { LotterySeminarService } from "./lottery.seminar.service";
 import { LotterySeminarInfoRepository } from "./lottery.seminar.info.repository";
 import { ReservationModule } from "@scspace-server/feature/reservation/reservation.module";
-import { MailModule } from "@scspace-server/tools/mailer/mail.module";
+import { MailModule } from "src/tools/mailer/mail.module";
 
 @Module({
     imports: [

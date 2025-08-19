@@ -2,7 +2,8 @@ import { BadRequestException, forwardRef, Inject, Injectable, Logger } from "@ne
 import { OrganizationPublicService } from "@scspace-server/feature/organization/organization.public.service";
 import { LotteryPerformanceRepository } from "./lottery.performance.repository";
 import { LotteryPerformanceInfoRepository } from "./lottery.performance.info.repository";
-import { MPerformanceLottery, MPerformanceLotteryInfo } from "./lottery.performance.model";
+import { MPerformanceLottery } from "./lottery.performance.model";
+
 import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
 import {
     ILotteryInfoCreate,
@@ -13,6 +14,7 @@ import { getDate, getDateBegin, getDateEnd, getNow, getRandomIndex } from "@scsp
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { SpacePublicService } from "@scspace-server/feature/space/space.public.service";
 import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
+import { MPerformanceLotteryInfo } from "./lottery.performance.info.model";
 
 @Injectable()
 export class LotteryPerformanceService {

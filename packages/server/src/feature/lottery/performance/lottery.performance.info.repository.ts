@@ -4,7 +4,7 @@ import { DBAsyncProvider } from "@scspace-server/db/db.provider";
 import { schema, PerformanceLotteryInfo } from "@scspace-server/db/schema";
 import { eq, InferInsertModel, asc, lte, gte, gt, and } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
-import { MPerformanceLotteryInfo } from "@scspace-server/feature/lottery/performance/lottery.performance.model";
+import { MPerformanceLotteryInfo } from "@scspace-server/feature/lottery/performance/lottery.performance.info.model";
 
 @Injectable()
 export class LotteryPerformanceInfoRepository {

@@ -1,4 +1,4 @@
-import { forwardRef, Module } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { DBModule } from "@scspace-server/db/db.module";
 import { SpaceModule } from "../../space/space.module";
 import { UserModule } from "../../user/user.module";

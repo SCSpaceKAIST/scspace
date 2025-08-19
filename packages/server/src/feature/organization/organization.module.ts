@@ -6,7 +6,7 @@ import { OrganizationMemberRepository } from './organization.member.repository';
 import { OrganizationPublicService } from './organization.public.service';
 import { DBModule } from '@scspace-server/db/db.module';
 import { UserModule } from '../user/user.module';
-import { MailModule } from '../../tools/mailer/mail.module';
+import { MailModule } from 'src/tools/mailer/mail.module';
 
 @Module({
   imports: [DBModule, UserModule, MailModule],
