@@ -428,7 +428,7 @@ export class LotterySeminarService {
                 );
 
                 const timeObj = await this.timeRangeDecodeString(seminarLottery.time);
-                const timeStr = `${timeObj.dayString}, ${timeObj.timeFromString}:00 ~ ${timeObj.timeToString + 1}:00`;
+                const timeStr = `${timeObj.dayString}, ${timeObj.timeFromString}:00 ~ ${timeObj.timeToString}:00`;
 
                 const seminarMeta = { ...LotteryMeta.Seminar.Win, timeRange : timeStr };
 
