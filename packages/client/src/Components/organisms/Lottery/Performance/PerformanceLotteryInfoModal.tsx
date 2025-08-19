@@ -45,7 +45,7 @@ export default function PerformanceLotteryInfoModal({ info, open, setOpen, refet
 
     useEffect(() => {
         setIsError(
-            today >= dateLotteryStart ||
+            // today >= dateLotteryStart ||
             dateLotteryStart >= dateLotteryEnd ||
             dateLotteryEnd >= dateStart ||
             dateStart >= dateEnd
