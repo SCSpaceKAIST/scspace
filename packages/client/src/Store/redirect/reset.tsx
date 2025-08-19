@@ -5,12 +5,14 @@ import { useEffect, useState } from "react";
 import { IRedirect, useRedirectStore } from ".";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
+import { usePathname } from "next/navigation";
 
 export function useRedirects() {
     const { spaces } = useAllSpace();
     const [spaceLinks, setSpaceLinks] = useState<IRedirect[]>([]);
     const [calendarLinks, setCalendarLinks] = useState<IRedirect[]>([]);
     const { userInfo, isAdmin, isManager, isLogined } = useAuth();
+    const pathname = usePathname();
 
     useEffect(() => {
         if (spaces) setSpaceLinks(spaces.map((s): IRedirect => {
@@ -34,7 +36,14 @@ export function useRedirects() {
 
     const { update } = useRedirectStore();
 
-    const { data: activeLotteryInfo } = useSeminarLotteryInfoAPI().activeLotteryInfo;
+    const {
+        data: activeLotteryInfo,
+        refetch: refetchActiveLotteryInfo
+    } = useSeminarLotteryInfoAPI().activeLotteryInfo;
+
+    useEffect(() => {
+        refetchActiveLotteryInfo();
+    }, [pathname]);
 
     useEffect(() => {
         update([

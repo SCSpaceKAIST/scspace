@@ -8,16 +8,16 @@ import {
     IconButton,
     Flex,
 } from "@chakra-ui/react";
-import { useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
+import { usePerformanceLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useDate } from "@scspace-client/Hooks/utils";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import { HiPlus } from "react-icons/hi2";
-import SeminarLotteryInfoModal from "@scspace-client/Components/organisms/Lottery/Seminar/SeminarLotteryInfoModal";
 import { ILotteryInfo } from "@scspace-depot/types/lottery/lottery.info.type";
+import PerformanceLotteryInfoModal from "./PerformanceLotteryInfoModal";
 
-export default function SeminarLotteryInfo() {
+export default function PerformanceLotteryInfo() {
     const { needAdmin } = useAuth();
     needAdmin();
     const {
@@ -26,7 +26,7 @@ export default function SeminarLotteryInfo() {
             isLoading,
             refetch
         }
-    } = useSeminarLotteryInfoAPI();
+    } = usePerformanceLotteryInfoAPI();
 
     const { getDateString } = useDate();
 
@@ -43,7 +43,7 @@ export default function SeminarLotteryInfo() {
 
     return (
         <>
-            <SeminarLotteryInfoModal
+            <PerformanceLotteryInfoModal
                 info={selectedInfo}
                 open={open}
                 setOpen={setOpen}
@@ -78,8 +78,8 @@ export default function SeminarLotteryInfo() {
                                 header={[
                                     "추첨 시작 날짜",
                                     "추첨 종료 날짜",
-                                    "학기 시작 날짜",
-                                    "학기 종료 날짜",
+                                    "기간 시작 날짜",
+                                    "기간 종료 날짜",
                                 ]}
                                 content={lotteryInfos.map(info => ({
                                     id: info.id,
