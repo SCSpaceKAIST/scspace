@@ -31,7 +31,7 @@ import { ReservationPublicService } from '@scspace-server/feature/reservation/re
 import { IReservationMultipleCreateResurt } from '@scspace-depot/types/reservation';
 import { MailService } from '@scspace-server/tools/mailer/mail.service';
 import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
-import { LotteryMeta } from '@scspace-depot/enums/mail.enum';
+import { LotteryMeta } from "@scspace-depot/enums/mail.enum";
 
 @Injectable()
 export class LotterySeminarService {
