@@ -33,6 +33,16 @@ import { MailService } from '@scspace-server/tools/mailer/mail.service';
 import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
 import { LotteryMeta } from "@scspace-depot/enums/mail.enum";
 
+const weekDays = [
+    { key: "sunday", label: "Sun", index: 0 },
+    { key: "monday", label: "Mon", index: 1 },
+    { key: "tuesday", label: "Tue", index: 2 },
+    { key: "wednesday", label: "Wed", index: 3 },
+    { key: "thursday", label: "Thu", index: 4 },
+    { key: "friday", label: "Fri", index: 5 },
+    { key: "saturday", label: "Sat", index: 6 },
+];
+
 @Injectable()
 export class LotterySeminarService {
     // This service will handle the data access for seminar lottery-related operations
@@ -261,25 +271,6 @@ export class LotterySeminarService {
         return await this.lotterySeminarRepository.insert(params.lottery);
     }
 
-    // OG
-    // async deleteSeminarLottery(id: number): Promise<boolean> {
-    //     const seminarLottery = await this.lotterySeminarRepository.fetch({ id });
-    //     if (!seminarLottery) {
-    //         throw new BadRequestException('Seminar lottery not found');
-    //     }
-    //     // Implementation for deleting seminar lottery data
-    //     return await this.lotterySeminarRepository.delete(id);
-    // }
-    //
-    // async drawSeminarLottery(id: number): Promise<void> {
-    //     const seminarLottery = await this.lotterySeminarRepository.fetch({ id });
-    //     if (!seminarLottery) {
-    //         throw new BadRequestException('Seminar lottery not found');
-    //     }
-    //     // Implementation for drawing seminar lottery
-    //     await this.lotterySeminarRepository.update(id, { lotteryWin: 1 });
-    // }
-
 
     async getSeminarLotteryTimeSlotCounts(param: { spaceId: number; infoId: number }): Promise<{ time: number; count: number }[]> {
         // 모든 시간대에 대해 신청한 조직 수 반환
@@ -312,8 +303,32 @@ export class LotterySeminarService {
         await this.lotterySeminarRepository.update(toId, toLottery[0]);
     }
 
+    //언젠간쓰겠지
+    private async timeDecode(time:number) : Promise <{ dayIndex : number , hour: number}> {
+        const dayIndex = Math.floor(time / 24);
+        const hour = time % 24;
+        return { dayIndex, hour };
+    }
+
+    private async timeDecodeString (time:number) : Promise<{ dayString : string, hourString : string}> {
+        const dayIndex : number = Math.floor(time / 24);
+        const hour : number = time % 24;
+
+        const dayString :string = await this.weekDayDecode(dayIndex);
+        const hourString :string =  String(hour).padStart(2, '0');
+
+        return {
+            dayString,
+            hourString,
+        }
+    }
+
+    private async weekDayDecode (weekDay:number ): Promise<string> {
+        return weekDays.find(s => s.index == weekDay).label;
+    }
+
     /**
-     * @description After lottery draw, delete the data of non-winners
+     * @description "LOST"
      * @param byDraw Check if the action executed by the official draw [optional]
      * @param id Lottery's ID
      * */
@@ -340,6 +355,11 @@ export class LotterySeminarService {
                     organization.delegatorId,
                 );
 
+                const timeObj = await this.timeDecodeString(seminarLottery.time);
+                const timeStr = `${timeObj.dayString}, ${timeObj.hourString}:00 ~ ${timeObj.hourString + 1}:00`;
+
+                const seminarMeta = { ...LotteryMeta.Seminar.Lost, timeRange : timeStr };
+
                 await this.mailService.sendMail({
                     to: delegator.email,
                     subject: `[SCSpace] 세미나실 정기예약 추첨 결과 안내`,
@@ -347,7 +367,7 @@ export class LotterySeminarService {
                     template: 'lotteryResult',
                     replyTo: 'scspace@kaist.ac.kr',
                     context: {
-                        meta: LotteryMeta.Seminar.Lost,
+                        meta : seminarMeta,
                         lottery: seminarLottery,
                         space: space,
                         organization: organization,
@@ -366,7 +386,7 @@ export class LotterySeminarService {
     }
 
     /**
-     * @description Draw the lottery
+     * @description "WIN"
      * @param byDraw Check if the action executed by the official draw [optional]
      * @param id Lottery's ID
      * */
@@ -396,7 +416,10 @@ export class LotterySeminarService {
                     organization.delegatorId,
                 );
 
-                const meta = LotteryMeta.Seminar.Win;
+                const timeObj = await this.timeDecodeString(seminarLottery.time);
+                const timeStr = `${timeObj.dayString}, ${timeObj.hourString}:00 ~ ${timeObj.hourString + 1}:00`;
+
+                const seminarMeta = { ...LotteryMeta.Seminar.Win, timeRange : timeStr };
 
                 await this.mailService.sendMail({
                     to: delegator.email,
@@ -405,7 +428,7 @@ export class LotterySeminarService {
                     template: 'lotteryResult',
                     replyTo: 'scspace@kaist.ac.kr',
                     context: {
-                        meta,
+                        meta: seminarMeta,
                         lottery: seminarLottery,
                         space: space,
                         organization: organization,
@@ -415,7 +438,7 @@ export class LotterySeminarService {
                 Logger.log(error);
                 await this.mailService.reportError(
                     error instanceof Error ? error : new Error(String(error)),
-                    'deleteSemniarLottery - Mail Sector',
+                    'drawSemniarLottery - Mail Sector',
                 );
             }
         }
