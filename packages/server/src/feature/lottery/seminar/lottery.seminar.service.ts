@@ -540,16 +540,15 @@ export class LotterySeminarService {
         const seminarRooms = await this.spacePublicService.fetchAllBySpaceType(SpaceTypeEnum.SEMINAR);
         const verifiedOrganizations = await this.organizationPublicService.fetchVerified();
 
-        for (const spaceId of seminarRooms.map((s) => s.id)) {
-            for (const _ of Array.from({ length: 168 })) {
-                const j = Array.from({ length: 168 }).indexOf(_);
+        seminarRooms.map((s) => s.id).forEach(async (spaceId) => {
+            Array.from({ length: 168 }).forEach(async (_, j) => {
                 const drawnLotteries = await this.lotterySeminarRepository.fetch({
                     spaceId,
                     infoId: activeLottery[0].id,
                     time: j,
                     lotteryWin: 1,
                 });
-                if (drawnLotteries.length === 1) continue;
+                if (drawnLotteries.length === 1) return;
 
                 const lotteries = await this.lotterySeminarRepository.fetch({
                     spaceId,
@@ -560,12 +559,12 @@ export class LotterySeminarService {
 
                 // Implementation for drawing the lottery
                 if (lotteries.length === 0) {
-                    continue;
+                    return;
                 }
 
                 if (lotteries.length === 1) {
                     await this.drawSeminarLottery(lotteries[0].id, true);
-                    continue;
+                    return;
                 }
 
                 const lotteriesWithOrg = lotteries.map(lottery => ({
@@ -591,8 +590,8 @@ export class LotterySeminarService {
                         await this.deleteSeminarLottery(lottery.id, true);
                     }
                 }
-            }
-        }
+            });
+        });
 
         return true;
     }
