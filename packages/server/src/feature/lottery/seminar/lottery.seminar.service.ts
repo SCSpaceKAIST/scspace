@@ -303,7 +303,7 @@ export class LotterySeminarService {
         await this.lotterySeminarRepository.update(toId, toLottery[0]);
     }
 
-    //언젠간쓰겠지
+    //currently non-usage
     private async timeDecode(time:number) : Promise <{ dayIndex : number , hour: number}> {
         const dayIndex = Math.floor(time / 24);
         const hour = time % 24;
@@ -321,6 +321,17 @@ export class LotterySeminarService {
             dayString,
             hourString,
         }
+    }
+
+    private async timeRangeDecodeString (time: number) : Promise<{ dayString :string, timeFromString : string, timeToString : string}> {
+        const timeDecoded = await this.timeDecodeString(time);
+
+        return {
+            dayString : timeDecoded.dayString,
+            timeFromString : timeDecoded.hourString,
+            timeToString : String(parseInt(timeDecoded.hourString) + 1).padStart(2, '0')
+        }
+
     }
 
     private async weekDayDecode (weekDay:number ): Promise<string> {
@@ -355,8 +366,8 @@ export class LotterySeminarService {
                     organization.delegatorId,
                 );
 
-                const timeObj = await this.timeDecodeString(seminarLottery.time);
-                const timeStr = `${timeObj.dayString}, ${timeObj.hourString}:00 ~ ${timeObj.hourString + 1}:00`;
+                let timeObj = await this.timeRangeDecodeString(seminarLottery.time)
+                const timeStr = `${timeObj.dayString}, ${timeObj.timeFromString}:00 ~ ${timeObj.timeToString}:00`;
 
                 const seminarMeta = { ...LotteryMeta.Seminar.Lost, timeRange : timeStr };
 
@@ -416,8 +427,8 @@ export class LotterySeminarService {
                     organization.delegatorId,
                 );
 
-                const timeObj = await this.timeDecodeString(seminarLottery.time);
-                const timeStr = `${timeObj.dayString}, ${timeObj.hourString}:00 ~ ${timeObj.hourString + 1}:00`;
+                const timeObj = await this.timeRangeDecodeString(seminarLottery.time);
+                const timeStr = `${timeObj.dayString}, ${timeObj.timeFromString}:00 ~ ${timeObj.timeToString + 1}:00`;
 
                 const seminarMeta = { ...LotteryMeta.Seminar.Win, timeRange : timeStr };
 
