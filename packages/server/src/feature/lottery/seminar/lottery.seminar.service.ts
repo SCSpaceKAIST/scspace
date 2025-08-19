@@ -46,7 +46,7 @@ export class LotterySeminarService {
         private readonly lotterySeminarInfoRepository: LotterySeminarInfoRepository,
         private readonly mailService: MailService,
         private readonly userPublicService: UserPublicService,
-    ) {}
+    ) { }
 
     async getAllSeminarLotteryInfo(): Promise<MSeminarLotteryInfo[]> {
         // 자동 정렬된 모든 세미나 추첨 정보 조회
@@ -380,6 +380,8 @@ export class LotterySeminarService {
         // Implementation for drawing seminar lottery
         await this.lotterySeminarRepository.update(id, { lotteryWin: 1 });
 
+        Logger.log(`Seminar lottery drawn: ${id}`);
+
         //send mail
         if (byDraw) {
             try {
@@ -408,7 +410,7 @@ export class LotterySeminarService {
                     },
                 });
             } catch (error) {
-                console.log(error);
+                Logger.log(error);
                 await this.mailService.reportError(
                     error instanceof Error ? error : new Error(String(error)),
                     'deleteSemniarLottery - Mail Sector',
@@ -525,6 +527,8 @@ export class LotterySeminarService {
 
     @Cron(CronExpression.EVERY_DAY_AT_6PM, { name: "drawing" })
     async drawing(): Promise<boolean> {
+        Logger.log("Drawing seminar lottery...");
+
         const activeLottery = await this.lotterySeminarInfoRepository.fetchActiveLotteries(getNow());
         if (!activeLottery || activeLottery.length === 0) {
             throw new BadRequestException("No active lottery found");
