@@ -129,13 +129,9 @@ export class LotteryPerformanceController {
     }
 
     @UseGuards(AdminGuard)
-    @Put("draw/:id")
-    async drawPerformanceLottery(
-        @Param('id', ParseIntPipe) id: number
-    ): Promise<ISuccessResponse> {
-        // 수동으로 공연 추첨 당첨 처리
-        await this.lotteryPerformanceService.drawPerformanceLottery(id);
-        return { success: true };
+    @Post("draw")
+    async drawPerformanceLottery(): Promise<ISuccessResponse> {
+        return { success: await this.lotteryPerformanceService.drawing() };
     }
 
     @UseGuards(AdminGuard)

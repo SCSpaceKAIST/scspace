@@ -136,8 +136,8 @@ export function usePerformanceLotteryInfoAPI(id?: number) {
     ).mutate;
 
     const drawPerformanceLottery = useMutationApi<ISuccessResponse, {}>(
-        `/lottery/performance/draw/${id || ''}`,
-        "PUT"
+        "/lottery/performance/draw",
+        "POST"
     ).mutate;
 
     const applyPerformanceLottery = useMutationApi<ISuccessResponse, {}>(

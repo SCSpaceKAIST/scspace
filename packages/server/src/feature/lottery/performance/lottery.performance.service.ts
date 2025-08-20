@@ -278,18 +278,16 @@ export class LotteryPerformanceService {
 
     // Performance lottery drawing logic - 우선순위 기반으로 추첨
     // @Cron(CronExpression.EVERY_DAY_AT_6PM, { name: "performance_drawing" })
-    async drawing() {
+    async drawing(): Promise<boolean> {
         const activeLottery = await this.lotteryPerformanceInfoRepository.fetchActiveLotteries(getNow());
         if (!activeLottery || activeLottery.length === 0) {
-            return;
+            return false;
         }
 
         // DANCE, SUMI 등 공연실만 대상으로 (향후 PERFORMANCE 타입 추가되면 수정)
         const performanceRooms = await this.spacePublicService.fetchAllBySpaceType(SpaceTypeEnum.DANCE);
         const performanceRooms2 = await this.spacePublicService.fetchAllBySpaceType(SpaceTypeEnum.SUMI);
         const allPerformanceRooms = [...performanceRooms, ...performanceRooms2];
-
-        const verifiedOrganizations = await this.organizationPublicService.fetchVerified();
 
         const startDate = getDate(activeLottery[0].timeStart);
         const endDate = getDate(activeLottery[0].timeEnd);
@@ -349,5 +347,6 @@ export class LotteryPerformanceService {
                 }
             }
         }
+        return true;
     }
 }
