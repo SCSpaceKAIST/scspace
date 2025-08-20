@@ -250,8 +250,9 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                 </ActionBar.SelectionTrigger>
                                 {available && !readOnly && (appliedId === -1) && (
                                     <>
-                                        {[1, 2, 3].map(priority => {
+                                        {[1, 2, 3].map(priority => (
                                             <Button
+                                                key={priority}
                                                 variant={"outline"}
                                                 colorPalette={"blue"}
                                                 onClick={() =>
@@ -260,7 +261,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                             >
                                                 Apply (Priority {priority})
                                             </Button>
-                                        })}
+                                        ))}
                                     </>
                                 )}
                                 {available && !readOnly && (appliedId !== -1) && (
