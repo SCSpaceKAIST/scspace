@@ -9,7 +9,7 @@ interface DateSlotProps {
     startTime: number;
     date: number;
     isSelected: boolean;
-    onSelect: (date: number) => void;
+    onSelect: () => void;
     orgCount: [number, number, number];
     drawnOrgName: string | null;
     isOrgRequested: boolean;
@@ -75,7 +75,7 @@ export function DateSlot({
                 minW={0}
                 padding={1}
                 rounded="none"
-                onClick={() => onSelect(date)}
+                onClick={onSelect}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 cursor={drawnOrgName !== null ? "default" : "pointer"}

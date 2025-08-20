@@ -249,7 +249,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                     {selectedDateString}
                                 </ActionBar.SelectionTrigger>
                                 {available && !readOnly && (appliedId === -1) && (
-                                    <>
+                                    <HStack>
                                         {[1, 2, 3].map(priority => (
                                             <Button
                                                 key={priority}
@@ -262,7 +262,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                                 Apply (Priority {priority})
                                             </Button>
                                         ))}
-                                    </>
+                                    </HStack>
                                 )}
                                 {available && !readOnly && (appliedId !== -1) && (
                                     <Button
@@ -290,7 +290,6 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
             <Flex direction={"row"} justify={"flex-end"}>
                 <RefetchBtn refetch={
                     refetchAll
-                    // () => alert("Refetch not implemented yet")
                 } />
             </Flex>
             {(
@@ -360,8 +359,8 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                 date={i}
                                 key={`date-slot-${i}`}
                                 isSelected={selectedDate === i && open}
-                                onSelect={setSelectedDate}
-                                orgCount={(dateSlotCounts && dateSlotCounts[i]) ? dateSlotCounts[i].count : [0, 0, 0]}
+                                onSelect={() => setSelectedDate(i)}
+                                orgCount={((dateSlotCounts) ? dateSlotCounts.find(d => d.date === i)?.count : [0, 0, 0]) ?? [0, 0, 0]}
                                 // drawnOrgName={"12332123132132132132123123123123123123123132"}
                                 drawnOrgName={null}
                                 isOrgRequested={false}
