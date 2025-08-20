@@ -212,6 +212,12 @@ export class LotteryPerformanceService {
             throw new BadRequestException("A performance lottery with the same date already exists.");
         }
 
+        // Priority별 신청 개수 제한 확인 (각 priority별로 1개씩만 허용)
+        const priorityCount = pastLotteries.filter(lottery => lottery.priority === params.lottery.priority).length;
+        if (priorityCount >= 1) {
+            throw new BadRequestException(`You can only apply for 1 performance lottery per priority. Priority ${params.lottery.priority} already has ${priorityCount} application(s).`);
+        }
+
         // 공연집중기간은 최대 신청 수 제한이 다를 수 있음 (일단 10개로 설정)
         if (pastLotteries.length >= 10) {
             throw new BadRequestException("Maximum number of performance lotteries is 10. Cannot create more.");
