@@ -250,7 +250,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                 </ActionBar.SelectionTrigger>
                                 {available && !readOnly && (appliedId === -1) && (
                                     <>
-                                        {[1, 2, 3].forEach(priority => {
+                                        {[1, 2, 3].map(priority => {
                                             <Button
                                                 variant={"outline"}
                                                 colorPalette={"blue"}
@@ -318,7 +318,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                 >
                     <Grid
                         templateColumns={`repeat(${weekDays.length}, 1fr)`}
-                        templateRows={`40px repeat(${Math.ceil((startDate.getDate() + periodLength) / weekDays.length)}, 1fr)`}
+                        templateRows={`40px repeat(${Math.ceil((startDate.getDay() + periodLength) / weekDays.length)}, 1fr)`}
                         gap={0}
                         minW="600px"
                         width="100%"
