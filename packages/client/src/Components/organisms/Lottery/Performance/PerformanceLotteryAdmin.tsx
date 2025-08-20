@@ -13,7 +13,7 @@ import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 import { ISpace } from "@scspace-depot/types/space";
 import { useEffect, useState } from "react";
 
-export default function PerformanceLottery() {
+export default function PerformanceLotteryAdmin() {
     const { needAdmin } = useAuth();
     needAdmin();
 
