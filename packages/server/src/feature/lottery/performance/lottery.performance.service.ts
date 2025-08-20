@@ -312,6 +312,7 @@ export class LotteryPerformanceService {
                 for (const priority of [1, 2, 3]) {
                     // 하루씩 증가하도록 수정 (24시간 * 60분 * 60초 * 1000밀리초)
                     for (let date = 0; date < periodLength; date++) {
+                        Logger.log(`Processing room ${room.id} for priority ${priority} on date offset ${date}`);
                         const drawnLotteries = await this.lotteryPerformanceRepository.fetch({
                             spaceId: room.id,
                             infoId: activeLottery[0].id,
