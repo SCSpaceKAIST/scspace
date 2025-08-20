@@ -298,6 +298,7 @@ export class LotteryPerformanceService {
 
             const startDate = getDate(activeLottery[0].timeStart);
             const endDate = getDate(activeLottery[0].timeEnd);
+            const periodLength = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 
             Logger.log(`Drawing lottery from ${startDate.toISOString()} to ${endDate.toISOString()}`);
 
@@ -310,13 +311,11 @@ export class LotteryPerformanceService {
             for (const room of allPerformanceRooms) {
                 for (const priority of [1, 2, 3]) {
                     // 하루씩 증가하도록 수정 (24시간 * 60분 * 60초 * 1000밀리초)
-                    for (let currentDate = startDate.getTime(); currentDate <= endDate.getTime(); currentDate += 24 * 60 * 60 * 1000) {
-                        const dateTimestamp = Math.floor(currentDate / 1000);
-
+                    for (let date = 0; date < periodLength; date++) {
                         const drawnLotteries = await this.lotteryPerformanceRepository.fetch({
                             spaceId: room.id,
                             infoId: activeLottery[0].id,
-                            date: dateTimestamp,
+                            date,
                             lotteryWin: 1
                         });
 
@@ -325,7 +324,7 @@ export class LotteryPerformanceService {
                         const lotteries = await this.lotteryPerformanceRepository.fetch({
                             spaceId: room.id,
                             infoId: activeLottery[0].id,
-                            date: dateTimestamp,
+                            date,
                             lotteryWin: 0,
                             priority
                         });
@@ -335,7 +334,7 @@ export class LotteryPerformanceService {
                         const winner = lotteries[getRandomIndex(lotteries.length)];
                         await this.drawPerformanceLottery(winner.id);
 
-                        Logger.log(`Performance lottery winner drawn: ${winner.id} for date ${dateTimestamp}`);
+                        Logger.log(`Performance lottery winner drawn: ${winner.id} for date ${date}`);
 
                         // 당첨된 조직의 다른 모든 신청을 한 번에 조회하고 삭제
                         const otherLotteries = await this.lotteryPerformanceRepository.fetch({
