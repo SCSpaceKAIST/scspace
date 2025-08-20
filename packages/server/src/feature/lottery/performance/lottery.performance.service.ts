@@ -286,8 +286,7 @@ export class LotteryPerformanceService {
                 return false;
             }
 
-            // DANCE, SUMI 등 공연실만 대상으로 (향후 PERFORMANCE 타입 추가되면 수정)
-            const performanceRooms = await this.spacePublicService.fetchAllBySpaceType(SpaceTypeEnum.DANCE);
+            const performanceRooms = await this.spacePublicService.fetchAllBySpaceType(SpaceTypeEnum.MIRAE);
             const performanceRooms2 = await this.spacePublicService.fetchAllBySpaceType(SpaceTypeEnum.SUMI);
             const allPerformanceRooms = [...performanceRooms, ...performanceRooms2];
 
