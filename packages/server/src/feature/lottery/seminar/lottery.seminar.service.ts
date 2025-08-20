@@ -285,37 +285,21 @@ export class LotterySeminarService {
         });
     }
 
-    async exchangeSeminarLottery(ids: [number, number]): Promise<void> {
-        const [fromId, toId] = ids;
-        const fromLottery = await this.lotterySeminarRepository.fetch({ id: fromId });
-        const toLottery = await this.lotterySeminarRepository.fetch({ id: toId });
 
-        if (!fromLottery || !toLottery) {
-            throw new BadRequestException("Invalid lottery IDs");
-        }
-
-        // Swap the lottery times
-        const tempTime = fromLottery[0].time;
-        fromLottery[0].time = toLottery[0].time;
-        toLottery[0].time = tempTime;
-
-        await this.lotterySeminarRepository.update(fromId, fromLottery[0]);
-        await this.lotterySeminarRepository.update(toId, toLottery[0]);
-    }
 
     //currently non-usage
-    private async timeDecode(time:number) : Promise <{ dayIndex : number , hour: number}> {
+    private async timeDecode(time: number): Promise<{ dayIndex: number, hour: number }> {
         const dayIndex = Math.floor(time / 24);
         const hour = time % 24;
         return { dayIndex, hour };
     }
 
-    private async timeDecodeString (time:number) : Promise<{ dayString : string, hourString : string}> {
-        const dayIndex : number = Math.floor(time / 24);
-        const hour : number = time % 24;
+    private async timeDecodeString(time: number): Promise<{ dayString: string, hourString: string }> {
+        const dayIndex: number = Math.floor(time / 24);
+        const hour: number = time % 24;
 
-        const dayString :string = await this.weekDayDecode(dayIndex);
-        const hourString :string =  String(hour).padStart(2, '0');
+        const dayString: string = await this.weekDayDecode(dayIndex);
+        const hourString: string = String(hour).padStart(2, '0');
 
         return {
             dayString,
@@ -323,18 +307,18 @@ export class LotterySeminarService {
         }
     }
 
-    private async timeRangeDecodeString (time: number) : Promise<{ dayString :string, timeFromString : string, timeToString : string}> {
+    private async timeRangeDecodeString(time: number): Promise<{ dayString: string, timeFromString: string, timeToString: string }> {
         const timeDecoded = await this.timeDecodeString(time);
 
         return {
-            dayString : timeDecoded.dayString,
-            timeFromString : timeDecoded.hourString,
-            timeToString : String(parseInt(timeDecoded.hourString) + 1).padStart(2, '0')
+            dayString: timeDecoded.dayString,
+            timeFromString: timeDecoded.hourString,
+            timeToString: String(parseInt(timeDecoded.hourString) + 1).padStart(2, '0')
         }
 
     }
 
-    private async weekDayDecode (weekDay:number ): Promise<string> {
+    private async weekDayDecode(weekDay: number): Promise<string> {
         return weekDays.find(s => s.index == weekDay).label;
     }
 
@@ -369,7 +353,7 @@ export class LotterySeminarService {
                 let timeObj = await this.timeRangeDecodeString(seminarLottery.time)
                 const timeStr = `${timeObj.dayString}, ${timeObj.timeFromString}:00 ~ ${timeObj.timeToString}:00`;
 
-                const seminarMeta = { ...LotteryMeta.Seminar.Lost, timeRange : timeStr };
+                const seminarMeta = { ...LotteryMeta.Seminar.Lost, timeRange: timeStr };
 
                 await this.mailService.sendMail({
                     to: delegator.email,
@@ -378,7 +362,7 @@ export class LotterySeminarService {
                     template: 'lotteryResult',
                     replyTo: 'scspace@kaist.ac.kr',
                     context: {
-                        meta : seminarMeta,
+                        meta: seminarMeta,
                         lottery: seminarLottery,
                         space: space,
                         organization: organization,
@@ -430,7 +414,7 @@ export class LotterySeminarService {
                 const timeObj = await this.timeRangeDecodeString(seminarLottery.time);
                 const timeStr = `${timeObj.dayString}, ${timeObj.timeFromString}:00 ~ ${timeObj.timeToString}:00`;
 
-                const seminarMeta = { ...LotteryMeta.Seminar.Win, timeRange : timeStr };
+                const seminarMeta = { ...LotteryMeta.Seminar.Win, timeRange: timeStr };
 
                 await this.mailService.sendMail({
                     to: delegator.email,

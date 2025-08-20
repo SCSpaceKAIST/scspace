@@ -3,9 +3,10 @@
 import { AbsoluteCenter, Box, Button, Center, DataList, Grid, GridItem, Separator, Stack, StackSeparator, Text } from "@chakra-ui/react";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import { useDate } from "@scspace-client/Hooks/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface DateSlotProps {
+    startTime: number;
     date: number;
     isSelected: boolean;
     onSelect: (date: number) => void;
@@ -15,6 +16,7 @@ interface DateSlotProps {
 }
 
 export function DateSlot({
+    startTime,
     date,
     isSelected,
     onSelect,
@@ -22,8 +24,16 @@ export function DateSlot({
     drawnOrgName,
     isOrgRequested
 }: DateSlotProps) {
-    const { getDateString } = useDate();
+    const { getDateString, getTime, getDate } = useDate();
     const [isHovered, setIsHovered] = useState(false);
+
+    const [slotDate, setSlotDate] = useState<Date>(getDate(startTime));
+    useEffect(() => {
+        setSlotDate(s => {
+            s.setDate(s.getDate() + date);
+            return s;
+        });
+    }, [date]);
 
     const getBgColor = () => {
         if (isSelected) return "blue.100"; // readOnly일 때 더 진한 색
@@ -85,7 +95,7 @@ export function DateSlot({
                     h={"100%"}
                 >
                     <Text fontSize="sm" margin={0} padding={0}>
-                        {getDateString(date)}
+                        {getDateString(getTime(slotDate))}
                     </Text>
                     <Separator borderColor={getBorderColor()} width={"100%"} />
                     <Center maxW="100%" overflow="hidden">

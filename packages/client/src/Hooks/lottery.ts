@@ -140,9 +140,9 @@ export function usePerformanceLotteryInfoAPI(id?: number) {
         "PUT"
     ).mutate;
 
-    const exchangePerformanceLottery = useMutationApi<ISuccessResponse, { fromId: number; toId: number }>(
-        `/lottery/performance/exchange`,
-        "PUT"
+    const applyPerformanceLottery = useMutationApi<ISuccessResponse, {}>(
+        `/lottery/performance/apply`,
+        "POST"
     ).mutate;
 
     return {
@@ -157,7 +157,7 @@ export function usePerformanceLotteryInfoAPI(id?: number) {
         deleteLotteryInfo,
 
         drawPerformanceLottery,
-        exchangePerformanceLottery
+        applyPerformanceLottery
     };
 }
 

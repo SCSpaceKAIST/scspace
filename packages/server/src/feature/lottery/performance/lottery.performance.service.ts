@@ -250,25 +250,24 @@ export class LotteryPerformanceService {
         });
     }
 
-    async exchangePerformanceLottery(ids: [number, number]): Promise<void> {
-        const [fromId, toId] = ids;
-        const fromLottery = await this.lotteryPerformanceRepository.fetch({ id: fromId });
-        const toLottery = await this.lotteryPerformanceRepository.fetch({ id: toId });
-
-        if (!fromLottery || !toLottery) {
-            throw new BadRequestException("Invalid lottery IDs");
+    async applyPerformanceLottery(): Promise<boolean> {
+        const activeLottery = await this.lotteryPerformanceInfoRepository.fetchActiveLotteries(getNow());
+        if (!activeLottery || activeLottery.length === 0) {
+            throw new BadRequestException("No active lottery found");
+        }
+        if (activeLottery[0].applied) {
+            throw new BadRequestException("You have already applied for this lottery");
         }
 
-        // Swap the lottery dates and priorities
-        const tempDate = fromLottery[0].date;
-        const tempPriority = fromLottery[0].priority;
-        fromLottery[0].date = toLottery[0].date;
-        fromLottery[0].priority = toLottery[0].priority;
-        toLottery[0].date = tempDate;
-        toLottery[0].priority = tempPriority;
+        // 공연 추첨 결과를 실제 예약으로 변환하는 로직 구현
+        // TODO: 구체적인 공연 예약 생성 로직 구현 필요
 
-        await this.lotteryPerformanceRepository.update(fromId, fromLottery[0]);
-        await this.lotteryPerformanceRepository.update(toId, toLottery[0]);
+        await this.lotteryPerformanceInfoRepository.update({
+            id: activeLottery[0].id,
+            updateLotteryInfo: { applied: true }
+        });
+
+        return true;
     }
 
     // Performance lottery drawing logic - 우선순위 기반으로 추첨

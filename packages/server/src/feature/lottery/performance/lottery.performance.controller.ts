@@ -139,12 +139,10 @@ export class LotteryPerformanceController {
     }
 
     @UseGuards(AdminGuard)
-    @Put("exchange")
-    async exchangePerformanceLottery(
-        @Body() { fromId, toId }: { fromId: number; toId: number }
-    ): Promise<ISuccessResponse> {
-        // 공연 추첨 교환
-        await this.lotteryPerformanceService.exchangePerformanceLottery([fromId, toId]);
+    @Post("apply")
+    async applyPerformanceLottery(): Promise<ISuccessResponse> {
+        // 공연 추첨 결과 적용
+        await this.lotteryPerformanceService.applyPerformanceLottery();
         return { success: true };
     }
 }
