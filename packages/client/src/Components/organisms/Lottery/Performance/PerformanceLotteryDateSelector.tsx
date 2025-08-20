@@ -82,7 +82,6 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
     }, [orgId, activeLotteryInfo, editable]);
 
     const [selectedDate, setSelectedDate] = useState<number>(-1);
-    const [priority, setPriority] = useState<number>(0);
     const [selectedDateString, setSelectedDateString] = useState<string>("");
     useEffect(() => {
         if (selectedDate !== -1) {
@@ -176,7 +175,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
         refetchActiveLotteryInfo();
     };
 
-    const createPerformanceLotteryHandler = () => {
+    const createPerformanceLotteryHandler = (priority: number) => {
         if (!activeLotteryInfo || activeLotteryInfo?.length === 0 || activeLotteryInfo[0].applied) return;
         if (orgId === -1) return;
         if (selectedDate === -1) return;
@@ -250,13 +249,19 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                     {selectedDateString}
                                 </ActionBar.SelectionTrigger>
                                 {available && !readOnly && (appliedId === -1) && (
-                                    <Button
-                                        variant={"outline"}
-                                        colorPalette={"blue"}
-                                        onClick={createPerformanceLotteryHandler}
-                                    >
-                                        Apply
-                                    </Button>
+                                    <>
+                                        {[1, 2, 3].forEach(priority => {
+                                            <Button
+                                                variant={"outline"}
+                                                colorPalette={"blue"}
+                                                onClick={() =>
+                                                    createPerformanceLotteryHandler(priority)
+                                                }
+                                            >
+                                                Apply (Priority {priority})
+                                            </Button>
+                                        })}
+                                    </>
                                 )}
                                 {available && !readOnly && (appliedId !== -1) && (
                                     <Button
@@ -313,7 +318,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                 >
                     <Grid
                         templateColumns={`repeat(${weekDays.length}, 1fr)`}
-                        templateRows={`40px repeat(4, 1fr)`}
+                        templateRows={`40px repeat(${Math.ceil((startDate.getDate() + periodLength) / weekDays.length)}, 1fr)`}
                         gap={0}
                         minW="600px"
                         width="100%"
@@ -340,7 +345,12 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                         ))}
 
                         {startDate.getDay() !== 0 && (
-                            <GridItem colSpan={startDate.getDay()} />
+                            <GridItem
+                                colSpan={startDate.getDay()}
+                                borderRightWidth="1px"
+                                borderBottomWidth="1px"
+                                borderColor="gray.200"
+                            />
                         )}
 
                         {Array.from({ length: periodLength }).map((_, i) => (
@@ -350,7 +360,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                 key={`date-slot-${i}`}
                                 isSelected={selectedDate === i && open}
                                 onSelect={setSelectedDate}
-                                orgCount={[0, 1, 2]}
+                                orgCount={(dateSlotCounts && dateSlotCounts[i]) ? dateSlotCounts[i].count : [0, 0, 0]}
                                 // drawnOrgName={"12332123132132132132123123123123123123123132"}
                                 drawnOrgName={null}
                                 isOrgRequested={false}

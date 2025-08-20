@@ -237,8 +237,8 @@ export class LotteryPerformanceService {
         await this.lotteryPerformanceRepository.update(id, { lotteryWin: 1 });
     }
 
-    async getPerformanceLotteryDateSlotCounts(param: { spaceId: number; infoId: number }): Promise<{ date: number; count: number }[]> {
-        // 모든 날짜에 대해 신청한 조직 수 반환
+    async getPerformanceLotteryDateSlotCounts(param: { spaceId: number; infoId: number }): Promise<{ date: number; count: [number, number, number] }[]> {
+        // 모든 날짜에 대해 신청한 조직 수를 priority별로 반환
         return await this.lotteryPerformanceRepository.fetchDateSlotCounts(param.spaceId, param.infoId);
     }
 

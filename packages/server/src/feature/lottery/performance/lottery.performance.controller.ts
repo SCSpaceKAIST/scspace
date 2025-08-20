@@ -94,8 +94,8 @@ export class LotteryPerformanceController {
     async getDateSlotCounts(
         @Query('spaceId', ParseIntPipe) spaceId: number,
         @Query('infoId', ParseIntPipe) infoId: number
-    ): Promise<{ date: number; count: number }[]> {
-        // 모든 날짜에 대해 신청한 조직 수 조회
+    ): Promise<{ date: number; count: [number, number, number] }[]> {
+        // 모든 날짜에 대해 신청한 조직 수를 priority별로 조회
         return await this.lotteryPerformanceService.getPerformanceLotteryDateSlotCounts({ spaceId, infoId });
     }
 

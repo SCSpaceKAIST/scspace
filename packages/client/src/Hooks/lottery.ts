@@ -186,7 +186,7 @@ export function usePerformanceLotteryAPI(params?: {
         `/lottery/performance/date?date=${date}&spaceId=${spaceId}&infoId=${infoId}`
     );
 
-    const dateSlotCounts = useQueryApi<{ date: number; count: number }[]>(
+    const dateSlotCounts = useQueryApi<{ date: number; count: [number, number, number] }[]>(
         `/lottery/performance/dateslot-counts?spaceId=${spaceId}&infoId=${infoId}`
     );
 

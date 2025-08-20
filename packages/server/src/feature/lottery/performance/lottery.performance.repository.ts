@@ -53,11 +53,12 @@ export class LotteryPerformanceRepository {
         return result;
     }
 
-    async fetchDateSlotCounts(spaceId: number, infoId: number): Promise<{ date: number; count: number }[]> {
-        // Implementation for fetching organization count per date slot
+    async fetchDateSlotCounts(spaceId: number, infoId: number): Promise<{ date: number; count: [number, number, number] }[]> {
+        // Implementation for fetching organization count per date slot by priority
         const result = await this.db
             .select({
                 date: PerformanceLottery.date,
+                priority: PerformanceLottery.priority,
                 count: count(PerformanceLottery.organizationId).as('count')
             })
             .from(PerformanceLottery)
@@ -65,11 +66,29 @@ export class LotteryPerformanceRepository {
                 eq(PerformanceLottery.spaceId, spaceId),
                 eq(PerformanceLottery.infoId, infoId)
             ))
-            .groupBy(PerformanceLottery.date);
+            .groupBy(PerformanceLottery.date, PerformanceLottery.priority);
 
-        return result.map(row => ({
-            date: row.date,
-            count: Number(row.count)
+        // Group by date and create array for each priority [priority1, priority2, priority3]
+        const dateCountMap = new Map<number, [number, number, number]>();
+
+        result.forEach(row => {
+            const date = row.date;
+            const priority = row.priority;
+            const count = Number(row.count);
+
+            if (!dateCountMap.has(date)) {
+                dateCountMap.set(date, [0, 0, 0]);
+            }
+
+            const counts = dateCountMap.get(date)!;
+            if (priority >= 1 && priority <= 3) {
+                counts[priority - 1] = count;
+            }
+        });
+
+        return Array.from(dateCountMap.entries()).map(([date, count]) => ({
+            date,
+            count
         }));
     }
 
