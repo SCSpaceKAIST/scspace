@@ -300,8 +300,6 @@ export class LotteryPerformanceService {
             const endDate = getDate(activeLottery[0].timeEnd);
             const periodLength = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 
-            Logger.log(`Drawing lottery from ${startDate.toISOString()} to ${endDate.toISOString()}`);
-
             // 날짜 범위 검증
             if (startDate.getTime() > endDate.getTime()) {
                 Logger.error('Invalid date range: start date is after end date');
@@ -319,8 +317,6 @@ export class LotteryPerformanceService {
                             lotteryWin: 1
                         });
 
-                        Logger.log(`Drawn lotteries for room ${room.id} on date ${date}: ${JSON.stringify(drawnLotteries)}`);
-
                         if (drawnLotteries.length > 0) continue; // 이미 당첨자가 있으면 스킵
 
                         const lotteries = await this.lotteryPerformanceRepository.fetch({
@@ -330,6 +326,8 @@ export class LotteryPerformanceService {
                             lotteryWin: 0,
                             priority
                         });
+
+                        Logger.log(`Available lotteries for room ${room.id} on date ${date}: ${JSON.stringify(lotteries)}`);
 
                         if (lotteries.length === 0) continue;
 
