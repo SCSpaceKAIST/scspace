@@ -1,6 +1,6 @@
 "use client"
 
-import { Grid, GridItem, Stack } from "@chakra-ui/react";
+import { Center, Grid, GridItem, Stack, Text } from "@chakra-ui/react";
 import LoadingComponent, { SmallLoading } from "@scspace-client/Components/atoms/Loading";
 import SelectComponent from "@scspace-client/Components/molecules/forms/Select";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
@@ -14,8 +14,8 @@ import { ISpace } from "@scspace-depot/types/space";
 import { useEffect, useState } from "react";
 
 export default function PerformanceLottery() {
-    const { userInfo, needLogin } = useAuth();
-    needLogin();
+    const { needAdmin } = useAuth();
+    needAdmin();
 
     const { spaces, isLoading: spaceLoading } = useAllSpace();
     const { data: verifiedOrganizations, isLoading: orgLoading } = useOrganizationAPI().verifiedOrganizations;
@@ -49,6 +49,13 @@ export default function PerformanceLottery() {
                         gap={8}
                         py={2}
                     >
+                        <GridItem colSpan={6}>
+                            <Center>
+                                <Text fontSize="xl" fontWeight="semibold" color={"red"}>
+                                    이 페이지의 기능을 악용하지 마시길 바랍니다.
+                                </Text>
+                            </Center>
+                        </GridItem>
                         <GridItem colSpan={6}>
                             <PerformanceLotteryNotice />
                         </GridItem>
@@ -84,7 +91,8 @@ export default function PerformanceLottery() {
                             <DateSelector
                                 orgId={orgId}
                                 spaceId={spaceId}
-                                editable={verifiedOrganizations?.find(v => v.id === orgId)?.delegatorId === userInfo?.id}
+                                editable
+                                isAdmin
                             />
                         </GridItem>
                     </Grid>

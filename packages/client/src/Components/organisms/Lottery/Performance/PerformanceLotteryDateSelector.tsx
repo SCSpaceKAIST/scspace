@@ -26,7 +26,7 @@ import { useDate } from "@scspace-client/Hooks/utils";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
 import AlertBtn from "@scspace-client/Components/atoms/AlertBtn";
 import { DateSlot } from "./PerformanceLotteryDateSlot";
-import { usePerformanceLotteryAPI, usePerformanceLotteryInfoAPI, useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
+import { usePerformanceLotteryAPI, usePerformanceLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 
 export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
     orgId: number;
@@ -361,35 +361,34 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                 isSelected={selectedDate === i && open}
                                 onSelect={() => setSelectedDate(i)}
                                 orgCount={((dateSlotCounts) ? dateSlotCounts.find(d => d.date === i)?.count : [0, 0, 0]) ?? [0, 0, 0]}
-                                // drawnOrgName={"12332123132132132132123123123123123123123132"}
-                                drawnOrgName={null}
-                                isOrgRequested={false}
+                                drawnOrgName={verifiedOrganizations?.find(o => o.id === drawnLottery?.find(l => l.date === i)?.organizationId)?.name || null}
+                                isOrgRequested={lotteryByOrganization?.some(l => l.date === i) ?? false}
                             />
                         ))}
                     </Grid>
                 </Box>
             )}
-            {/* {isAdmin && activeLotteryInfo && activeLotteryInfo.length > 0 && (
+            {isAdmin && activeLotteryInfo && activeLotteryInfo.length > 0 && (
                 <Stack>
                     <Button width={"full"} colorPalette={"blue"} size={"xl"} disabled={activeLotteryInfo[0].applied} onClick={() => {
                         drawPerformanceLottery({}, {
                             onSuccess: () => {
                                 toaster.success({
-                                    title: "Successfully drawn seminar lottery",
-                                    description: "The seminar lottery has been drawn successfully.",
+                                    title: "추첨 진행 완료",
+                                    description: "공연집중기간 추첨이 완료되었습니다.",
                                 });
                                 refetchAll();
                             },
                             onError: (error) => {
                                 toaster.error({
-                                    title: "Failed to draw seminar lottery",
-                                    description: error.message || "Failed to draw seminar lottery.",
+                                    title: "추첨 진행 실패",
+                                    description: error.message || "세미나실 추첨 진행에 실패했습니다.",
                                 });
                                 refetchAll();
                             },
                         })
                     }}>
-                        추첨 저장하기
+                        추첨 진행하기
                     </Button>
                     <AlertBtn
                         onClick={() => {
@@ -424,7 +423,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                         </Button>
                     </AlertBtn>
                 </Stack>
-            )} */}
+            )}
         </Stack>
     </>);
 }

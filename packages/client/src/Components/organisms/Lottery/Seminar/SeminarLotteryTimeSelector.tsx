@@ -391,21 +391,21 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
                         drawSeminarLottery({}, {
                             onSuccess: () => {
                                 toaster.success({
-                                    title: "Successfully drawn seminar lottery",
-                                    description: "The seminar lottery has been drawn successfully.",
+                                    title: "추첨 진행 완료",
+                                    description: "세미나실 추첨이 완료되었습니다.",
                                 });
                                 refetchAll();
                             },
                             onError: (error) => {
                                 toaster.error({
-                                    title: "Failed to draw seminar lottery",
-                                    description: error.message || "Failed to draw seminar lottery.",
+                                    title: "추첨 진행 실패",
+                                    description: error.message || "세미나실 추첨 진행에 실패했습니다.",
                                 });
                                 refetchAll();
                             },
                         })
                     }}>
-                        추첨 저장하기
+                        추첨 진행하기
                     </Button>
                     <AlertBtn
                         onClick={() => {
