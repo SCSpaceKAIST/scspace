@@ -291,59 +291,61 @@ export class LotteryPerformanceService {
 
         const verifiedOrganizations = await this.organizationPublicService.fetchVerified();
 
+        const startDate = getDate(activeLottery[0].timeStart);
+        const endDate = getDate(activeLottery[0].timeEnd);
+
         for (const room of allPerformanceRooms) {
-            // 각 날짜별로 추첨 진행 (공연집중기간은 보통 며칠간 진행)
-            const startDate = getDate(activeLottery[0].timeStart);
-            const endDate = getDate(activeLottery[0].timeEnd);
+            for (const priority of [1, 2, 3]) {
+                for (let currentDate = startDate.getTime(); currentDate <= endDate.getTime(); currentDate += 24 * 60) {
+                    const dateTimestamp = Math.floor(currentDate / 1000);
 
-            for (let currentDate = startDate.getTime(); currentDate <= endDate.getTime(); currentDate += 24 * 60 * 60 * 1000) {
-                const dateTimestamp = Math.floor(currentDate / 1000);
+                    const drawnLotteries = await this.lotteryPerformanceRepository.fetch({
+                        spaceId: room.id,
+                        infoId: activeLottery[0].id,
+                        date: dateTimestamp,
+                        lotteryWin: 1
+                    });
 
-                const drawnLotteries = await this.lotteryPerformanceRepository.fetch({
-                    spaceId: room.id,
-                    infoId: activeLottery[0].id,
-                    date: dateTimestamp,
-                    lotteryWin: 1
-                });
+                    if (drawnLotteries.length > 0) continue; // 이미 당첨자가 있으면 스킵
 
-                if (drawnLotteries.length > 0) continue; // 이미 당첨자가 있으면 스킵
+                    const lotteries = await this.lotteryPerformanceRepository.fetch({
+                        spaceId: room.id,
+                        infoId: activeLottery[0].id,
+                        date: dateTimestamp,
+                        lotteryWin: 0,
+                        priority
+                    });
 
-                const lotteries = await this.lotteryPerformanceRepository.fetch({
-                    spaceId: room.id,
-                    infoId: activeLottery[0].id,
-                    date: dateTimestamp,
-                    lotteryWin: 0
-                });
+                    if (lotteries.length === 0) continue;
 
-                if (lotteries.length === 0) continue;
-                if (lotteries.length === 1) {
-                    await this.drawPerformanceLottery(lotteries[0].id);
-                    continue;
-                }
+                    const winner = lotteries[getRandomIndex(lotteries.length)];
+                    await this.drawPerformanceLottery(winner.id);
 
-                // 우선순위별로 정렬하여 추첨
-                const lotteriesWithOrg = lotteries.map(lottery => ({
-                    ...lottery,
-                    organization: verifiedOrganizations.find(org => org.id === lottery.organizationId)
-                }));
+                    Logger.log(`Performance lottery winner drawn: ${winner.id} for date ${dateTimestamp}`);
 
-                // 우선순위가 높은 순서대로 정렬 (낮은 숫자가 높은 우선순위)
-                lotteriesWithOrg.sort((a, b) => a.priority - b.priority);
+                    const otherLotteries = await this.lotteryPerformanceRepository.fetch({
+                        spaceId: room.id,
+                        infoId: activeLottery[0].id,
+                        lotteryWin: 0,
+                        organizationId: winner.organizationId,
+                    });
 
-                // 같은 우선순위 그룹에서 추첨
-                const highestPriority = lotteriesWithOrg[0].priority;
-                const highestPriorityLotteries = lotteriesWithOrg.filter(l => l.priority === highestPriority);
-
-                const winner = highestPriorityLotteries[getRandomIndex(highestPriorityLotteries.length)];
-                await this.drawPerformanceLottery(winner.id);
-
-                Logger.log(`Performance lottery winner drawn: ${winner.id} for date ${dateTimestamp}`);
-
-                // 나머지 신청 삭제
-                for (const lottery of lotteries) {
-                    if (lottery.id !== winner.id) {
+                    for (const lottery of otherLotteries) {
                         await this.deletePerformanceLottery(lottery.id);
+                        Logger.log(`Performance lottery deleted: ${lottery.id} for drawn organization ${winner.organizationId}`);
                     }
+                }
+                // 나머지 신청 삭제
+                const failedLotteries = await this.lotteryPerformanceRepository.fetch({
+                    spaceId: room.id,
+                    infoId: activeLottery[0].id,
+                    lotteryWin: 0,
+                    priority
+                });
+
+                for (const lottery of failedLotteries) {
+                    await this.deletePerformanceLottery(lottery.id);
+                    Logger.log(`Performance lottery failed: ${lottery.id} for priority ${priority}`);
                 }
             }
         }
