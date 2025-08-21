@@ -9,6 +9,7 @@ import { ReservationPublicService } from './reservation.public.service';
 import { OrganizationModule } from 'src/feature/organization/organization.module';
 import { MailModule } from 'src/tools/mailer/mail.module';
 import { LotterySeminarModule } from '../lottery/seminar/lottery.seminar.module';
+import { LotteryPerformanceModule } from '../lottery/performance/lottery.performance.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { LotterySeminarModule } from '../lottery/seminar/lottery.seminar.module'
     UserModule,
     OrganizationModule,
     MailModule,
-    forwardRef(() => LotterySeminarModule)
+    forwardRef(() => LotterySeminarModule),
+    forwardRef(() => LotteryPerformanceModule)
   ],
   controllers: [ReservationController],
   providers: [

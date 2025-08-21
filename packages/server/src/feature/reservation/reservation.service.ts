@@ -190,7 +190,19 @@ export class ReservationService {
     if (!space) throw new BadRequestException('Space not found');
 
     // 세미나실 추첨 기간 겹침 검증
-    await this.reservationPublicService.validateSeminarLotteryConflict(reservationInput.userId, space, reservationInput.timeFrom, reservationInput.timeTo);
+    await this.reservationPublicService.validateSeminarLotteryConflict(
+      reservationInput.userId,
+      space,
+      reservationInput.timeFrom,
+      reservationInput.timeTo
+    );
+
+    await this.reservationPublicService.validatePerformanceLotteryConflict(
+      reservationInput.userId,
+      space,
+      reservationInput.timeFrom,
+      reservationInput.timeTo
+    );
 
     if (user.type !== UserTypeEnum.MANAGER && user.type !== UserTypeEnum.ADMIN) {
       const userOrganizations = await this.organizationPublicService.fetchByUserId(reservationInput.userId);
@@ -281,7 +293,17 @@ export class ReservationService {
 
     // 공간 정보 조회하여 세미나실 추첨 기간 겹침 검증
     await this.reservationPublicService.validateSeminarLotteryConflict(
-      reservation[0].userId, space, reservationInput.timeFrom, reservationInput.timeTo
+      reservation[0].userId,
+      space,
+      reservationInput.timeFrom,
+      reservationInput.timeTo
+    );
+
+    await this.reservationPublicService.validatePerformanceLotteryConflict(
+      reservation[0].userId,
+      space,
+      reservationInput.timeFrom,
+      reservationInput.timeTo
     );
 
     const [reservationUpdated, reservationContentUpdated] = await this.reservationRepository.update(reservationInput);
@@ -310,8 +332,6 @@ export class ReservationService {
         organization.id !== 1
           ? await this.organizationPublicService.fetchDeepById(organization.id)
           : undefined;
-
-
 
       await this.mailService.sendMail({
         to:

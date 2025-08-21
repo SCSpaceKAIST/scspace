@@ -47,6 +47,7 @@ import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { MailService } from '@scspace-server/tools/mailer/mail.service';
 import { IUser } from '@scspace-depot/types/user';
 import { ReservationMeta } from '@scspace-depot/enums/mail.enum';
+import { LotteryPerformanceService } from '../lottery/performance/lottery.performance.service';
 
 const writeFile = promisify(fs.writeFile);
 const mkdir = promisify(fs.mkdir);
@@ -59,8 +60,8 @@ export class ReservationPublicService {
     private readonly userPublicService: UserPublicService,
     private readonly organizationPublicService: OrganizationPublicService,
     private readonly mailService: MailService,
-    @Inject(forwardRef(() => LotterySeminarService))
-    private readonly lotterySeminarService: LotterySeminarService,
+    @Inject(forwardRef(() => LotterySeminarService)) private readonly lotterySeminarService: LotterySeminarService,
+    @Inject(forwardRef(() => LotteryPerformanceService)) private readonly lotteryPerformanceService: LotteryPerformanceService,
   ) { }
 
   async postMultipleReservation(
@@ -669,7 +670,61 @@ export class ReservationPublicService {
         const startDate = getDateString(lottery.timeStart);
         const endDate = getDateString(lottery.timeEnd);
         throw new BadRequestException(
-          `This period is reserved for seminar lottery from ${startDate} to ${endDate}. Reservation cannot be made until the lottery is completed.`,
+          `This period is reserved for seminar room regular reservation lottery (세미나실 정기예약 추첨) from ${startDate} to ${endDate}. Reservation cannot be made until the lottery is completed.`,
+        );
+      }
+    }
+  }
+
+  /**
+     * 조수미홀, 미래홀 예약 시 추첨 기간과 겹치는지 검증
+     * @param userId 사용자 ID
+     * @param space 예약하려는 공간 정보
+     * @param timeFrom 예약 시작 시간 (timestamp)
+     * @param timeTo 예약 종료 시간 (timestamp)
+     */
+  async validatePerformanceLotteryConflict(
+    userId: number,
+    space: ISpace,
+    timeFrom: number,
+    timeTo: number,
+  ): Promise<void> {
+    // 조수미홀, 미래홀 이 아니면 검증하지 않음
+    if (space.spaceType !== SpaceTypeEnum.SUMI && space.spaceType !== SpaceTypeEnum.MIRAE) {
+      return;
+    }
+
+    // 공간위원이면 추첨 기간과 겹쳐도 예약 가능
+    // if (await this.userPublicService.isManager(userId)) {
+    //   return;
+    // }
+
+    // 모든 추첨 정보 조회 (시간 순으로 정렬됨)
+    const allLotteries =
+      await this.lotteryPerformanceService.getAllPerformanceLotteryInfo();
+
+    for (const lottery of allLotteries) {
+      // 추첨 시작 시간부터 행사 끝 시간까지의 기간
+      const eventStartTime = BigInt(lottery.timeStart);
+      const eventEndTime = BigInt(lottery.timeEnd);
+      const applied = lottery.applied;
+
+      // 예약 시간과 추첨 기간이 겹치는지 확인
+      // A: [timeFrom ---- timeTo] (예약)
+      // B: [lotteryStartTime ---- eventEndTime] (추첨 기간)
+      // 겹치지 않는 조건: timeTo <= lotteryStartTime OR timeFrom >= eventEndTime
+      // 겹치는 조건: !(겹치지 않는 조건)
+      const isOverlapping = !(
+        timeTo <= eventStartTime ||
+        timeFrom >= eventEndTime ||
+        applied
+      );
+
+      if (isOverlapping) {
+        const startDate = getDateString(lottery.timeStart);
+        const endDate = getDateString(lottery.timeEnd);
+        throw new BadRequestException(
+          `This period is reserved for performance period lottery (공연집중기간 추첨) from ${startDate} to ${endDate}. Reservation cannot be made until the lottery is completed.`,
         );
       }
     }

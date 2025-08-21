@@ -200,7 +200,7 @@ export class LotteryPerformanceService {
             lotteryWin: 1
         });
         if (drawnLotteries.length > 0) {
-            throw new BadRequestException("A performance lottery with the same date has already been drawn.");
+            throw new BadRequestException("Your organization has already been drawn in this space.");
         }
 
         const pastLotteries = await this.lotteryPerformanceRepository.fetch({
@@ -208,7 +208,7 @@ export class LotteryPerformanceService {
             infoId: params.lottery.infoId
         });
         if (pastLotteries.find(lottery => lottery.date === params.lottery.date)) {
-            throw new BadRequestException("A performance lottery with the same date already exists.");
+            throw new BadRequestException("Your organization has already applied for a performance lottery on this date.");
         }
 
         // Priority별 신청 개수 제한 확인 (각 priority별로 1개씩만 허용)
@@ -216,7 +216,7 @@ export class LotteryPerformanceService {
             (lottery.priority === params.lottery.priority) && (lottery.spaceId === params.lottery.spaceId)
         ).length;
         if (priorityCount >= 1) {
-            throw new BadRequestException(`You can only apply for 1 performance lottery per priority. Priority ${params.lottery.priority} already has ${priorityCount} application(s).`);
+            throw new BadRequestException(`You can only apply for 1 performance lottery per priority. Priority ${params.lottery.priority} already has an application.`);
         }
 
         const createdLottery = await this.lotteryPerformanceRepository.insert(params.lottery);
