@@ -50,7 +50,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
     } = usePerformanceLotteryInfoAPI();
 
     if (!isAdmin && activeLotteryInfo && (activeLotteryInfo.length === 0 || activeLotteryInfo[0].applied)) {
-        alert("It is NOT a seminar room lottery period");
+        alert("It is NOT a performance period lottery");
         linkPush("/");
     }
     const [startDate, setStartDate] = useState<Date>(new Date());

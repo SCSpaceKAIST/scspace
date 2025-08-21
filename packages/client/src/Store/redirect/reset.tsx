@@ -4,7 +4,7 @@ import { useAllSpace } from "@scspace-client/Hooks/space";
 import { useEffect, useState } from "react";
 import { IRedirect, useRedirectStore } from ".";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
+import { usePerformanceLotteryInfoAPI, useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import { usePathname } from "next/navigation";
 
 export function useRedirects() {
@@ -37,12 +37,18 @@ export function useRedirects() {
     const { update } = useRedirectStore();
 
     const {
-        data: activeLotteryInfo,
-        refetch: refetchActiveLotteryInfo
+        data: activeSeminarLotteryInfo,
+        refetch: refetchActiveSeminarLotteryInfo
     } = useSeminarLotteryInfoAPI().activeLotteryInfo;
 
+    const {
+        data: activePerformanceLotteryInfo,
+        refetch: refetchActivePerformanceLotteryInfo
+    } = usePerformanceLotteryInfoAPI().activeLotteryInfo;
+
     useEffect(() => {
-        refetchActiveLotteryInfo();
+        refetchActiveSeminarLotteryInfo();
+        refetchActivePerformanceLotteryInfo();
     }, [pathname]);
 
     useEffect(() => {
@@ -51,14 +57,13 @@ export function useRedirects() {
                 href: "/lottery-seminar",
                 label: "세미나실 정기예약 추첨",
                 helperText: "Seminar Room Lottery",
-                invisible: !isLogined || !activeLotteryInfo || activeLotteryInfo.length === 0 || activeLotteryInfo[0].applied,
+                invisible: !isLogined || !activeSeminarLotteryInfo || activeSeminarLotteryInfo.length === 0 || activeSeminarLotteryInfo[0].applied,
             },
             {
                 href: "/lottery-performance",
                 label: "공연집중기간 추첨",
                 helperText: "Performance Intensive Period Lottery",
-                // invisible: !isLogined, // TODO: performance lottery info API 연동 후 조건 수정 예정
-                invisible: true
+                invisible: !isLogined || !activePerformanceLotteryInfo || activePerformanceLotteryInfo.length === 0 || activePerformanceLotteryInfo[0].applied,
             },
             {
                 href: "/browse",
