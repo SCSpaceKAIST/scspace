@@ -4,7 +4,7 @@ import { Dialog, Portal, HStack, useBreakpointValue, DataList, Separator, Text, 
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useDate } from "@scspace-client/Hooks/utils";
 import { IReservationAll } from "@scspace-depot/types/reservation";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
@@ -13,6 +13,7 @@ import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import ChangeTimeBtn from "./ChangeTimeBtn";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
+import { toaster } from "@scspace-client/Components/atoms/Toaster";
 
 export default function ReservationDetail({ open, setOpen, selectedRes, refetch }: {
     open: boolean;
@@ -27,14 +28,35 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
 
     const isMember = organizationDetail?.members.some(member => member.userId === userInfo?.id) ?? false;
 
+    const [e, setError] = useState<string | null>(null);
+
     const deleteReservation = useReservationAPI({ rid: selectedRes?.id ?? 0 }).deleteRes;
     function onDelete() {
-        deleteReservation({}, {
-            onSuccess: () => {
-                refetch();
-                setOpen(false);
+        toaster.promise(
+            deleteReservation({}, {
+                onError: (error) => {
+                    setError(error.message);
+                },
+                onSuccess: () => {
+                    refetch();
+                    setOpen(false);
+                }
+            }),
+            {
+                loading: {
+                    title: "Deleting...",
+                    description: "Please wait",
+                },
+                success: {
+                    title: "Deleted Successfully!",
+                    description: "Your Reservation has been deleted",
+                },
+                error: {
+                    title: "Delete Failed",
+                    description: e ?? "Please resubmit"
+                }
             }
-        });
+        )
     }
 
     const isWide = useBreakpointValue<boolean>({ base: false, md: true });

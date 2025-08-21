@@ -63,7 +63,7 @@ export default function Application() {
 
   const createReservation = useReservationAPI().createRes;
 
-  const [e, setE] = useState<string>();
+  const [e, setE] = useState<string | null>(null);
 
   const { getTime } = useDate();
 

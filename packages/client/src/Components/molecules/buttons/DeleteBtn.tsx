@@ -24,12 +24,7 @@ export default function DeleteBtn({ onDelete }: {
                 </>
             }
         >
-            <Button
-                colorPalette="red"
-            // px={2}
-            // py={1}
-            // height="fit-content"
-            >
+            <Button colorPalette="red">
                 Delete
             </Button>
         </AlertBtn>

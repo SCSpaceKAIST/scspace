@@ -216,7 +216,7 @@ export function useReservationAPI(Rid?: { rid: number }) {
     const deleteRes = useMutationApi<ISuccessResponse, {}>(
         `/reservation/${rid}`,
         "DELETE"
-    ).mutate;
+    ).mutateAsync;
 
     return { createRes, createMultipleRes, updateRes, deleteRes };
 };

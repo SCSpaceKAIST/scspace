@@ -535,16 +535,6 @@ export class LotterySeminarService {
         return logs;
     }
 
-    @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, { name: "auto apply" })
-    async autoApply() {
-        const activeLottery = await this.lotterySeminarInfoRepository.fetchActiveLotteries(getNow());
-        if (!activeLottery || activeLottery.length === 0) return;
-        if (activeLottery[0].applied) return;
-
-        const now = getNow();
-        if (now + 1 > activeLottery[0].timeStart) await this.applySeminarLottery();
-    }
-
     @Cron(CronExpression.EVERY_DAY_AT_6PM, { name: "drawing" })
     async drawing(): Promise<boolean> {
         Logger.log("Drawing seminar lottery...");
