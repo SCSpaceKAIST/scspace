@@ -10,7 +10,7 @@ import {
     ILotteryInfoUpdate,
     IPerformanceLotteryCreate,
 } from "@scspace-depot/types/lottery";
-import { getDate, getDateBegin, getDateEnd, getNow, getRandomIndex } from "@scspace-server/common/utils";
+import { getDate, getDateBegin, getDateEnd, getNow, getRandomIndex, getTime } from "@scspace-server/common/utils";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { SpacePublicService } from "@scspace-server/feature/space/space.public.service";
 import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
@@ -292,11 +292,14 @@ export class LotteryPerformanceService {
                 const lottery = performanceLotteryWithOrg.find(l => l.spaceId === room.id && l.date === date);
                 if (!lottery) continue;
 
-                const pastReservations = await this.reservationPublicService.getReservationBySpaceIDBetweenTime(
-                    room.id,
-                    activeLottery[0].timeStart + date * 24 * 60,
-                    activeLottery[0].timeStart + (date + 1) * 24 * 60
-                )
+                const resStart = getTime(new Date(
+                    startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + date
+                ));
+                const resEnd = getTime(new Date(
+                    startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + date + 1
+                ));
+
+                const pastReservations = await this.reservationPublicService.getReservationBySpaceIDBetweenTime(room.id, resStart, resEnd);
 
                 if (pastReservations.length === 0) {
                     const log = await this.reservationPublicService.postMultipleReservation({
@@ -305,8 +308,8 @@ export class LotteryPerformanceService {
                         userId: 1,
                         organizationId: lottery.organization.id,
                         time: [{
-                            timeFrom: activeLottery[0].timeStart + date * 24 * 60,
-                            timeTo: activeLottery[0].timeStart + (date + 1) * 24 * 60
+                            timeFrom: resStart,
+                            timeTo: resEnd
                         }],
                         content: {
                             description: `공연집중기간 예약 [${lottery.organization.name}]`,
@@ -326,7 +329,7 @@ export class LotteryPerformanceService {
                 }
 
                 const time: { timeFrom: number; timeTo: number }[] = [{
-                    timeFrom: activeLottery[0].timeStart + date * 24 * 60,
+                    timeFrom: resStart,
                     timeTo: pastReservations[0].timeFrom
                 }];
 
@@ -339,7 +342,7 @@ export class LotteryPerformanceService {
 
                 time.push({
                     timeFrom: pastReservations[pastReservations.length - 1].timeTo,
-                    timeTo: activeLottery[0].timeStart + (date + 1) * 24 * 60
+                    timeTo: resEnd
                 })
 
                 const log = await this.reservationPublicService.postMultipleReservation({
@@ -363,8 +366,6 @@ export class LotteryPerformanceService {
                 logs.push(log);
             }
         }
-
-        // await this.lotteryPerformanceInfoRepository.update({
         //     id: activeLottery[0].id,
         //     updateLotteryInfo: { applied: true }
         // });
