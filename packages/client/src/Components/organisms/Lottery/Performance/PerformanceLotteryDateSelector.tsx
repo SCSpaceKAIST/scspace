@@ -234,7 +234,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                         <VStack separator={<StackSeparator />}>
                             {lotteryByDate && lotteryByDate.length > 0 && (
                                 <VStack>
-                                    {['purple', 'yellow', 'blue'].map((color, priority) => (
+                                    {['purple', 'yellow', 'green'].map((color, priority) => (
                                         <Wrap key={color}>
                                             <For each={lotteryByDate.filter(l => l.priority === priority + 1)} fallback={
                                                 <Badge colorPalette={"gray"} key={-1}>

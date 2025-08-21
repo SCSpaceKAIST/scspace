@@ -425,6 +425,7 @@ export class LotteryPerformanceService {
                         const otherLotteries = await this.lotteryPerformanceRepository.fetch({
                             infoId: activeLottery[0].id,
                             lotteryWin: 0,
+                            spaceId: room.id,
                             organizationId: winner.organizationId,
                         });
 
@@ -433,9 +434,6 @@ export class LotteryPerformanceService {
                             await this.deletePerformanceLottery(lottery.id);
                             Logger.log(`Performance lottery deleted: ${lottery.id} for drawn organization ${winner.organizationId}`);
                         }
-
-                        // 해당 날짜의 다른 priority 신청들도 삭제 (당첨자가 나왔으므로)
-                        break;
                     }
                     // 나머지 신청 삭제
                     const failedLotteries = await this.lotteryPerformanceRepository.fetch({
