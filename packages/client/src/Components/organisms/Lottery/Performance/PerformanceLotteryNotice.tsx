@@ -15,7 +15,11 @@ export default function PerformanceLotteryNotice() {
                 content: "The number in each column represents the number of organizations that applied during that date.",
             },
             {
-                content: "The names of the organizations are listed in order of their application priority, with <Badge colorPalette={'purple'}>Priority 1</Badge>, <Badge colorPalette={'yellow'}>Priority 2</Badge>, or <Badge colorPalette={'green'}>Priority 3</Badge>.",
+                content: (
+                    <>
+                        The names of the organizations are listed in order of their application priority, with <Badge colorPalette={'purple'}>Priority 1</Badge>, <Badge colorPalette={'yellow'}>Priority 2</Badge>, or <Badge colorPalette={'green'}>Priority 3</Badge>.
+                    </>
+                )
             },
             {
                 content: "The lottery will be automatically conducted every day at 6 PM during the lottery period, and the results will be notified via email."
