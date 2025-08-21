@@ -1,9 +1,9 @@
 import { Tabs } from "@chakra-ui/react";
-import OrgRule from "@scspace-client/Components/organisms/Rules/organizationRule";
-import ResRule from "@scspace-client/Components/organisms/Rules/reservationRule";
+import OrgRule from "@scspace-client/Components/organisms/Rules/OrganizationRule";
+import ResRule from "@scspace-client/Components/organisms/Rules/ReservationRule";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import React from "react";
-import SeminarLotteryRule from "@scspace-client/Components/organisms/Rules/seminarLotteryRule";
+import SeminarLotteryRule from "@scspace-client/Components/organisms/Rules/SeminarLotteryRule";
 
 export default function Rules() {
     const tabList: { [key: string]: React.ReactNode } = {

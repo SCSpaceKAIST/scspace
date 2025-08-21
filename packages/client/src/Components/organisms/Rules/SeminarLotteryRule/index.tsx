@@ -1,6 +1,6 @@
-import { Badge, Blockquote, Field, Fieldset, Heading, Highlight, Icon, List, Mark, Separator, Stack, Text, Wrap } from "@chakra-ui/react";
+import { Alert, Badge, Blockquote, Field, Fieldset, Heading, Highlight, Icon, List, Mark, Separator, Stack, Text, Wrap } from "@chakra-ui/react";
 import SimpleLink from "@scspace-client/Components/atoms/SimpleLink";
-import { RiAsterisk } from "react-icons/ri";
+import SeminarLotteryStatus from "./SeminarLotteryStatus";
 
 export default function SeminarLotteryRule() {
     return (
@@ -14,6 +14,7 @@ export default function SeminarLotteryRule() {
                 세미나실 정기예약 관련 세칙 및 안내사항
             </Fieldset.HelperText>
             <Fieldset.Content>
+                <SeminarLotteryStatus />
                 <Field.Root>
                     <Field.Label>
                         세미나실 정기예약 추첨이란?
