@@ -1,12 +1,13 @@
 import { Alert, Badge, Blockquote, Field, Fieldset, Heading, Highlight, Icon, List, Mark, Separator, Stack, Text, Wrap } from "@chakra-ui/react";
 import SimpleLink from "@scspace-client/Components/atoms/SimpleLink";
 import SeminarLotteryStatus from "./SeminarLotteryStatus";
+import { BlueMark, RedMark } from "../utils";
 
 export default function SeminarLotteryRule() {
     return (
         <Fieldset.Root>
             <Fieldset.Legend>
-                <Heading>
+                <Heading whiteSpace={"break-spaces"}>
                     Seminar-room Recurring Reservation Rules
                 </Heading>
             </Fieldset.Legend>
@@ -23,7 +24,7 @@ export default function SeminarLotteryRule() {
                         <Blockquote.Content>
                             <Stack>
                                 <Text>
-                                    세미나실 정기예약은 정규학기(1주차-16주차) 중 시험기간 2주(7-8주차, 15-16주차)를 제외하고 <Mark color={"blue"} fontWeight={"semibold"}>매주 특정 시간에 특정 조직에게 세미나실 예약을 정기적으로 해주는 이벤트</Mark>입니다.
+                                    세미나실 정기예약은 정규학기(1주차-16주차) 중 시험기간 2주(7-8주차, 15-16주차)를 제외하고 <BlueMark>매주 특정 시간에 특정 조직에게 세미나실 예약을 정기적으로 해주는 이벤트</BlueMark>입니다.
                                 </Text>
                                 <Text>
                                     개강 2주 전, 일주일간 세미나실 정기예약 추첨을 받습니다.
@@ -63,13 +64,13 @@ export default function SeminarLotteryRule() {
                         <Blockquote.Content>
                             <Stack>
                                 <Text>
-                                    <Mark color={"red"} fontWeight={"semibold"}>인증된 조직만이 추첨에 참여할 수 있습니다.</Mark> 조직 인증을 받는 방법은 <SimpleLink href="/browse/rules" text="찾아보기 > 세칙 > Organization" />에서 알 수 있습니다.
+                                    <RedMark>인증된 조직만이 추첨에 참여할 수 있습니다.</RedMark> 조직 인증을 받는 방법은 <SimpleLink href="/browse/rules" text="찾아보기 > 세칙 > Organization" />에서 알 수 있습니다.
                                 </Text>
                                 <Text>
-                                    추첨을 신청하기 전에 반드시 <SimpleLink href="/mypage/organization" text="마이페이지 > 내 조직" /> 에서 <Mark color={"red"} fontWeight={"semibold"}>단체실 소유 여부</Mark>를 지정하시길 바랍니다. 조직의 이름은 단체실 소유 여부에 따라 <Badge colorPalette={"blue"}>Org has room</Badge> 또는 <Badge colorPalette={"green"}>Org has no room</Badge>으로 표시됩니다.
+                                    추첨을 신청하기 전에 반드시 <SimpleLink href="/mypage/organization" text="마이페이지 > 내 조직" /> 에서 <RedMark>단체실 소유 여부</RedMark>를 지정하시길 바랍니다. 조직의 이름은 단체실 소유 여부에 따라 <Badge colorPalette={"blue"}>Org has room</Badge> 또는 <Badge colorPalette={"green"}>Org has no room</Badge>으로 표시됩니다.
                                 </Text>
                                 <Text>
-                                    <Mark color={"red"} fontWeight={"semibold"}>동아리방/회의실이 없는 조직이 우선 배정을 받습니다.</Mark> 이를 악용하다 적발될 시 공간위가 제공하는 추첨에 불이익이 따를 수 있습니다.
+                                    <RedMark>동아리방/회의실이 없는 조직이 우선 배정을 받습니다.</RedMark> 이를 악용하다 적발될 시 공간위가 제공하는 추첨에 불이익이 따를 수 있습니다.
                                 </Text>
                                 <Text>
                                     매 추첨 전, 추첨 페이지에서 시간대별 신청한 조직의 수를 확인할 수 있습니다.
@@ -81,7 +82,7 @@ export default function SeminarLotteryRule() {
                                     세미나실1과 2는 서로 다른 공간으로, 각각 당첨여부가 결정됩니다.
                                 </Text>
                                 <Text>
-                                    세미나실1과 2를 합쳐 <Mark color={"blue"} fontWeight={"semibold"}>일주일 최대 6시간</Mark>을 신청할 수 있습니다.
+                                    세미나실1과 2를 합쳐 <BlueMark>일주일 최대 6시간</BlueMark>을 신청할 수 있습니다.
                                 </Text>
                                 <Text>
                                     1시간 단위로 추첨을 신청할 수 있습니다.
@@ -101,7 +102,7 @@ export default function SeminarLotteryRule() {
                                     당첨된 후에는 삭제 및 재신청이 가능하지만, 삭제 후에는 당첨 상태로 되돌릴 수 없습니다.
                                 </Text>
                                 <Text>
-                                    인성/리더십 수업이나 기타 이유로 이미 예약이 들어가 있는 시간대도 있으며, 이 경우 해당 시간대에 당첨되더라도 <Mark color={"blue"} fontWeight={"semibold"}>반영되지 않습니다.</Mark>
+                                    인성/리더십 수업이나 기타 이유로 이미 예약이 들어가 있는 시간대도 있으며, 이 경우 해당 시간대에 당첨되더라도 <BlueMark>반영되지 않습니다.</BlueMark>
                                 </Text>
                             </Stack>
                         </Blockquote.Content>
