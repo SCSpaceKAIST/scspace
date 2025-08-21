@@ -2,7 +2,8 @@ import {
     mysqlTable,
     varchar,
     int,
-    bigint
+    bigint,
+    boolean
 } from 'drizzle-orm/mysql-core';
 import { User } from './user';
 
@@ -13,6 +14,7 @@ export const Goods = mysqlTable('goods', {
     description: varchar('description', { length: 4098 }),
     countAll: int('count_all').notNull().default(1),
     countNow: int('count_Now').notNull().default(1),
+    imageId: int('image_id').notNull().default(0),
 });
 
 // rental 테이블 정의
@@ -28,6 +30,8 @@ export const Rental = mysqlTable('rental', {
     timeBorrow: bigint('time_borrow', { mode: 'number' }).notNull(),
     timeDue: bigint('time_due', { mode: 'number' }).notNull(),
     timeReturn: bigint('time_return', { mode: 'number' }).notNull().default(0),
+    timeConfirm: bigint('time_confirm', { mode: 'number' }).notNull().default(0),
+    overdue: int('overdue').notNull().default(0),
     // Foreign keys
     // userId references users.userId O
     // goodsId references goods.goodsId O
