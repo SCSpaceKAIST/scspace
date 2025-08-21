@@ -197,6 +197,7 @@ export class LotteryPerformanceService {
         const drawnLotteries = await this.lotteryPerformanceRepository.fetch({
             spaceId: params.lottery.spaceId,
             infoId: params.lottery.infoId,
+            organizationId: params.lottery.organizationId,
             lotteryWin: 1
         });
         if (drawnLotteries.length > 0) {
