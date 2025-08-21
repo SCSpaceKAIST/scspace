@@ -366,9 +366,11 @@ export class LotteryPerformanceService {
                 logs.push(log);
             }
         }
-        //     id: activeLottery[0].id,
-        //     updateLotteryInfo: { applied: true }
-        // });
+
+        await this.lotteryPerformanceInfoRepository.update({
+            id: activeLottery[0].id,
+            updateLotteryInfo: { applied: true }
+        });
 
         return logs;
     }
