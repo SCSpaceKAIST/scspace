@@ -15,6 +15,8 @@ import { Cron, CronExpression } from "@nestjs/schedule";
 import { SpacePublicService } from "@scspace-server/feature/space/space.public.service";
 import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 import { MPerformanceLotteryInfo } from "./lottery.performance.info.model";
+import { IReservationMultipleCreateResurt } from "@scspace-depot/types/reservation";
+import { ReservationPublicService } from "@scspace-server/feature/reservation/reservation.public.service";
 
 @Injectable()
 export class LotteryPerformanceService {
@@ -23,7 +25,9 @@ export class LotteryPerformanceService {
         private readonly organizationPublicService: OrganizationPublicService,
         private readonly spacePublicService: SpacePublicService,
         private readonly lotteryPerformanceRepository: LotteryPerformanceRepository,
-        private readonly lotteryPerformanceInfoRepository: LotteryPerformanceInfoRepository
+        private readonly lotteryPerformanceInfoRepository: LotteryPerformanceInfoRepository,
+        @Inject(forwardRef(() => ReservationPublicService))
+        private readonly reservationPublicService: ReservationPublicService,
     ) { }
 
     async getAllPerformanceLotteryInfo(): Promise<MPerformanceLotteryInfo[]> {
@@ -253,7 +257,7 @@ export class LotteryPerformanceService {
         });
     }
 
-    async applyPerformanceLottery(): Promise<boolean> {
+    async applyPerformanceLottery(): Promise<IReservationMultipleCreateResurt[]> {
         const activeLottery = await this.lotteryPerformanceInfoRepository.fetchActiveLotteries(getNow());
         if (!activeLottery || activeLottery.length === 0) {
             throw new BadRequestException("No active lottery found");
@@ -262,15 +266,110 @@ export class LotteryPerformanceService {
             throw new BadRequestException("You have already applied for this lottery");
         }
 
-        // 공연 추첨 결과를 실제 예약으로 변환하는 로직 구현
-        // TODO: 구체적인 공연 예약 생성 로직 구현 필요
+        const performanceRooms = await this.spacePublicService.fetchAllBySpaceType(SpaceTypeEnum.MIRAE);
+        const performanceRooms2 = await this.spacePublicService.fetchAllBySpaceType(SpaceTypeEnum.SUMI);
+        const allPerformanceRooms = [...performanceRooms, ...performanceRooms2];
 
-        await this.lotteryPerformanceInfoRepository.update({
-            id: activeLottery[0].id,
-            updateLotteryInfo: { applied: true }
+        const startDate = getDate(activeLottery[0].timeStart);
+        const endDate = getDate(activeLottery[0].timeEnd);
+        const periodLength = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+
+        const performanceLottery = await this.lotteryPerformanceRepository.fetch({
+            infoId: activeLottery[0].id
         });
 
-        return true;
+        const verifiedOrganizations = await this.organizationPublicService.fetchVerified();
+
+        const performanceLotteryWithOrg = performanceLottery.map(lottery => {
+            const org = verifiedOrganizations.find(o => o.id === lottery.organizationId);
+            return { ...lottery, organization: org };
+        });
+
+        const logs: IReservationMultipleCreateResurt[] = [];
+
+        for (const room of allPerformanceRooms) {
+            for (let date = 0; date < periodLength; date++) {
+                const lottery = performanceLotteryWithOrg.find(l => l.spaceId === room.id && l.date === date);
+                if (!lottery) continue;
+
+                const pastReservations = await this.reservationPublicService.getReservationBySpaceIDBetweenTime(
+                    room.id,
+                    activeLottery[0].timeStart + date * 24 * 60,
+                    activeLottery[0].timeStart + (date + 1) * 24 * 60
+                )
+
+                if (pastReservations.length === 0) {
+                    const log = await this.reservationPublicService.postMultipleReservation({
+                        title: `공연집중기간 예약 [${lottery.organization.name}]`,
+                        spaceId: lottery.spaceId,
+                        userId: 1,
+                        organizationId: lottery.organization.id,
+                        time: [{
+                            timeFrom: activeLottery[0].timeStart + date * 24 * 60,
+                            timeTo: activeLottery[0].timeStart + (date + 1) * 24 * 60
+                        }],
+                        content: {
+                            description: `공연집중기간 예약 [${lottery.organization.name}]`,
+                            innerParticipantNumber: 20,
+                            outerParticipantNumber: 0,
+                            food: "",
+                            desk: 10,
+                            chair: 10,
+                            busking: false,
+                            worker: 0,
+                        }
+                    })
+
+                    logs.push(log);
+
+                    continue;
+                }
+
+                const time: { timeFrom: number; timeTo: number }[] = [{
+                    timeFrom: activeLottery[0].timeStart + date * 24 * 60,
+                    timeTo: pastReservations[0].timeFrom
+                }];
+
+                for (let i = 0; i < pastReservations.length - 2; i++) {
+                    time.push({
+                        timeFrom: pastReservations[i].timeTo,
+                        timeTo: pastReservations[i + 1].timeFrom
+                    });
+                }
+
+                time.push({
+                    timeFrom: pastReservations[pastReservations.length - 1].timeTo,
+                    timeTo: activeLottery[0].timeStart + (date + 1) * 24 * 60
+                })
+
+                const log = await this.reservationPublicService.postMultipleReservation({
+                    title: `공연집중기간 예약 [${lottery.organization.name}]`,
+                    spaceId: lottery.spaceId,
+                    userId: 1,
+                    organizationId: lottery.organization.id,
+                    time,
+                    content: {
+                        description: `공연집중기간 예약 [${lottery.organization.name}]`,
+                        innerParticipantNumber: 20,
+                        outerParticipantNumber: 0,
+                        food: "",
+                        desk: 10,
+                        chair: 10,
+                        busking: false,
+                        worker: 0,
+                    }
+                })
+
+                logs.push(log);
+            }
+        }
+
+        // await this.lotteryPerformanceInfoRepository.update({
+        //     id: activeLottery[0].id,
+        //     updateLotteryInfo: { applied: true }
+        // });
+
+        return logs;
     }
 
     // Performance lottery drawing logic - 우선순위 기반으로 추첨
@@ -287,20 +386,9 @@ export class LotteryPerformanceService {
             const performanceRooms2 = await this.spacePublicService.fetchAllBySpaceType(SpaceTypeEnum.SUMI);
             const allPerformanceRooms = [...performanceRooms, ...performanceRooms2];
 
-            if (allPerformanceRooms.length === 0) {
-                Logger.log('No performance rooms found');
-                return false;
-            }
-
             const startDate = getDate(activeLottery[0].timeStart);
             const endDate = getDate(activeLottery[0].timeEnd);
             const periodLength = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-
-            // 날짜 범위 검증
-            if (startDate.getTime() > endDate.getTime()) {
-                Logger.error('Invalid date range: start date is after end date');
-                return false;
-            }
 
             for (const room of allPerformanceRooms) {
                 for (const priority of [1, 2, 3]) {

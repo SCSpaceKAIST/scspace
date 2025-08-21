@@ -43,7 +43,7 @@ export class ReservationController {
     @Query('timeFrom') timeFrom?: number,
     @Query('timeTo') timeTo?: number
   ): Promise<IReservationAll[]> {
-    return await this.reservationService.getReservationBySpaceIDBetweenTime(
+    return await this.reservationPublicService.getReservationBySpaceIDBetweenTime(
       spaceId,
       timeFrom,
       timeTo,
@@ -132,7 +132,7 @@ export class ReservationController {
   async deleteAllReservation(): Promise<ISuccessResponse> {
     const spaces = await this.spaceService.fetchAll();
     for (const space of spaces) {
-      const reservations = await this.reservationService.getReservationBySpaceIDBetweenTime(space.id);
+      const reservations = await this.reservationPublicService.getReservationBySpaceIDBetweenTime(space.id);
       for (const reservation of reservations) {
         await this.reservationService.deleteReservation(reservation.id, reservation.user);
       }

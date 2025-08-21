@@ -22,15 +22,18 @@ import {
   MReservationSimple,
 } from '@scspace-server/feature/reservation/reservation.model';
 import {
+  checkContainAllId,
   getDate,
   getDateDiffInMinute,
   getDateString,
   getNow,
   getString,
   getWeekPeriod,
+  takeAll,
   timeRangeCheck,
 } from '@scspace-server/common/utils';
 import {
+  IReservationAll,
   IReservationContent,
   IReservationCreate,
   IReservationCreateMultiple,
@@ -48,6 +51,7 @@ import { MailService } from '@scspace-server/tools/mailer/mail.service';
 import { IUser } from '@scspace-depot/types/user';
 import { ReservationMeta } from '@scspace-depot/enums/mail.enum';
 import { LotteryPerformanceService } from '../lottery/performance/lottery.performance.service';
+import { IOrganization } from '@scspace-depot/types/organization/organization.type';
 
 const writeFile = promisify(fs.writeFile);
 const mkdir = promisify(fs.mkdir);
@@ -222,6 +226,48 @@ export class ReservationPublicService {
       return null;
     }
     return MReservationSimple.fromDB(reservation[0]);
+  }
+
+  async getReservationBySpaceIDBetweenTime(
+    spaceId: number,
+    timeFrom?: number,
+    timeTo?: number,
+  ): Promise<IReservationAll[]> {
+
+    if (timeFrom && timeTo) {
+      if (timeFrom > timeTo) throw new BadRequestException('timeFrom must be before timeTo');
+      const oneDayInMs = BigInt(60) * BigInt(24);
+      timeTo = Number(BigInt(timeTo) + oneDayInMs - BigInt(1));
+    }
+    // If either timeFrom or timeTo is missing, fetch all reservations for the space
+    const { data: reservations } = await this.reservationRepository.fetch({
+      spaceId,
+      ...(timeFrom && timeTo ? { timeRange: { timeFrom: timeFrom, timeTo: timeTo } } : {})
+    });
+    if (reservations.length === 0) {
+      return [];
+    }
+
+    const userIds = reservations.map((reservation) => reservation.userId);
+    const organizationIds = reservations.map((reservation) => reservation.organizationId);
+
+    const [users, space, organizations, reservationContents] = await Promise.all([
+      this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
+      this.spacePublicService.fetchById(spaceId),
+      this.organizationPublicService.fetchByIds(organizationIds),
+      this.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
+    ]) as [IUser[], ISpace, IOrganization[], IReservationContent[]];
+
+    checkContainAllId(userIds, users, 'users');
+    checkContainAllId(organizationIds, organizations, 'organizations');
+
+    return reservations.map((reservation) => ({
+      ...reservation,
+      user: users.find(user => user.id === reservation.userId)!,
+      organization: organizations.find(org => org.id === reservation.organizationId)!,
+      space,
+      content: reservationContents.find(content => content.id === reservation.id)!,
+    }));
   }
 
   async getDailyReservationTimeByOrganization(
@@ -695,9 +741,9 @@ export class ReservationPublicService {
     }
 
     // 공간위원이면 추첨 기간과 겹쳐도 예약 가능
-    // if (await this.userPublicService.isManager(userId)) {
-    //   return;
-    // }
+    if (await this.userPublicService.isManager(userId)) {
+      return;
+    }
 
     // 모든 추첨 정보 조회 (시간 순으로 정렬됨)
     const allLotteries =
