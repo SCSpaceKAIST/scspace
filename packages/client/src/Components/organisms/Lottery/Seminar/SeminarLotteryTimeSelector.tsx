@@ -369,10 +369,8 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
                                         onSelect={() => {
                                             if (selectedTime !== encodeTimeSlot(day.index, hour)) {
                                                 setSelectedTime(encodeTimeSlot(day.index, hour));
-                                            } else if (!open) {
-                                                setOpen(true);
                                             } else {
-                                                setSelectedTime(-1);
+                                                setOpen(true);
                                             }
                                         }}
                                         orgCount={timeSlotCounts?.find(s => s.time === encodeTimeSlot(day.index, hour))?.count ?? 0}

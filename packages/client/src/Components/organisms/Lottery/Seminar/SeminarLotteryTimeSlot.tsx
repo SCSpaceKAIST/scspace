@@ -12,7 +12,7 @@ interface TimeSlotProps {
     day: string;
     hour: number;
     isSelected: boolean;
-    onSelect: (day: string, hour: number) => void;
+    onSelect: () => void;
     orgCount: number;
     drawnOrgName: string | null;
     isOrgRequested: boolean;
@@ -68,7 +68,7 @@ export function TimeSlot({
                 minW={0}
                 padding={1}
                 rounded="none"
-                onClick={() => onSelect(day, hour)}
+                onClick={() => onSelect()}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 cursor={drawnOrgName !== null ? "default" : "pointer"}

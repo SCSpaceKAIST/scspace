@@ -16,6 +16,7 @@ import {
     Alert,
     Wrap,
     Badge,
+    For,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
@@ -232,17 +233,27 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                     <ActionBar.Content>
                         <VStack separator={<StackSeparator />}>
                             {lotteryByDate && lotteryByDate.length > 0 && (
-                                <Wrap>
-                                    {lotteryByDate.map(l => {
-                                        const org = verifiedOrganizations?.find(org => org.id === l.organizationId);
-                                        if (!org) return null;
-                                        return (
-                                            <Badge colorPalette={org.hasRoom ? "blue" : "green"} key={l.id}>
-                                                {org.name}
-                                            </Badge>
-                                        );
-                                    })}
-                                </Wrap>
+                                <VStack>
+                                    {['purple', 'yellow', 'blue'].map((color, priority) => (
+                                        <Wrap>
+                                            <For each={lotteryByDate.filter(l => l.priority === priority + 1)} fallback={
+                                                <Badge colorPalette={"gray"} key={-1}>
+                                                    No Lottery
+                                                </Badge>
+                                            }>
+                                                {(item) => {
+                                                    const org = verifiedOrganizations?.find(org => org.id === item.organizationId);
+                                                    if (!org) return null;
+                                                    return (
+                                                        <Badge colorPalette={color} key={item.id}>
+                                                            {org.name}
+                                                        </Badge>
+                                                    )
+                                                }}
+                                            </For>
+                                        </Wrap>
+                                    ))}
+                                </VStack>
                             )}
                             <HStack separator={<StackSeparator />}>
                                 <ActionBar.SelectionTrigger>
@@ -359,7 +370,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                 date={i}
                                 key={`date-slot-${i}`}
                                 isSelected={selectedDate === i && open}
-                                onSelect={() => setSelectedDate(i)}
+                                onSelect={() => (i === selectedDate) ? setOpen(true) : setSelectedDate(i)}
                                 orgCount={((dateSlotCounts) ? dateSlotCounts.find(d => d.date === i)?.count : [0, 0, 0]) ?? [0, 0, 0]}
                                 drawnOrgName={verifiedOrganizations?.find(o => o.id === drawnLottery?.find(l => l.date === i)?.organizationId)?.name || null}
                                 isOrgRequested={lotteryByOrganization?.some(l => l.date === i) ?? false}
