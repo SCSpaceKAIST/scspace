@@ -38,7 +38,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
     const [readOnly, setReadOnly] = useState<boolean>(false);
     const [appliedId, setAppliedId] = useState<number>(-1);
     const { linkPush } = useLinkPush();
-    const { getTime, getDate } = useDate();
+    const { getTime, getDate, getDateString } = useDate();
 
     const {
         activeLotteryInfo: {
@@ -85,11 +85,9 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
     const [selectedDate, setSelectedDate] = useState<number>(-1);
     const [selectedDateString, setSelectedDateString] = useState<string>("");
     useEffect(() => {
-        if (selectedDate !== -1) {
-            const { dayIndex, hour } = decodeTimeSlot(selectedDate);
-            const dayLabel = weekDays[dayIndex].label;
-            setSelectedDateString(`${dayLabel} ${hour}:00 - ${hour + 1}:00`);
-        }
+        const pivotDate = new Date(startDate);
+        pivotDate.setDate(pivotDate.getDate() + selectedDate);
+        setSelectedDateString(getDateString(getTime(pivotDate)));
     }, [selectedDate]);
 
     const [open, setOpen] = useState<boolean>(false);
@@ -129,6 +127,14 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
     useEffect(() => { refetchDrawnLottery(); }, [orgId, spaceId]);
     useEffect(() => { refetchLotteryByOrganization(); }, [orgId, spaceId]);
 
+    const [drawnOrgNameAtSelectedDate, setDrawnOrgNameAtSelectedDate] = useState<string | null>(null);
+    useEffect(() => {
+        if (drawnLottery && selectedDate !== -1) {
+            const found = drawnLottery.find(l => l.date === selectedDate);
+            setDrawnOrgNameAtSelectedDate(verifiedOrganizations?.find(o => o.id === found?.organizationId)?.name || null);
+        }
+    }, [drawnLottery, selectedDate]);
+
     const [available, setAvailable] = useState<boolean>(true);
 
     useEffect(() => {
@@ -152,21 +158,6 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
         { key: "friday", label: "Fri", index: 5 },
         { key: "saturday", label: "Sat", index: 6 },
     ];
-
-    // 시간 배열 (18 ~ 3시: 18,19,20,21,22,23,0,1,2,3)
-    const timeHours = Array.from({ length: 24 }, (_, i) => i);
-
-    // 날짜와 시간을 number로 인코딩: (시간) + (날짜) * 24
-    const encodeTimeSlot = (dayIndex: number, hour: number): number => {
-        return hour + dayIndex * 24;
-    };
-
-    // number를 날짜와 시간으로 디코딩
-    const decodeTimeSlot = (encoded: number): { dayIndex: number; hour: number } => {
-        const dayIndex = Math.floor(encoded / 24);
-        const hour = encoded % 24;
-        return { dayIndex, hour };
-    };
 
     const refetchAll = () => {
         refetchDateSlotCounts();
@@ -232,7 +223,12 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                 <ActionBar.Positioner zIndex={100}>
                     <ActionBar.Content>
                         <VStack separator={<StackSeparator />}>
-                            {lotteryByDate && lotteryByDate.length > 0 && (
+                            {drawnOrgNameAtSelectedDate && (
+                                <Badge colorPalette={"blue"}>
+                                    {drawnOrgNameAtSelectedDate}
+                                </Badge>
+                            )}
+                            {!drawnOrgNameAtSelectedDate && lotteryByDate && lotteryByDate.length > 0 && (
                                 <VStack>
                                     {['purple', 'yellow', 'green'].map((color, priority) => (
                                         <Wrap key={color}>
@@ -372,7 +368,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                 isSelected={selectedDate === i && open}
                                 onSelect={() => (i === selectedDate) ? setOpen(true) : setSelectedDate(i)}
                                 orgCount={((dateSlotCounts) ? dateSlotCounts.find(d => d.date === i)?.count : [0, 0, 0]) ?? [0, 0, 0]}
-                                drawnOrgName={verifiedOrganizations?.find(o => o.id === drawnLottery?.find(l => l.date === i)?.organizationId)?.name || null}
+                                drawnOrgName={verifiedOrganizations?.find(o => o.id === drawnLottery?.find(l => l.date === i)?.organizationId)?.name ?? null}
                                 isOrgRequested={lotteryByOrganization?.some(l => l.date === i) ?? false}
                             />
                         ))}
