@@ -235,7 +235,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                             {lotteryByDate && lotteryByDate.length > 0 && (
                                 <VStack>
                                     {['purple', 'yellow', 'blue'].map((color, priority) => (
-                                        <Wrap>
+                                        <Wrap key={color}>
                                             <For each={lotteryByDate.filter(l => l.priority === priority + 1)} fallback={
                                                 <Badge colorPalette={"gray"} key={-1}>
                                                     No Lottery
