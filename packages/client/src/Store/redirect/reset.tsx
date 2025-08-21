@@ -141,7 +141,6 @@ export function useRedirects() {
                 href: "/rental",
                 label: "대여",
                 helperText: "Rental",
-                disabled: true
             },
             {
                 href: "/manage",

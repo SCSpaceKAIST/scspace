@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import PageTemplete from "@scspace-client/Components/molecules/page/PageTemplete";
 import { useSpace } from "@scspace-client/Hooks/space";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
-import SpaceIntro from "@scspace-client/Components/organisms/Space/SpaceIntro";
+import SpaceIntro from "@scspace-client/Components/pages/Space/SpaceIntro";
 
 export default function SpaceIntroPage() {
   const params = useParams();

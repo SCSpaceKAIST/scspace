@@ -72,7 +72,6 @@ export const useRedirectStore = create<{
             href: "/rental",
             label: "대여",
             helperText: "Rental",
-            disabled: true
         },
     ],
     update: (links) => set(() => ({ links })),

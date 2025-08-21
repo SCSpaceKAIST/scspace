@@ -4,7 +4,8 @@ import React from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import PageSelector, { IPage } from "../../molecules/page/PageSelector";
 import ManageUser from "./ManageUser";
-import LotteryManagement from "./Lottery/Seminar";
+import ManageSeminarLottery from "./Lottery/Seminar";
+import ManagePerformanceLottery from "./Lottery/Performance";
 
 export default function Administration() {
     const { needAdmin } = useAuth();
@@ -18,9 +19,15 @@ export default function Administration() {
             href: "/admin/user"
         },
         {
-            kor: "추첨 관리",
-            eng: "Lottery Management",
-            preview: <LotteryManagement />,
+            kor: "세미나실 정기예약 추첨 관리",
+            eng: "Seminar Room Lottery Management",
+            preview: <ManageSeminarLottery />,
+            href: "/admin/lottery"
+        },
+        {
+            kor: "공연집중기간 추첨 관리",
+            eng: "Performance Intensive Period Lottery Management",
+            preview: <ManagePerformanceLottery />,
             href: "/admin/lottery"
         }
     ]

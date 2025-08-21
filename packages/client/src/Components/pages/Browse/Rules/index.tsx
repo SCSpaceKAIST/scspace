@@ -3,11 +3,13 @@ import OrgRule from "@scspace-client/Components/organisms/Rules/organizationRule
 import ResRule from "@scspace-client/Components/organisms/Rules/reservationRule";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import React from "react";
+import SeminarLotteryRule from "@scspace-client/Components/organisms/Rules/seminarLotteryRule";
 
 export default function Rules() {
     const tabList: { [key: string]: React.ReactNode } = {
         Reservation: (<ResRule />),
-        Organization: (<OrgRule />)
+        Organization: (<OrgRule />),
+        "Seminar-room Recurring Reservation": (<SeminarLotteryRule />)
     };
 
     return (

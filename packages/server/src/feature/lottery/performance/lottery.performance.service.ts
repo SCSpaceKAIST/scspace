@@ -86,9 +86,9 @@ export class LotteryPerformanceService {
         const now = getNow();
 
         // 시간 유효성 검증
-        // if (params.lotteryInfo.timeLotteryStart < now) {
-        //     throw new BadRequestException("Lottery time cannot be in the past");
-        // }
+        if (params.lotteryInfo.timeLotteryStart < now) {
+            throw new BadRequestException("Lottery time cannot be in the past");
+        }
         if (params.lotteryInfo.timeLotteryEnd < params.lotteryInfo.timeLotteryStart) {
             throw new BadRequestException("Lottery end time cannot be before start time");
         }
@@ -210,7 +210,8 @@ export class LotteryPerformanceService {
 
         const pastLotteries = await this.lotteryPerformanceRepository.fetch({
             organizationId: params.lottery.organizationId,
-            infoId: params.lottery.infoId
+            infoId: params.lottery.infoId,
+            spaceId: params.lottery.spaceId,
         });
         if (pastLotteries.find(lottery => lottery.date === params.lottery.date)) {
             throw new BadRequestException("Your organization has already applied for a performance lottery on this date.");
