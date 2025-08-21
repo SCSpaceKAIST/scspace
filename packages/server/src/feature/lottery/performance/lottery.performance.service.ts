@@ -196,7 +196,6 @@ export class LotteryPerformanceService {
 
         const drawnLotteries = await this.lotteryPerformanceRepository.fetch({
             spaceId: params.lottery.spaceId,
-            date: params.lottery.date,
             infoId: params.lottery.infoId,
             lotteryWin: 1
         });
@@ -213,14 +212,11 @@ export class LotteryPerformanceService {
         }
 
         // Priority별 신청 개수 제한 확인 (각 priority별로 1개씩만 허용)
-        const priorityCount = pastLotteries.filter(lottery => lottery.priority === params.lottery.priority).length;
+        const priorityCount = pastLotteries.filter(lottery =>
+            (lottery.priority === params.lottery.priority) && (lottery.spaceId === params.lottery.spaceId)
+        ).length;
         if (priorityCount >= 1) {
             throw new BadRequestException(`You can only apply for 1 performance lottery per priority. Priority ${params.lottery.priority} already has ${priorityCount} application(s).`);
-        }
-
-        // 공연집중기간은 최대 신청 수 제한이 다를 수 있음 (일단 10개로 설정)
-        if (pastLotteries.length >= 10) {
-            throw new BadRequestException("Maximum number of performance lotteries is 10. Cannot create more.");
         }
 
         const createdLottery = await this.lotteryPerformanceRepository.insert(params.lottery);
@@ -277,7 +273,7 @@ export class LotteryPerformanceService {
     }
 
     // Performance lottery drawing logic - 우선순위 기반으로 추첨
-    // @Cron(CronExpression.EVERY_DAY_AT_6PM, { name: "performance_drawing" })
+    @Cron(CronExpression.EVERY_DAY_AT_6PM, { name: "performance_drawing" })
     async drawing(): Promise<boolean> {
         try {
             const activeLottery = await this.lotteryPerformanceInfoRepository.fetchActiveLotteries(getNow());
