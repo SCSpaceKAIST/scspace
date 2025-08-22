@@ -1,4 +1,4 @@
-import { Alert, Badge, Blockquote, Field, Fieldset, Heading, Highlight, Icon, List, Mark, Separator, Stack, Text, Wrap } from "@chakra-ui/react";
+import { Badge, Blockquote, Field, Fieldset, Heading, Stack, Text } from "@chakra-ui/react";
 import SimpleLink from "@scspace-client/Components/atoms/SimpleLink";
 import SeminarLotteryStatus from "./SeminarLotteryStatus";
 import { BlueMark, RedMark } from "../utils";
@@ -99,7 +99,7 @@ export default function SeminarLotteryRule() {
                         <Blockquote.Content>
                             <Stack>
                                 <Text>
-                                    당첨된 후에는 삭제 및 재신청이 가능하지만, 삭제 후에는 당첨 상태로 되돌릴 수 없습니다.
+                                    당첨된 후에는 삭제 및 재신청이 가능하지만, <RedMark>삭제 후에는 당첨 상태로 되돌릴 수 없습니다.</RedMark>
                                 </Text>
                                 <Text>
                                     인성/리더십 수업이나 기타 이유로 이미 예약이 들어가 있는 시간대도 있으며, 이 경우 해당 시간대에 당첨되더라도 <BlueMark>반영되지 않습니다.</BlueMark>

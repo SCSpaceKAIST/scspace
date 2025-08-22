@@ -1,11 +1,11 @@
 "use client"
 
 import { Alert, Center, Heading } from "@chakra-ui/react";
-import { useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
+import { usePerformanceLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import { useDate } from "@scspace-client/Hooks/utils";
 
-export default function SeminarLotteryStatus() {
-    const { data: activeLotteryInfo } = useSeminarLotteryInfoAPI().activeLotteryInfo;
+export default function PerformanceLotteryStatus() {
+    const { data: activeLotteryInfo } = usePerformanceLotteryInfoAPI().activeLotteryInfo;
     const { getDateString } = useDate();
 
     return (
@@ -19,16 +19,16 @@ export default function SeminarLotteryStatus() {
                 )}
                 <Alert.Title>
                     {(activeLotteryInfo && activeLotteryInfo.length > 0) ? (
-                        "세미나실 정기예약 추첨이 진행 중입니다."
+                        "공연집중기간 추첨이 진행 중입니다."
                     ) : (
-                        "세미나실 정기예약 추첨 기간이 아닙니다."
+                        "공연집중기간 추첨 기간이 아닙니다."
                     )}
                 </Alert.Title>
                 <Alert.Description>
                     {activeLotteryInfo && activeLotteryInfo.length > 0 ? (
-                        "The Seminar-room regular reservation lottery is currently in progress."
+                        "The Performance Concentration Period lottery is currently in progress."
                     ) : (
-                        "The Seminar-room regular reservation lottery is NOT in progress."
+                        "The Performance Concentration Period lottery is NOT in progress."
                     )}
                 </Alert.Description>
             </Alert.Content>

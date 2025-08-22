@@ -1,4 +1,6 @@
 import { Blockquote, Field, Fieldset, Heading, Stack, Text } from "@chakra-ui/react";
+import AvailableDate from "./AvailableDate";
+import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 
 export default function ResRule() {
     return (
@@ -27,6 +29,7 @@ export default function ResRule() {
                     <Blockquote.Root>
                         <Blockquote.Content>
                             <Stack>
+                                <AvailableDate spaceType={SpaceTypeEnum.INDIVIDUAL} />
                                 <Text>
                                     예약은 사용일의 14일 전 00시00분부터 1일 전 23시59분까지 가능하다
                                 </Text>
@@ -44,6 +47,7 @@ export default function ResRule() {
                     <Blockquote.Root>
                         <Blockquote.Content>
                             <Stack>
+                                <AvailableDate spaceType={SpaceTypeEnum.SEMINAR} />
                                 <Text>
                                     예약은 사용일의 14일 전 00시00분부터 2일 전 23시59분까지 가능하다
                                 </Text>
@@ -61,6 +65,7 @@ export default function ResRule() {
                     <Blockquote.Root>
                         <Blockquote.Content>
                             <Stack>
+                                <AvailableDate spaceType={SpaceTypeEnum.DANCE} />
                                 <Text>
                                     예약은 사용일의 14일 전 00시00분부터 2일 전 23시59분까지 가능하다
                                 </Text>
@@ -81,6 +86,7 @@ export default function ResRule() {
                     <Blockquote.Root>
                         <Blockquote.Content>
                             <Stack>
+                                <AvailableDate spaceType={SpaceTypeEnum.GROUP} />
                                 <Text>
                                     예약은 사용일의 14일 전 00시00분부터 2일 전 23시59분까지 가능하다
                                 </Text>
@@ -101,6 +107,7 @@ export default function ResRule() {
                     <Blockquote.Root>
                         <Blockquote.Content>
                             <Stack>
+                                <AvailableDate spaceType={SpaceTypeEnum.SUMI} />
                                 <Text>
                                     예약은 사용일의 45일 전 00시00분부터 10일 전 23시 59분까지 가능하다
                                 </Text>
@@ -124,6 +131,7 @@ export default function ResRule() {
                     <Blockquote.Root>
                         <Blockquote.Content>
                             <Stack>
+                                <AvailableDate spaceType={SpaceTypeEnum.WORK} />
                                 <Text>
                                     예약은 사용일의 14일 전 00시00분부터 1일 전 23시59분까지 가능하다
                                 </Text>
@@ -144,6 +152,7 @@ export default function ResRule() {
                     <Blockquote.Root>
                         <Blockquote.Content>
                             <Stack>
+                                <AvailableDate spaceType={SpaceTypeEnum.OPEN} />
                                 <Text>
                                     예약은 사용일의 45일 전 00시00분부터 5일 전 23시59분까지 가능하다
                                 </Text>
