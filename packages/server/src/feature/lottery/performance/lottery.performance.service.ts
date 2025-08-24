@@ -1,38 +1,25 @@
-import {
-  BadRequestException,
-  forwardRef,
-  Inject,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
-import { OrganizationPublicService } from '@scspace-server/feature/organization/organization.public.service';
-import { LotteryPerformanceRepository } from './lottery.performance.repository';
-import { LotteryPerformanceInfoRepository } from './lottery.performance.info.repository';
-import { MPerformanceLottery } from './lottery.performance.model';
+import { BadRequestException, forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
+import { OrganizationPublicService } from "@scspace-server/feature/organization/organization.public.service";
+import { LotteryPerformanceRepository } from "./lottery.performance.repository";
+import { LotteryPerformanceInfoRepository } from "./lottery.performance.info.repository";
+import { MPerformanceLottery } from "./lottery.performance.model";
 
-import { OrganizationStatusEnum } from '@scspace-depot/enums/organization.enum';
+import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
 import {
     ILotteryInfoCreate,
     ILotteryInfoUpdate,
     IPerformanceLotteryCreate,
-} from '@scspace-depot/types/lottery';
-import {
-    getDate,
-    getDateBegin,
-    getDateEnd,
-    getNow,
-    getRandomIndex,
-    getTime,
-} from '@scspace-server/common/utils';
-import { Cron, CronExpression } from '@nestjs/schedule';
-import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
-import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
-import { MPerformanceLotteryInfo } from './lottery.performance.info.model';
-import { IReservationMultipleCreateResurt } from '@scspace-depot/types/reservation';
-import { ReservationPublicService } from '@scspace-server/feature/reservation/reservation.public.service';
-import { MailService } from '@scspace-server/tools/mailer/mail.service';
-import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
-import { LotteryMeta } from '@scspace-depot/enums/mail.enum';
+} from "@scspace-depot/types/lottery";
+import { getDate, getDateBegin, getDateEnd, getNow, getRandomIndex, getTime } from "@scspace-server/common/utils";
+import { Cron, CronExpression } from "@nestjs/schedule";
+import { SpacePublicService } from "@scspace-server/feature/space/space.public.service";
+import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
+import { MPerformanceLotteryInfo } from "./lottery.performance.info.model";
+import { IReservationMultipleCreateResurt } from "@scspace-depot/types/reservation";
+import { ReservationPublicService } from "@scspace-server/feature/reservation/reservation.public.service";
+import { MailService } from "@scspace-server/tools/mailer/mail.service";
+import { UserPublicService } from "@scspace-server/feature/user/user.public.service";
+import {LotteryMeta} from "@scspace-depot/enums/mail.enum";
 
 @Injectable()
 export class LotteryPerformanceService {
@@ -46,11 +33,12 @@ export class LotteryPerformanceService {
         private readonly reservationPublicService: ReservationPublicService,
         private readonly mailService: MailService,
         private readonly userPublicService: UserPublicService,
-    ) {}
+    ) { }
 
     async getAllPerformanceLotteryInfo(): Promise<MPerformanceLotteryInfo[]> {
         // 자동 정렬된 모든 공연 추첨 정보 조회
-        return await this.lotteryPerformanceInfoRepository.fetchAll();
+        const performanceLotteryInfo = await this.lotteryPerformanceInfoRepository.fetchAll();
+        return performanceLotteryInfo;
     }
 
     async getActivePerformanceLotteryInfo(): Promise<MPerformanceLotteryInfo[]> {
@@ -70,13 +58,13 @@ export class LotteryPerformanceService {
      */
     private async validateTimeConflict(
         lotteryInfo: { timeLotteryStart: number; timeEnd: number },
-        excludeId?: number,
+        excludeId?: number
     ): Promise<void> {
         const allLotteries = await this.lotteryPerformanceInfoRepository.fetchAll();
 
         // 현재 수정 중인 항목은 제외
         const otherLotteries = excludeId
-            ? allLotteries.filter((lottery) => lottery.id !== excludeId)
+            ? allLotteries.filter(lottery => lottery.id !== excludeId)
             : allLotteries;
 
         const newStartTime = lotteryInfo.timeLotteryStart;
@@ -143,7 +131,7 @@ export class LotteryPerformanceService {
             throw new BadRequestException("Performance lottery info not found");
         }
 
-        const now = getNow();
+        // const now = getNow();
 
         // 업데이트할 값들을 기존 값과 병합
         const mergedLotteryInfo = {
@@ -219,7 +207,7 @@ export class LotteryPerformanceService {
             spaceId: params.lottery.spaceId,
             infoId: params.lottery.infoId,
             organizationId: params.lottery.organizationId,
-            lotteryWin: 1,
+            lotteryWin: 1
         });
         if (drawnLotteries.length > 0) {
             throw new BadRequestException("Your organization has already been drawn in this space.");
@@ -242,24 +230,116 @@ export class LotteryPerformanceService {
             throw new BadRequestException(`You can only apply for 1 performance lottery per priority. Priority ${params.lottery.priority} already has an application.`);
         }
 
-        const createdLottery = await this.lotteryPerformanceRepository.insert(params.lottery);
-        return createdLottery;
+        return await this.lotteryPerformanceRepository.insert(params.lottery);
     }
 
-    async deletePerformanceLottery(id: number): Promise<boolean> {
-        const performanceLottery = await this.lotteryPerformanceRepository.fetch({ id });
+    async deletePerformanceLottery(id: number, byDrawn : boolean, startDate?: Date): Promise<boolean> {
+        const performanceLotteryArr = await this.lotteryPerformanceRepository.fetch({ id });
+        const performanceLottery = performanceLotteryArr[0];
+
         if (!performanceLottery) {
             throw new BadRequestException("Performance lottery not found");
         }
-        return await this.lotteryPerformanceRepository.delete(id);
+        const res =  await this.lotteryPerformanceRepository.delete(id);
+
+        if ( ! (res && byDrawn) ) return res;
+
+        try {
+            //fetch info
+            const organization = await this.organizationPublicService.fetchById(performanceLottery.organizationId);
+            const delegator = await this.userPublicService.fetchById(organization.delegatorId);
+            const space = await this.spacePublicService.fetchById(performanceLottery.spaceId);
+
+
+            //calculate date
+            let targetDate = new Date(startDate);
+            targetDate.setDate(targetDate.getDate() + performanceLottery.date);
+
+            const [year, month, day] = [
+                targetDate.getFullYear(),
+                String(targetDate.getMonth() + 1).padStart(2, "0"),
+                String(targetDate.getDate()).padStart(2, "0")
+            ];
+
+            const timestr = `${year}-${month}-${day}`
+            const performanceMeta =  {  ...LotteryMeta.Performance.Win, timeRange : timestr }
+
+            //send
+
+            await this.mailService.sendMail( {
+                subject : `[SCSpace] 공연집중기간 ${space.nameKr} 추첨 결과 안내 / ${space.nameEn} Lottery Result`,
+                to : delegator.email,
+                bcc : 'scspace.kaist@gmail.com', //deprecated
+                replyTo : 'scspace@kaist.ac.kr',
+                template : "lotteryResult",
+                context  :  {
+                    space : space,
+                    organization : organization,
+                    lottery : performanceLottery,
+                    meta : performanceMeta
+                }
+            })
+        } catch (error) {
+            console.log(error);
+            await this.mailService.reportError(
+                error instanceof Error ? error : new Error(String(error)),
+                'deletePerformanceLottery - Mail Sector',
+            );
+        }
     }
 
-    async drawPerformanceLottery(id: number): Promise<void> {
-        const performanceLottery = await this.lotteryPerformanceRepository.fetch({ id });
+    async drawPerformanceLottery(id: number, byDrawn : boolean, startDate ?: Date): Promise<void> {
+        const performanceLotteryArr = await this.lotteryPerformanceRepository.fetch({ id });
+        const performanceLottery = performanceLotteryArr[0];
+
         if (!performanceLottery) {
             throw new BadRequestException("Performance lottery not found");
         }
-        await this.lotteryPerformanceRepository.update(id, { lotteryWin: 1 });
+        const res = await this.lotteryPerformanceRepository.update(id, { lotteryWin: 1 });
+        if ( ! (res.lotteryWin == 1 && byDrawn) ) return;
+        try {
+            //fetch info
+            const organization = await this.organizationPublicService.fetchById(performanceLottery.organizationId);
+            const delegator = await this.userPublicService.fetchById(organization.delegatorId);
+            const space = await this.spacePublicService.fetchById(performanceLottery.spaceId);
+
+
+            //calculate date
+            let targetDate = new Date(startDate);
+            targetDate.setDate(targetDate.getDate() + performanceLottery.date);
+
+            const [year, month, day] = [
+                targetDate.getFullYear(),
+                String(targetDate.getMonth() + 1).padStart(2, "0"),
+                String(targetDate.getDate()).padStart(2, "0")
+            ];
+
+            const timestr = `${year}-${month}-${day}`
+            const performanceMeta =  {  ...LotteryMeta.Performance.Win, timeRange : timestr }
+
+            //send
+
+            await this.mailService.sendMail( {
+                subject : `[SCSpace] 공연집중기간 ${space.nameKr} 추첨 결과 안내 / ${space.nameEn} Lottery Result`,
+                to : delegator.email,
+                bcc : 'scspace.kaist@gmail.com', //deprecated
+                replyTo : 'scspace@kaist.ac.kr',
+                template : "lotteryResult",
+                context  :  {
+                    space : space,
+                    organization : organization,
+                    lottery : performanceLottery,
+                    meta : performanceMeta
+                }
+            })
+      }
+      catch (error) {
+        console.log(error);
+        await this.mailService.reportError(
+            error instanceof Error ? error : new Error(String(error)),
+            'drawPerformanceLottery - Mail Sector',
+        );
+      }
     }
 
     async getPerformanceLotteryDateSlotCounts(param: { spaceId: number; infoId: number }): Promise<{ date: number; count: [number, number, number] }[]> {
@@ -451,10 +531,8 @@ export class LotteryPerformanceService {
 
                         // 배치로 삭제 처리
                         for (const lottery of otherLotteries) {
-                            await this.deletePerformanceLottery(lottery.id, false); //winner => @param byDrawn false
-                            Logger.log(
-                                `Performance lottery deleted: ${lottery.id} for drawn organization ${winner.organizationId}`,
-                            );
+                            await this.deletePerformanceLottery(lottery.id, true, startDate );
+                            Logger.log(`Performance lottery deleted: ${lottery.id} for drawn organization ${winner.organizationId}`);
                         }
                     }
                     // 나머지 신청 삭제
@@ -466,7 +544,7 @@ export class LotteryPerformanceService {
                     });
 
                     for (const lottery of failedLotteries) {
-                        await this.deletePerformanceLottery(lottery.id);
+                        await this.deletePerformanceLottery(lottery.id, true, startDate);
                         Logger.log(`Performance lottery failed: ${lottery.id} for priority ${priority}`);
                     }
                 }
