@@ -419,7 +419,7 @@ export class LotterySeminarService {
                 await this.mailService.sendMail({
                     to: delegator.email,
                     subject: `[SCSpace] 세미나실 정기예약 추첨 결과 안내`,
-                    bcc: 'scspace.kaist@gmail.com', //need to check
+                    bcc: 'scspace.kaist@gmail.com', //deprecated
                     template: 'lotteryResult',
                     replyTo: 'scspace@kaist.ac.kr',
                     context: {

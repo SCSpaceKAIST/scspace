@@ -75,7 +75,13 @@
             {{space.nameEn}}</span>
         </li>
         <li>
-          <strong>추첨 대상 시간대:</strong>
+          <strong>
+              {{#if (eq meta.type "seminar")}}
+                  추첨 대상 요일 / 시간대
+              {{else}}
+                  추첨 대상 날짜
+              {{/if}}
+          </strong>
           <span>{{meta.timeRange}} (KST)</span>
         </li>
       </ul>

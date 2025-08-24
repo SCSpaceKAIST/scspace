@@ -1,26 +1,42 @@
-import { BadRequestException, forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
-import { OrganizationPublicService } from "@scspace-server/feature/organization/organization.public.service";
-import { LotteryPerformanceRepository } from "./lottery.performance.repository";
-import { LotteryPerformanceInfoRepository } from "./lottery.performance.info.repository";
-import { MPerformanceLottery } from "./lottery.performance.model";
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
+import { OrganizationPublicService } from '@scspace-server/feature/organization/organization.public.service';
+import { LotteryPerformanceRepository } from './lottery.performance.repository';
+import { LotteryPerformanceInfoRepository } from './lottery.performance.info.repository';
+import { MPerformanceLottery } from './lottery.performance.model';
 
-import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
+import { OrganizationStatusEnum } from '@scspace-depot/enums/organization.enum';
 import {
     ILotteryInfoCreate,
     ILotteryInfoUpdate,
     IPerformanceLotteryCreate,
-} from "@scspace-depot/types/lottery";
-import { getDate, getDateBegin, getDateEnd, getNow, getRandomIndex, getTime } from "@scspace-server/common/utils";
-import { Cron, CronExpression } from "@nestjs/schedule";
-import { SpacePublicService } from "@scspace-server/feature/space/space.public.service";
-import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
-import { MPerformanceLotteryInfo } from "./lottery.performance.info.model";
-import { IReservationMultipleCreateResurt } from "@scspace-depot/types/reservation";
-import { ReservationPublicService } from "@scspace-server/feature/reservation/reservation.public.service";
+} from '@scspace-depot/types/lottery';
+import {
+    getDate,
+    getDateBegin,
+    getDateEnd,
+    getNow,
+    getRandomIndex,
+    getTime,
+} from '@scspace-server/common/utils';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
+import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';
+import { MPerformanceLotteryInfo } from './lottery.performance.info.model';
+import { IReservationMultipleCreateResurt } from '@scspace-depot/types/reservation';
+import { ReservationPublicService } from '@scspace-server/feature/reservation/reservation.public.service';
+import { MailService } from '@scspace-server/tools/mailer/mail.service';
+import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
+import { LotteryMeta } from '@scspace-depot/enums/mail.enum';
 
 @Injectable()
 export class LotteryPerformanceService {
-    // This service will handle the data access for performance lottery-related operations
+    // This service will handle the data access for performance-lottery-related operations
     constructor(
         private readonly organizationPublicService: OrganizationPublicService,
         private readonly spacePublicService: SpacePublicService,
@@ -28,12 +44,13 @@ export class LotteryPerformanceService {
         private readonly lotteryPerformanceInfoRepository: LotteryPerformanceInfoRepository,
         @Inject(forwardRef(() => ReservationPublicService))
         private readonly reservationPublicService: ReservationPublicService,
-    ) { }
+        private readonly mailService: MailService,
+        private readonly userPublicService: UserPublicService,
+    ) {}
 
     async getAllPerformanceLotteryInfo(): Promise<MPerformanceLotteryInfo[]> {
         // 자동 정렬된 모든 공연 추첨 정보 조회
-        const performanceLotteryInfo = await this.lotteryPerformanceInfoRepository.fetchAll();
-        return performanceLotteryInfo;
+        return await this.lotteryPerformanceInfoRepository.fetchAll();
     }
 
     async getActivePerformanceLotteryInfo(): Promise<MPerformanceLotteryInfo[]> {
@@ -53,13 +70,13 @@ export class LotteryPerformanceService {
      */
     private async validateTimeConflict(
         lotteryInfo: { timeLotteryStart: number; timeEnd: number },
-        excludeId?: number
+        excludeId?: number,
     ): Promise<void> {
         const allLotteries = await this.lotteryPerformanceInfoRepository.fetchAll();
 
         // 현재 수정 중인 항목은 제외
         const otherLotteries = excludeId
-            ? allLotteries.filter(lottery => lottery.id !== excludeId)
+            ? allLotteries.filter((lottery) => lottery.id !== excludeId)
             : allLotteries;
 
         const newStartTime = lotteryInfo.timeLotteryStart;
@@ -202,7 +219,7 @@ export class LotteryPerformanceService {
             spaceId: params.lottery.spaceId,
             infoId: params.lottery.infoId,
             organizationId: params.lottery.organizationId,
-            lotteryWin: 1
+            lotteryWin: 1,
         });
         if (drawnLotteries.length > 0) {
             throw new BadRequestException("Your organization has already been drawn in this space.");
@@ -420,7 +437,7 @@ export class LotteryPerformanceService {
                         if (lotteries.length === 0) continue;
 
                         const winner = lotteries[getRandomIndex(lotteries.length)];
-                        await this.drawPerformanceLottery(winner.id);
+                        await this.drawPerformanceLottery(winner.id, true, startDate);
 
                         Logger.log(`Performance lottery winner drawn: ${winner.id} for date ${date}`);
 
@@ -434,8 +451,10 @@ export class LotteryPerformanceService {
 
                         // 배치로 삭제 처리
                         for (const lottery of otherLotteries) {
-                            await this.deletePerformanceLottery(lottery.id);
-                            Logger.log(`Performance lottery deleted: ${lottery.id} for drawn organization ${winner.organizationId}`);
+                            await this.deletePerformanceLottery(lottery.id, false); //winner => @param byDrawn false
+                            Logger.log(
+                                `Performance lottery deleted: ${lottery.id} for drawn organization ${winner.organizationId}`,
+                            );
                         }
                     }
                     // 나머지 신청 삭제

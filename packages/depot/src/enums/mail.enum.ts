@@ -167,6 +167,7 @@ export const ReservationMeta = {
 export const LotteryMeta = {
     Seminar : {
         Win : {
+            type : 'seminar', // discriminator for seminar from performance - in template
             // color : "#24d7c2",
             color : "#007bff",
             emoji : '🎉',
@@ -186,6 +187,7 @@ export const LotteryMeta = {
             templatefooterEn : "This email is sent to the Delegator of the reservation lottery organization.",
         },
         Lost : {
+            type : 'seminar',
             color : "#d72424",
             emoji : DEFAULT_EMOJI_RESERVATION,
             header : {
@@ -204,4 +206,45 @@ export const LotteryMeta = {
             templatefooterEn : "This email is sent to the Delegator of the reservation lottery organization.",
         }
     },
+    Performance : {
+        Win : {
+            type : 'performance',
+            // color : "#24d7c2",
+            color : "#007bff",
+            emoji : '🎉' ,
+            header : {
+                kr : "공연집중기간 예약 추첨 결과 안내",
+                en : "Performance Concentration Period Reservation Results",
+            },
+            body :  {
+                kr : "귀 조직의 공연집중기간 예약 신청의 추첨 결과를 아래와 같이 안내드립니다.",
+                en : "The results of the lottery for the performance concentration period reservation of your organization are as follows.",
+            },
+            contentUpperDesc : {
+                kr : "예약 성공 (당첨)",
+                en : "Reservation Successful",      // i hate this
+            },
+            templatefooter :  "이 메일은 공연집중기간 예약 추첨 신청 조직의 위임자 (Delegator) 에게 발송되었습니다.",
+            templatefooterEn : "This email is sent to the Delegator of the reservation lottery organization.",
+        },
+        Lost : {
+            type : 'performance',
+            color : "#d72424",
+            emoji : DEFAULT_EMOJI_RESERVATION,
+            header : {
+                kr : "공연집중기간 예약 추첨 결과 안내",
+                en : "Performance Concentration Period Reservation Results",
+            },
+            body :  {
+                kr : "귀 조직의 공연집중기간 예약 신청의 추첨 결과를 아래와 같이 안내드립니다.",
+                en : "The results of the lottery for the performance concentration period reservation of your organization are as follows.",
+            },
+            contentUpperDesc : {
+                kr : "예약 실패 (낙첨)",
+                en : "Reservation Failed",      // i love this
+            },
+            templatefooter :  "이 메일은 공연집중기간 예약 추첨 신청 조직의 위임자 (Delegator) 에게 발송되었습니다.",
+            templatefooterEn : "This email is sent to the Delegator of the reservation lottery organization.",
+        }
+    }
 } as const
