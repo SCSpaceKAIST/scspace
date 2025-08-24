@@ -37,8 +37,7 @@ export class LotteryPerformanceService {
 
     async getAllPerformanceLotteryInfo(): Promise<MPerformanceLotteryInfo[]> {
         // 자동 정렬된 모든 공연 추첨 정보 조회
-        const performanceLotteryInfo = await this.lotteryPerformanceInfoRepository.fetchAll();
-        return performanceLotteryInfo;
+        return await this.lotteryPerformanceInfoRepository.fetchAll();
     }
 
     async getActivePerformanceLotteryInfo(): Promise<MPerformanceLotteryInfo[]> {
@@ -111,13 +110,12 @@ export class LotteryPerformanceService {
         });
 
         // 추첨 정보 생성 (자동 정렬됨)
-        const createdLotteryInfo = await this.lotteryPerformanceInfoRepository.insert({
+        return await this.lotteryPerformanceInfoRepository.insert({
             timeStart: getDateBegin(params.lotteryInfo.timeStart),
             timeEnd: getDateEnd(params.lotteryInfo.timeEnd),
             timeLotteryStart: getDateBegin(params.lotteryInfo.timeLotteryStart),
             timeLotteryEnd: getDateEnd(params.lotteryInfo.timeLotteryEnd)
         });
-        return createdLotteryInfo;
     }
 
     async updatePerformanceLotteryInfo(params: {
@@ -158,9 +156,7 @@ export class LotteryPerformanceService {
             timeEnd: mergedLotteryInfo.timeEnd
         }, params.id);
 
-        // 추첨 정보 업데이트 (자동 정렬됨)
-        const updatedLotteryInfo = await this.lotteryPerformanceInfoRepository.update(params);
-        return updatedLotteryInfo;
+        return await this.lotteryPerformanceInfoRepository.update(params);
     }
 
     async deletePerformanceLotteryInfo(id: number): Promise<boolean> {
@@ -233,7 +229,7 @@ export class LotteryPerformanceService {
         return await this.lotteryPerformanceRepository.insert(params.lottery);
     }
 
-    async deletePerformanceLottery(id: number, byDrawn : boolean, startDate?: Date): Promise<boolean> {
+    async deletePerformanceLottery(id: number, byDrawn: boolean, startDate?: Date): Promise<boolean> {
         const performanceLotteryArr = await this.lotteryPerformanceRepository.fetch({ id });
         const performanceLottery = performanceLotteryArr[0];
 
@@ -262,7 +258,7 @@ export class LotteryPerformanceService {
             ];
 
             const timestr = `${year}-${month}-${day}`
-            const performanceMeta =  {  ...LotteryMeta.Performance.Win, timeRange : timestr }
+            const performanceMeta =  {  ...LotteryMeta.Performance.Lost, timeRange : timestr }
 
             //send
 

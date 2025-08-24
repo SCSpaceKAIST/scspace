@@ -113,7 +113,7 @@ export class LotteryPerformanceController {
     async postPerformanceLottery(
         @Body() lottery: IPerformanceLotteryCreate
     ): Promise<IPerformanceLottery> {
-        // Implementation for posting new performance lottery
+        // Implementation for posting a new performance lottery
         return await this.lotteryPerformanceService.postPerformanceLottery({ lottery });
     }
 
@@ -122,7 +122,7 @@ export class LotteryPerformanceController {
     async deletePerformanceLottery(
         @Param('id', ParseIntPipe) id: number
     ): Promise<ISuccessResponse> {
-        // Implementation for deleting existing performance lottery
+        // Implementation for deleting the existing performance lottery
         return {
             success: await this.lotteryPerformanceService.deletePerformanceLottery(id, false)
         }
