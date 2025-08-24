@@ -8,11 +8,11 @@ export default function SeminarLotteryRule() {
         <Fieldset.Root>
             <Fieldset.Legend>
                 <Heading whiteSpace={"break-spaces"}>
-                    Seminar-room Recurring Reservation Rules
+                    Seminar-room Recurring Reservation Lottery Rules
                 </Heading>
             </Fieldset.Legend>
             <Fieldset.HelperText>
-                세미나실 정기예약 관련 세칙 및 안내사항
+                세미나실 정기예약 추첨 관련 세칙 및 안내사항
             </Fieldset.HelperText>
             <Fieldset.Content>
                 <SeminarLotteryStatus />

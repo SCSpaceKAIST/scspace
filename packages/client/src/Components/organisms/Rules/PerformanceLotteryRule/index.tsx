@@ -8,7 +8,7 @@ export default function PerformanceLotteryRule() {
         <Fieldset.Root>
             <Fieldset.Legend>
                 <Heading whiteSpace={"break-spaces"}>
-                    Performance Concentration Period Rules
+                    Performance Concentration Period Lottery Rules
                 </Heading>
             </Fieldset.Legend>
             <Fieldset.HelperText>

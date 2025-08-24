@@ -1,28 +1,43 @@
+"use client"
+
 import { Button, Collapsible, Stack, Tabs } from "@chakra-ui/react";
 import OrgRule from "@scspace-client/Components/organisms/Rules/OrganizationRule";
 import ResRule from "@scspace-client/Components/organisms/Rules/ReservationRule";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
-import React from "react";
+import React, { use, useEffect } from "react";
 import SeminarLotteryRule from "@scspace-client/Components/organisms/Rules/SeminarLotteryRule";
 import PerformanceLotteryRule from "@scspace-client/Components/organisms/Rules/PerformanceLotteryRule";
+import { useRuleTopicStore } from "@scspace-client/Store/ruleTopic";
+
+const topics: { [key: string]: React.ReactNode } = {
+    Reservation: (<ResRule />),
+    Organization: (<OrgRule />),
+    "Seminar-room Lottery": (<SeminarLotteryRule />),
+    "Performance Period Lottery": (<PerformanceLotteryRule />)
+};
 
 export default function Rules() {
-    const tabList: { [key: string]: React.ReactNode } = {
-        Reservation: (<ResRule />),
-        Organization: (<OrgRule />),
-        "Seminar-room Recurring Reservation": (<SeminarLotteryRule />),
-        "Performance Concentration Period": (<PerformanceLotteryRule />)
-    };
+    const { topic, update } = useRuleTopicStore();
+
+    useEffect(() => {
+        if (!topic) {
+            update(Object.keys(topics)[0]);
+        }
+    }, [topic, update]);
 
     return (
         <Scroll>
-            <Tabs.Root defaultValue={Object.keys(tabList)[1]} variant={"enclosed"}>
+            <Tabs.Root
+                value={topic}
+                onValueChange={(v) => update(v.value)}
+                variant={"enclosed"}
+            >
                 <Collapsible.Root>
                     <Stack>
                         <Collapsible.Content>
                             <Tabs.List w={"full"}>
                                 <Stack w={"full"}>
-                                    {Object.keys(tabList).map((key) => (
+                                    {Object.keys(topics).map((key) => (
                                         <Tabs.Trigger key={key} value={key} whiteSpace={"nowrap"} width={"full"} textAlign={"center"}>
                                             {key}
                                         </Tabs.Trigger>
@@ -38,7 +53,7 @@ export default function Rules() {
                     </Stack>
                 </Collapsible.Root>
                 {
-                    Object.entries(tabList).map(([key, content]) => (
+                    Object.entries(topics).map(([key, content]) => (
                         <Tabs.Content key={key} value={key}>
                             {content}
                         </Tabs.Content>

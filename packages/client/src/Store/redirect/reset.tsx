@@ -56,13 +56,13 @@ export function useRedirects() {
             {
                 href: "/lottery-seminar",
                 label: "세미나실 정기예약 추첨",
-                helperText: "Seminar Room Lottery",
+                helperText: "Seminar-room Lottery",
                 invisible: !isLogined || !activeSeminarLotteryInfo || activeSeminarLotteryInfo.length === 0 || activeSeminarLotteryInfo[0].applied,
             },
             {
                 href: "/lottery-performance",
                 label: "공연집중기간 추첨",
-                helperText: "Performance Intensive Period Lottery",
+                helperText: "Performance Period Lottery",
                 invisible: !isLogined || !activePerformanceLotteryInfo || activePerformanceLotteryInfo.length === 0 || activePerformanceLotteryInfo[0].applied,
             },
             {
