@@ -124,7 +124,7 @@ export class LotteryPerformanceController {
     ): Promise<ISuccessResponse> {
         // Implementation for deleting existing performance lottery
         return {
-            success: await this.lotteryPerformanceService.deletePerformanceLottery(id)
+            success: await this.lotteryPerformanceService.deletePerformanceLottery(id, false)
         }
     }
 
