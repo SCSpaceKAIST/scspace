@@ -15,12 +15,13 @@ export default function GoodsList(props: {
     const disabled = props.disabled ?? false;
     const isAdmin = props.isAdmin ?? false;
 
-    const checked: { [key: string]: boolean } = {};
+    const [cart, setCart] = useState<{ id: number; count: number }[]>([]);
     const onCheckedChange = (c: { id: number; checked: boolean }) => {
-        if (!checked[c.id.toString()] && c.checked) {
-            checked[c.id.toString()] = true;
-        } else if (checked[c.id.toString()] && !c.checked) {
-            delete checked[c.id.toString()];
+        const exist = cart.find((item) => item.id === c.id);
+        if (!exist && c.checked) {
+            setCart((_cart) => [..._cart, { id: c.id, count: 1 }]);
+        } else if (exist && !c.checked) {
+            setCart((_cart) => _cart.filter((item) => item.id !== c.id));
         }
     }
 
@@ -78,8 +79,9 @@ export default function GoodsList(props: {
                         backgroundColor: "white"
                     }}
                     key={object.id}
-                    checked={checked[object.id.toString()] ?? false}
+                    checked={cart.find(c => c.id === object.id) ? true : false}
                     onCheckedChange={(v) => {
+                        console.log(v);
                         const checked = !!v.checked;
                         setSelectedId(checked ? object.id : -1);
                         onCheckedChange({ id: object.id, checked });
