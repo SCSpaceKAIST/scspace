@@ -7,7 +7,8 @@ export interface IUser {
   nameEn: string;
   email: string | null;
   type: UserTypeEnum;
+  timeOverdue: number;
 }
 
-export type IUserCreate = Omit<IUser, "id">;
-export type IUserUpdate = Pick<IUser, "type">;
+export type IUserCreate = Omit<IUser, "id" | "timeOverdue">;
+export type IUserUpdate = Partial<Pick<IUser, "type" | "timeOverdue">>;

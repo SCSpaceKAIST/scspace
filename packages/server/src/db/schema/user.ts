@@ -1,7 +1,8 @@
 import {
   mysqlTable,
   varchar,
-  int
+  int,
+  bigint
 } from 'drizzle-orm/mysql-core';
 
 // users 테이블 정의
@@ -12,4 +13,5 @@ export const User = mysqlTable('user', {
   nameEn: varchar('name_en', { length: 128 }).notNull(),
   email: varchar('email', { length: 128 }).notNull().unique(),
   type: int('type').notNull().default(1), // type은 enum 필드 user, worker, manager, admin
+  timeOverdue: bigint('time_overdue', { mode: 'number' }).notNull().default(0)
 });

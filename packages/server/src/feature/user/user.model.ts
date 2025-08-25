@@ -11,6 +11,7 @@ export class MUser implements IUser {
   studentNumber: IUser['studentNumber'];
   email: IUser['email'];
   type: IUser['type'];
+  timeOverdue: IUser['timeOverdue'];
 
   constructor(user: IUser) {
     this.id = user.id;
@@ -19,6 +20,7 @@ export class MUser implements IUser {
     this.studentNumber = user.studentNumber;
     this.email = user.email;
     this.type = user.type;
+    this.timeOverdue = user.timeOverdue;
   }
 
   static fromDB(user: UserDBResult): IUser {
@@ -29,6 +31,7 @@ export class MUser implements IUser {
       studentNumber: user.studentNumber,
       email: user.email,
       type: user.type,
+      timeOverdue: user.timeOverdue,
     };
   }
 }
