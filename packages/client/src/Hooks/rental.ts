@@ -115,7 +115,7 @@ export function useGoodsAPI(params?: {
     const deleteGoods = useMutationApi<ISuccessResponse, {}>(
         `/rental/goods/${id || ''}`,
         "DELETE"
-    ).mutate;
+    ).mutateAsync;
 
     const checkAvailability = useMutationApi<{ available: boolean }, IGoodsAvailabilityCheck>(
         "/rental/goods/check-availability",

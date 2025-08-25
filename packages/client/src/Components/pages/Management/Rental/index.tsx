@@ -7,7 +7,7 @@ import React from "react";
 export default function ManageRental() {
     const tabList: { [key: string]: React.ReactNode } = {
         History: <>Will be implemented</>,
-        List: <GoodsList />,
+        "Manage Goods": <GoodsList />,
         "Add Goods": <AddGoods />
     };
 
