@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { SpaceModule } from './feature/space/space.module';
 import { ReservationModule } from './feature/reservation/reservation.module';
 import { OrganizationModule } from './feature/organization/organization.module';
+import { RentalModule } from './feature/rental/rental.module';
 import { join } from 'path';
 import { MailModule } from './tools/mailer/mail.module';
 import { LotteryModule } from './feature/lottery/lottery.module';
@@ -26,6 +27,7 @@ import { ScheduleModule } from "@nestjs/schedule";
     SpaceModule,
     ReservationModule,
     OrganizationModule,
+    RentalModule,
     MailModule,
     LotteryModule
   ],

@@ -5,6 +5,7 @@ import { useAuth } from "@scspace-client/Hooks/auth";
 import PageSelector, { IPage } from "../../molecules/page/PageSelector";
 import ManageOrganization from "./Organization";
 import ManageReservation from "./Reservation";
+import ManageRental from "./Rental";
 
 export default function Management() {
   const { needManager } = useAuth();
@@ -22,6 +23,12 @@ export default function Management() {
       kor: "예약",
       eng: "Reservation",
       preview: (<ManageReservation />)
+    },
+    {
+      href: "/manage/rental",
+      kor: "대여",
+      eng: "Rental",
+      preview: (<ManageRental />)
     }
   ]
 
