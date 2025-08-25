@@ -339,6 +339,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                 borderBottomWidth="1px"
                                 borderColor="gray.200"
                                 height="40px"
+                                minW={"190px"}
                             >
                                 <Center height="100%">
                                     <Text
