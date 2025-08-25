@@ -30,7 +30,7 @@ import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useDate } from "@scspace-client/Hooks/utils";
 
-export default function Application() {
+export default function ReservationApplication() {
   const { userInfo, needLogin } = useAuth();
   needLogin();
 

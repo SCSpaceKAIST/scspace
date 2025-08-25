@@ -1,8 +1,26 @@
+import React from "react";
+import PageSelector, { IPage } from "../../molecules/page/PageSelector";
+import RentalApplication from "./Application";
+
 export default function Rental() {
+    const pages: IPage[] = [
+        {
+            href: "/rental/application",
+            kor: "신청",
+            eng: "Application",
+            preview: (<RentalApplication />)
+        },
+        {
+            href: "/manage/rental",
+            kor: "내 대여",
+            eng: "My Rentals",
+            preview: (<>내 대여</>)
+        }
+    ]
+
     return (
-        <div>
-            <h1>대여 페이지</h1>
-            <p>이곳은 대여 관련 정보가 표시되는 페이지입니다.</p>
-        </div>
+        <PageSelector
+            pages={pages}
+        />
     );
 }

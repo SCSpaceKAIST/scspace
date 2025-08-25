@@ -63,7 +63,7 @@ export function DateSlot({
             borderBottomWidth="1px"
             borderColor={getBorderColor()}
             height="152px"
-            minW={0}
+            minW={"190px"}
             bg={getBgColor()}
             transition="all 0.2s"
         >

@@ -1,7 +1,7 @@
 "use client"
 
 import PageSelector, { IPage } from "@scspace-client/Components/molecules/page/PageSelector";
-import Application from "./Application";
+import ReservationApplication from "./Application";
 import ResStatus from "./Status";
 import UserReservation from "../Mypage/UserReservation";
 import { useAuth } from "@scspace-client/Hooks/auth";
@@ -19,13 +19,13 @@ export default function Reservation() {
         {
             kor: "신청",
             eng: "Application",
-            preview: (<Application />),
+            preview: (<ReservationApplication />),
             href: "/reservation/application",
             invisible: !isLogined
         },
         {
             kor: "내 예약",
-            eng: "My Organization",
+            eng: "My Reservation",
             preview: (<UserReservation />),
             href: "/mypage/reservation",
             invisible: !isLogined
