@@ -17,6 +17,7 @@ import {
     Wrap,
     Badge,
     For,
+    useBreakpointValue,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
@@ -217,6 +218,8 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
         });
     }
 
+    const isWide = useBreakpointValue({ base: false, md: true });
+
     return (<>
         <ActionBar.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
             <Portal>
@@ -251,11 +254,27 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                                     ))}
                                 </VStack>
                             )}
+                            {available && !readOnly && (appliedId === -1) && !isWide && (
+                                <VStack>
+                                    {[1, 2, 3].map(priority => (
+                                        <Button
+                                            key={priority}
+                                            variant={"outline"}
+                                            colorPalette={"blue"}
+                                            onClick={() =>
+                                                createPerformanceLotteryHandler(priority)
+                                            }
+                                        >
+                                            Apply (Priority {priority})
+                                        </Button>
+                                    ))}
+                                </VStack>
+                            )}
                             <HStack separator={<StackSeparator />}>
                                 <ActionBar.SelectionTrigger>
                                     {selectedDateString}
                                 </ActionBar.SelectionTrigger>
-                                {available && !readOnly && (appliedId === -1) && (
+                                {available && !readOnly && (appliedId === -1) && isWide && (
                                     <HStack>
                                         {[1, 2, 3].map(priority => (
                                             <Button
