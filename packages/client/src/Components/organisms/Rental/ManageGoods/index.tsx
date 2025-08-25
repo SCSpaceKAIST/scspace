@@ -15,8 +15,7 @@ export default function ManageGoods() {
     return (
         <Stack>
             <GoodsList
-                checked={checked}
-                onCheckedChange={handleCheck}
+                isAdmin
             />
         </Stack>
     );

@@ -7,14 +7,22 @@ import { useGoodsAPI } from "@scspace-client/Hooks/rental";
 import { useEffect, useState } from "react";
 
 export default function GoodsList(props: {
-    checked?: { [key: string]: boolean };
-    onCheckedChange?: (prop: { id: number, checked: boolean }) => void;
     refetchCount?: number;
+    disabled?: boolean;
+    isAdmin?: boolean;
 }) {
     const refetchCount = props.refetchCount ?? 0;
-    const disabled = props.onCheckedChange === undefined ? true : false;
-    const checked = props.checked ?? {};
-    const onCheckedChange = props.onCheckedChange ?? (() => { });
+    const disabled = props.disabled ?? false;
+    const isAdmin = props.isAdmin ?? false;
+
+    const checked: { [key: string]: boolean } = {};
+    const onCheckedChange = (c: { id: number; checked: boolean }) => {
+        if (!checked[c.id.toString()] && c.checked) {
+            checked[c.id.toString()] = true;
+        } else if (checked[c.id.toString()] && !c.checked) {
+            delete checked[c.id.toString()];
+        }
+    }
 
     const [selectedId, setSelectedId] = useState<number>(-1);
 
