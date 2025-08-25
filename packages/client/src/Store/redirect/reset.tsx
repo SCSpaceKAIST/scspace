@@ -157,6 +157,11 @@ export function useRedirects() {
                         href: "/manage/reservation",
                         label: "예약",
                         helperText: "Reservation"
+                    },
+                    {
+                        href: "/manage/rental",
+                        label: "대여",
+                        helperText: "Rental"
                     }
                 ]
             },

@@ -13,7 +13,7 @@ export const Goods = mysqlTable('goods', {
     name: varchar('name', { length: 128 }).notNull(),
     description: varchar('description', { length: 4098 }),
     countAll: int('count_all').notNull().default(1),
-    countNow: int('count_Now').notNull().default(1),
+    countNow: int('count_now').notNull(), // 기본값 제거, repository에서 설정
     imageId: int('image_id').notNull().default(0),
 });
 

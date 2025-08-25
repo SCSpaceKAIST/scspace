@@ -137,7 +137,10 @@ export class RentalRepository {
 
     // Goods CRUD operations
     async createGoods(goods: IGoodsCreate): Promise<number> {
-        const result = await this.db.insert(Goods).values(goods);
+        const result = await this.db.insert(Goods).values({
+            ...goods,
+            countNow: goods.countAll, // countNow를 countAll과 같은 값으로 설정
+        });
         return result[0].insertId;
     }
 

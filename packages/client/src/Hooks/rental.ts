@@ -89,29 +89,12 @@ export function useRentalAPI(params?: {
 // 통합 Goods API Hook (물품 관리)
 export function useGoodsAPI(params?: {
     id?: number;
-    name?: string;
-    available?: boolean;
-    limit?: number;
-    offset?: number;
 }) {
-    const { id, name, available, limit = 50, offset = 0 } = params || {
-        id: -1,
-        name: undefined,
-        available: undefined,
-        limit: 50,
-        offset: 0
-    };
-
-    // 쿼리 파라미터 구성
-    const queryParams = new URLSearchParams();
-    if (name) queryParams.append('name', name);
-    if (available !== undefined) queryParams.append('available', available.toString());
-    queryParams.append('limit', limit.toString());
-    queryParams.append('offset', offset.toString());
+    const { id } = params || { id: -1 };
 
     // GET Hook들을 최상위에서 호출
     const allGoods = useQueryApi<IGoods[]>(
-        `/rental/goods/list?${queryParams.toString()}`
+        `/rental/goods/list`
     );
 
     const goodsById = useQueryApi<IGoods>(
@@ -122,7 +105,7 @@ export function useGoodsAPI(params?: {
     const createGoods = useMutationApi<{ success: boolean; data: { id: number } }, IGoodsCreate>(
         "/rental/goods",
         "POST"
-    ).mutate;
+    ).mutateAsync;
 
     const updateGoods = useMutationApi<ISuccessResponse, Omit<IGoodsUpdate, 'id'>>(
         `/rental/goods/${id || ''}`,

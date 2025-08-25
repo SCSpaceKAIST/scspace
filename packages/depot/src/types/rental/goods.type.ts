@@ -8,7 +8,7 @@ export interface IGoods {
     imageId: number;
 }
 
-export type IGoodsCreate = Omit<IGoods, "id">;
+export type IGoodsCreate = Omit<IGoods, "id" | "countNow">;
 
 export type IGoodsUpdate = Partial<Omit<IGoods, "id">> & {
     id: number;

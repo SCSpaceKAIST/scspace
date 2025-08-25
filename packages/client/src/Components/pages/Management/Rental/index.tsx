@@ -1,13 +1,14 @@
 import { Tabs } from "@chakra-ui/react";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
-import AllReservation from "@scspace-client/Components/organisms/Reservation/Listing/AllReservation";
-import CreateReservation from "@scspace-client/Components/organisms/Reservation/Manager/CreateReservation";
+import { AddGoods } from "@scspace-client/Components/organisms/Rental/AddGoods";
+import GoodsList from "@scspace-client/Components/organisms/Rental/List";
 import React from "react";
 
 export default function ManageRental() {
     const tabList: { [key: string]: React.ReactNode } = {
-        History: <AllReservation />,
-        Create: <CreateReservation />,
+        History: <>Will be implemented</>,
+        List: <GoodsList />,
+        "Add Goods": <AddGoods />
     };
 
     return (
