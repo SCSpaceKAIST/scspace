@@ -31,7 +31,6 @@ export const Rental = mysqlTable('rental', {
     timeDue: bigint('time_due', { mode: 'number' }).notNull(),
     timeReturn: bigint('time_return', { mode: 'number' }).notNull().default(0),
     timeConfirm: bigint('time_confirm', { mode: 'number' }).notNull().default(0),
-    overdue: int('overdue').notNull().default(0),
     // Foreign keys
     // userId references users.userId O
     // goodsId references goods.goodsId O
