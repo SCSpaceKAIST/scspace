@@ -547,6 +547,19 @@ export class ReservationPublicService {
       throw new BadRequestException('Time is not available');
     }
 
+    // 미래홀과 수미홀의 추가 시간 제약 검증
+    const space = await this.spacePublicService.fetchById(spaceId);
+    if (!space) {
+      throw new BadRequestException('Space not found');
+    }
+    await this.validateSpaceTimeConstraints(
+      userId,
+      organizationId,
+      space,
+      timeFrom,
+      timeTo,
+    );
+
     const isOverlap = await this.checkTimeAvailability(
       spaceId,
       timeFrom,
@@ -772,6 +785,63 @@ export class ReservationPublicService {
         throw new BadRequestException(
           `This period is reserved for performance period lottery (공연집중기간 추첨) from ${startDate} to ${endDate}. Reservation cannot be made until the lottery is completed.`,
         );
+      }
+    }
+  }
+
+  async validateSpaceTimeConstraints(
+    userId: number,
+    organizationId: number,
+    space: ISpace,
+    timeFrom: number,
+    timeTo: number,
+  ): Promise<void> {
+    if (space.spaceType !== SpaceTypeEnum.SUMI && space.spaceType !== SpaceTypeEnum.MIRAE) {
+      return;
+    }
+
+    if (await this.userPublicService.isManager(userId)) {
+      return;
+    }
+
+    const { weekStart, weekEnd } = getWeekPeriod(timeFrom);
+    const reservations = await this.reservationRepository.fetch({
+      spaceId: space.id,
+      timeRange: {
+        timeFrom: weekStart,
+        timeTo: weekEnd,
+      },
+    });
+
+    let matchReservation: MReservationSimple | null = null;
+    if (organizationId === 1) {
+      matchReservation = reservations.data.find((reservation) => reservation.userId === userId && reservation.organizationId === 1);
+    } else {
+      matchReservation = reservations.data.find((reservation) => reservation.organizationId === organizationId);
+    }
+
+    let checkArray: number[] = new Array(7).fill(0);
+
+    if (matchReservation) {
+      for (let i = 0; i < reservations.data.length; i++) {
+        const reservationFromTime = reservations.data[i].timeFrom / (24 * 60);
+        const reservationToTime = reservations.data[i].timeTo / (24 * 60);
+
+        checkArray[reservationFromTime % 7] += 1;
+        checkArray[reservationToTime % 7] += 1;
+      }
+      checkArray[(timeFrom / (24 * 60)) % 7] += 1;
+      checkArray[(timeTo / (24 * 60)) % 7] += 1;
+
+      let count: number = 0;
+      for (let i = 0; i < 7; i++) {
+        if (checkArray[i] > 1) {
+          count += 1;
+        }
+      }
+
+      if (count > 2) {
+        throw new BadRequestException('Mirae Hall and Sumi Hall can only be reserved for up to 2 days per week.');
       }
     }
   }
