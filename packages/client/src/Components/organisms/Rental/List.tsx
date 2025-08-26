@@ -1,14 +1,13 @@
 "use client"
 
-import { Center, CheckboxCard, Grid, Separator, Stack } from "@chakra-ui/react";
+import { Box, Center, CheckboxCard, Grid, Separator, Stack, useBreakpointValue } from "@chakra-ui/react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
-import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useGoodsAPI } from "@scspace-client/Hooks/rental";
 import { useState } from "react";
 import ManageBar from "./ManageGoods/ManageBar";
 import CartCollapsible from "./ManageCart/CartCollapsible";
-import { IGoods } from "@scspace-depot/types/rental";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
+import Image from "next/image";
 
 export interface ICartItem {
     id: number;
@@ -23,6 +22,7 @@ export default function GoodsList(props: {
 }) {
     const disabled = props.disabled ?? false;
     const manage = props.manage ?? false;
+    const isWide = useBreakpointValue({ base: false, md: true });
 
     const {
         allGoods: {
@@ -64,7 +64,7 @@ export default function GoodsList(props: {
         }
     }
 
-    // const goodsListData: IGoods[] = [{
+    // const goodsListData = [{
     //     id: 1,
     //     name: "Sample Good",
     //     description: "This is a sample good",
@@ -139,11 +139,28 @@ export default function GoodsList(props: {
                             }}
                         >
                             {!disabled && <CheckboxCard.HiddenInput />}
-                            <Grid templateColumns="auto auto 1fr">
-                                <Center aspectRatio={5 / 4}>
-                                    image
-                                </Center>
-                                <Separator orientation="vertical" />
+                            <Grid
+                                templateColumns={isWide ? "auto auto 1fr" : "1fr"}
+                                templateRows={isWide ? "1fr" : "auto auto 1fr "}
+                            >
+                                <Box
+                                    aspectRatio={5 / 4}
+                                    p={2}
+                                >
+                                    <Box
+                                        position="relative"
+                                        h={"full"}
+                                        w={"full"}
+                                    >
+                                        <Image
+                                            src="/img/logo.svg"
+                                            alt="LOGO"
+                                            fill
+                                            objectFit="contain"
+                                        />
+                                    </Box>
+                                </Box>
+                                <Separator orientation={isWide ? "vertical" : "horizontal"} />
                                 <Stack gap={0}>
                                     <CheckboxCard.Control>
                                         <CheckboxCard.Content>
