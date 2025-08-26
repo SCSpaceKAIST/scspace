@@ -5,6 +5,7 @@ import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useGoodsAPI } from "@scspace-client/Hooks/rental";
 import { useEffect, useState } from "react";
+import ManageBar from "./ManageGoods/ManageBar";
 
 export default function GoodsList(props: {
     refetchCount?: number;
@@ -81,6 +82,7 @@ export default function GoodsList(props: {
         <LoadingComponent />
     ) : (
         <Stack p={2}>
+            <ManageBar />
             {goodsListData.map(object => (
                 <CheckboxCard.Root
                     _hover={{
