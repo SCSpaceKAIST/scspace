@@ -147,6 +147,21 @@ export class ReservationService {
     if (!organization) throw new BadRequestException('Organization not found');
     if (!space) throw new BadRequestException('Space not found');
 
+    if (user.type !== UserTypeEnum.MANAGER && user.type !== UserTypeEnum.ADMIN) {
+      const userOrganizations = await this.organizationPublicService.fetchByUserId(reservationInput.userId);
+      if (!userOrganizations.some(org => org.id === reservationInput.organizationId)) {
+        throw new BadRequestException('User does not belong to the specified organization');
+      }
+    }
+
+    await this.reservationPublicService.validateSpaceTimeConstraints(
+      reservationInput.userId,
+      reservationInput.organizationId,
+      space,
+      reservationInput.timeFrom,
+      reservationInput.timeTo
+    )
+
     // 세미나실 추첨 기간 겹침 검증
     await this.reservationPublicService.validateSeminarLotteryConflict(
       reservationInput.userId,
@@ -161,13 +176,6 @@ export class ReservationService {
       reservationInput.timeFrom,
       reservationInput.timeTo
     );
-
-    if (user.type !== UserTypeEnum.MANAGER && user.type !== UserTypeEnum.ADMIN) {
-      const userOrganizations = await this.organizationPublicService.fetchByUserId(reservationInput.userId);
-      if (!userOrganizations.some(org => org.id === reservationInput.organizationId)) {
-        throw new BadRequestException('User does not belong to the specified organization');
-      }
-    }
 
     const [reservation, reservationContent] = await this.reservationRepository.insert(reservationInput);
 
@@ -249,6 +257,14 @@ export class ReservationService {
     if (!organization) throw new BadRequestException('Organization not found');
     if (!space) throw new BadRequestException('Space not found');
 
+
+    await this.reservationPublicService.validateSpaceTimeConstraints(
+      reservation[0].userId,
+      reservation[0].organizationId,
+      space,
+      reservationInput.timeFrom,
+      reservationInput.timeTo
+    )
     // 공간 정보 조회하여 세미나실 추첨 기간 겹침 검증
     await this.reservationPublicService.validateSeminarLotteryConflict(
       reservation[0].userId,
