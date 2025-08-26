@@ -14,7 +14,6 @@ import {
 import { Request } from 'express';
 import { RentalService } from './rental.service';
 import {
-    IRental,
     IRentalCreate,
     IRentalUpdate,
     IRentalAll,
@@ -23,7 +22,6 @@ import {
     IGoods,
     IGoodsCreate,
     IGoodsUpdate,
-    IGoodsFilter,
     IGoodsAvailabilityCheck,
     IUserRentalStatus,
 } from '@scspace-depot/types/rental';

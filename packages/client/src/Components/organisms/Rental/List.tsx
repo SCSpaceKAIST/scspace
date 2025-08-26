@@ -6,7 +6,7 @@ import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useGoodsAPI } from "@scspace-client/Hooks/rental";
 import { useState } from "react";
 import ManageBar from "./ManageGoods/ManageBar";
-import CartCollapsible from "./SelectGoods/CartCollapsible";
+import CartCollapsible from "./ManageCart/CartCollapsible";
 import { IGoods } from "@scspace-depot/types/rental";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 

@@ -10,7 +10,7 @@ export default function RentalApplication() {
     return (
         <Scroll>
             <GoodsList
-                disabled={!isLogined}
+            // disabled={!isLogined}
             />
         </Scroll>
     );
