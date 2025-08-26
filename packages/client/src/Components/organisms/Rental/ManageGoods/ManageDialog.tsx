@@ -21,11 +21,11 @@ export default function ManageDialog() {
                                 Body
                             </Dialog.Body>
                             <Dialog.Footer>
-                                <Dialog.CloseTrigger asChild>
+                                <Dialog.ActionTrigger asChild>
                                     <Button variant={"outline"}>
                                         Close
                                     </Button>
-                                </Dialog.CloseTrigger>
+                                </Dialog.ActionTrigger>
                             </Dialog.Footer>
                         </Dialog.Content>
                     </Dialog.Positioner>
