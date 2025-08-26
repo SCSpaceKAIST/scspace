@@ -1,9 +1,10 @@
 import { ActionBar, Button, Dialog, Portal } from "@chakra-ui/react";
 import ManageDialog from "./ManageDialog";
 
-export default function ManageBar({ name, id }: {
+export default function ManageBar({ name, id, onChange }: {
     name: string | null,
-    id: number | null
+    id: number | null,
+    onChange: () => void
 }) {
     return (
         <ActionBar.Root open>
@@ -18,7 +19,10 @@ export default function ManageBar({ name, id }: {
                                 <ActionBar.Separator />
                             </>
                         )}
-                        <ManageDialog id={id ?? -1} />
+                        <ManageDialog
+                            id={id ?? -1}
+                            onChange={onChange}
+                        />
                     </ActionBar.Content>
                 </ActionBar.Positioner>
             </Portal>

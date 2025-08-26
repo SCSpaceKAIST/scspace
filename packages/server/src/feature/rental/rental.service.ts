@@ -274,7 +274,16 @@ export class RentalService {
             throw new NotFoundException('Goods not found');
         }
 
-        await this.rentalRepository.updateGoods(id, updates);
+        const countNow = existingGoods.countNow + updates.countAll - existingGoods.countAll;
+
+        if (countNow < 0) {
+            throw new BadRequestException('Insufficient stock');
+        }
+
+        await this.rentalRepository.updateGoods(id, {
+            ...updates,
+            countNow
+        });
 
         return { success: true };
     }

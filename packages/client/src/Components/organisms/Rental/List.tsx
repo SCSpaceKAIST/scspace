@@ -86,6 +86,7 @@ export default function GoodsList(props: {
                 <ManageBar
                     name={goodsListData.find(item => item.id === cart[0]?.id)?.name ?? null}
                     id={cart[0]?.id ?? null}
+                    onChange={goodsListRefetch}
                 />)}
             {goodsListData.map(object => (
                 <CheckboxCard.Root

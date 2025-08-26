@@ -10,7 +10,8 @@ import { GoodsDescriptionForm } from "../AddGoods/DecsriptionForm";
 import { GoodsCountForm } from "../AddGoods/CountForm";
 import GoodsImageForm from "../AddGoods/ImageForm";
 
-export default function ManageDialog({ id }: {
+export default function ManageDialog({ id, onChange }: {
+    onChange: () => void;
     id: number;
 }) {
     const [name, setName] = useState<string>('');
@@ -21,6 +22,7 @@ export default function ManageDialog({ id }: {
     const {
         createGoods,
         updateGoods,
+        deleteGoods,
         goodsById: {
             data: goodsData,
             refetch: goodsRefetch
@@ -60,6 +62,7 @@ export default function ManageDialog({ id }: {
                     setDescription('');
                     setCountAll(0);
                     setErrorMessage('');
+                    onChange();
                 }
             }),
             {
@@ -93,6 +96,9 @@ export default function ManageDialog({ id }: {
                     setErrorMessage(error.message || 'Failed to update goods');
                     console.error('Failed to update goods:', error);
                 },
+                onSuccess: () => {
+                    onChange();
+                }
             }),
             {
                 loading: {
@@ -110,6 +116,34 @@ export default function ManageDialog({ id }: {
             }
         );
     }, [name, description, countAll, updateGoods, errorMessage]);
+
+    const handleDelete = useCallback(() => {
+        toaster.promise(
+            deleteGoods({}, {
+                onError: (error) => {
+                    setErrorMessage(error.message || 'Failed to delete goods');
+                    console.error('Failed to delete goods:', error);
+                },
+                onSuccess: () => {
+                    goodsRefetch();
+                }
+            }),
+            {
+                loading: {
+                    title: "Deleting goods...",
+                    description: "Please wait",
+                },
+                success: {
+                    title: "Goods deleted successfully!",
+                    description: "The goods has been removed",
+                },
+                error: {
+                    title: "Failed to delete goods",
+                    description: errorMessage || "Please try again"
+                }
+            }
+        )
+    }, [deleteGoods, goodsRefetch]);
 
     return (
         <Dialog.Root placement={"center"}>
@@ -151,16 +185,22 @@ export default function ManageDialog({ id }: {
                                     </Button>
                                 </Dialog.ActionTrigger>
                                 {(id !== -1) ? (
-                                    <Button
-                                        variant={"outline"}
-                                        onClick={handleUpdate}
-                                        colorPalette={"blue"}
-                                    >
-                                        Update
-                                    </Button>
+                                    <>
+                                        <Button
+                                            onClick={handleUpdate}
+                                            colorPalette={"blue"}
+                                        >
+                                            Update
+                                        </Button>
+                                        <Button
+                                            onClick={handleDelete}
+                                            colorPalette={"red"}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </>
                                 ) : (
                                     <Button
-                                        variant={"outline"}
                                         onClick={handleCreate}
                                         colorPalette={"green"}
                                     >
