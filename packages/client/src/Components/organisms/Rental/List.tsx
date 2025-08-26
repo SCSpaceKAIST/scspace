@@ -6,6 +6,14 @@ import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useGoodsAPI } from "@scspace-client/Hooks/rental";
 import { useEffect, useState } from "react";
 import ManageBar from "./ManageGoods/ManageBar";
+import CartCollapsible from "./SelectGoods/CartCollapsible";
+
+export interface ICartItem {
+    id: number;
+    name: string;
+    count: number;
+    countNow: number;
+}
 
 export default function GoodsList(props: {
     refetchCount?: number;
@@ -16,32 +24,45 @@ export default function GoodsList(props: {
     const disabled = props.disabled ?? false;
     const manage = props.manage ?? false;
 
-    const [cart, setCart] = useState<{ id: number; count: number }[]>([]);
-    const onCheckedChange = (c: { id: number; checked: boolean }) => {
-        const exist = cart.find((item) => item.id === c.id);
-        if (!manage) {
-            if (!exist && c.checked) {
-                setCart((_cart) => [..._cart, { id: c.id, count: 1 }]);
-            } else if (exist && !c.checked) {
-                setCart((_cart) => _cart.filter((item) => item.id !== c.id));
-            }
-        } else {
-            if (!exist && c.checked) {
-                setCart([{ id: c.id, count: 1 }]);
-            } else if (exist && !c.checked) {
-                setCart([]);
-            }
-        }
-    }
-
-    const [selectedId, setSelectedId] = useState<number>(-1);
-
     const {
         allGoods: {
             data: goodsListData,
             refetch: goodsListRefetch
         }
     } = useGoodsAPI();
+
+    const [cart, setCart] = useState<ICartItem[]>([]);
+    const onCheckedChange = (c: {
+        name: string;
+        id: number;
+        checked: boolean;
+        countNow: number;
+    }) => {
+        const exist = cart.find((item) => item.id === c.id);
+        if (!manage) {
+            if (!exist && c.checked) {
+                setCart((_cart) => [..._cart, {
+                    id: c.id,
+                    count: 1,
+                    name: c.name,
+                    countNow: c.countNow
+                }]);
+            } else if (exist && !c.checked) {
+                setCart((_cart) => _cart.filter((item) => item.id !== c.id));
+            }
+        } else {
+            if (!exist && c.checked) {
+                setCart([{
+                    id: c.id,
+                    count: 1,
+                    name: c.name,
+                    countNow: c.countNow
+                }]);
+            } else if (exist && !c.checked) {
+                setCart([]);
+            }
+        }
+    }
 
     useEffect(() => {
         goodsListRefetch();
@@ -82,12 +103,17 @@ export default function GoodsList(props: {
         <LoadingComponent />
     ) : (
         <Stack p={2}>
-            {manage && (
+            {manage ? (
                 <ManageBar
-                    name={goodsListData.find(item => item.id === cart[0]?.id)?.name ?? null}
-                    id={cart[0]?.id ?? null}
+                    item={cart[0] ?? null}
                     onChange={goodsListRefetch}
-                />)}
+                />
+            ) : (
+                <CartCollapsible
+                    cart={cart}
+                    setCart={setCart}
+                />
+            )}
             {goodsListData.map(object => (
                 <CheckboxCard.Root
                     _hover={{
@@ -96,10 +122,12 @@ export default function GoodsList(props: {
                     key={object.id}
                     checked={cart.find(c => c.id === object.id) ? true : false}
                     onCheckedChange={(v) => {
-                        console.log(v);
-                        const checked = !!v.checked;
-                        setSelectedId(checked ? object.id : -1);
-                        onCheckedChange({ id: object.id, checked });
+                        onCheckedChange({
+                            id: object.id,
+                            checked: !!v.checked,
+                            name: object.name,
+                            countNow: object.countNow
+                        });
                     }}
                 >
                     {!disabled && <CheckboxCard.HiddenInput />}

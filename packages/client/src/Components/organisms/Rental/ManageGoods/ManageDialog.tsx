@@ -125,7 +125,7 @@ export default function ManageDialog({ id, onChange }: {
                     console.error('Failed to delete goods:', error);
                 },
                 onSuccess: () => {
-                    goodsRefetch();
+                    onChange();
                 }
             }),
             {
@@ -192,12 +192,14 @@ export default function ManageDialog({ id, onChange }: {
                                         >
                                             Update
                                         </Button>
-                                        <Button
-                                            onClick={handleDelete}
-                                            colorPalette={"red"}
-                                        >
-                                            Delete
-                                        </Button>
+                                        <Dialog.ActionTrigger asChild>
+                                            <Button
+                                                onClick={handleDelete}
+                                                colorPalette={"red"}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </Dialog.ActionTrigger>
                                     </>
                                 ) : (
                                     <Button

@@ -1,9 +1,9 @@
 import { ActionBar, Button, Dialog, Portal } from "@chakra-ui/react";
 import ManageDialog from "./ManageDialog";
+import { ICartItem } from "../List";
 
-export default function ManageBar({ name, id, onChange }: {
-    name: string | null,
-    id: number | null,
+export default function ManageBar({ item, onChange }: {
+    item: ICartItem | null
     onChange: () => void
 }) {
     return (
@@ -11,16 +11,16 @@ export default function ManageBar({ name, id, onChange }: {
             <Portal>
                 <ActionBar.Positioner>
                     <ActionBar.Content>
-                        {name && (
+                        {item && (
                             <>
                                 <ActionBar.SelectionTrigger>
-                                    {name}
+                                    {item.name}
                                 </ActionBar.SelectionTrigger>
                                 <ActionBar.Separator />
                             </>
                         )}
                         <ManageDialog
-                            id={id ?? -1}
+                            id={item?.id ?? -1}
                             onChange={onChange}
                         />
                     </ActionBar.Content>
