@@ -103,15 +103,10 @@ export default function GoodsList(props: {
         <LoadingComponent />
     ) : (
         <Stack p={2}>
-            {manage ? (
+            {manage && (
                 <ManageBar
                     item={cart[0] ?? null}
                     onChange={goodsListRefetch}
-                />
-            ) : (
-                <CartCollapsible
-                    cart={cart}
-                    setCart={setCart}
                 />
             )}
             {goodsListData.map(object => (
@@ -157,6 +152,12 @@ export default function GoodsList(props: {
                     </Grid>
                 </CheckboxCard.Root>
             ))}
+            {!manage && (
+                <CartCollapsible
+                    cart={cart}
+                    setCart={setCart}
+                />
+            )}
         </Stack >
     );
 }

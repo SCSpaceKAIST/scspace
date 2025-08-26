@@ -7,12 +7,16 @@ export default function CartCollapsible({ cart, setCart }: {
     setCart: React.Dispatch<React.SetStateAction<ICartItem[]>>;
 }) {
     return (
-        <Collapsible.Root open={cart.length > 0}>
+        <Collapsible.Root
+            open={cart.length > 0}
+            height={"18dvh"}
+            backgroundColor={"gray.50"}
+        >
             <Collapsible.Content>
                 <Scroll>
                     <Stack>
                         {cart.map(item => (
-                            <Card.Root key={item.id}>
+                            <Card.Root key={item.id} size={"sm"}>
                                 <Card.Body>
                                     {item.name}
                                 </Card.Body>
