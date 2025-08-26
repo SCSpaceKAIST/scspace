@@ -4,9 +4,11 @@ import { Center, CheckboxCard, Grid, Separator, Stack } from "@chakra-ui/react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useGoodsAPI } from "@scspace-client/Hooks/rental";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ManageBar from "./ManageGoods/ManageBar";
 import CartCollapsible from "./SelectGoods/CartCollapsible";
+import { IGoods } from "@scspace-depot/types/rental";
+import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 
 export interface ICartItem {
     id: number;
@@ -16,11 +18,9 @@ export interface ICartItem {
 }
 
 export default function GoodsList(props: {
-    refetchCount?: number;
     disabled?: boolean;
     manage?: boolean;
 }) {
-    const refetchCount = props.refetchCount ?? 0;
     const disabled = props.disabled ?? false;
     const manage = props.manage ?? false;
 
@@ -64,100 +64,115 @@ export default function GoodsList(props: {
         }
     }
 
-    useEffect(() => {
-        goodsListRefetch();
-    }, [refetchCount]);
-
-    const deleteGoods = useGoodsAPI().deleteGoods;
-
-    const [errorMessage, setErrorMessage] = useState<string>('');
-    const handleDelete = (id: number) => {
-        toaster.promise(
-            deleteGoods({}, {
-                onSuccess: () => {
-                    goodsListRefetch();
-                },
-                onError: (error) => {
-                    setErrorMessage(error.message || 'Failed to create goods');
-                    console.error('Failed to delete goods:', error);
-                }
-            }),
-            {
-                loading: {
-                    title: "Deleting goods...",
-                    description: "Please wait",
-                },
-                success: {
-                    title: "Goods deleted successfully!",
-                    description: "The goods has been removed",
-                },
-                error: {
-                    title: "Failed to delete goods",
-                    description: errorMessage || "Please try again"
-                }
-            }
-        )
-    }
+    // const goodsListData: IGoods[] = [{
+    //     id: 1,
+    //     name: "Sample Good",
+    //     description: "This is a sample good",
+    //     countNow: 5,
+    //     countAll: 10,
+    //     imageId: 1
+    // }, {
+    //     id: 2,
+    //     name: "Sample Good 2",
+    //     description: "This is a sample good 2",
+    //     countNow: 3,
+    //     countAll: 8,
+    //     imageId: 2
+    // }, {
+    //     id: 3,
+    //     name: "Sample Good 3",
+    //     description: "This is a sample good 3",
+    //     countNow: 0,
+    //     countAll: 5,
+    //     imageId: 3
+    // }, {
+    //     id: 4,
+    //     name: "Sample Good 4",
+    //     description: "This is a sample good 4",
+    //     countNow: 2,
+    //     countAll: 6,
+    //     imageId: 4
+    // }, {
+    //     id: 5,
+    //     name: "Sample Good 5",
+    //     description: "This is a sample good 5",
+    //     countNow: 1,
+    //     countAll: 3,
+    //     imageId: 5
+    // }, {
+    //     id: 6,
+    //     name: "Sample Good 6",
+    //     description: "This is a sample good 6",
+    //     countNow: 4,
+    //     countAll: 10,
+    //     imageId: 6
+    // }];
+    // const goodsListRefetch = () => { };
 
     return (!goodsListData || goodsListData.length === 0) ? (
         <LoadingComponent />
-    ) : (
-        <Stack p={2}>
-            {manage && (
-                <ManageBar
-                    item={cart[0] ?? null}
-                    onChange={goodsListRefetch}
-                />
-            )}
-            {goodsListData.map(object => (
-                <CheckboxCard.Root
-                    _hover={{
-                        backgroundColor: "white"
-                    }}
-                    key={object.id}
-                    checked={cart.find(c => c.id === object.id) ? true : false}
-                    onCheckedChange={(v) => {
-                        onCheckedChange({
-                            id: object.id,
-                            checked: !!v.checked,
-                            name: object.name,
-                            countNow: object.countNow
-                        });
-                    }}
-                >
-                    {!disabled && <CheckboxCard.HiddenInput />}
-                    <Grid templateColumns="auto auto 1fr">
-                        <Center aspectRatio={5 / 4}>
-                            image
-                        </Center>
-                        <Separator orientation="vertical" />
-                        <Stack gap={0}>
-                            <CheckboxCard.Control>
-                                <CheckboxCard.Content>
-                                    <CheckboxCard.Label>
-                                        {object.name}
-                                    </CheckboxCard.Label>
-                                    <CheckboxCard.Description>
-                                        {object.countNow} / {object.countAll} Available
-                                    </CheckboxCard.Description>
-                                </CheckboxCard.Content>
-                                {(!disabled && !manage) && <CheckboxCard.Indicator />}
-                            </CheckboxCard.Control>
-                            {(object.description !== null) && (
-                                <CheckboxCard.Addon>
-                                    {object.description}
-                                </CheckboxCard.Addon>
-                            )}
-                        </Stack>
-                    </Grid>
-                </CheckboxCard.Root>
-            ))}
-            {!manage && (
+    ) : (<>
+        {manage && (
+            <ManageBar
+                item={cart[0] ?? null}
+                onChange={goodsListRefetch}
+            />
+        )}
+        <Grid templateRows={"1fr auto"} height={"100%"}>
+            <Scroll>
+                <Stack p={2}>
+
+                    {goodsListData.map(object => (
+                        <CheckboxCard.Root
+                            _hover={{
+                                backgroundColor: "white"
+                            }}
+                            key={object.id}
+                            checked={cart.find(c => c.id === object.id) ? true : false}
+                            onCheckedChange={(v) => {
+                                onCheckedChange({
+                                    id: object.id,
+                                    checked: !!v.checked,
+                                    name: object.name,
+                                    countNow: object.countNow
+                                });
+                            }}
+                        >
+                            {!disabled && <CheckboxCard.HiddenInput />}
+                            <Grid templateColumns="auto auto 1fr">
+                                <Center aspectRatio={5 / 4}>
+                                    image
+                                </Center>
+                                <Separator orientation="vertical" />
+                                <Stack gap={0}>
+                                    <CheckboxCard.Control>
+                                        <CheckboxCard.Content>
+                                            <CheckboxCard.Label>
+                                                {object.name}
+                                            </CheckboxCard.Label>
+                                            <CheckboxCard.Description>
+                                                {object.countNow} / {object.countAll} Available
+                                            </CheckboxCard.Description>
+                                        </CheckboxCard.Content>
+                                        {(!disabled && !manage) && <CheckboxCard.Indicator />}
+                                    </CheckboxCard.Control>
+                                    {(object.description !== null) && (
+                                        <CheckboxCard.Addon>
+                                            {object.description}
+                                        </CheckboxCard.Addon>
+                                    )}
+                                </Stack>
+                            </Grid>
+                        </CheckboxCard.Root>
+                    ))}
+                </Stack>
+            </Scroll>
+            {(!manage && !disabled) && (
                 <CartCollapsible
                     cart={cart}
                     setCart={setCart}
                 />
             )}
-        </Stack >
-    );
+        </Grid>
+    </>);
 }
