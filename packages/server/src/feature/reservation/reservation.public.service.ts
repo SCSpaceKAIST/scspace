@@ -788,7 +788,6 @@ export class ReservationPublicService {
       }
     }
   }
-
   async validateSpaceTimeConstraints(
     userId: number,
     organizationId: number,
@@ -813,25 +812,25 @@ export class ReservationPublicService {
       },
     });
 
-    let matchReservation: MReservationSimple | null = null;
+    let matchReservation: MReservationSimple[] | null = null;
     if (organizationId === 1) {
-      matchReservation = reservations.data.find((reservation) => reservation.userId === userId && reservation.organizationId === 1);
+      matchReservation = reservations.data.filter((reservation) => (reservation.userId === userId && reservation.organizationId === 1));
     } else {
-      matchReservation = reservations.data.find((reservation) => reservation.organizationId === organizationId);
+      matchReservation = reservations.data.filter((reservation) => reservation.organizationId === organizationId);
     }
 
     let checkArray: number[] = new Array(7).fill(0);
 
     if (matchReservation) {
       for (let i = 0; i < reservations.data.length; i++) {
-        const reservationFromTime = reservations.data[i].timeFrom / (24 * 60);
-        const reservationToTime = reservations.data[i].timeTo / (24 * 60);
+        const reservationFromTime = Math.floor(reservations.data[i].timeFrom / (24 * 60));
+        const reservationToTime = Math.floor(reservations.data[i].timeTo / (24 * 60));
 
         checkArray[reservationFromTime % 7] += 1;
         checkArray[reservationToTime % 7] += 1;
       }
-      checkArray[(timeFrom / (24 * 60)) % 7] += 1;
-      checkArray[(timeTo / (24 * 60)) % 7] += 1;
+      checkArray[Math.floor(timeFrom / (24 * 60)) % 7] += 1;
+      checkArray[Math.floor(timeTo / (24 * 60)) % 7] += 1;
 
       let count: number = 0;
       for (let i = 0; i < 7; i++) {
