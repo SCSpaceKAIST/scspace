@@ -15,7 +15,7 @@ export default function ManageGoods() {
     return (
         <Stack>
             <GoodsList
-                isAdmin
+                manage
             />
         </Stack>
     );

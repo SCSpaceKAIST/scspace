@@ -9,19 +9,27 @@ import { useEffect, useState } from "react";
 export default function GoodsList(props: {
     refetchCount?: number;
     disabled?: boolean;
-    isAdmin?: boolean;
+    manage?: boolean;
 }) {
     const refetchCount = props.refetchCount ?? 0;
     const disabled = props.disabled ?? false;
-    const isAdmin = props.isAdmin ?? false;
+    const isAdmin = props.manage ?? false;
 
     const [cart, setCart] = useState<{ id: number; count: number }[]>([]);
     const onCheckedChange = (c: { id: number; checked: boolean }) => {
         const exist = cart.find((item) => item.id === c.id);
-        if (!exist && c.checked) {
-            setCart((_cart) => [..._cart, { id: c.id, count: 1 }]);
-        } else if (exist && !c.checked) {
-            setCart((_cart) => _cart.filter((item) => item.id !== c.id));
+        if (!isAdmin) {
+            if (!exist && c.checked) {
+                setCart((_cart) => [..._cart, { id: c.id, count: 1 }]);
+            } else if (exist && !c.checked) {
+                setCart((_cart) => _cart.filter((item) => item.id !== c.id));
+            }
+        } else {
+            if (!exist && c.checked) {
+                setCart([{ id: c.id, count: 1 }]);
+            } else if (exist && !c.checked) {
+                setCart([]);
+            }
         }
     }
 
@@ -103,7 +111,7 @@ export default function GoodsList(props: {
                                         {object.countNow} / {object.countAll} Available
                                     </CheckboxCard.Description>
                                 </CheckboxCard.Content>
-                                {!disabled && <CheckboxCard.Indicator />}
+                                {(!disabled && !isAdmin) && <CheckboxCard.Indicator />}
                             </CheckboxCard.Control>
                             {(object.description !== null) && (
                                 <CheckboxCard.Addon>
