@@ -82,7 +82,11 @@ export default function GoodsList(props: {
         <LoadingComponent />
     ) : (
         <Stack p={2}>
-            <ManageBar />
+            {manage && (
+                <ManageBar
+                    name={goodsListData.find(item => item.id === cart[0]?.id)?.name ?? null}
+                    id={cart[0]?.id ?? null}
+                />)}
             {goodsListData.map(object => (
                 <CheckboxCard.Root
                     _hover={{

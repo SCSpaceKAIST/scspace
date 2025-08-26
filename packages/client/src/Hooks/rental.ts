@@ -110,7 +110,7 @@ export function useGoodsAPI(params?: {
     const updateGoods = useMutationApi<ISuccessResponse, Omit<IGoodsUpdate, 'id'>>(
         `/rental/goods/${id || ''}`,
         "PUT"
-    ).mutate;
+    ).mutateAsync;
 
     const deleteGoods = useMutationApi<ISuccessResponse, {}>(
         `/rental/goods/${id || ''}`,
