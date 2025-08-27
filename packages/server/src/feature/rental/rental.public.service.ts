@@ -78,6 +78,10 @@ export class RentalPublicService {
         return await this.rentalRepository.checkGoodsAvailability(check);
     }
 
+    async checkCreateRentalAvailability(userId: number): Promise<boolean> {
+        return await this.rentalRepository.checkCreateRentalAvailability(userId);
+    }
+
     async getOverdueRentals(): Promise<IRental[]> {
         const overdueRentals = await this.rentalRepository.getOverdueRentals();
         return overdueRentals.map(rental => MRental.fromDB(rental));

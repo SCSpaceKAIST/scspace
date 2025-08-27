@@ -21,6 +21,7 @@ import OrganizationDialog from "@scspace-client/Components/organisms/Organizatio
 import OrganizationName from "./OrganizationName";
 import NewOrganizationBtn from "./NewOrganizationBtn";
 import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
+import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
 
 export default function OrganizationTable({ uid, disabled, organization, refetch, helperText, showTabs }: {
     helperText?: string;
@@ -98,15 +99,7 @@ export default function OrganizationTable({ uid, disabled, organization, refetch
                         </Text>
                     ))}
                     <HStack>
-                        <TooltipComponent content="Refresh">
-                            <IconButton
-                                rounded="sm"
-                                variant="ghost"
-                                onClick={() => refetch()}
-                            >
-                                <HiOutlineRefresh color="gray" />
-                            </IconButton>
-                        </TooltipComponent>
+                        <RefetchBtn refetch={refetch} />
                         {uid && (
                             <NewOrganizationBtn
                                 uid={uid}

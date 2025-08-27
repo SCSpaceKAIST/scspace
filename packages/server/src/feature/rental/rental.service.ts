@@ -24,6 +24,7 @@ import { RentalRepository } from './rental.repository';
 import { RentalPublicService } from './rental.public.service';
 import { UserPublicService } from '../user/user.public.service';
 import { IUser } from '@scspace-depot/types/user';
+import { MAX_RENTAL_DURATION, MAX_RENTAL_LIMIT } from '@scspace-depot/enums/rental.enum';
 
 @Injectable()
 export class RentalService {
@@ -35,10 +36,16 @@ export class RentalService {
 
     // Rental 관련 서비스 메서드들
     async createRental(rentalData: IRentalCreateClient & { userId: number }): Promise<{ success: boolean; data: { id: number } }> {
+
+        const creatable = await this.rentalPublicService.checkCreateRentalAvailability(rentalData.userId);
+        if (!creatable) {
+            throw new BadRequestException(`User has reached the maximum rental limit: ${MAX_RENTAL_LIMIT}`);
+        }
+
         // 물품 가용성 확인
         const now = getNow();
         const _now = getDate(now);
-        _now.setDate(_now.getDate() + 7);
+        _now.setDate(_now.getDate() + MAX_RENTAL_DURATION);
         const afterOneWeek = getDateEnd(getTime(_now));
 
         const availability: IGoodsAvailabilityCheck = {
@@ -139,7 +146,7 @@ export class RentalService {
         };
     }
 
-    async getUserRentals(params: IUserRentalStatus): Promise<IDataResponse<IRentalAll[]>> {
+    async getUserRentals(params: IUserRentalStatus): Promise<IRentalAll[]> {
         const { userId, isActive } = params;
 
         const { data: rentals, count } = await this.rentalPublicService.getRentalsByUserId(
@@ -150,7 +157,7 @@ export class RentalService {
         );
 
         if (rentals.length === 0) {
-            return { data: [], count };
+            return [];
         }
 
         const goodsIds = [...new Set(rentals.map(r => r.goodsId))];
@@ -171,10 +178,7 @@ export class RentalService {
             goods: goods.find(g => g.id === rental.goodsId)!,
         }));
 
-        return {
-            data: rentalsWithDetails,
-            count
-        };
+        return rentalsWithDetails;
     }
 
     async updateRental(id: number, updates: IRentalUpdate): Promise<ISuccessResponse> {

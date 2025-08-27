@@ -32,51 +32,6 @@ export default function GoodsList(props: {
 
     const [selected, setSelected] = useState<number | null>(null);
 
-    // const goodsListData = [{
-    //     id: 1,
-    //     name: "Sample Good",
-    //     description: "This is a sample good",
-    //     countNow: 5,
-    //     countAll: 10,
-    //     imageId: 1
-    // }, {
-    //     id: 2,
-    //     name: "Sample Good 2",
-    //     description: "This is a sample good 2",
-    //     countNow: 3,
-    //     countAll: 8,
-    //     imageId: 2
-    // }, {
-    //     id: 3,
-    //     name: "Sample Good 3",
-    //     description: "This is a sample good 3",
-    //     countNow: 0,
-    //     countAll: 5,
-    //     imageId: 3
-    // }, {
-    //     id: 4,
-    //     name: "Sample Good 4",
-    //     description: "This is a sample good 4",
-    //     countNow: 2,
-    //     countAll: 6,
-    //     imageId: 4
-    // }, {
-    //     id: 5,
-    //     name: "Sample Good 5",
-    //     description: "This is a sample good 5",
-    //     countNow: 1,
-    //     countAll: 3,
-    //     imageId: 5
-    // }, {
-    //     id: 6,
-    //     name: "Sample Good 6",
-    //     description: "This is a sample good 6",
-    //     countNow: 4,
-    //     countAll: 10,
-    //     imageId: 6
-    // }];
-    // const goodsListRefetch = () => { };
-
     return (!goodsListData || goodsListData.length === 0) ? (
         <LoadingComponent />
     ) : (<>

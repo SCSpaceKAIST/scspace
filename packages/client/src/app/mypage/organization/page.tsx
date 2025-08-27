@@ -1,5 +1,5 @@
 import PageTemplete from "@scspace-client/Components/molecules/page/PageTemplete";
-import UserOrganization from "@scspace-client/Components/pages/Mypage/Organization";
+import UserOrganization from "@scspace-client/Components/pages/Mypage/UserOrganization";
 
 export default function SpacePage() {
     return (

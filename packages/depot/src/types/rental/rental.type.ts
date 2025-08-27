@@ -28,9 +28,9 @@ export type IRentalCreateClient = Pick<
     "count" | "goodsId"
 >;
 
-export type IRentalUpdate = Partial<Omit<
+export type IRentalUpdate = Partial<Pick<
     IRental,
-    "id" | "userId" | "goodsId"
+    "timeReturn" | "timeConfirm"
 >> & {
     id: number;
 };

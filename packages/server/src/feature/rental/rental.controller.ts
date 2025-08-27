@@ -80,7 +80,7 @@ export class RentalController {
     async getUserRentals(
         @Param('userId', ParseIntPipe) userId: number,
         @Query('isActive') isActive?: string
-    ): Promise<IDataResponse<IRentalAll[]>> {
+    ): Promise<IRentalAll[]> {
         const params: IUserRentalStatus = {
             userId,
             isActive: isActive ? isActive === 'true' : undefined,
@@ -95,7 +95,7 @@ export class RentalController {
     async getMyRentals(
         @Req() req: Request,
         @Query('isActive') isActive?: string
-    ): Promise<IDataResponse<IRentalAll[]>> {
+    ): Promise<IRentalAll[]> {
         const user = req.user as IUser;
         const params: IUserRentalStatus = {
             userId: user.id,

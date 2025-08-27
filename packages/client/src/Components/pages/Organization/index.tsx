@@ -1,7 +1,7 @@
 "use client"
 
 import PageSelector, { IPage } from "@scspace-client/Components/molecules/page/PageSelector";
-import UserOrganization from "../Mypage/Organization";
+import UserOrganization from "../Mypage/UserOrganization";
 import VerifiedOrganization from "./Verified";
 import { useAuth } from "@scspace-client/Hooks/auth";
 

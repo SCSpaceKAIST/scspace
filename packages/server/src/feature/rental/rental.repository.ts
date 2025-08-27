@@ -34,6 +34,7 @@ import {
 } from '@scspace-depot/types/rental';
 import { getNow } from '@scspace-server/common/utils';
 import { IDataResponse } from '@scspace-depot/types/common/common.type';
+import { MAX_RENTAL_LIMIT } from "@scspace-depot/enums/rental.enum"
 
 @Injectable()
 export class RentalRepository {
@@ -203,6 +204,19 @@ export class RentalRepository {
         const availableCount = goods.countAll - conflictingCount;
 
         return availableCount >= requestedCount;
+    }
+
+    async checkCreateRentalAvailability(userId: number): Promise<boolean> {
+        const countRental = await this.db
+            .select({ totalCount: count() })
+            .from(Rental)
+            .where(and(
+                eq(Rental.userId, userId),
+                eq(Rental.timeReturn, 0)
+            ))
+            .then(res => res[0]?.totalCount || 0);
+
+        return countRental < MAX_RENTAL_LIMIT;
     }
 
     // Get overdue rentals

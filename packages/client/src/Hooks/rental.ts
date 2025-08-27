@@ -42,11 +42,11 @@ export function useRentalAPI(params?: {
         (id && id > 0) ? `/rental/${id}` : ""
     );
 
-    const userRentals = useQueryApi<IDataResponse<IRentalAll[]>>(
+    const userRentals = useQueryApi<IRentalAll[]>(
         (userId && userId > 0) ? `/rental/user/${userId}?${activeParam}` : ""
     );
 
-    const myRentals = useQueryApi<IDataResponse<IRentalAll[]>>(
+    const myRentals = useQueryApi<IRentalAll[]>(
         `/rental/my/list${activeParam ? `?${activeParam.slice(1)}` : ''}`
     );
 
