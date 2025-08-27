@@ -2,7 +2,6 @@ import {
     Injectable,
     Inject,
     NotFoundException,
-    BadRequestException,
 } from '@nestjs/common';
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
@@ -15,8 +14,6 @@ import {
     eq,
     and,
     SQL,
-    inArray,
-    InferInsertModel,
     gt,
     lt,
     desc,
@@ -25,9 +22,6 @@ import {
     lte,
     count,
     ne,
-    isNotNull,
-    getTableColumns,
-    like,
     asc,
 } from 'drizzle-orm';
 import {

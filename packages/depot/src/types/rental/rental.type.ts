@@ -20,12 +20,12 @@ export type IRentalAll = IRental & {
 
 export type IRentalCreate = Pick<
     IRental,
-    "userId" | "goodsId" | "count"
+    "userId" | "goodsId" | "count" | "timeBorrow" | "timeDue"
 >;
 
-export type IRentalCreateClient = Omit<
+export type IRentalCreateClient = Pick<
     IRentalCreate,
-    "userId"
+    "count" | "goodsId"
 >;
 
 export type IRentalUpdate = Partial<Omit<

@@ -16,9 +16,10 @@ import {
     IRentalConfirm,
     IGoodsAvailabilityCheck,
     IUserRentalStatus,
+    IRentalCreateClient,
 } from '@scspace-depot/types/rental';
 import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
-import { checkContainAllId, takeAll, getNow } from '@scspace-server/common/utils';
+import { checkContainAllId, takeAll, getNow, getDate, getTime, getDateEnd } from '@scspace-server/common/utils';
 import { RentalRepository } from './rental.repository';
 import { RentalPublicService } from './rental.public.service';
 import { UserPublicService } from '../user/user.public.service';
@@ -33,13 +34,18 @@ export class RentalService {
     ) { }
 
     // Rental 관련 서비스 메서드들
-    async createRental(rentalData: IRentalCreate): Promise<{ success: boolean; data: { id: number } }> {
+    async createRental(rentalData: IRentalCreateClient & { userId: number }): Promise<{ success: boolean; data: { id: number } }> {
         // 물품 가용성 확인
+        const now = getNow();
+        const _now = getDate(now);
+        _now.setDate(_now.getDate() + 7);
+        const afterOneWeek = getDateEnd(getTime(_now));
+
         const availability: IGoodsAvailabilityCheck = {
             goodsId: rentalData.goodsId,
             count: rentalData.count,
-            timeBorrow: rentalData.timeBorrow,
-            timeDue: rentalData.timeDue,
+            timeBorrow: now,
+            timeDue: afterOneWeek,
         };
 
         const isAvailable = await this.rentalPublicService.checkGoodsAvailability(availability);
@@ -57,7 +63,11 @@ export class RentalService {
             throw new BadRequestException('Insufficient stock');
         }
 
-        const id = await this.rentalRepository.createRental(rentalData);
+        const id = await this.rentalRepository.createRental({
+            ...rentalData,
+            timeBorrow: now,
+            timeDue: afterOneWeek
+        });
 
         // 재고 업데이트
         await this.rentalRepository.updateGoodsStock(
