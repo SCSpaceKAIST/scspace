@@ -91,6 +91,7 @@ export default function GoodsList(props: {
                 <Stack p={2}>
                     {goodsListData.map(item => (
                         <GoodsListItem
+                            key={item.name}
                             item={item}
                             isSelected={selected === item.id}
                             onSelect={id => setSelected((s) => s === id ? null : id)}
