@@ -38,7 +38,7 @@ export default function RentalTable({
 
     const isWide = useBreakpointValue({ base: false, md: true });
 
-    const [tab, setTab] = useState<string>("all");
+    const [tab, setTab] = useState<string>("0");
 
     return (
         <>
@@ -99,7 +99,7 @@ export default function RentalTable({
                                     rental.goods.name,
                                     rental.count,
                                     getString(rental.timeBorrow),
-                                    getString(rental.timeReturn)
+                                    getString(rental.timeDue)
                                 ]
                             }))
                         }
