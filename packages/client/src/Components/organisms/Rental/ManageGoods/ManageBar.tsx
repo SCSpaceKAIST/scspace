@@ -1,9 +1,9 @@
 import { ActionBar, Button, Dialog, Portal } from "@chakra-ui/react";
 import ManageDialog from "./ManageDialog";
-import { ICartItem } from "../List";
+import { IGoods } from "@scspace-depot/types/rental";
 
 export default function ManageBar({ item, onChange }: {
-    item: ICartItem | null
+    item: IGoods | null
     onChange: () => void
 }) {
     return (

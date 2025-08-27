@@ -18,9 +18,14 @@ export type IRentalAll = IRental & {
     goods: IGoods;
 };
 
-export type IRentalCreate = Omit<
+export type IRentalCreate = Pick<
     IRental,
-    "id" | "timeReturn" | "timeConfirm"
+    "userId" | "goodsId" | "count"
+>;
+
+export type IRentalCreateClient = Omit<
+    IRentalCreate,
+    "userId"
 >;
 
 export type IRentalUpdate = Partial<Omit<

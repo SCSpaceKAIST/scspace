@@ -4,7 +4,6 @@ import { useMutationApi, useQueryApi } from "./api";
 import {
     IRental,
     IRentalAll,
-    IRentalCreate,
     IRentalUpdate,
     IRentalReturn,
     IRentalConfirm,
@@ -12,6 +11,7 @@ import {
     IGoodsCreate,
     IGoodsUpdate,
     IGoodsAvailabilityCheck,
+    IRentalCreateClient,
 } from "@scspace-depot/types/rental";
 import { IDataResponse, ISuccessResponse } from "@scspace-depot/types/common/common.type";
 
@@ -51,10 +51,10 @@ export function useRentalAPI(params?: {
     );
 
     // POST/PUT/DELETE 메서드들
-    const createRental = useMutationApi<{ success: boolean; data: { id: number } }, Omit<IRentalCreate, 'userId'>>(
+    const createRental = useMutationApi<{ success: boolean; data: { id: number } }, Omit<IRentalCreateClient, 'userId'>>(
         "/rental",
         "POST"
-    ).mutate;
+    ).mutateAsync;
 
     const updateRental = useMutationApi<ISuccessResponse, Omit<IRentalUpdate, 'id'>>(
         `/rental/${id || ''}`,

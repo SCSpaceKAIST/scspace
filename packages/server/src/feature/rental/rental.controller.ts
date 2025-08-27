@@ -24,6 +24,7 @@ import {
     IGoodsUpdate,
     IGoodsAvailabilityCheck,
     IUserRentalStatus,
+    IRentalCreateClient,
 } from '@scspace-depot/types/rental';
 import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
 import { ManagerGuard, MemberGuard, UserGuard } from '../auth/jwt/jwt.guard';
@@ -42,7 +43,7 @@ export class RentalController {
     @Post()
     @UseGuards(AuthGuard('jwt'))
     async createRental(
-        @Body() rentalData: IRentalCreate,
+        @Body() rentalData: IRentalCreateClient,
         @Req() req: Request
     ): Promise<{ success: boolean; data: { id: number } }> {
         const user = req.user as IUser;
