@@ -1,6 +1,7 @@
 import React from "react";
 import PageSelector, { IPage } from "../../molecules/page/PageSelector";
 import RentalApplication from "./Application";
+import UserRental from "../Mypage/UserRental";
 
 export default function Rental() {
     const pages: IPage[] = [
@@ -14,7 +15,7 @@ export default function Rental() {
             href: "/manage/rental",
             kor: "내 대여",
             eng: "My Rentals",
-            preview: (<>내 대여</>)
+            preview: (<UserRental />)
         }
     ]
 

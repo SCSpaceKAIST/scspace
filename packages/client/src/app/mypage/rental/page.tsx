@@ -1,13 +1,13 @@
 import PageTemplete from "@scspace-client/Components/molecules/page/PageTemplete";
-import UserReservation from "@scspace-client/Components/pages/Mypage/UserReservation";
+import UserRental from "@scspace-client/Components/pages/Mypage/UserRental";
 
 export default function SpacePage() {
   return (
     <PageTemplete
-      title={["마이페이지", "예약 목록"]}
-      subtitle={["Mypage", "Reservation List"]}
+      title={["마이페이지", "대여 목록"]}
+      subtitle={["Mypage", "Rental List"]}
     >
-      <UserReservation />
+      <UserRental />
     </PageTemplete>
   );
 }
