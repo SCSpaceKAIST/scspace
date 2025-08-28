@@ -7,7 +7,7 @@ import {
     useBreakpointValue,
     Tabs
 } from "@chakra-ui/react";
-import { useState, } from "react";
+import { useEffect, useState, } from "react";
 
 import { useDate } from "@scspace-client/Hooks/utils";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
@@ -37,7 +37,22 @@ export default function RentalTable({
 
     const isWide = useBreakpointValue({ base: false, md: true });
 
-    const [tab, setTab] = useState<string>("all");
+    const RENTAL_STATE = {
+        ALL: "all",
+        ON_RENT: "on rent",
+        OVERDUE: "overdue",
+        RETURNED: "returned",
+        CONFIRMED: "confirmed"
+    };
+
+    const [tab, setTab] = useState<string>(RENTAL_STATE.ALL);
+
+    const { getTime } = useDate();
+    const [now, setNow] = useState<number>(0);
+
+    useEffect(() => {
+        setNow(getTime(new Date()));
+    }, []);
 
     return (
         <>
@@ -57,14 +72,20 @@ export default function RentalTable({
                             onValueChange={(e) => setTab(e.value)}
                         >
                             <Tabs.List>
-                                <Tabs.Trigger value={"all"}>
+                                <Tabs.Trigger value={RENTAL_STATE.ALL}>
                                     All
                                 </Tabs.Trigger>
-                                <Tabs.Trigger value={"on rent"}>
+                                <Tabs.Trigger value={RENTAL_STATE.ON_RENT}>
                                     On Rent
                                 </Tabs.Trigger>
-                                <Tabs.Trigger value={"returned"}>
+                                <Tabs.Trigger value={RENTAL_STATE.OVERDUE}>
+                                    Overdue
+                                </Tabs.Trigger>
+                                <Tabs.Trigger value={RENTAL_STATE.RETURNED}>
                                     Returned
+                                </Tabs.Trigger>
+                                <Tabs.Trigger value={RENTAL_STATE.CONFIRMED}>
+                                    Confirmed
                                 </Tabs.Trigger>
                             </Tabs.List>
                         </Tabs.Root>
@@ -94,12 +115,20 @@ export default function RentalTable({
                             "Return Due"
                         ]}
                         content={rentals
-                            .filter(rental => (
-                                tab === "all" ? true :
-                                    tab === "on rent" ?
-                                        rental.timeReturn === 0 :
-                                        rental.timeReturn !== 0
-                            ))
+                            .filter(rental => {
+                                switch (tab) {
+                                    case RENTAL_STATE.ALL:
+                                        return true;
+                                    case RENTAL_STATE.CONFIRMED:
+                                        return rental.timeConfirm !== 0;
+                                    case RENTAL_STATE.RETURNED:
+                                        return rental.timeReturn !== 0;
+                                    case RENTAL_STATE.OVERDUE:
+                                        return rental.timeDue < now;
+                                    default:
+                                        return rental.timeReturn === 0;
+                                }
+                            })
                             .map((rental: IRentalAll) => ({
                                 id: rental.id,
                                 row: [
