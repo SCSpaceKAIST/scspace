@@ -2,11 +2,8 @@
 
 import { useMutationApi, useQueryApi } from "./api";
 import {
-    IRental,
     IRentalAll,
     IRentalUpdate,
-    IRentalReturn,
-    IRentalConfirm,
     IGoods,
     IGoodsCreate,
     IGoodsUpdate,
@@ -56,20 +53,15 @@ export function useRentalAPI(params?: {
         "POST"
     ).mutateAsync;
 
-    const updateRental = useMutationApi<ISuccessResponse, Omit<IRentalUpdate, 'id'>>(
-        `/rental/${id || ''}`,
-        "PUT"
-    ).mutate;
-
-    const returnRental = useMutationApi<ISuccessResponse, Omit<IRentalReturn, 'id'>>(
+    const returnRental = useMutationApi<ISuccessResponse, { id: number }>(
         `/rental/${id || ''}/return`,
         "PUT"
-    ).mutate;
+    ).mutateAsync;
 
-    const confirmReturn = useMutationApi<ISuccessResponse, Omit<IRentalConfirm, 'id'>>(
+    const confirmReturn = useMutationApi<ISuccessResponse, { id: number }>(
         `/rental/${id || ''}/confirm`,
         "PUT"
-    ).mutate;
+    ).mutateAsync;
 
     return {
         // GET 데이터와 상태들
@@ -80,7 +72,6 @@ export function useRentalAPI(params?: {
 
         // CUD 메서드들
         createRental,
-        updateRental,
         returnRental,
         confirmReturn,
     };

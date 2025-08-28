@@ -14,11 +14,8 @@ import {
 import { Request } from 'express';
 import { RentalService } from './rental.service';
 import {
-    IRentalCreate,
     IRentalUpdate,
     IRentalAll,
-    IRentalReturn,
-    IRentalConfirm,
     IGoods,
     IGoodsCreate,
     IGoodsUpdate,
@@ -128,12 +125,8 @@ export class RentalController {
     @UseGuards(AuthGuard('jwt'))
     async returnRental(
         @Param('id', ParseIntPipe) id: number,
-        @Body() returnData: Omit<IRentalReturn, 'id'>
     ): Promise<ISuccessResponse> {
-        return await this.rentalService.returnRental({
-            id,
-            ...returnData,
-        });
+        return await this.rentalService.returnRental(id);
     }
 
     // 반납 확인 (관리자용)
@@ -141,12 +134,8 @@ export class RentalController {
     @UseGuards(ManagerGuard)
     async confirmReturn(
         @Param('id', ParseIntPipe) id: number,
-        @Body() confirmData: Omit<IRentalConfirm, 'id'>
     ): Promise<ISuccessResponse> {
-        return await this.rentalService.confirmReturn({
-            id,
-            ...confirmData,
-        });
+        return await this.rentalService.confirmReturn(id);
     }
 
     // 대여 삭제

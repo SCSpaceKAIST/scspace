@@ -12,7 +12,7 @@ export default function Rental() {
             preview: (<RentalApplication />)
         },
         {
-            href: "/manage/rental",
+            href: "/mypage/rental",
             kor: "내 대여",
             eng: "My Rentals",
             preview: (<UserRental />)

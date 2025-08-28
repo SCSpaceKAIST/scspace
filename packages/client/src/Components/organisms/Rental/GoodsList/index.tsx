@@ -51,6 +51,7 @@ export default function GoodsList(props: {
                             isSelected={selected === item.id}
                             onSelect={id => setSelected((s) => s === id ? null : id)}
                             disabled={disabled}
+                            manage={manage}
                             isWide={isWide ?? false}
                             refetch={goodsListRefetch}
                             countAvailable={item.countNow}

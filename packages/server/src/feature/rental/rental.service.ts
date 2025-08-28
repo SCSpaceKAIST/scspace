@@ -4,16 +4,11 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import {
-    IRentalCreate,
     IRentalUpdate,
     IRentalAll,
-    IRental,
     IGoodsCreate,
     IGoodsUpdate,
     IGoods,
-    IGoodsFilter,
-    IRentalReturn,
-    IRentalConfirm,
     IGoodsAvailabilityCheck,
     IUserRentalStatus,
     IRentalCreateClient,
@@ -192,8 +187,7 @@ export class RentalService {
         return { success: true };
     }
 
-    async returnRental(returnData: IRentalReturn): Promise<ISuccessResponse> {
-        const { id, timeReturn } = returnData;
+    async returnRental(id: number): Promise<ISuccessResponse> {
 
         const rental = await this.rentalPublicService.getRentalById(id);
         if (!rental) {
@@ -204,7 +198,7 @@ export class RentalService {
             throw new BadRequestException('This rental has already been returned');
         }
 
-        await this.rentalRepository.returnRental(id, timeReturn);
+        await this.rentalRepository.returnRental(id, getNow());
 
         // 재고 복구
         const goods = await this.rentalPublicService.getGoodsById(rental.goodsId);
@@ -218,9 +212,7 @@ export class RentalService {
         return { success: true };
     }
 
-    async confirmReturn(confirmData: IRentalConfirm): Promise<ISuccessResponse> {
-        const { id, timeConfirm } = confirmData;
-
+    async confirmReturn(id: number): Promise<ISuccessResponse> {
         const rental = await this.rentalPublicService.getRentalById(id);
         if (!rental) {
             throw new NotFoundException('Rental not found');
@@ -234,32 +226,32 @@ export class RentalService {
             throw new BadRequestException('This return has already been confirmed');
         }
 
-        await this.rentalRepository.confirmReturn(id, timeConfirm);
+        await this.rentalRepository.confirmReturn(id, getNow());
 
         return { success: true };
     }
 
-    async deleteRental(id: number): Promise<ISuccessResponse> {
-        const rental = await this.rentalPublicService.getRentalById(id);
-        if (!rental) {
-            throw new NotFoundException('Rental not found');
-        }
+    // async deleteRental(id: number): Promise<ISuccessResponse> {
+    //     const rental = await this.rentalPublicService.getRentalById(id);
+    //     if (!rental) {
+    //         throw new NotFoundException('Rental not found');
+    //     }
 
-        // 반납되지 않은 대여는 삭제 시 재고 복구
-        if (rental.timeReturn === 0) {
-            const goods = await this.rentalPublicService.getGoodsById(rental.goodsId);
-            if (goods) {
-                await this.rentalRepository.updateGoodsStock(
-                    rental.goodsId,
-                    goods.countNow + rental.count
-                );
-            }
-        }
+    //     // 반납되지 않은 대여는 삭제 시 재고 복구
+    //     if (rental.timeReturn === 0) {
+    //         const goods = await this.rentalPublicService.getGoodsById(rental.goodsId);
+    //         if (goods) {
+    //             await this.rentalRepository.updateGoodsStock(
+    //                 rental.goodsId,
+    //                 goods.countNow + rental.count
+    //             );
+    //         }
+    //     }
 
-        await this.rentalRepository.deleteRental(id);
+    //     await this.rentalRepository.deleteRental(id);
 
-        return { success: true };
-    }
+    //     return { success: true };
+    // }
 
     // Goods 관련 서비스 메서드들
     async createGoods(goodsData: IGoodsCreate): Promise<{ success: boolean; data: { id: number } }> {

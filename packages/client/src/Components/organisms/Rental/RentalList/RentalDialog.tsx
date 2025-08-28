@@ -9,6 +9,7 @@ import {
     HStack,
     useBreakpointValue,
     Badge,
+    Center,
 } from "@chakra-ui/react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { HiOutlineRefresh } from "react-icons/hi";
@@ -20,6 +21,7 @@ import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { IRentalAll } from "@scspace-depot/types/rental";
+import ReturnBtn from "./ReturnBtn";
 
 export default function RentalDialog({ open, setOpen, rental, refetchList }: {
     open: boolean;
@@ -52,18 +54,15 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
                     <Separator />
                     <Dialog.Body px={8} py={4}>
                         <DataList.Root orientation={isWide ? "horizontal" : "vertical"}>
-                            {/* {isManager && (
-                                <>
-                                    <Verification
-                                        organization={organizationDetail}
-                                        onChange={() => {
-                                            refetchDetail();
-                                            refetchList();
-                                        }}
+                            <Center>
+                                <HStack>
+                                    <ReturnBtn
+                                        refetch={refetchList}
+                                        id={rental.id}
                                     />
-                                    <Separator />
-                                </>
-                            )} */}
+                                </HStack>
+                            </Center>
+                            <Separator />
                             <DataListItem label="Goods">
                                 <DataList.Root
                                     orientation={isWide ? "horizontal" : "vertical"}

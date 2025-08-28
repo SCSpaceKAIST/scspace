@@ -13,6 +13,7 @@ export default function GoodsListItem({
     isSelected,
     onSelect,
     disabled,
+    manage,
     isWide,
     refetch,
     countAvailable
@@ -21,6 +22,7 @@ export default function GoodsListItem({
     isSelected: boolean;
     onSelect: (id: number) => void;
     disabled: boolean;
+    manage: boolean;
     isWide: boolean;
     refetch: () => void;
     countAvailable: number;
@@ -117,7 +119,7 @@ export default function GoodsListItem({
                         )}
                     </Stack>
                 </Grid>
-                <Collapsible.Root open={isSelected}>
+                <Collapsible.Root open={isSelected && !manage}>
                     <Collapsible.Content>
                         <Separator />
                         <Flex justify={"flex-end"} p={2} gap={4}>

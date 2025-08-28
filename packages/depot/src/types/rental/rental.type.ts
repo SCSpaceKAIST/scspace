@@ -35,18 +35,6 @@ export type IRentalUpdate = Partial<Pick<
     id: number;
 };
 
-// 반납 처리
-export type IRentalReturn = {
-    id: number;
-    timeReturn: number;
-};
-
-// 반납 확인 처리
-export type IRentalConfirm = {
-    id: number;
-    timeConfirm: number;
-};
-
 // 대여 가능 여부 체크
 export type IGoodsAvailabilityCheck = {
     goodsId: number;
