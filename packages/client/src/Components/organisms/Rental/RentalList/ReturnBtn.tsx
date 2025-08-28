@@ -10,12 +10,12 @@ export default function ReturnBtn({ id, refetch }: {
     id: number;
     refetch: () => void;
 }) {
-    const returnRental = useRentalAPI().returnRental;
+    const returnRental = useRentalAPI({ id }).returnRental;
     const [e, setE] = useState<string>('');
 
     const handleReturn = () => {
         toaster.promise(
-            returnRental({ id }, {
+            returnRental({}, {
                 onError: (error) => {
                     setE(error.message);
                 },

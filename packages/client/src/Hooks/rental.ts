@@ -53,12 +53,12 @@ export function useRentalAPI(params?: {
         "POST"
     ).mutateAsync;
 
-    const returnRental = useMutationApi<ISuccessResponse, { id: number }>(
+    const returnRental = useMutationApi<ISuccessResponse, {}>(
         `/rental/${id || ''}/return`,
         "PUT"
     ).mutateAsync;
 
-    const confirmReturn = useMutationApi<ISuccessResponse, { id: number }>(
+    const confirmReturn = useMutationApi<ISuccessResponse, {}>(
         `/rental/${id || ''}/confirm`,
         "PUT"
     ).mutateAsync;
