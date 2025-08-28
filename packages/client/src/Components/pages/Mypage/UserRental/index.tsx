@@ -7,7 +7,7 @@ import RentalTable from "@scspace-client/Components/organisms/Rental/RentalList/
 import { useRentalAPI } from "@scspace-client/Hooks/rental";
 
 export default function UserRental() {
-    const { userInfo, needLogin } = useAuth();
+    const { needLogin } = useAuth();
     needLogin();
 
     const { data: rentals, refetch } = useRentalAPI().myRentals;
@@ -18,7 +18,6 @@ export default function UserRental() {
                 <RentalTable
                     rentals={rentals}
                     refetch={refetch}
-                    uid={userInfo?.id ?? 0}
                     showTabs
                 />
             ) : (

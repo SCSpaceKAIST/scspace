@@ -57,8 +57,8 @@ export default function ReturnBtn({ id, refetch }: {
                 </>
             }
         >
-            <Button colorPalette={"blue"}>
-                Return
+            <Button colorPalette={"blue"} variant={"outline"}>
+                Request Return
             </Button>
         </AlertBtn>
     );

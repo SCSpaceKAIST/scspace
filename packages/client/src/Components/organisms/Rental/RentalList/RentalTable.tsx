@@ -17,7 +17,6 @@ import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn"
 import RentalDialog from "./RentalDialog";
 
 export default function RentalTable({
-    uid,
     disabled,
     rentals,
     refetch,
@@ -26,12 +25,11 @@ export default function RentalTable({
 }: {
     helperText?: string;
     disabled?: boolean;
-    uid?: number;
     rentals: IRentalAll[];
     refetch: () => void;
     showTabs?: boolean;
 }) {
-    const [selected, setSelected] = useState<number>(-1);
+    const [selected, setSelected] = useState<number | null>(null);
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -110,7 +108,7 @@ export default function RentalTable({
             <RentalDialog
                 open={open}
                 setOpen={setOpen}
-                rental={rentals.find(rental => rental.id === selected) || null}
+                rental={rentals.find(rental => rental.id === selected) ?? null}
                 refetchList={refetch}
             />
         </>

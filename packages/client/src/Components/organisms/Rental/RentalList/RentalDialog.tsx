@@ -17,7 +17,6 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useDate } from "@scspace-client/Hooks/utils";
-import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { IRentalAll } from "@scspace-depot/types/rental";
@@ -29,10 +28,12 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
     rental: IRentalAll | null;
     refetchList: () => any;
 }) {
-    const { userInfo, isManager } = useAuth();
+    const { isManager } = useAuth();
     const { getString } = useDate();
 
     const isWide = useBreakpointValue({ base: false, md: true });
+
+    useEffect(() => console.log(rental), [rental]);
 
     return (
         <SimpleDialog
