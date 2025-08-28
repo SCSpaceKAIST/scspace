@@ -14,7 +14,7 @@ import {
     IRentalCreateClient,
 } from '@scspace-depot/types/rental';
 import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
-import { checkContainAllId, takeAll, getNow, getDate, getTime, getDateEnd } from '@scspace-server/common/utils';
+import { checkContainAllId, takeAll, getNow, getDate, getTime, getDateEnd, getDateDiffInMinute } from '@scspace-server/common/utils';
 import { RentalRepository } from './rental.repository';
 import { RentalPublicService } from './rental.public.service';
 import { UserPublicService } from '../user/user.public.service';
@@ -32,9 +32,42 @@ export class RentalService {
     // Rental 관련 서비스 메서드들
     async createRental(rentalData: IRentalCreateClient & { userId: number }): Promise<{ success: boolean; data: { id: number } }> {
 
-        const creatable = await this.rentalPublicService.checkCreateRentalAvailability(rentalData.userId);
-        if (!creatable) {
+        // 1. 대여 개수 제한 확인
+        const limitOk = await this.rentalPublicService.checkRentalLimit(rentalData.userId);
+        if (!limitOk) {
             throw new BadRequestException(`User has reached the maximum rental limit: ${MAX_RENTAL_LIMIT}`);
+        }
+
+        // 2. 현재 연체된 대여 확인
+        const overdueOk = await this.rentalPublicService.checkCurrentOverdue(rentalData.userId);
+        if (!overdueOk) {
+            throw new BadRequestException('Cannot create new rental: user has overdue rentals that must be returned first');
+        }
+
+        // 3. 관리자 확인 대기 중인 연체 반납 확인
+        const unconfirmedOk = await this.rentalPublicService.checkUnconfirmedOverdueReturns(rentalData.userId);
+        if (!unconfirmedOk) {
+            throw new BadRequestException('Cannot create new rental: user has overdue returns pending administrator confirmation');
+        }
+
+        // 4. 연체 제재 기간 확인
+        const penaltyOk = await this.rentalPublicService.checkUserOverduePenalty(rentalData.userId);
+        if (!penaltyOk) {
+            // 사용자 정보를 가져와서 언제부터 대여 가능한지 알려주기
+            const user = await this.userPublicService.fetchById(rentalData.userId);
+            if (user && user.timeOverdue > 0) {
+                const availableDate = getDate(user.timeOverdue);
+                const formattedDate = availableDate.toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                throw new BadRequestException(`User is currently under rental penalty due to overdue returns. Rental will be available again after: ${formattedDate}`);
+            } else {
+                throw new BadRequestException('User is currently under rental penalty due to overdue returns');
+            }
         }
 
         // 물품 가용성 확인
@@ -76,6 +109,14 @@ export class RentalService {
             rentalData.goodsId,
             goods.countNow - rentalData.count
         );
+
+        // 3.4: 대여 성공 시 timeOverdue 초기화
+        const user = await this.userPublicService.fetchById(rentalData.userId);
+        if (user && user.timeOverdue !== 0) {
+            await this.userPublicService.updateOverdue(rentalData.userId, {
+                timeOverdue: 0
+            });
+        }
 
         return {
             success: true,
@@ -224,6 +265,44 @@ export class RentalService {
 
         if (rental.timeConfirm !== 0) {
             throw new BadRequestException('This return has already been confirmed');
+        }
+
+        // 연체된 대여인지 확인
+        const isOverdue = rental.timeDue < rental.timeReturn;
+
+        if (isOverdue) {
+            // 연체 기간 계산 (일 단위)
+            const overdueDays = Math.ceil(
+                getDateDiffInMinute(rental.timeReturn, rental.timeDue) / (60 * 24)
+            );
+
+            // 사용자 정보 가져오기
+            const user = await this.userPublicService.fetchById(rental.userId);
+            if (!user) {
+                throw new NotFoundException('User not found');
+            }
+
+            // 새로운 timeOverdue 계산
+            let newTimeOverdue: number;
+            const now = getNow();
+
+            if (user.timeOverdue === 0) {
+                // 3.2: 첫 연체인 경우, timeReturn부터 연체된 날짜만큼 뒤 23:59:59
+                const overdueEndDate = getDate(rental.timeReturn);
+                overdueEndDate.setDate(overdueEndDate.getDate() + overdueDays);
+                overdueEndDate.setHours(23, 59, 59, 999);
+                newTimeOverdue = getTime(overdueEndDate);
+            } else {
+                // 3.3: 이미 연체 기록이 있는 경우, 기존 timeOverdue에 연체 기간 추가
+                const existingOverdueEndDate = getDate(user.timeOverdue);
+                existingOverdueEndDate.setDate(existingOverdueEndDate.getDate() + overdueDays);
+                newTimeOverdue = getTime(existingOverdueEndDate);
+            }
+
+            // 사용자의 timeOverdue 업데이트
+            await this.userPublicService.updateOverdue(rental.userId, {
+                timeOverdue: newTimeOverdue
+            });
         }
 
         await this.rentalRepository.confirmReturn(id, getNow());

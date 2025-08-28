@@ -20,7 +20,7 @@ export class UserService {
     return newUser;
   }
 
-  async updateType(id: number, user: IUserUpdate): Promise<IUser> {
+  async update(id: number, user: IUserUpdate): Promise<IUser> {
     const userExist = await this.userRepository.fetch({ id });
     if (userExist.length === 0) {
       throw new BadRequestException(`User ID ${id} not found.`);

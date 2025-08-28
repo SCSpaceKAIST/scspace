@@ -78,8 +78,20 @@ export class RentalPublicService {
         return await this.rentalRepository.checkGoodsAvailability(check);
     }
 
-    async checkCreateRentalAvailability(userId: number): Promise<boolean> {
-        return await this.rentalRepository.checkCreateRentalAvailability(userId);
+    async checkRentalLimit(userId: number): Promise<boolean> {
+        return await this.rentalRepository.checkRentalLimit(userId);
+    }
+
+    async checkCurrentOverdue(userId: number): Promise<boolean> {
+        return await this.rentalRepository.checkCurrentOverdue(userId);
+    }
+
+    async checkUnconfirmedOverdueReturns(userId: number): Promise<boolean> {
+        return await this.rentalRepository.checkUnconfirmedOverdueReturns(userId);
+    }
+
+    async checkUserOverduePenalty(userId: number): Promise<boolean> {
+        return await this.rentalRepository.checkUserOverduePenalty(userId);
     }
 
     async getOverdueRentals(): Promise<IRental[]> {

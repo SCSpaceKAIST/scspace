@@ -62,7 +62,7 @@ export class UserController {
     @Param('id', ParseIntPipe) uid: number,
     @Body() body: IUserUpdate
   ): Promise<IUser> {
-    return await this.userService.updateType(uid, body);
+    return await this.userService.update(uid, body);
   }
 
   //HOOK: useUserInfo

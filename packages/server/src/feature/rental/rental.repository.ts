@@ -9,6 +9,7 @@ import {
     schema,
     Rental,
     Goods,
+    User,
 } from '@schema';
 import {
     eq,
@@ -206,7 +207,8 @@ export class RentalRepository {
         return availableCount >= requestedCount;
     }
 
-    async checkCreateRentalAvailability(userId: number): Promise<boolean> {
+    // 각 상황별로 분리된 검사 함수들
+    async checkRentalLimit(userId: number): Promise<boolean> {
         const countRental = await this.db
             .select({ totalCount: count() })
             .from(Rental)
@@ -217,6 +219,56 @@ export class RentalRepository {
             .then(res => res[0]?.totalCount || 0);
 
         return countRental < MAX_RENTAL_LIMIT;
+    }
+
+    async checkCurrentOverdue(userId: number): Promise<boolean> {
+        const now = getNow();
+        const overdueCount = await this.db
+            .select({ totalCount: count() })
+            .from(Rental)
+            .where(and(
+                eq(Rental.userId, userId),
+                eq(Rental.timeReturn, 0),  // 아직 반납하지 않음
+                lt(Rental.timeDue, now)    // 기한이 지남
+            ))
+            .then(res => res[0]?.totalCount || 0);
+
+        return overdueCount === 0;
+    }
+
+    async checkUnconfirmedOverdueReturns(userId: number): Promise<boolean> {
+        const unconfirmedOverdueCount = await this.db
+            .select({ totalCount: count() })
+            .from(Rental)
+            .where(and(
+                eq(Rental.userId, userId),
+                gt(Rental.timeReturn, 0),   // 반납은 했음
+                eq(Rental.timeConfirm, 0),  // 아직 관리자 확인 안됨
+                lt(Rental.timeDue, Rental.timeReturn)  // 연체된 반납 (due < return)
+            ))
+            .then(res => res[0]?.totalCount || 0);
+
+        return unconfirmedOverdueCount === 0;
+    }
+
+    async checkUserOverduePenalty(userId: number): Promise<boolean> {
+        const now = getNow();
+
+        // User 테이블에서 timeOverdue 확인
+        const userResult = await this.db
+            .select({ timeOverdue: User.timeOverdue })
+            .from(User)
+            .where(eq(User.id, userId))
+            .limit(1);
+
+        if (userResult.length === 0) {
+            return false; // 사용자를 찾을 수 없음
+        }
+
+        const user = userResult[0];
+
+        // timeOverdue가 0이거나 현재 시간이 timeOverdue를 지났으면 대여 가능
+        return user.timeOverdue === 0 || now > user.timeOverdue;
     }
 
     // Get overdue rentals

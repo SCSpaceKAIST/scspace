@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { UserRepository } from './user.repository';
 import { MUser } from './user.model';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
-import { IUser, IUserCreate } from '@scspace-depot/types/user';
+import { IUser, IUserCreate, IUserUpdate } from '@scspace-depot/types/user';
 import { UserService } from './user.service';
 
 @Injectable()
@@ -55,6 +55,10 @@ export class UserPublicService {
       user.type === UserTypeEnum.MANAGER ||
       user.type === UserTypeEnum.ADMIN
     );
+  }
+
+  async updateOverdue(id: number, user: Pick<IUserUpdate, "timeOverdue">): Promise<IUser> {
+    return this.userService.update(id, user);
   }
 
 }
