@@ -14,6 +14,7 @@ import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import { IRentalAll } from "@scspace-depot/types/rental";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
+import RentalDialog from "./RentalDialog";
 
 export default function RentalTable({
     uid,
@@ -106,6 +107,12 @@ export default function RentalTable({
                     />
                 </Scroll>
             </Grid>
+            <RentalDialog
+                open={open}
+                setOpen={setOpen}
+                rental={rentals.find(rental => rental.id === selected) || null}
+                refetchList={refetch}
+            />
         </>
     );
 }
