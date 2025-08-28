@@ -72,6 +72,13 @@ export const useRedirectStore = create<{
             href: "/rental",
             label: "대여",
             helperText: "Rental",
+            subdomains: [
+                {
+                    href: "/rental/application",
+                    label: "물품 목록",
+                    helperText: "Goods List",
+                },
+            ]
         },
     ],
     update: (links) => set(() => ({ links })),

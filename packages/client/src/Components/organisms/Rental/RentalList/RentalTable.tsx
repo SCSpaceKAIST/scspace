@@ -37,7 +37,7 @@ export default function RentalTable({
 
     const isWide = useBreakpointValue({ base: false, md: true });
 
-    const [tab, setTab] = useState<string>("0");
+    const [tab, setTab] = useState<string>("All");
 
     return (
         <>
@@ -57,10 +57,13 @@ export default function RentalTable({
                             onValueChange={(e) => setTab(e.value)}
                         >
                             <Tabs.List>
-                                <Tabs.Trigger value={"0"}>
+                                <Tabs.Trigger value={"all"}>
+                                    All
+                                </Tabs.Trigger>
+                                <Tabs.Trigger value={"on rent"}>
                                     On Rent
                                 </Tabs.Trigger>
-                                <Tabs.Trigger value={"-1"}>
+                                <Tabs.Trigger value={"returned"}>
                                     Returned
                                 </Tabs.Trigger>
                             </Tabs.List>
@@ -92,9 +95,10 @@ export default function RentalTable({
                         ]}
                         content={rentals
                             .filter(rental => (
-                                tab === "0" ?
-                                    rental.timeReturn === 0 :
-                                    rental.timeReturn !== 0
+                                tab === "all" ? true :
+                                    tab === "on rent" ?
+                                        rental.timeReturn === 0 :
+                                        rental.timeReturn !== 0
                             ))
                             .map((rental: IRentalAll) => ({
                                 id: rental.id,

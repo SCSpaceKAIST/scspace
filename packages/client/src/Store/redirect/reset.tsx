@@ -141,6 +141,26 @@ export function useRedirects() {
                 href: "/rental",
                 label: "대여",
                 helperText: "Rental",
+                subdomains: [
+                    {
+                        href: "/rental/application",
+                        label: "물품 목록",
+                        helperText: "Goods List",
+                        invisible: isLogined,
+                    },
+                    {
+                        href: "/rental/application",
+                        label: "대여 신청",
+                        helperText: "Rental Application",
+                        invisible: !isLogined,
+                    },
+                    {
+                        href: "/mypage/rental",
+                        label: "내 대여",
+                        helperText: "My Rental",
+                        invisible: !isLogined,
+                    }
+                ]
             },
             {
                 href: "/manage",
