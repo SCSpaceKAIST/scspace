@@ -21,6 +21,7 @@ import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { IRentalAll } from "@scspace-depot/types/rental";
 import ReturnBtn from "./ReturnBtn";
+import ConfirmBtn from "./ConfirmBtn";
 
 export default function RentalDialog({ open, setOpen, rental, refetchList }: {
     open: boolean;
@@ -60,7 +61,15 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
                                     <ReturnBtn
                                         refetch={refetchList}
                                         id={rental.id}
+                                        disabled={rental.timeReturn !== 0}
                                     />
+                                    {isManager && (rental.timeReturn !== 0) && (
+                                        <ConfirmBtn
+                                            refetch={refetchList}
+                                            id={rental.id}
+                                            disabled={rental.timeConfirm !== 0}
+                                        />
+                                    )}
                                 </HStack>
                             </Center>
                             <Separator />

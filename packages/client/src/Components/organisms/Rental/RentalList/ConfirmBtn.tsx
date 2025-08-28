@@ -6,17 +6,17 @@ import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useRentalAPI } from "@scspace-client/Hooks/rental";
 import { useState } from "react";
 
-export default function ReturnBtn({ disabled, id, refetch }: {
+export default function ConfirmBtn({ disabled, id, refetch }: {
     disabled: boolean;
     id: number;
     refetch: () => void;
 }) {
-    const returnRental = useRentalAPI({ id }).returnRental;
+    const confirmReturn = useRentalAPI({ id }).confirmReturn;
     const [e, setE] = useState<string>('');
 
     const handleReturn = () => {
         toaster.promise(
-            returnRental({}, {
+            confirmReturn({}, {
                 onError: (error) => {
                     setE(error.message);
                 },
@@ -26,15 +26,15 @@ export default function ReturnBtn({ disabled, id, refetch }: {
             }),
             {
                 loading: {
-                    title: "Processing return...",
+                    title: "Processing confirm...",
                     description: "Please wait",
                 },
                 success: {
-                    title: "Return successful",
-                    description: "The rental has been returned successfully.",
+                    title: "Confirm successful",
+                    description: "The rental has been confirmed successfully.",
                 },
                 error: {
-                    title: "Return failed",
+                    title: "Confirm failed",
                     description: e || "Please try again",
                 },
             }
@@ -46,24 +46,24 @@ export default function ReturnBtn({ disabled, id, refetch }: {
             onClick={handleReturn}
             colorPalette="blue"
             buttonText="Return"
-            dialogTitle="Would you like to request a return?"
+            dialogTitle="반납 확인하시겠습니까?"
             dialogBody={
                 <>
                     <Text>
-                        Are you sure you want to return this rental?
+                        실제 물품 반납을 확인한 뒤에 버튼을 누르시길 바랍니다.
                     </Text>
-                    <Text fontWeight={"semibold"} color={"blue"}>
-                        Please return the item to SCSpace and then press this button.
+                    <Text fontWeight={"semibold"} color={"red"}>
+                        이 작업은 되돌릴 수 없습니다.
                     </Text>
                 </>
             }
         >
             <Button
-                colorPalette={"blue"}
+                colorPalette={"green"}
                 variant={"outline"}
                 disabled={disabled}
             >
-                {disabled ? "Already Returned" : "Request Return"}
+                {disabled ? "Already Confirmed" : "Confirm Return"}
             </Button>
         </AlertBtn>
     );
