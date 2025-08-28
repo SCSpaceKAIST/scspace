@@ -34,7 +34,7 @@ import {
 } from '@scspace-depot/types/rental';
 import { getNow } from '@scspace-server/common/utils';
 import { IDataResponse } from '@scspace-depot/types/common/common.type';
-import { MAX_RENTAL_LIMIT } from "@scspace-depot/enums/rental.enum"
+import { MAX_RENTAL_LIMIT } from "@scspace-depot/consts/rental.const"
 
 @Injectable()
 export class RentalRepository {

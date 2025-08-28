@@ -19,7 +19,7 @@ import { RentalRepository } from './rental.repository';
 import { RentalPublicService } from './rental.public.service';
 import { UserPublicService } from '../user/user.public.service';
 import { IUser } from '@scspace-depot/types/user';
-import { MAX_RENTAL_DURATION, MAX_RENTAL_LIMIT } from '@scspace-depot/enums/rental.enum';
+import { MAX_RENTAL_DURATION, MAX_RENTAL_LIMIT } from '@scspace-depot/consts/rental.const';
 
 @Injectable()
 export class RentalService {

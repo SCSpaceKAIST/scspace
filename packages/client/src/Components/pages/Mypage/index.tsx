@@ -2,6 +2,7 @@
 
 import PageSelector, { IPage } from "../../molecules/page/PageSelector";
 import UserOrganization from "./UserOrganization";
+import UserRental from "./UserRental";
 import UserReservation from "./UserReservation";
 import { useAuth } from "@scspace-client/Hooks/auth";
 
@@ -22,6 +23,12 @@ export default function Mypage() {
       preview: (<UserOrganization />),
       href: "/mypage/organization"
     },
+    {
+      kor: "대여 목록",
+      eng: "Rental List",
+      preview: (<UserRental />),
+      href: "/mypage/rental"
+    }
   ];
 
   return (

@@ -3,7 +3,6 @@ import {
     varchar,
     int,
     bigint,
-    boolean
 } from 'drizzle-orm/mysql-core';
 import { User } from './user';
 

@@ -37,7 +37,7 @@ export default function RentalTable({
 
     const isWide = useBreakpointValue({ base: false, md: true });
 
-    const [tab, setTab] = useState<string>("All");
+    const [tab, setTab] = useState<string>("all");
 
     return (
         <>
