@@ -6,7 +6,7 @@ import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import RentalTable from "@scspace-client/Components/organisms/Rental/RentalList/RentalTable";
 import { useRentalAPI } from "@scspace-client/Hooks/rental";
 
-export default function RentalHistory() {
+export default function RentalHistoryManager() {
     const { needManager } = useAuth();
     needManager();
 

@@ -14,7 +14,7 @@ import {
     IRentalCreateClient,
 } from '@scspace-depot/types/rental';
 import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
-import { checkContainAllId, takeAll, getNow, getDate, getTime, getDateEnd, getDateDiffInMinute } from '@scspace-server/common/utils';
+import { checkContainAllId, takeAll, getNow, getDate, getTime, getDateEnd, getDateDiffInMinute, getDateString } from '@scspace-server/common/utils';
 import { RentalRepository } from './rental.repository';
 import { RentalPublicService } from './rental.public.service';
 import { UserPublicService } from '../user/user.public.service';
@@ -56,15 +56,7 @@ export class RentalService {
             // 사용자 정보를 가져와서 언제부터 대여 가능한지 알려주기
             const user = await this.userPublicService.fetchById(rentalData.userId);
             if (user && user.timeOverdue > 0) {
-                const availableDate = getDate(user.timeOverdue);
-                const formattedDate = availableDate.toLocaleDateString('ko-KR', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                throw new BadRequestException(`User is currently under rental penalty due to overdue returns. Rental will be available again after: ${formattedDate}`);
+                throw new BadRequestException(`User is currently under rental penalty due to overdue returns. Rental will be available again after: ${getDateString(user.timeOverdue)}`);
             } else {
                 throw new BadRequestException('User is currently under rental penalty due to overdue returns');
             }
