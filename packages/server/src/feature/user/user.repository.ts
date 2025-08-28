@@ -82,9 +82,18 @@ export class UserRepository {
   }
 
   async updateType(id: number, user: IUserUpdate): Promise<MUser> {
+    // undefined 필드를 제거하여 빈 객체 전달 방지
+    const updateData: Partial<typeof User.$inferSelect> = {};
+    if (user.type !== undefined) {
+      updateData.type = user.type;
+    }
+    if (user.timeOverdue !== undefined) {
+      updateData.timeOverdue = user.timeOverdue;
+    }
+
     await this.db
       .update(User)
-      .set({ type: user.type })
+      .set(updateData)
       .where(eq(User.id, id));
 
     const updatedUser = await this.fetch({ id: id });
