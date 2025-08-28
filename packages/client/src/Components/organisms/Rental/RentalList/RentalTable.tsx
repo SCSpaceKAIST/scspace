@@ -122,9 +122,9 @@ export default function RentalTable({
                                     case RENTAL_STATE.CONFIRMED:
                                         return rental.timeConfirm !== 0;
                                     case RENTAL_STATE.RETURNED:
-                                        return rental.timeReturn !== 0;
+                                        return rental.timeReturn !== 0 && rental.timeConfirm === 0;
                                     case RENTAL_STATE.OVERDUE:
-                                        return rental.timeDue < now;
+                                        return rental.timeDue < now && rental.timeReturn === 0;
                                     default:
                                         return rental.timeReturn === 0;
                                 }
