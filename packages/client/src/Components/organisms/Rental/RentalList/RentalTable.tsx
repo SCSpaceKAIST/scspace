@@ -91,7 +91,11 @@ export default function RentalTable({
                             "Return Due"
                         ]}
                         content={rentals
-                            .filter(rental => rental.timeReturn.toString() === tab)
+                            .filter(rental => (
+                                tab === "0" ?
+                                    rental.timeReturn === 0 :
+                                    rental.timeReturn !== 0
+                            ))
                             .map((rental: IRentalAll) => ({
                                 id: rental.id,
                                 row: [
