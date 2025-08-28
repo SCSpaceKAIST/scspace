@@ -67,7 +67,6 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
                             <DataListItem label="Goods">
                                 <DataList.Root
                                     orientation={isWide ? "horizontal" : "vertical"}
-                                    gap={1} color="fg.muted"
                                 >
                                     <DataListItem label="Name">
                                         {rental.goods.name}
@@ -80,10 +79,10 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
                                     </DataListItem>
                                 </DataList.Root>
                             </DataListItem>
+                            <Separator />
                             <DataListItem label="Info">
                                 <DataList.Root
                                     orientation={isWide ? "horizontal" : "vertical"}
-                                    gap={1} color="fg.muted"
                                 >
                                     <DataListItem label="Burrowed Time">
                                         {getString(rental.timeBorrow)}
@@ -99,10 +98,10 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
                                     </DataListItem>
                                 </DataList.Root>
                             </DataListItem>
+                            <Separator />
                             <DataListItem label="User">
                                 <DataList.Root
                                     orientation={isWide ? "horizontal" : "vertical"}
-                                    gap={1} color="fg.muted"
                                 >
                                     <DataListItem label="Name">
                                         {rental.user.nameKr} ({rental.user.nameEn})
