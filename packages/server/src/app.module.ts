@@ -13,6 +13,7 @@ import { join } from 'path';
 import { MailModule } from './tools/mailer/mail.module';
 import { LotteryModule } from './feature/lottery/lottery.module';
 import { ScheduleModule } from "@nestjs/schedule";
+import { UploadModule } from './tools/uploader/upload.module';
 
 @Module({
   imports: [
@@ -29,7 +30,8 @@ import { ScheduleModule } from "@nestjs/schedule";
     OrganizationModule,
     RentalModule,
     MailModule,
-    LotteryModule
+    LotteryModule,
+    UploadModule
   ],
   controllers: [AppController],
   providers: [AppService],
