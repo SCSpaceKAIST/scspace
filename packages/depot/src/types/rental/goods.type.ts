@@ -10,9 +10,7 @@ export interface IGoods {
 
 export type IGoodsCreate = Omit<IGoods, "id" | "countNow">;
 
-export type IGoodsUpdate = Partial<Omit<IGoods, "id">> & {
-    id: number;
-};
+export type IGoodsUpdate = Partial<Omit<IGoods, "id">>;
 
 // 물품 재고 업데이트
 export type IGoodsStockUpdate = {

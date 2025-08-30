@@ -69,8 +69,6 @@ export default function ManageDialog({ id, onChange }: {
         const formData = new FormData();
 
         formData.append('file', fileUpload.acceptedFiles[0]);
-        console.log(fileUpload.acceptedFiles[0].name);
-
         formData.append('name', name);
         formData.append('description', description || '');
         formData.append('countAll', countAll.toString());
@@ -109,12 +107,12 @@ export default function ManageDialog({ id, onChange }: {
     }, [name, description, countAll, createGoods, errorMessage, fileUpload]);
 
     const handleUpdate = useCallback(() => {
-        const formData: IGoodsCreate = {
-            name,
-            description: description || null,
-            countAll,
-            imageURI: '', // 임시로 기본값 설정
-        };
+        const formData = new FormData();
+
+        if (fileUpload.acceptedFiles.length > 0) formData.append('file', fileUpload.acceptedFiles[0]);
+        if (name) formData.append('name', name);
+        if (description) formData.append('description', description);
+        if (countAll) formData.append('countAll', countAll.toString());
 
         toaster.promise(
             updateGoods(formData, {
@@ -124,6 +122,7 @@ export default function ManageDialog({ id, onChange }: {
                 },
                 onSuccess: () => {
                     onChange();
+                    fileUpload.clearFiles();
                 }
             }),
             {
@@ -141,7 +140,7 @@ export default function ManageDialog({ id, onChange }: {
                 }
             }
         );
-    }, [name, description, countAll, updateGoods, errorMessage]);
+    }, [name, description, countAll, updateGoods, errorMessage, fileUpload]);
 
     const handleDelete = useCallback(() => {
         toaster.promise(

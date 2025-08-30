@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { PUBLIC_FOLDER } from "@scspace-depot/consts/file.const";
 import * as fs from 'fs';
 
 @Injectable()
@@ -27,9 +28,13 @@ export class FileService {
     //     return filePath;
     // }
 
-    async deleteFile(filePath: string) {
-        this.fileExistValidator(filePath);
-
-        fs.unlinkSync(filePath);
+    async deleteFile(publicUri: string) {
+        const filePath = `${PUBLIC_FOLDER}/${publicUri.split('/')[2]}`;
+        try {
+            fs.unlinkSync(filePath);
+        } catch (error) {
+            // throw new NotFoundException(`File not found: ${filePath}`);
+            Logger.log(`File not found: ${filePath}`);
+        }
     }
 }

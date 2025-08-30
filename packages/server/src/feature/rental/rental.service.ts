@@ -20,6 +20,7 @@ import { RentalPublicService } from './rental.public.service';
 import { UserPublicService } from '../user/user.public.service';
 import { IUser } from '@scspace-depot/types/user';
 import { MAX_RENTAL_DURATION, MAX_RENTAL_LIMIT } from '@scspace-depot/consts/rental.const';
+import { FileService } from '@scspace-server/tools/file/file.service';
 
 @Injectable()
 export class RentalService {
@@ -27,6 +28,7 @@ export class RentalService {
         private readonly rentalRepository: RentalRepository,
         private readonly rentalPublicService: RentalPublicService,
         private readonly userPublicService: UserPublicService,
+        private readonly fileService: FileService
     ) { }
 
     // Rental 관련 서비스 메서드들
@@ -355,6 +357,10 @@ export class RentalService {
 
         if (countNow < 0) {
             throw new BadRequestException('Insufficient stock');
+        }
+
+        if (updates.imageURI) {
+            await this.fileService.deleteFile(existingGoods.imageURI);
         }
 
         await this.rentalRepository.updateGoods(id, {

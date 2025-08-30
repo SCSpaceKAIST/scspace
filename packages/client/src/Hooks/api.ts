@@ -49,7 +49,10 @@ export const useQueryApi = <ResponseType>(
   });
 };
 
-export const useFormDataMutation = <ResponseType>(endpoint: string) => {
+export const useFormDataMutation = <ResponseType>(
+  endpoint: string,
+  method: "POST" | "PUT" | "DELETE" | "GET" | "PATCH",
+) => {
   const queryClient = useQueryClient();
 
   return useMutation<
@@ -59,7 +62,7 @@ export const useFormDataMutation = <ResponseType>(endpoint: string) => {
   >({
     mutationFn: async (formData: FormData) => {
       const res = await fetch(`${baseUrl}${endpoint}`, {
-        method: "POST",
+        method,
         credentials: "include",
         body: formData
       });

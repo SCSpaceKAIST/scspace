@@ -161,26 +161,22 @@ export class RentalController {
 
     // 물품 생성
     @Post('goods')
-    @UseInterceptors(FileInterceptor('file', {
-        storage: publicStorage,
-    }))
-    // @UseGuards(ManagerGuard)
+    @UseInterceptors(FileInterceptor('file', { storage: publicStorage, }))
+    @UseGuards(ManagerGuard)
     async createGoods(
         @UploadedFile() file: Express.Multer.File,
-        @Body() goodsData: Omit<IGoodsCreate, 'imageURI'>
+        @Body() goodsData: Omit<IGoodsCreate, 'imageURI' | "countAll"> & {
+            countAll?: string;
+        }
     ): Promise<{ success: boolean; data: { id: number } }> {
-        Logger.log(file, goodsData);
-
         const imageURI = `/uploads/${file.filename}`;
-        Logger.log(`최종 이미지 URI: ${imageURI}`);
 
         return await this.rentalService.createGoods({
             ...goodsData,
-            imageURI
+            imageURI,
+            countAll: parseInt(goodsData.countAll, 10)
         });
     }
-
-
 
     // 모든 물품 목록 조회
     @Get('goods/list')
@@ -198,12 +194,25 @@ export class RentalController {
 
     // 물품 정보 수정
     @Put('goods/:id')
+    @UseInterceptors(FileInterceptor('file', { storage: publicStorage, }))
     @UseGuards(ManagerGuard)
     async updateGoods(
         @Param('id', ParseIntPipe) id: number,
-        @Body() updates: IGoodsUpdate
+        @UploadedFile() file: Express.Multer.File,
+        @Body() updates: Omit<IGoodsUpdate, "countNow" | "countAll"> & {
+            countAll?: string; // string으로 받아서 내부에서 number로 변환
+            countNow?: string;
+        },
     ): Promise<ISuccessResponse> {
-        return await this.rentalService.updateGoods(id, updates);
+        if (file) {
+            const imageURI = `/uploads/${file.filename}`;
+            updates.imageURI = imageURI;
+        }
+        return await this.rentalService.updateGoods(id, {
+            ...updates,
+            countAll: parseInt(updates.countAll, 10),
+            countNow: parseInt(updates.countNow, 10)
+        });
     }
 
     // 물품 삭제

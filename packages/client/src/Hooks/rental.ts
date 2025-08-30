@@ -92,16 +92,12 @@ export function useGoodsAPI(params?: {
         (id && id > 0) ? `/rental/goods/${id}` : ""
     );
 
-    // POST/PUT/DELETE 메서드들
-    // const createGoods = useMutationApi<{ success: boolean; data: { id: number } }, IGoodsCreate>(
-    //     "/rental/goods",
-    //     "POST"
-    // ).mutateAsync;
     const createGoods = useFormDataMutation<{ success: boolean; data: { id: number } }>(
-        "/rental/goods"
+        "/rental/goods",
+        "POST"
     ).mutateAsync;
 
-    const updateGoods = useMutationApi<ISuccessResponse, Omit<IGoodsUpdate, 'id'>>(
+    const updateGoods = useFormDataMutation<ISuccessResponse>(
         `/rental/goods/${id || ''}`,
         "PUT"
     ).mutateAsync;
