@@ -2,6 +2,7 @@
 
 import {
     Button,
+    Field,
     FileUpload,
     useFileUploadContext,
     UseFileUploadReturn,
@@ -34,11 +35,18 @@ export default function GoodsImageForm({ fileUpload }: { fileUpload: UseFileUplo
     return (
         <FileUpload.RootProvider value={fileUpload}>
             <FileUpload.HiddenInput />
-            <FileUpload.Trigger asChild>
-                <Button variant="outline" width={"full"}>
-                    <LuFileImage /> Upload Images
-                </Button>
-            </FileUpload.Trigger>
+            <Field.Root required>
+                <Field.Label>
+                    {fileUpload.acceptedFiles.length > 0 ?
+                        fileUpload.acceptedFiles[0].name : "No files selected"}
+                    <Field.RequiredIndicator />
+                </Field.Label>
+                <FileUpload.Trigger asChild>
+                    <Button variant="outline" width={"full"}>
+                        <LuFileImage /> {fileUpload.acceptedFiles.length > 0 ? "Change Image" : "Upload Image"}
+                    </Button>
+                </FileUpload.Trigger>
+            </Field.Root>
             <FileUploadList />
         </FileUpload.RootProvider>
     )

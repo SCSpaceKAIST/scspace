@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Get, Logger, Post, Query, Req, Res, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Logger, Post, Query, Req, Res, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { privateStorage, publicStorage } from "./file.storage";
 import { Response } from "express";
@@ -14,8 +14,11 @@ export class FileController {
 
     @Post("upload")
     @UseInterceptors(FilesInterceptor('files', 25, { storage: privateStorage }))
-    async uploadFile(@UploadedFiles() files: Array<Express.Multer.File>): Promise<IFileUploadResponse> {
-        Logger.log(files);
+    async uploadFile(
+        @UploadedFiles() files: Array<Express.Multer.File>,
+        @Body() body: any
+    ): Promise<IFileUploadResponse> {
+        Logger.log(files, body);
         return {
             success: true,
             files: files.map(file => ({

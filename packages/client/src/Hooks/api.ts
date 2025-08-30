@@ -49,13 +49,48 @@ export const useQueryApi = <ResponseType>(
   });
 };
 
+export const useFormDataMutation = <ResponseType>(endpoint: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    ResponseType,
+    Error,
+    FormData
+  >({
+    mutationFn: async (formData: FormData) => {
+      const res = await fetch(`${baseUrl}${endpoint}`, {
+        method: "POST",
+        credentials: "include",
+        body: formData
+      });
+
+      if (!res.ok) {
+        let errorMessage = res.statusText;
+
+        try {
+          const errorData = await res.json();
+          errorMessage = errorData.message || errorData.error || res.statusText;
+          console.log(errorData, errorMessage);
+        } catch (parseError) {
+          console.log("JSON parsing fail");
+        }
+
+        throw new Error(errorMessage);
+      }
+
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [endpoint] });
+    },
+  });
+}
+
 export const useMutationApi = <ResponseType, RequestParamType extends object>(
   endpoint: string,
   method: "POST" | "PUT" | "DELETE" | "GET" | "PATCH",
 ) => {
   const queryClient = useQueryClient();
-
-  console.log(baseUrl, endpoint);
 
   return useMutation<ResponseType, Error, RequestParamType>({
     mutationFn:

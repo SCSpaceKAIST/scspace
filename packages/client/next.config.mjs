@@ -14,6 +14,14 @@ const nextConfig = {
   // 이미지 최적화
   images: {
     formats: ["image/webp", "image/avif"],
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3001",
+        pathname: "/uploads/**",
+      },
+    ],
   },
 
   // 개발 환경에서만 적용되는 안전한 웹팩 최적화

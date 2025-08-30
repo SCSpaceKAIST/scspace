@@ -10,6 +10,10 @@ import {
     ParseIntPipe,
     UseGuards,
     Req,
+    UseInterceptors,
+    UploadedFile,
+    BadRequestException,
+    Logger,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { RentalService } from './rental.service';
@@ -27,11 +31,17 @@ import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
 import { ManagerGuard, MemberGuard, UserGuard } from '../auth/jwt/jwt.guard';
 import { IUser } from '@scspace-depot/types/user';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { privateStorage, publicStorage } from '@scspace-server/tools/file/file.storage';
+import { FileService } from '@scspace-server/tools/file/file.service';
+import { join } from 'path';
+import multer from 'multer';
 
 @Controller('rental')
 export class RentalController {
     constructor(
         private readonly rentalService: RentalService,
+        private readonly fileService: FileService
     ) { }
 
     // Rental 관련 엔드포인트들
@@ -151,12 +161,26 @@ export class RentalController {
 
     // 물품 생성
     @Post('goods')
-    @UseGuards(ManagerGuard)
+    @UseInterceptors(FileInterceptor('file', {
+        storage: publicStorage,
+    }))
+    // @UseGuards(ManagerGuard)
     async createGoods(
-        @Body() goodsData: IGoodsCreate
+        @UploadedFile() file: Express.Multer.File,
+        @Body() goodsData: Omit<IGoodsCreate, 'imageURI'>
     ): Promise<{ success: boolean; data: { id: number } }> {
-        return await this.rentalService.createGoods(goodsData);
+        Logger.log(file, goodsData);
+
+        const imageURI = `/uploads/${file.filename}`;
+        Logger.log(`최종 이미지 URI: ${imageURI}`);
+
+        return await this.rentalService.createGoods({
+            ...goodsData,
+            imageURI
+        });
     }
+
+
 
     // 모든 물품 목록 조회
     @Get('goods/list')

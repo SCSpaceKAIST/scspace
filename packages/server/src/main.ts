@@ -6,15 +6,15 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 
 async function bootstrap() {
-  // const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  // const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('/api');
 
   // uploads/public 폴더의 절대 경로 설정 (dev 모드에서는 packages/server가 cwd)
   const uploadsPath = join(process.cwd(), 'uploads', 'public');
   console.log('Static files path:', uploadsPath);
 
-  // app.useStaticAssets(uploadsPath, { prefix: '/uploads' });
+  app.useStaticAssets(uploadsPath, { prefix: '/uploads' });
 
   // CORS 설정
   app.enableCors({

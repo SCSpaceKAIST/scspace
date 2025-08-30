@@ -18,9 +18,11 @@ export default function ToasterComponent() {
                             <Toast.Title>
                                 {toast.title ?? "Title"}
                             </Toast.Title>
-                            <Toast.Description>
-                                {toast.description ?? "Description"}
-                            </Toast.Description>
+                            {toast.description && (
+                                <Toast.Description>
+                                    {toast.description}
+                                </Toast.Description>
+                            )}
                         </Stack>
                     </HStack>
                 </Toast.Root>

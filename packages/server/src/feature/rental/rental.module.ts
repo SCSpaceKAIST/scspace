@@ -5,11 +5,19 @@ import { RentalPublicService } from './rental.public.service';
 import { RentalController } from './rental.controller';
 import { DBModule } from 'src/db/db.module';
 import { UserModule } from 'src/feature/user/user.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { FileModule } from '@scspace-server/tools/file/file.module';
 
 @Module({
     imports: [
         DBModule,
         UserModule,
+        MulterModule.registerAsync({
+            imports: [ConfigModule],
+            useFactory: async (config: ConfigService) => ({})
+        }),
+        FileModule
     ],
     controllers: [RentalController],
     providers: [

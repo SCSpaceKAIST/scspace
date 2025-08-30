@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import * as fs from 'fs';
 
 @Injectable()
@@ -6,11 +6,26 @@ export class FileService {
     constructor() { }
 
     async fileExistValidator(filePath: string) {
-        if (!fs.existsSync(filePath)) {
-            Logger.log("Not found")
-            throw new NotFoundException("File does not exits");
+        const maxWaitTime = 5000;
+        const startTime = Date.now();
+
+        while (Date.now() - startTime < maxWaitTime) {
+            if (fs.existsSync(filePath)) {
+                Logger.log(`파일 존재 확인됨: ${filePath}`);
+                return; // 파일이 존재함
+            }
+            // 파일이 아직 존재하지 않음, 50ms 기다린 후 다시 시도
+            await new Promise(resolve => setTimeout(resolve, 50));
         }
+
+        throw new BadRequestException(`File save confirmation timed out: ${filePath}`);
     }
+
+    // async savePublicFile(file: Express.Multer.File): Promise<string> {
+    //     const filePath = join(publicStorage, file.filename);
+    //     await fs.promises.writeFile(filePath, file.buffer);
+    //     return filePath;
+    // }
 
     async deleteFile(filePath: string) {
         this.fileExistValidator(filePath);

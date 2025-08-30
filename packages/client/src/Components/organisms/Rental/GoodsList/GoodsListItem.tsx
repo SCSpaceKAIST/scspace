@@ -93,7 +93,7 @@ export default function GoodsListItem({
                             w={"full"}
                         >
                             <Image
-                                src="/img/logo.svg"
+                                src={"http://localhost:3001" + (item.imageURI || "/img/logo.svg")}
                                 alt="LOGO"
                                 fill
                                 objectFit="contain"

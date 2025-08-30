@@ -1,6 +1,6 @@
 "use client"
 
-import { useMutationApi, useQueryApi } from "./api";
+import { useFormDataMutation, useMutationApi, useQueryApi } from "./api";
 import {
     IRentalAll,
     IRentalUpdate,
@@ -93,9 +93,12 @@ export function useGoodsAPI(params?: {
     );
 
     // POST/PUT/DELETE 메서드들
-    const createGoods = useMutationApi<{ success: boolean; data: { id: number } }, IGoodsCreate>(
-        "/rental/goods",
-        "POST"
+    // const createGoods = useMutationApi<{ success: boolean; data: { id: number } }, IGoodsCreate>(
+    //     "/rental/goods",
+    //     "POST"
+    // ).mutateAsync;
+    const createGoods = useFormDataMutation<{ success: boolean; data: { id: number } }>(
+        "/rental/goods"
     ).mutateAsync;
 
     const updateGoods = useMutationApi<ISuccessResponse, Omit<IGoodsUpdate, 'id'>>(

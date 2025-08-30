@@ -9,8 +9,6 @@ import { GoodsNameForm } from "../AddGoods/NameForm";
 import { GoodsDescriptionForm } from "../AddGoods/DecsriptionForm";
 import { GoodsCountForm } from "../AddGoods/CountForm";
 import GoodsImageForm from "../AddGoods/ImageForm";
-import { useFileAPI } from "@scspace-client/Hooks/file";
-import { error } from "console";
 
 export default function ManageDialog({ id, onChange }: {
     onChange: () => void;
@@ -36,8 +34,6 @@ export default function ManageDialog({ id, onChange }: {
         }
     } = useGoodsAPI({ id });
 
-    const uploadPublicFile = useFileAPI().uploadPublicFile;
-
     useEffect(() => {
         if (id !== -1) {
             goodsRefetch();
@@ -53,42 +49,45 @@ export default function ManageDialog({ id, onChange }: {
     }, [goodsData]);
 
     const handleCreate = useCallback(() => {
-        const imageFormData = new FormData();
-        fileUpload.acceptedFiles.forEach(file => {
-            imageFormData.append('files', file);
-        });
+        if (!name) {
+            toaster.error({ title: "Name is required" });
+            return;
+        }
+        if (!description) {
+            toaster.error({ title: "Description is required" });
+            return;
+        }
+        if (countAll <= 0) {
+            toaster.error({ title: "Count must be greater than 0" });
+            return;
+        }
+        if (fileUpload.acceptedFiles.length === 0) {
+            toaster.error({ title: "Image is required" });
+            return;
+        }
 
-        const data: IGoodsCreate = {
-            name,
-            description: description || null,
-            countAll,
-            imageURI: '', // 임시로 기본값 설정
-        };
+        const formData = new FormData();
+
+        formData.append('file', fileUpload.acceptedFiles[0]);
+        console.log(fileUpload.acceptedFiles[0].name);
+
+        formData.append('name', name);
+        formData.append('description', description || '');
+        formData.append('countAll', countAll.toString());
 
         toaster.promise(
-            uploadPublicFile(imageFormData, {
+            createGoods(formData, {
                 onError: (error) => {
-                    setErrorMessage(error.message || 'Failed to upload image');
-                    console.error('Failed to upload image:', error);
+                    setErrorMessage(error.message || 'Failed to create goods');
+                    console.error('Failed to create goods:', error);
                 },
-                onSuccess: (res) => {
-                    console.log('Image uploaded successfully:', res);
-
-                    data.imageURI = res.files[0].url;
-
-                    createGoods(data, {
-                        onError: (error) => {
-                            setErrorMessage(error.message || 'Failed to create goods');
-                            console.error('Failed to create goods:', error);
-                        },
-                        onSuccess: () => {
-                            setName('');
-                            setDescription('');
-                            setCountAll(0);
-                            setErrorMessage('');
-                            onChange();
-                        }
-                    })
+                onSuccess: () => {
+                    setName('');
+                    setDescription('');
+                    setCountAll(0);
+                    setErrorMessage('');
+                    fileUpload.clearFiles();
+                    onChange();
                 }
             }),
 
@@ -107,7 +106,7 @@ export default function ManageDialog({ id, onChange }: {
                 }
             }
         );
-    }, [name, description, countAll, createGoods, errorMessage]);
+    }, [name, description, countAll, createGoods, errorMessage, fileUpload]);
 
     const handleUpdate = useCallback(() => {
         const formData: IGoodsCreate = {
