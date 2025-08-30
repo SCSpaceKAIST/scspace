@@ -385,6 +385,8 @@ export class RentalService {
             throw new BadRequestException('Cannot delete goods with active rentals');
         }
 
+        await this.fileService.deleteFile(goods.imageURI);
+
         await this.rentalRepository.deleteGoods(id);
 
         return { success: true };

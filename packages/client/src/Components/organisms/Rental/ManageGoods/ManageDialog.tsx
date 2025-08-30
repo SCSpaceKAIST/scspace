@@ -45,7 +45,12 @@ export default function ManageDialog({ id, onChange }: {
             setName(goodsData.name);
             setDescription(goodsData.description || '');
             setCountAll(goodsData.countAll);
+        } else {
+            setName('');
+            setDescription('');
+            setCountAll(0);
         }
+        fileUpload.clearFiles();
     }, [goodsData]);
 
     const handleCreate = useCallback(() => {
