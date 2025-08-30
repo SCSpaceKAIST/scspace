@@ -18,17 +18,15 @@ async function bootstrap() {
 
   // CORS 설정
   app.enableCors({
-    // origin: [
-    //   'http://localhost:3000',
-    //   'http://localhost:3001',
-    //   'http://localhost:33000',
-    //   'http://localhost:33001',
-    //   'http://localhost',
-    //   'https://localhost',
-    //   'https://iam2.kaist.ac.kr',
-    //   'https://scspace.kws.sparcs.net'
-    // ],
-    origin: true,
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:33000',
+      'http://localhost:33001',
+      'http://localhost',
+      'https://iam2.kaist.ac.kr',
+      'https://scspace.kws.sparcs.net'
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: [
