@@ -13,7 +13,7 @@ export const Goods = mysqlTable('goods', {
     description: varchar('description', { length: 4098 }),
     countAll: int('count_all').notNull().default(1),
     countNow: int('count_now').notNull(), // 기본값 제거, repository에서 설정
-    imageId: int('image_id').notNull().default(0),
+    imageURI: int('image_uri').notNull().default(0),
 });
 
 // rental 테이블 정의

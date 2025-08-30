@@ -2,23 +2,36 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
+  // const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('/api');
 
+  // uploads/public 폴더의 절대 경로 설정 (dev 모드에서는 packages/server가 cwd)
+  const uploadsPath = join(process.cwd(), 'uploads', 'public');
+  console.log('Static files path:', uploadsPath);
+
+  // app.useStaticAssets(uploadsPath, { prefix: '/uploads' });
+
   // CORS 설정
   app.enableCors({
-    origin: [
-      'http://localhost:33000',
-      'http://localhost:33001',
-      'https://localhost',
-      'https://iam2.kaist.ac.kr',
-      'https://scspace.kws.sparcs.net'
-    ],
+    origin: process.env.NODE_ENV === 'production'
+      ? [
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'http://localhost:33000',
+        'http://localhost:33001',
+        'https://iam2.kaist.ac.kr',
+        'https://scspace.kws.sparcs.net'
+      ]
+      : true, // 개발 환경에서는 모든 origin 허용
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+    optionsSuccessStatus: 200 // IE11 지원을 위한 설정
   });
 
   // 쿠키 파서 설정

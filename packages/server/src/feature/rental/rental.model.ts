@@ -42,7 +42,7 @@ export class MGoods implements IGoods {
     description: IGoods['description'];
     countAll: IGoods['countAll'];
     countNow: IGoods['countNow'];
-    imageId: IGoods['imageId'];
+    imageURI: IGoods['imageURI'];
 
     constructor(data: IGoods) {
         this.id = data.id;
@@ -50,7 +50,7 @@ export class MGoods implements IGoods {
         this.description = data.description;
         this.countAll = data.countAll;
         this.countNow = data.countNow;
-        this.imageId = data.imageId;
+        this.imageURI = data.imageURI;
     }
 
     static fromDB(goods: typeof Goods.$inferSelect): IGoods {
@@ -60,7 +60,7 @@ export class MGoods implements IGoods {
             description: goods.description,
             countAll: goods.countAll,
             countNow: goods.countNow,
-            imageId: goods.imageId,
+            imageURI: goods.imageURI,
         };
     }
 }

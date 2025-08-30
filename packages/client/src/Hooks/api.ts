@@ -3,7 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
-const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:33001/api";
+const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
 const valueToString = (val: unknown) => {
   if (val instanceof Date) return val.toISOString();

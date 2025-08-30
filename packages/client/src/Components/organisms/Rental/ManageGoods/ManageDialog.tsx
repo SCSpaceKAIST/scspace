@@ -48,7 +48,7 @@ export default function ManageDialog({ id, onChange }: {
             name,
             description: description || null,
             countAll,
-            imageId: 1, // 임시로 기본값 설정
+            imageURI: 1, // 임시로 기본값 설정
         };
 
         toaster.promise(
@@ -87,7 +87,7 @@ export default function ManageDialog({ id, onChange }: {
             name,
             description: description || null,
             countAll,
-            imageId: 1, // 임시로 기본값 설정
+            imageURI: 1, // 임시로 기본값 설정
         };
 
         toaster.promise(
