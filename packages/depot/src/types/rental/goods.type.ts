@@ -5,7 +5,7 @@ export interface IGoods {
     description: string | null;
     countAll: number;
     countNow: number;
-    imageURI: string;
+    imageURI: string | null; // string -> string | null로 수정
 }
 
 export type IGoodsCreate = Omit<IGoods, "id" | "countNow">;

@@ -55,6 +55,8 @@ export const useMutationApi = <ResponseType, RequestParamType extends object>(
 ) => {
   const queryClient = useQueryClient();
 
+  console.log(baseUrl, endpoint);
+
   return useMutation<ResponseType, Error, RequestParamType>({
     mutationFn:
       method === "GET"
