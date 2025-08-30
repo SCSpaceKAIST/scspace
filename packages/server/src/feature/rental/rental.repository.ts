@@ -141,12 +141,16 @@ export class RentalRepository {
     }
 
     async fetchGoodsById(id: number): Promise<typeof Goods.$inferSelect | null> {
-        const result = await this.db.select().from(Goods).where(eq(Goods.id, id));
+        const result = await this.db.select()
+            .from(Goods)
+            .where(eq(Goods.id, id));
         return result[0] || null;
     }
 
     async fetchAllGoods(): Promise<typeof Goods.$inferSelect[]> {
-        return await this.db.select().from(Goods).orderBy(asc(Goods.name));
+        return await this.db.select()
+            .from(Goods)
+            .orderBy(asc(Goods.name));
     }
 
     async updateGoods(id: number, updates: IGoodsUpdate): Promise<void> {

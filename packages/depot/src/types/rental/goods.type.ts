@@ -5,7 +5,7 @@ export interface IGoods {
     description: string | null;
     countAll: number;
     countNow: number;
-    imageURI: number;
+    imageURI: string;
 }
 
 export type IGoodsCreate = Omit<IGoods, "id" | "countNow">;

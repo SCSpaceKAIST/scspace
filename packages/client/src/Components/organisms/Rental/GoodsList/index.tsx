@@ -32,7 +32,7 @@ export default function GoodsList(props: {
 
     const [selected, setSelected] = useState<number | null>(null);
 
-    return (!goodsListData || goodsListData.length === 0) ? (
+    return (!goodsListData) ? (
         <LoadingComponent />
     ) : (<>
         {manage && (

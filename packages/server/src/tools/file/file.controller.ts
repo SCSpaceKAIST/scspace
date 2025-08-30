@@ -4,6 +4,7 @@ import { privateStorage, publicStorage } from "./file.storage";
 import { Response } from "express";
 import { FileService } from "./file.service";
 import { PRIVATE_FOLDER } from "@scspace-depot/consts/file.const";
+import { IFileUploadPublicResponse, IFileUploadResponse } from "@scspace-depot/types/file";
 
 @Controller("file")
 export class FileController {
@@ -13,7 +14,7 @@ export class FileController {
 
     @Post("upload")
     @UseInterceptors(FilesInterceptor('files', 25, { storage: privateStorage }))
-    uploadFile(@UploadedFiles() files: Array<Express.Multer.File>) {
+    async uploadFile(@UploadedFiles() files: Array<Express.Multer.File>): Promise<IFileUploadResponse> {
         Logger.log(files);
         return {
             success: true,
@@ -28,7 +29,7 @@ export class FileController {
 
     @Post("upload/public")
     @UseInterceptors(FilesInterceptor('files', 25, { storage: publicStorage }))
-    uploadPublicFile(@UploadedFiles() files: Array<Express.Multer.File>) {
+    async uploadPublicFile(@UploadedFiles() files: Array<Express.Multer.File>): Promise<IFileUploadPublicResponse> {
         Logger.log(files);
         return {
             success: true,

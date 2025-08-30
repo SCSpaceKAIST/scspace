@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, Dialog, Portal, VStack } from "@chakra-ui/react";
+import { Button, Dialog, Portal, useFileUpload, VStack } from "@chakra-ui/react";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useGoodsAPI } from "@scspace-client/Hooks/rental";
 import { IGoodsCreate } from "@scspace-depot/types/rental/goods.type";
@@ -9,6 +9,8 @@ import { GoodsNameForm } from "../AddGoods/NameForm";
 import { GoodsDescriptionForm } from "../AddGoods/DecsriptionForm";
 import { GoodsCountForm } from "../AddGoods/CountForm";
 import GoodsImageForm from "../AddGoods/ImageForm";
+import { useFileAPI } from "@scspace-client/Hooks/file";
+import { error } from "console";
 
 export default function ManageDialog({ id, onChange }: {
     onChange: () => void;
@@ -19,6 +21,11 @@ export default function ManageDialog({ id, onChange }: {
     const [countAll, setCountAll] = useState<number>(0);
     const [errorMessage, setErrorMessage] = useState<string>('');
 
+    const fileUpload = useFileUpload({
+        maxFiles: 1,
+        accept: { "image/*": [] },
+    });
+
     const {
         createGoods,
         updateGoods,
@@ -28,6 +35,8 @@ export default function ManageDialog({ id, onChange }: {
             refetch: goodsRefetch
         }
     } = useGoodsAPI({ id });
+
+    const uploadPublicFile = useFileAPI().uploadPublicFile;
 
     useEffect(() => {
         if (id !== -1) {
@@ -44,27 +53,45 @@ export default function ManageDialog({ id, onChange }: {
     }, [goodsData]);
 
     const handleCreate = useCallback(() => {
-        const formData: IGoodsCreate = {
+        const imageFormData = new FormData();
+        fileUpload.acceptedFiles.forEach(file => {
+            imageFormData.append('files', file);
+        });
+
+        const data: IGoodsCreate = {
             name,
             description: description || null,
             countAll,
-            imageURI: 1, // 임시로 기본값 설정
+            imageURI: '', // 임시로 기본값 설정
         };
 
         toaster.promise(
-            createGoods(formData, {
+            uploadPublicFile(imageFormData, {
                 onError: (error) => {
-                    setErrorMessage(error.message || 'Failed to create goods');
-                    console.error('Failed to create goods:', error);
+                    setErrorMessage(error.message || 'Failed to upload image');
+                    console.error('Failed to upload image:', error);
                 },
-                onSuccess: () => {
-                    setName('');
-                    setDescription('');
-                    setCountAll(0);
-                    setErrorMessage('');
-                    onChange();
+                onSuccess: (res) => {
+                    console.log('Image uploaded successfully:', res);
+
+                    data.imageURI = res.files[0].url;
+
+                    createGoods(data, {
+                        onError: (error) => {
+                            setErrorMessage(error.message || 'Failed to create goods');
+                            console.error('Failed to create goods:', error);
+                        },
+                        onSuccess: () => {
+                            setName('');
+                            setDescription('');
+                            setCountAll(0);
+                            setErrorMessage('');
+                            onChange();
+                        }
+                    })
                 }
             }),
+
             {
                 loading: {
                     title: "Creating goods...",
@@ -87,7 +114,7 @@ export default function ManageDialog({ id, onChange }: {
             name,
             description: description || null,
             countAll,
-            imageURI: 1, // 임시로 기본값 설정
+            imageURI: '', // 임시로 기본값 설정
         };
 
         toaster.promise(
@@ -146,7 +173,10 @@ export default function ManageDialog({ id, onChange }: {
     }, [deleteGoods, goodsRefetch]);
 
     return (
-        <Dialog.Root placement={"center"}>
+        <Dialog.Root
+            placement={"center"}
+            scrollBehavior={"inside"}
+        >
             <Dialog.Trigger asChild>
                 <Button variant={"outline"}>
                     {(id !== -1) ? "Manage" : "Create"}
@@ -175,7 +205,7 @@ export default function ManageDialog({ id, onChange }: {
                                         count={countAll}
                                         setCount={setCountAll}
                                     />
-                                    <GoodsImageForm />
+                                    <GoodsImageForm fileUpload={fileUpload} />
                                 </VStack>
                             </Dialog.Body>
                             <Dialog.Footer>
