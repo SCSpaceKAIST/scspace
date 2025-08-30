@@ -3,11 +3,13 @@ import { useFormDataMutation } from "./api";
 
 export function useFileAPI() {
     const uploadFile = useFormDataMutation<IFileUploadResponse>(
-        "/file/upload"
+        "/file/upload",
+        'POST'
     ).mutateAsync;
 
     const uploadPublicFile = useFormDataMutation<IFileUploadPublicResponse>(
-        "/file/upload/public"
+        "/file/upload/public",
+        'POST'
     ).mutateAsync;
 
     return { uploadFile, uploadPublicFile };

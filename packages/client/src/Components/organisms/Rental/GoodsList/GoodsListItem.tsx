@@ -8,6 +8,8 @@ import Counter from "./Counter";
 import { useRentalAPI } from "@scspace-client/Hooks/rental";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 
+const localhostBaseURL = "http://localhost:3001";
+
 export default function GoodsListItem({
     item,
     isSelected,
@@ -89,7 +91,7 @@ export default function GoodsListItem({
                                 w={"full"}
                             >
                                 <Image
-                                    src={"http://localhost:3001" + (item.imageURI || "/img/logo.svg")}
+                                    src={item.imageURI ? `${localhostBaseURL}${item.imageURI}` : "/img/logo.svg"}
                                     alt="LOGO"
                                     fill
                                     objectFit="contain"
@@ -127,7 +129,7 @@ export default function GoodsListItem({
                                 cursor={"pointer"}
                             >
                                 <Image
-                                    src={"http://localhost:3001" + (item.imageURI || "/img/logo.svg")}
+                                    src={item.imageURI ? `${localhostBaseURL}${item.imageURI}` : "/img/logo.svg"}
                                     alt="LOGO"
                                     fill
                                     objectFit="contain"
