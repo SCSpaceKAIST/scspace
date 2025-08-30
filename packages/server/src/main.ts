@@ -18,16 +18,17 @@ async function bootstrap() {
 
   // CORS 설정
   app.enableCors({
-    origin: process.env.NODE_ENV === 'production'
-      ? [
-        'http://localhost:3000',
-        'http://localhost:3001',
-        'http://localhost:33000',
-        'http://localhost:33001',
-        'https://iam2.kaist.ac.kr',
-        'https://scspace.kws.sparcs.net'
-      ]
-      : true, // 개발 환경에서는 모든 origin 허용
+    // origin: [
+    //   'http://localhost:3000',
+    //   'http://localhost:3001',
+    //   'http://localhost:33000',
+    //   'http://localhost:33001',
+    //   'http://localhost',
+    //   'https://localhost',
+    //   'https://iam2.kaist.ac.kr',
+    //   'https://scspace.kws.sparcs.net'
+    // ],
+    origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
