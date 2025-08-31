@@ -4,8 +4,6 @@ export interface IReservationContent {
   innerParticipantNumber: number;
   outerParticipantNumber: number;
   food: string;
-  desk: number;
-  chair: number;
   busking: boolean;
   worker: number;
 }

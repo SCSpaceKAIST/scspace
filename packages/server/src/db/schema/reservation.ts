@@ -39,8 +39,6 @@ export const ReservationContent = mysqlTable('reservation_content', {
   innerParticipantNumber: int('inner_participant_number').notNull().default(0),
   outerParticipantNumber: int('outer_participant_number').notNull().default(0),
   food: varchar('food', { length: 255 }).notNull().default(''), // For Mirae & Sumi
-  desk: int('desk').notNull().default(0), // For Sumi
-  chair: int('chair').notNull().default(0), // For Sumi
   busking: boolean('busking').notNull().default(false),
   worker: int('worker').notNull().default(0), // -2 -> 필요 없음 -1 -> 필요 / 배정 시 UID
 });

@@ -56,8 +56,6 @@ export default function ReservationApplication() {
   const [inner, setInner] = useState<number>(10);
   const [outer, setOuter] = useState<number>(0);
   const [food, setFood] = useState<string>("");
-  const [desk, setDesk] = useState<number>(0);
-  const [chair, setChair] = useState<number>(0);
   const [worker, setWorker] = useState<number>(0);
   const [check, setCheck] = useState<boolean>(false);
 
@@ -94,8 +92,6 @@ export default function ReservationApplication() {
             innerParticipantNumber: inner,
             outerParticipantNumber: outer,
             food: food,
-            desk: desk,
-            chair: chair,
             busking: check && (spaceId === 13),
             worker: worker
           },
@@ -228,16 +224,10 @@ export default function ReservationApplication() {
             />
           </GridItem>
           <GridItem colSpan={{ base: 6, md: 2 }}>
-            <DeskForm
-              count={desk}
-              setCount={setDesk}
-            />
+            <DeskForm />
           </GridItem>
           <GridItem colSpan={{ base: 6, md: 2 }}>
-            <ChairForm
-              count={chair}
-              setCount={setChair}
-            />
+            <ChairForm />
           </GridItem>
           <GridItem colSpan={{ base: 6, md: 2 }}>
             <WorkerForm

@@ -101,12 +101,6 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
                                             </Text>
                                         ) : (selectedRes.content.food)}
                                     </DataListItem>
-                                    <DataListItem label="# of Desk">
-                                        {selectedRes.content.desk}
-                                    </DataListItem>
-                                    <DataListItem label="# of Chair">
-                                        {selectedRes.content.chair}
-                                    </DataListItem>
                                     <DataListItem label="# of Worker">
                                         {selectedRes.content.worker}
                                     </DataListItem>

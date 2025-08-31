@@ -638,8 +638,6 @@ export class ReservationPublicService {
           content?.innerParticipantNumber || 0,
           content?.outerParticipantNumber || 0,
           content?.food || false,
-          content?.desk || false,
-          content?.chair || false,
           content?.busking || false,
           content?.worker || false,
         ];

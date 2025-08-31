@@ -1,16 +1,15 @@
-import NumberInputComponent from "@scspace-client/Components/molecules/forms/NumberInput";
-import { Dispatch, SetStateAction } from "react";
+import { Text } from "@chakra-ui/react";
+import FieldComponent from "@scspace-client/Components/atoms/Field";
 
-export function DeskForm({ count, setCount }: {
-  count: number;
-  setCount: Dispatch<SetStateAction<number>>;
-}) {
+export function DeskForm() {
   return (
-    <NumberInputComponent
-      label="Desk"
-      value={count.toString()}
-      onChange={v => setCount(parseInt(v))}
-    />
+    <FieldComponent
+      options={{
+        label: "Desk",
+      }}
+    >
+      <Text>Please make rental</Text>
+    </FieldComponent>
   );
 }
 

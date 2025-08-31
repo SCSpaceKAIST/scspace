@@ -19,7 +19,7 @@ import { IReservationMultipleCreateResurt } from "@scspace-depot/types/reservati
 import { ReservationPublicService } from "@scspace-server/feature/reservation/reservation.public.service";
 import { MailService } from "@scspace-server/tools/mailer/mail.service";
 import { UserPublicService } from "@scspace-server/feature/user/user.public.service";
-import {LotteryMeta} from "@scspace-depot/enums/mail.enum";
+import { LotteryMeta } from "@scspace-depot/enums/mail.enum";
 
 @Injectable()
 export class LotteryPerformanceService {
@@ -236,9 +236,9 @@ export class LotteryPerformanceService {
         if (!performanceLottery) {
             throw new BadRequestException("Performance lottery not found");
         }
-        const res =  await this.lotteryPerformanceRepository.delete(id);
+        const res = await this.lotteryPerformanceRepository.delete(id);
 
-        if ( ! (res && byDrawn) ) return res;
+        if (!(res && byDrawn)) return res;
 
         try {
             //fetch info
@@ -258,21 +258,21 @@ export class LotteryPerformanceService {
             ];
 
             const timestr = `${year}-${month}-${day}`
-            const performanceMeta =  {  ...LotteryMeta.Performance.Lost, timeRange : timestr }
+            const performanceMeta = { ...LotteryMeta.Performance.Lost, timeRange: timestr }
 
             //send
 
-            await this.mailService.sendMail( {
-                subject : `[SCSpace] 공연집중기간 ${space.nameKr} 추첨 결과 안내 / ${space.nameEn} Lottery Result`,
-                to : delegator.email,
-                bcc : 'scspace.kaist@gmail.com', //deprecated
-                replyTo : 'scspace@kaist.ac.kr',
-                template : "lotteryResult",
-                context  :  {
-                    space : space,
-                    organization : organization,
-                    lottery : performanceLottery,
-                    meta : performanceMeta
+            await this.mailService.sendMail({
+                subject: `[SCSpace] 공연집중기간 ${space.nameKr} 추첨 결과 안내 / ${space.nameEn} Lottery Result`,
+                to: delegator.email,
+                bcc: 'scspace.kaist@gmail.com', //deprecated
+                replyTo: 'scspace@kaist.ac.kr',
+                template: "lotteryResult",
+                context: {
+                    space: space,
+                    organization: organization,
+                    lottery: performanceLottery,
+                    meta: performanceMeta
                 }
             })
         } catch (error) {
@@ -284,7 +284,7 @@ export class LotteryPerformanceService {
         }
     }
 
-    async drawPerformanceLottery(id: number, byDrawn : boolean, startDate ?: Date): Promise<void> {
+    async drawPerformanceLottery(id: number, byDrawn: boolean, startDate?: Date): Promise<void> {
         const performanceLotteryArr = await this.lotteryPerformanceRepository.fetch({ id });
         const performanceLottery = performanceLotteryArr[0];
 
@@ -292,7 +292,7 @@ export class LotteryPerformanceService {
             throw new BadRequestException("Performance lottery not found");
         }
         const res = await this.lotteryPerformanceRepository.update(id, { lotteryWin: 1 });
-        if ( ! (res.lotteryWin == 1 && byDrawn) ) return;
+        if (!(res.lotteryWin == 1 && byDrawn)) return;
         try {
             //fetch info
             const organization = await this.organizationPublicService.fetchById(performanceLottery.organizationId);
@@ -311,31 +311,31 @@ export class LotteryPerformanceService {
             ];
 
             const timestr = `${year}-${month}-${day}`
-            const performanceMeta =  {  ...LotteryMeta.Performance.Win, timeRange : timestr }
+            const performanceMeta = { ...LotteryMeta.Performance.Win, timeRange: timestr }
 
             //send
 
-            await this.mailService.sendMail( {
-                subject : `[SCSpace] 공연집중기간 ${space.nameKr} 추첨 결과 안내 / ${space.nameEn} Lottery Result`,
-                to : delegator.email,
-                bcc : 'scspace.kaist@gmail.com', //deprecated
-                replyTo : 'scspace@kaist.ac.kr',
-                template : "lotteryResult",
-                context  :  {
-                    space : space,
-                    organization : organization,
-                    lottery : performanceLottery,
-                    meta : performanceMeta
+            await this.mailService.sendMail({
+                subject: `[SCSpace] 공연집중기간 ${space.nameKr} 추첨 결과 안내 / ${space.nameEn} Lottery Result`,
+                to: delegator.email,
+                bcc: 'scspace.kaist@gmail.com', //deprecated
+                replyTo: 'scspace@kaist.ac.kr',
+                template: "lotteryResult",
+                context: {
+                    space: space,
+                    organization: organization,
+                    lottery: performanceLottery,
+                    meta: performanceMeta
                 }
             })
-      }
-      catch (error) {
-        console.log(error);
-        await this.mailService.reportError(
-            error instanceof Error ? error : new Error(String(error)),
-            'drawPerformanceLottery - Mail Sector',
-        );
-      }
+        }
+        catch (error) {
+            console.log(error);
+            await this.mailService.reportError(
+                error instanceof Error ? error : new Error(String(error)),
+                'drawPerformanceLottery - Mail Sector',
+            );
+        }
     }
 
     async getPerformanceLotteryDateSlotCounts(param: { spaceId: number; infoId: number }): Promise<{ date: number; count: [number, number, number] }[]> {
@@ -410,8 +410,6 @@ export class LotteryPerformanceService {
                             innerParticipantNumber: 20,
                             outerParticipantNumber: 0,
                             food: "",
-                            desk: 10,
-                            chair: 10,
                             busking: false,
                             worker: 0,
                         }
@@ -450,8 +448,6 @@ export class LotteryPerformanceService {
                         innerParticipantNumber: 20,
                         outerParticipantNumber: 0,
                         food: "",
-                        desk: 10,
-                        chair: 10,
                         busking: false,
                         worker: 0,
                     }
@@ -527,7 +523,7 @@ export class LotteryPerformanceService {
 
                         // 배치로 삭제 처리
                         for (const lottery of otherLotteries) {
-                            await this.deletePerformanceLottery(lottery.id, true, startDate );
+                            await this.deletePerformanceLottery(lottery.id, true, startDate);
                             Logger.log(`Performance lottery deleted: ${lottery.id} for drawn organization ${winner.organizationId}`);
                         }
                     }

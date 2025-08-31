@@ -307,8 +307,6 @@ export class ReservationRepository {
       innerParticipantNumber: reservationInput.content.innerParticipantNumber,
       outerParticipantNumber: reservationInput.content.outerParticipantNumber,
       food: reservationInput.content.food,
-      desk: reservationInput.content.desk,
-      chair: reservationInput.content.chair,
       busking: reservationInput.content.busking,
       workerNeed: reservationInput.content.worker,
     } as InferInsertModel<typeof ReservationContent>;

@@ -7,8 +7,6 @@ export class MReservationContent implements IReservationContent {
   innerParticipantNumber: IReservationContent['innerParticipantNumber'];
   outerParticipantNumber: IReservationContent['outerParticipantNumber'];
   food: IReservationContent['food'];
-  desk: IReservationContent['desk'];
-  chair: IReservationContent['chair'];
   busking: IReservationContent['busking'];
   worker: IReservationContent['worker'];
 
@@ -18,8 +16,6 @@ export class MReservationContent implements IReservationContent {
     this.innerParticipantNumber = data.innerParticipantNumber ?? 0;
     this.outerParticipantNumber = data.outerParticipantNumber ?? 0;
     this.food = data.food ?? '';
-    this.desk = data.desk ?? 0;
-    this.chair = data.chair ?? 0;
     this.busking = data.busking ?? false;
     this.worker = data.worker ?? 1;
   }
@@ -31,8 +27,6 @@ export class MReservationContent implements IReservationContent {
       innerParticipantNumber: reservationContent.innerParticipantNumber,
       outerParticipantNumber: reservationContent.outerParticipantNumber,
       food: reservationContent.food,
-      desk: reservationContent.desk,
-      chair: reservationContent.chair,
       busking: reservationContent.busking,
       worker: reservationContent.worker,
     };
@@ -69,8 +63,6 @@ export class MReservation implements IReservation {
       innerParticipantNumber: 0,
       outerParticipantNumber: 0,
       food: '',
-      desk: 0,
-      chair: 0,
       busking: false,
       worker: 1,
     });
@@ -94,8 +86,6 @@ export class MReservation implements IReservation {
         innerParticipantNumber: 0,
         outerParticipantNumber: 0,
         food: '',
-        desk: 0,
-        chair: 0,
         busking: false,
         worker: 1,
       }),
