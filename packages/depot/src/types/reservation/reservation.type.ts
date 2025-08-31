@@ -22,6 +22,7 @@ export interface IReservation {
 export type IReservationAll = IReservation & {
   space: ISpace;
   user: IUser;
+  worker: IUser | null;
   organization: IOrganization;
 };
 
@@ -63,6 +64,11 @@ export type IReservationUpdate = Partial<Omit<
 >> & {
   id: number
 };
+
+export interface IReservationApplyWorker {
+  id: number;
+  workerId: number;
+}
 
 // 공간 예약 시간 체크 요청
 export type ISpaceTimeCheckRequest = Pick<

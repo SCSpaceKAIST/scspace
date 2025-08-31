@@ -261,13 +261,17 @@ export class ReservationPublicService {
     checkContainAllId(userIds, users, 'users');
     checkContainAllId(organizationIds, organizations, 'organizations');
 
-    return reservations.map((reservation) => ({
-      ...reservation,
-      user: users.find(user => user.id === reservation.userId)!,
-      organization: organizations.find(org => org.id === reservation.organizationId)!,
-      space,
-      content: reservationContents.find(content => content.id === reservation.id)!,
-    }));
+    return reservations.map((reservation) => {
+      const content = reservationContents.find(content => content.id === reservation.id)!;
+      return {
+        ...reservation,
+        user: users.find(user => user.id === reservation.userId)!,
+        organization: organizations.find(org => org.id === reservation.organizationId)!,
+        space,
+        worker: (content.workerId === 0) ? null : users.find(user => user.id === content.workerId) ?? null,
+        content
+      };
+    });
   }
 
   async getDailyReservationTimeByOrganization(

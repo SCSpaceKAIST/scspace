@@ -1,10 +1,10 @@
 "use client"
 
-import { Dialog, Portal, HStack, useBreakpointValue, DataList, Separator, Text, Button, Center, Stack, Badge } from "@chakra-ui/react";
+import { Dialog, Portal, HStack, useBreakpointValue, DataList, Separator, Text, Button, Center, Stack, Badge, Show } from "@chakra-ui/react";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useDate } from "@scspace-client/Hooks/utils";
 import { IReservationAll } from "@scspace-depot/types/reservation";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
@@ -14,6 +14,7 @@ import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import ChangeTimeBtn from "./ChangeTimeBtn";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
+import { useUserInfo } from "@scspace-client/Hooks/user";
 
 export default function ReservationDetail({ open, setOpen, selectedRes, refetch }: {
     open: boolean;
@@ -22,7 +23,7 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
     refetch: () => any;
 }) {
     const { getString } = useDate();
-    const { userInfo, isManager } = useAuth();
+    const { userInfo, isManager, isWorker } = useAuth();
 
     const { data: organizationDetail } = useOrganizationAPI({ id: selectedRes?.organizationId ?? 0 }).organizationDetail;
 
@@ -30,7 +31,40 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
 
     const [e, setError] = useState<string | null>(null);
 
-    const deleteReservation = useReservationAPI({ rid: selectedRes?.id ?? 0 }).deleteRes;
+    const { assignWorker, deleteRes: deleteReservation } = useReservationAPI({ rid: selectedRes?.id ?? 0 });
+
+    const handleAssignWorker = useCallback(() => {
+        if (!selectedRes) return;
+
+        toaster.promise(
+            assignWorker({
+                id: selectedRes.id,
+                workerId: userInfo?.id ?? 0,
+            }, {
+                onError: (error) => {
+                    setError(error.message);
+                },
+                onSuccess: () => {
+                    refetch();
+                }
+            }),
+            {
+                loading: {
+                    title: "Assigning Worker...",
+                    description: "Please wait",
+                },
+                success: {
+                    title: "Worker Assigned Successfully!",
+                    description: "The worker has been assigned to the reservation",
+                },
+                error: {
+                    title: "Assign Failed",
+                    description: e ?? "Please resubmit"
+                }
+            }
+        );
+    }, [selectedRes, userInfo]);
+
     function onDelete() {
         toaster.promise(
             deleteReservation({}, {
@@ -101,15 +135,57 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
                                             </Text>
                                         ) : (selectedRes.content.food)}
                                     </DataListItem>
-                                    <DataListItem label="# of Worker">
-                                        {selectedRes.content.workerNeed} {selectedRes.content.workerId}
-                                    </DataListItem>
                                     {(selectedRes.spaceId === 13) && (
                                         <DataListItem label="Busking Zone">
                                             {selectedRes.content.busking ? "Yes" : "No"}
                                         </DataListItem>
                                     )}
                                 </DataList.Root>
+                            </DataListItem>
+                            <Separator />
+                            <DataListItem label="Worker">
+                                <Show when={selectedRes.content.workerNeed}
+                                    fallback={(
+                                        <Badge>
+                                            Not Applied
+                                        </Badge>
+                                    )}
+                                >
+                                    <Show when={selectedRes.content.workerId !== 0}
+                                        fallback={(
+                                            <Show when={isWorker}
+                                                fallback={(
+                                                    <Badge colorPalette={"blue"}>
+                                                        Waiting for Assignment
+                                                    </Badge>
+                                                )}
+                                            >
+                                                <Button
+                                                    variant={"outline"}
+                                                    colorPalette={"blue"}
+                                                    onClick={handleAssignWorker}
+                                                >
+                                                    근로 지원
+                                                </Button>
+                                            </Show>
+                                        )}
+                                    >
+                                        {selectedRes.worker ? (
+                                            <DataList.Root orientation="horizontal" width="100%">
+                                                <DataListItem label="Name">
+                                                    {selectedRes.worker.nameKr}
+                                                </DataListItem>
+                                                <DataListItem label="Contact Email">
+                                                    {selectedRes.worker.email}
+                                                </DataListItem>
+                                            </DataList.Root>
+                                        ) : (
+                                            <Badge>
+                                                Loading...
+                                            </Badge>
+                                        )}
+                                    </Show>
+                                </Show>
                             </DataListItem>
                             <Separator />
                             <DataListItem label="Time">
@@ -169,7 +245,8 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
                 <Center margin={8}>
                     <LoadingComponent />
                 </Center>
-            )}
+            )
+            }
         </SimpleDialog >
     );
 }

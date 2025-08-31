@@ -56,7 +56,7 @@ export default function ReservationApplication() {
   const [inner, setInner] = useState<number>(10);
   const [outer, setOuter] = useState<number>(0);
   const [food, setFood] = useState<string>("");
-  const [worker, setWorker] = useState<number>(0);
+  const [worker, setWorker] = useState<boolean>(false);
   const [check, setCheck] = useState<boolean>(false);
 
   const createReservation = useReservationAPI().createRes;
@@ -93,7 +93,7 @@ export default function ReservationApplication() {
             outerParticipantNumber: outer,
             food: food,
             busking: check && (spaceId === 13),
-            workerNeed: false
+            workerNeed: worker
           },
           userId: userInfo.id,
           organizationId: orgId,
@@ -231,8 +231,8 @@ export default function ReservationApplication() {
           </GridItem>
           <GridItem colSpan={{ base: 6, md: 2 }}>
             <WorkerForm
-              count={worker}
-              setCount={setWorker}
+              value={worker}
+              setValue={setWorker}
             />
           </GridItem>
         </Grid>

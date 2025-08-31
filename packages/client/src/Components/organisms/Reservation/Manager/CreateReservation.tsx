@@ -224,8 +224,8 @@ export default function CreateReservation() {
                     </GridItem>
                     <GridItem colSpan={{ base: 6, md: 2 }}>
                         <WorkerForm
-                            count={worker}
-                            setCount={setWorker}
+                            value={worker}
+                            setValue={setWorker}
                         />
                     </GridItem>
                 </Grid>

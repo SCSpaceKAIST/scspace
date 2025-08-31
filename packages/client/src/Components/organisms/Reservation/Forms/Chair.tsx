@@ -8,7 +8,7 @@ export function ChairForm() {
         label: "Chair",
       }}
     >
-      <Text>Please make rental</Text>
+      <Text color={"gray"}>Please make rental</Text>
     </FieldComponent>
   );
 }

@@ -15,7 +15,10 @@ export default function FieldComponent({
 }) {
   return (
     <Field.Root
-      invalid={options?.errortext !== null}
+      invalid={
+        options?.errortext !== null &&
+        options?.errortext !== undefined
+      }
       disabled={options?.disabled ?? false}
       required={options.required ?? false}
     >

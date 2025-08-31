@@ -43,6 +43,22 @@ export class AdminGuard extends AuthGuard('jwt') {
 }
 
 @Injectable()
+export class WorkerGuard extends AuthGuard('jwt') {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const can = await super.canActivate(context);
+    if (!can) return false;
+
+    const request = context.switchToHttp().getRequest();
+    const user = request.user as IUser;
+
+    if (user.type === UserTypeEnum.WORKER || isManage(user)) {
+      return true;
+    }
+    return false;
+  }
+}
+
+@Injectable()
 export class UserGuard extends AuthGuard('jwt') {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const can = await super.canActivate(context);
@@ -62,6 +78,7 @@ export class UserGuard extends AuthGuard('jwt') {
     return false;
   }
 }
+
 @Injectable()
 export class MemberGuard extends AuthGuard('jwt') {
   constructor(

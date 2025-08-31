@@ -8,7 +8,7 @@ import {
     Float,
     Button,
 } from "@chakra-ui/react";
-import { useDateReservations, useReservations } from "@scspace-client/Hooks/reservation";
+import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { useEffect, useState } from "react";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import ReservationDetail from "../Detail";
@@ -20,7 +20,11 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
     dateFrom: Date;
     dateTo: Date;
 }) {
-    const { dateReservation, refetch } = useDateReservations({ spaceId, dateFrom, dateTo, });
+    const {
+        dataForCalendar: dateReservation,
+        data: reservations,
+        refetch
+    } = useReservationAPI({ spaceId, dateFrom, dateTo }).spaceReservation;
     const dates = Object.keys(dateReservation);
     const times = Array.from({ length: 24 }, (_, i) => i);
     const [open, setOpen] = useState<boolean>(false);
@@ -28,7 +32,6 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
     useEffect(() => { refetch() }, [refetchCounter, refetch]);
 
     const [selected, setSelected] = useState<number>(0);
-    const { reservations, refetch: refetchDetail } = useReservations({ spaceId, dateFrom, dateTo });
     const [selectedRes, setSelectedRes] = useState<IReservationAll | null>(null);
 
     useEffect(() => {
@@ -42,7 +45,7 @@ export function CalendarView({ refetchCounter = 0, spaceId, dateFrom, dateTo }: 
             return;
         }
         setSelectedRes(filtered);
-    }, [selected]);
+    }, [selected, reservations]);
 
     return (
         <>

@@ -13,7 +13,7 @@ import {
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { useAllReservation } from "@scspace-client/Hooks/reservation";
+import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { useEffect, useState } from "react";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { IReservationAll } from "@scspace-depot/types/reservation";
@@ -49,16 +49,16 @@ export default function AllReservation() {
     const [open, setOpen] = useState<boolean>(false);
     const isWide = useBreakpointValue({ base: false, md: true });
 
-    const { reservation, refetch } = useAllReservation({
+    const { data: reservation, refetch } = useReservationAPI({
         oid,
         limit,
         offset: limit * (page - 1)
-    });
+    }).allReservation;
 
     useEffect(() => { refetch(); }, [page, limit]);
 
     useEffect(() => {
-        setSelected(reservation.data[0] || null);
+        setSelected(reservation?.data[0] ?? null);
     }, [reservation]);
 
     useEffect(() => {

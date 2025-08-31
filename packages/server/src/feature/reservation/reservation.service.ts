@@ -4,6 +4,7 @@ import {
   IReservationAll,
   IReservationContent,
   IReservation,
+  IReservationApplyWorker,
 } from '@scspace-depot/types/reservation';
 import { IOrganization } from '@scspace-depot/types/organization';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
@@ -58,13 +59,17 @@ export class ReservationService {
     checkContainAllId(spaceIds, spaces, 'spaces');
 
     return {
-      data: reservations.map((reservation) => ({
-        ...reservation,
-        user: users.find(user => user.id === reservation.userId)!,
-        organization: organizations.find(org => org.id === reservation.organizationId)!,
-        space: spaces.find(space => space.id === reservation.spaceId)!,
-        content: reservationContents.find(content => content.id === reservation.id)!,
-      })),
+      data: reservations.map((reservation) => {
+        const content = reservationContents.find(content => content.id === reservation.id)!;
+        return {
+          ...reservation,
+          user: users.find(user => user.id === reservation.userId)!,
+          organization: organizations.find(org => org.id === reservation.organizationId)!,
+          space: spaces.find(space => space.id === reservation.spaceId)!,
+          worker: (content.workerId === 0) ? null : users.find(user => user.id === content.workerId) ?? null,
+          content
+        };
+      }),
       count
     };
   }
@@ -96,13 +101,17 @@ export class ReservationService {
     checkContainAllId(spaceIds, spaces, 'spaces');
 
     return {
-      data: reservations.map((reservation) => ({
-        ...reservation,
-        user: users.find(user => user.id === reservation.userId)!,
-        organization: organizations.find(org => org.id === reservation.organizationId)!,
-        space: spaces.find(space => space.id === reservation.spaceId)!,
-        content: reservationContents.find(content => content.id === reservation.id)!,
-      })),
+      data: reservations.map((reservation) => {
+        const content = reservationContents.find(content => content.id === reservation.id)!;
+        return {
+          ...reservation,
+          user: users.find(user => user.id === reservation.userId)!,
+          organization: organizations.find(org => org.id === reservation.organizationId)!,
+          space: spaces.find(space => space.id === reservation.spaceId)!,
+          worker: (content.workerId === 0) ? null : users.find(user => user.id === content.workerId) ?? null,
+          content
+        };
+      }),
       count
     };
   }
@@ -226,8 +235,40 @@ export class ReservationService {
     )
   }
 
+  async assignWorker(param: IReservationApplyWorker) {
+    const { id, workerId } = param;
+    const { data: reservation } = await this.reservationRepository.fetch({ id, });
+
+    if (reservation.length === 0) {
+      throw new NotFoundException('Reservation not found');
+    }
+
+
+    const worker = await this.userPublicService.fetchById(workerId);
+
+    if (!worker) {
+      throw new NotFoundException('Worker not found');
+    }
+
+    const reservationContent = await this.reservationRepository.fetchContent(reservation[0].id);
+
+    const [reservationUpdated, reservationContentUpdated] = await this.reservationRepository.update({
+      ...reservation[0],
+      content: {
+        ...reservationContent,
+        workerId
+      }
+    });
+
+    ////////////
+    // Mailer //
+    ////////////
+
+    return MReservation.fromDB(reservationUpdated, reservationContentUpdated);
+  }
+
   async updateReservation(
-    reservationInput: IReservationUpdate,
+    reservationInput: Omit<IReservationUpdate, "workerId">,
   ): Promise<MReservation> {
     const { data: reservation } = await this.reservationRepository.fetch({
       id: reservationInput.id,
@@ -449,16 +490,16 @@ export class ReservationService {
     checkContainAllId(organizationIds, organizations, 'organizations');
     checkContainAllId(spaceIds, spaces, 'spaces');
 
-    return reservations.map((reservation) => ({
-      ...reservation,
-      user: users.find((user) => user.id === reservation.userId)!,
-      organization: organizations.find(
-        (org) => org.id === reservation.organizationId,
-      )!,
-      space: spaces.find((space) => space.id === reservation.spaceId)!,
-      content: reservationContents.find(
-        (content) => content.id === reservation.id,
-      )!,
-    }));
+    return reservations.map((reservation) => {
+      const content = reservationContents.find((content) => content.id === reservation.id,)!;
+      return {
+        ...reservation,
+        user: users.find((user) => user.id === reservation.userId)!,
+        organization: organizations.find((org) => org.id === reservation.organizationId,)!,
+        space: spaces.find((space) => space.id === reservation.spaceId)!,
+        content,
+        worker: users.find((user) => user.id === content.workerId)!,
+      };
+    });
   }
 }

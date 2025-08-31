@@ -10,12 +10,12 @@ import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import UpdateType from "./UpdateType";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import OrganizationTable from "../Organization/OrganizationTable";
-import { useUserReservation } from "@scspace-client/Hooks/reservation";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import ReservationDetail from "../Reservation/Detail";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import { useDate } from "@scspace-client/Hooks/utils";
 import SimplePagination from "@scspace-client/Components/molecules/page/SimplePagenation";
+import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 
 export default function UserDialog({
     open: openDetail,
@@ -34,15 +34,15 @@ export default function UserDialog({
 
     const [page, setPage] = useState<number>(1);
     const [openResDetail, setOpenResDetail] = useState<boolean>(false);
-    const { reservation, refetch: refetchRes } = useUserReservation({
+    const { data: reservation, refetch: refetchRes } = useReservationAPI({
         uid: user?.id || 0,
         oid: 0,
         limit: 50,
         offset: 50 * (page - 1)
-    });
+    }).userReservation;
     const [selectedRes, setSelectedRes] = useState<IReservationAll | null>(null);
     useEffect(() => { refetchRes(); }, [page, user?.id || 0]);
-    useEffect(() => { setSelectedRes(reservation.data[0] || null); }, [reservation]);
+    useEffect(() => { setSelectedRes(reservation?.data[0] ?? null); }, [reservation]);
 
     const { getString } = useDate();
 
@@ -57,7 +57,7 @@ export default function UserDialog({
             open={openDetail}
             setOpen={setOpenDetail}
         >
-            {user ? (
+            {(user && reservation) ? (
                 <>
                     <Dialog.Header>
                         <Dialog.Title whiteSpace="nowrap">
