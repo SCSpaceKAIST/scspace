@@ -14,8 +14,7 @@ export function useFileAPI() {
 
     const downloadFile = async (filename: string) => {
         return await fetch(
-            // `/file/download?filename=${encodeURIComponent(filename)}`, 임시 << 일단해봄
-            `/file/download?filename=${filename}`,
+            `/file/download?filename=${encodeURIComponent(filename)}`,
             {
                 method: 'GET',
                 headers: {

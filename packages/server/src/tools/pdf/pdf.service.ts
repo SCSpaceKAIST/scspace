@@ -37,7 +37,7 @@ export class PdfService {
             const browser =  await puppeteer.launch(
                 {
                     channel : 'chrome',
-                    args: ['--no-sandbox', '--disable-setuid-sandbox', '--allow-file-access-from-files'],
+                    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-web-security', '--allow-file-access-from-files'],
                 }
             );
             const page = await browser.newPage();
