@@ -13,16 +13,39 @@ export function useFileAPI() {
     ).mutateAsync;
 
     const downloadFile = async (filename: string) => {
-        return await fetch(
+        // return await fetch(
+        //     `/file/download?filename=${encodeURIComponent(filename)}`,
+        //     {
+        //         method: 'GET',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         credentials: 'include',
+        //     }
+        // ).then(r => r.json());
+        const res = await fetch(
             `/file/download?filename=${encodeURIComponent(filename)}`,
             {
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 credentials: 'include',
             }
-        ).then(r => r.json());
+        );
+
+        if (!res.ok) throw new Error("Download failed");
+
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+
+        document.body.appendChild(a);
+
+        a.click();
+        a.remove();
+
+        window.URL.revokeObjectURL(url);
     }
 
     return { uploadFile, uploadPublicFile, downloadFile };
