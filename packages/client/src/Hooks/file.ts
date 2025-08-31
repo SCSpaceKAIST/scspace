@@ -12,7 +12,7 @@ export function useFileAPI() {
         'POST'
     ).mutateAsync;
 
-    const downloadFile = async (filename: string) => {
+    const downloadFile = async (filename: string)  : Promise<Response> => {
         // return await fetch(
         //     `/file/download?filename=${encodeURIComponent(filename)}`,
         //     {
@@ -31,7 +31,7 @@ export function useFileAPI() {
             }
         );
 
-        if (!res) throw new Error("Download failed");
+        if (!res.ok) throw new Error("Download failed");
 
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);
@@ -46,6 +46,8 @@ export function useFileAPI() {
         a.remove();
 
         window.URL.revokeObjectURL(url);
+
+        return res;
     }
 
     return { uploadFile, uploadPublicFile, downloadFile };
