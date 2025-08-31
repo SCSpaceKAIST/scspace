@@ -26,11 +26,10 @@ export class PdfService {
             const source = fs.readFileSync(templatePath, 'utf8');
             const tpl = Handlebars.compile(source, { strict: true });
 
-
-            const logoPath = path.resolve(__dirname, './templates/logo.png');
+            const logoBase64 = fs.readFileSync(path.resolve(__dirname, "./templates/logo.png")).toString("base64");
             const meta = {
                 ...data,
-                logoPath
+                logoBase64 : logoBase64,
             }
             const html = tpl(meta);
 
