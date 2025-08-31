@@ -4,9 +4,27 @@
     <meta charset="UTF-8" />
     <title>물품대여확인서 / Rental Confirmation #{{id}}</title>
     <style>
-        * { box-sizing: border-box; }
-        html, body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", Arial, sans-serif; color: #111; line-height: 1.45; }
+        @font-face {
+            font-family: 'NotoSansKR';
+            font-style: normal;
+            font-weight: 400;
+            src: url('https://fonts.gstatic.com/s/notosanskr/v27/Pby6FmXiEBPT4ITbgNA5CgmO.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'NotoSansKR';
+            font-style: normal;
+            font-weight: 700;
+            src: url('https://fonts.gstatic.com/s/notosanskr/v27/Pby7FmXiEBPT4ITbgNA5CgmOAwM.woff2') format('woff2');
+        }
 
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'NotoSansKR', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", Arial, sans-serif;
+            color: #111;
+            line-height: 1.45;
+        }
+        * { box-sizing: border-box; }
         .page { width: 210mm; min-height: 297mm; margin: 0 auto; padding: 20mm; background: #fff; }
         @page { size: A4; margin: 20mm; }
         @media print { body { margin: 0; } .page { padding: 0; width: auto; min-height: auto; } }
@@ -44,7 +62,7 @@
     <!-- 헤더 -->
     <div class="header">
         <div class="brand">
-            <img class="brand__logo" src="file://{{logoPath}}" alt="Organization Logo">
+            <img class="brand__logo" src="file:///{{logoPath}}" alt="Organization Logo">
             <div class="brand__title">
                 <span>물품대여확인서</span>
                 <span>Rental Confirmation</span>

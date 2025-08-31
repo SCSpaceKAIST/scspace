@@ -8,5 +8,9 @@ import { PRIVATE_FOLDER } from "@scspace-depot/consts/file.const";
 export class PdfController {
     constructor(
         private readonly pdfService : PdfService
-    ) {}
+    ) {
+
+        //super amazing codes
+
+    }
 }
