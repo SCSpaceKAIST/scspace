@@ -31,7 +31,7 @@ export function useFileAPI() {
             }
         );
 
-        if (!res.ok) throw new Error("Download failed");
+        if (!res) throw new Error("Download failed");
 
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);
