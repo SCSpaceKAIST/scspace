@@ -23,6 +23,7 @@ import { IRentalAll } from "@scspace-depot/types/rental";
 import ReturnBtn from "./ReturnBtn";
 import ConfirmBtn from "./ConfirmBtn";
 import { useFileAPI } from "@scspace-client/Hooks/file";
+import { toaster } from "@scspace-client/Components/atoms/Toaster";
 
 export default function RentalDialog({ open, setOpen, rental, refetchList }: {
     open: boolean;
@@ -35,12 +36,29 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
 
     const isWide = useBreakpointValue({ base: false, md: true });
 
-    useEffect(() => console.log(rental), [rental]);
-
     const downloadFile = useFileAPI().downloadFile;
 
     const handleDownload = () => {
-        downloadFile(rental?.certName ?? '');
+        toaster.promise(
+            async () => {
+                const res = await downloadFile(rental?.certName ?? '');
+                if (!res.ok) throw new Error(res.error.message || 'Download failed');
+            },
+            {
+                loading: {
+                    title: 'Downloading...',
+                    description: 'Please wait while we download your file.',
+                },
+                success: {
+                    title: 'Download complete',
+                    description: 'Your file has been downloaded successfully.',
+                },
+                error: {
+                    title: 'Download failed',
+                    description: 'There was an error downloading your file.',
+                },
+            }
+        )
     }
 
     return (

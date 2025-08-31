@@ -13,7 +13,7 @@ export function useFileAPI() {
     ).mutateAsync;
 
     const downloadFile = async (filename: string) => {
-        await fetch(
+        return await fetch(
             `/file/download?filename=${encodeURIComponent(filename)}`,
             {
                 method: 'GET',
@@ -22,7 +22,7 @@ export function useFileAPI() {
                 },
                 credentials: 'include',
             }
-        );
+        ).then(r => r.json());
     }
 
     return { uploadFile, uploadPublicFile, downloadFile };
