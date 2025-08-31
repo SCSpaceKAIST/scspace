@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from "@nestjs/common";
-import { PUBLIC_FOLDER } from "@scspace-depot/consts/file.const";
+import { PRIVATE_FOLDER, PUBLIC_FOLDER } from "@scspace-depot/consts/file.const";
 import * as fs from 'fs';
 
 @Injectable()
@@ -22,14 +22,18 @@ export class FileService {
         throw new BadRequestException(`File save confirmation timed out: ${filePath}`);
     }
 
-    // async savePublicFile(file: Express.Multer.File): Promise<string> {
-    //     const filePath = join(publicStorage, file.filename);
-    //     await fs.promises.writeFile(filePath, file.buffer);
-    //     return filePath;
-    // }
-
-    async deleteFile(publicUri: string) {
+    async deletePublicFile(publicUri: string) {
         const filePath = `${PUBLIC_FOLDER}/${publicUri.split('/')[2]}`;
+        try {
+            fs.unlinkSync(filePath);
+        } catch (error) {
+            // throw new NotFoundException(`File not found: ${filePath}`);
+            Logger.log(`File not found: ${filePath}`);
+        }
+    }
+
+    async deletePrivateFile(filename: string) {
+        const filePath = `${PRIVATE_FOLDER}/${filename}`;
         try {
             fs.unlinkSync(filePath);
         } catch (error) {

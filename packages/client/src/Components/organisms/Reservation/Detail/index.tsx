@@ -102,7 +102,7 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
                                         ) : (selectedRes.content.food)}
                                     </DataListItem>
                                     <DataListItem label="# of Worker">
-                                        {selectedRes.content.worker}
+                                        {selectedRes.content.workerNeed} {selectedRes.content.workerId}
                                     </DataListItem>
                                     {(selectedRes.spaceId === 13) && (
                                         <DataListItem label="Busking Zone">

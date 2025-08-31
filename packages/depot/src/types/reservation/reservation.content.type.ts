@@ -5,7 +5,8 @@ export interface IReservationContent {
   outerParticipantNumber: number;
   food: string;
   busking: boolean;
-  worker: number;
+  workerNeed: boolean;
+  workerId: number;
 }
 
-export type IReservationContentCreate = Omit<IReservationContent, "id">;
+export type IReservationContentCreate = Omit<IReservationContent, "id" | "workerId">;

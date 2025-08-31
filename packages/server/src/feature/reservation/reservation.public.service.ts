@@ -639,7 +639,8 @@ export class ReservationPublicService {
           content?.outerParticipantNumber || 0,
           content?.food || false,
           content?.busking || false,
-          content?.worker || false,
+          content?.workerNeed || false,
+          content?.workerId || 0,
         ];
       });
 

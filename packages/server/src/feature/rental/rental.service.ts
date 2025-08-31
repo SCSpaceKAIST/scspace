@@ -360,7 +360,7 @@ export class RentalService {
         }
 
         if (updates.imageURI) {
-            await this.fileService.deleteFile(existingGoods.imageURI);
+            await this.fileService.deletePublicFile(existingGoods.imageURI);
         }
 
         await this.rentalRepository.updateGoods(id, {
@@ -385,7 +385,7 @@ export class RentalService {
             throw new BadRequestException('Cannot delete goods with active rentals');
         }
 
-        await this.fileService.deleteFile(goods.imageURI);
+        await this.fileService.deletePublicFile(goods.imageURI);
 
         await this.rentalRepository.deleteGoods(id);
 

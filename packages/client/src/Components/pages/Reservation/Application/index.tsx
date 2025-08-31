@@ -93,7 +93,7 @@ export default function ReservationApplication() {
             outerParticipantNumber: outer,
             food: food,
             busking: check && (spaceId === 13),
-            worker: worker
+            workerNeed: false
           },
           userId: userInfo.id,
           organizationId: orgId,

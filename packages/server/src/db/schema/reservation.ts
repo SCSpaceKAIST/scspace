@@ -40,7 +40,8 @@ export const ReservationContent = mysqlTable('reservation_content', {
   outerParticipantNumber: int('outer_participant_number').notNull().default(0),
   food: varchar('food', { length: 255 }).notNull().default(''), // For Mirae & Sumi
   busking: boolean('busking').notNull().default(false),
-  worker: int('worker').notNull().default(0), // -2 -> 필요 없음 -1 -> 필요 / 배정 시 UID
+  workerNeed: boolean('worker_need').notNull().default(false),
+  workerId: int('worker_id').notNull().default(0),
 });
 
 export const ReservationRelations = relations(Reservation, ({ one }) => ({

@@ -517,7 +517,7 @@ export class LotterySeminarService {
                         outerParticipantNumber: 0,
                         food: "",
                         busking: false,
-                        worker: 0,
+                        workerNeed: false,
                     }
                 })
 
