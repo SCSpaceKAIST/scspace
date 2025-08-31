@@ -21,6 +21,9 @@ import { UserPublicService } from '../user/user.public.service';
 import { IUser } from '@scspace-depot/types/user';
 import { MAX_RENTAL_DURATION, MAX_RENTAL_LIMIT } from '@scspace-depot/consts/rental.const';
 import { FileService } from '@scspace-server/tools/file/file.service';
+import { PdfService } from "@scspace-server/tools/pdf/pdf.service";
+import { ICertificatePdf } from "@scspace-depot/types/pdf/pdf.type";
+import { MailService } from "@scspace-server/tools/mailer/mail.service";
 
 @Injectable()
 export class RentalService {
@@ -28,7 +31,9 @@ export class RentalService {
         private readonly rentalRepository: RentalRepository,
         private readonly rentalPublicService: RentalPublicService,
         private readonly userPublicService: UserPublicService,
-        private readonly fileService: FileService
+        private readonly fileService: FileService,
+        private readonly pdfService : PdfService,
+        private readonly mailService : MailService
     ) { }
 
     // Rental 관련 서비스 메서드들
@@ -110,6 +115,34 @@ export class RentalService {
             await this.userPublicService.updateOverdue(rentalData.userId, {
                 timeOverdue: 0
             });
+        }
+
+        //Rental Cert
+        try {
+            const meta : ICertificatePdf = {
+                id : id,
+                user : user,
+                goods : goods,
+                contact : user.email,
+                rentalFrom : getDateString(now),
+                rentalTo : getDateString(afterOneWeek),
+                rentalDuration : MAX_RENTAL_DURATION, // # day - might be 7
+                rentalQuantity : rentalData.count,
+            }
+
+            const res = await this.pdfService.createAndStoreRentalCert(meta)
+
+            await this.rentalRepository.updateRentalCert(id, res.filename);
+
+        } catch (error) {
+            console.log(error)
+
+            const err = error instanceof Error
+                ? error
+                : new Error(String(error))
+            await this.mailService.reportError(err,
+                "pdf.service.ts > createRentalConfirmPdf")
+            throw err;
         }
 
         return {

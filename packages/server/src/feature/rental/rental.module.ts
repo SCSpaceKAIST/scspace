@@ -8,6 +8,8 @@ import { UserModule } from 'src/feature/user/user.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { FileModule } from '@scspace-server/tools/file/file.module';
+import { PdfModule } from "@scspace-server/tools/pdf/pdf.module";
+import { MailModule } from "@scspace-server/tools/mailer/mail.module";
 
 @Module({
     imports: [
@@ -17,7 +19,9 @@ import { FileModule } from '@scspace-server/tools/file/file.module';
             imports: [ConfigModule],
             useFactory: async (config: ConfigService) => ({})
         }),
-        FileModule
+        FileModule,
+        PdfModule,
+        MailModule
     ],
     controllers: [RentalController],
     providers: [

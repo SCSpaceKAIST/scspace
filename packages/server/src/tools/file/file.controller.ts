@@ -14,7 +14,7 @@ export class FileController {
 
     @Post("upload")
     @UseInterceptors(FilesInterceptor('files', 25, { storage: privateStorage }))
-    async uploadFile(
+    async uploaFile(
         @UploadedFiles() files: Array<Express.Multer.File>,
         @Body() body: any
     ): Promise<IFileUploadResponse> {
@@ -53,7 +53,7 @@ export class FileController {
     ) {
         const filePath = `${PRIVATE_FOLDER}/${file}`;
 
-        this.fileService.fileExistValidator(filePath);
+        await this.fileService.fileExistValidator(filePath);
 
         res.download(filePath, file, (err) => {
             if (err) {
