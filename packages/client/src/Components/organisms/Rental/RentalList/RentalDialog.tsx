@@ -22,6 +22,7 @@ import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { IRentalAll } from "@scspace-depot/types/rental";
 import ReturnBtn from "./ReturnBtn";
 import ConfirmBtn from "./ConfirmBtn";
+import { useFileAPI } from "@scspace-client/Hooks/file";
 
 export default function RentalDialog({ open, setOpen, rental, refetchList }: {
     open: boolean;
@@ -35,6 +36,12 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
     const isWide = useBreakpointValue({ base: false, md: true });
 
     useEffect(() => console.log(rental), [rental]);
+
+    const downloadFile = useFileAPI().downloadFile;
+
+    const handleDownload = () => {
+        downloadFile(rental?.certName ?? '');
+    }
 
     return (
         <SimpleDialog
@@ -127,6 +134,13 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
                     </Dialog.Body >
                     <Separator />
                     <Dialog.Footer>
+                        <Button
+                            variant={"outline"}
+                            onClick={handleDownload}
+                            colorPalette={"blue"}
+                        >
+                            Download Certification
+                        </Button>
                         <Dialog.ActionTrigger asChild>
                             <Button variant="outline" rounded="sm">
                                 Close

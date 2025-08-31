@@ -49,7 +49,7 @@ export class FileController {
     @Get("download")
     async downloadFile(
         @Res() res: Response,
-        @Query("file") file: string,
+        @Query("filename") file: string,
     ) {
         const filePath = `${PRIVATE_FOLDER}/${file}`;
 

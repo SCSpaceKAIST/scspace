@@ -11,6 +11,7 @@ export interface IRental {
     timeDue: number;
     timeReturn: number;
     timeConfirm: number;
+    certName: string;
 }
 
 export type IRentalAll = IRental & {

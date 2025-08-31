@@ -12,5 +12,18 @@ export function useFileAPI() {
         'POST'
     ).mutateAsync;
 
-    return { uploadFile, uploadPublicFile };
+    const downloadFile = async (filename: string) => {
+        await fetch(
+            `/file/download?filename=${encodeURIComponent(filename)}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+            }
+        );
+    }
+
+    return { uploadFile, uploadPublicFile, downloadFile };
 }

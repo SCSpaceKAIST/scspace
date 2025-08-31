@@ -10,6 +10,7 @@ export class MRental implements IRental {
     timeDue: IRental['timeDue'];
     timeReturn: IRental['timeReturn'];
     timeConfirm: IRental['timeConfirm'];
+    certName: IRental['certName'];
 
     constructor(data: IRental) {
         this.id = data.id;
@@ -20,6 +21,7 @@ export class MRental implements IRental {
         this.timeDue = data.timeDue;
         this.timeReturn = data.timeReturn;
         this.timeConfirm = data.timeConfirm;
+        this.certName = data.certName;
     }
 
     static fromDB(rental: typeof Rental.$inferSelect): IRental {
@@ -32,6 +34,7 @@ export class MRental implements IRental {
             timeDue: rental.timeDue,
             timeReturn: rental.timeReturn,
             timeConfirm: rental.timeConfirm,
+            certName: rental.certName,
         };
     }
 }

@@ -45,11 +45,11 @@ export class RentalRepository {
 
     // Rental CRUD operations
     async createRental(rental: IRentalCreate): Promise<number> {
-        const now = getNow();
         const result = await this.db.insert(Rental).values({
             ...rental,
             timeReturn: 0,
             timeConfirm: 0,
+            certName: "Certificate Name",
         });
         return result[0].insertId;
     }
