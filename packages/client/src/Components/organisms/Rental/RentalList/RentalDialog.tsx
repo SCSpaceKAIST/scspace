@@ -42,7 +42,8 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
         toaster.promise(
             async () => {
                 const res = await downloadFile(rental?.certName ?? '');
-                if (!res.ok) throw new Error(res.error.message || 'Download failed');
+                // if (!res.ok) throw new Error(res.error.message || 'Download failed');
+                if (!res.ok) throw new Error('Download failed');
             },
             {
                 loading: {
