@@ -24,6 +24,10 @@ import ReturnBtn from "./ReturnBtn";
 import ConfirmBtn from "./ConfirmBtn";
 import { useFileAPI } from "@scspace-client/Hooks/file";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
+import { useLinkPush } from "@scspace-client/Hooks/api";
+import Link from "next/link";
+
+const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
 export default function RentalDialog({ open, setOpen, rental, refetchList }: {
     open: boolean;
@@ -37,6 +41,7 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
     const isWide = useBreakpointValue({ base: false, md: true });
 
     const downloadFile = useFileAPI().downloadFile;
+    const { linkPush } = useLinkPush();
 
     const handleDownload = () => {
         toaster.promise(
@@ -153,13 +158,16 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
                     </Dialog.Body >
                     <Separator />
                     <Dialog.Footer>
-                        <Button
-                            variant={"outline"}
-                            onClick={handleDownload}
-                            colorPalette={"blue"}
+                        <Link
+                            href={`${baseUrl}/file/download?filename=${encodeURIComponent(rental?.certName ?? '')}`}
                         >
-                            Download Certification
-                        </Button>
+                            <Button
+                                variant={"outline"}
+                                colorPalette={"blue"}
+                            >
+                                Download Certification
+                            </Button>
+                        </Link>
                         <Dialog.ActionTrigger asChild>
                             <Button variant="outline" rounded="sm">
                                 Close
