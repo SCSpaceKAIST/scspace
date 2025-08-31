@@ -9,6 +9,10 @@
       {
         "include": "tools/mailer/templates/*",
         "outDir": "dist/server/src/"
+      } ,
+      {
+        "include" : "tools/pdf/templates/*",
+        "outDir" : "dist/server/src"
       }
     ]
   }

@@ -119,6 +119,11 @@ export class RentalRepository {
         await this.db.update(Rental).set(updates).where(eq(Rental.id, id));
     }
 
+    //rental Cert URI update
+    async updateRentalCert (id:number, filename : string) : Promise <void> {
+        await this.db.update(Rental).set({certName : filename}).where(eq(Rental.id, id));
+    }
+
     async returnRental(id: number, timeReturn: number): Promise<void> {
         await this.db.update(Rental).set({ timeReturn }).where(eq(Rental.id, id));
     }

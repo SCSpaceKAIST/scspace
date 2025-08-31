@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>물품대여확인서 / Rental Confirmation #{{id}}</title>
+    <style>
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", Arial, sans-serif; color: #111; line-height: 1.45; }
+
+        .page { width: 210mm; min-height: 297mm; margin: 0 auto; padding: 20mm; background: #fff; }
+        @page { size: A4; margin: 20mm; }
+        @media print { body { margin: 0; } .page { padding: 0; width: auto; min-height: auto; } }
+
+        :root { --accent:#7B9EB6; --border:#d9e2ea; --muted:#66707a; }
+
+        .header { display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid var(--accent); padding-bottom:12px; }
+        .brand { display:flex; align-items:center; gap:12px; }
+        .brand__logo { width:117px; height:85px; }
+        .brand__title { font-size:22px; font-weight:800; color:var(--accent); line-height:1.2; }
+        .brand__title span { display:block; }
+
+        .doc-meta { text-align:right; font-size:12px; color:var(--muted); }
+        .mono { font-family: ui-monospace, Menlo, Consolas, "Courier New", monospace; }
+
+        h1 { font-size:20px; margin:16px 0 10px; color:#111; white-space:nowrap; }
+        .muted { color:var(--muted); }
+        .section { margin-top:18px; }
+        .section__title { font-size:15px; font-weight:800; margin-bottom:8px; border-left:4px solid var(--accent); padding-left:8px; color:#111; white-space:nowrap; }
+
+        .section.section-item { margin-top:36px; }
+
+        table.info { width:100%; border-collapse:collapse; font-size:13px; table-layout: fixed; }
+        table.info th, table.info td { border:1px solid var(--border); padding:8px 10px; vertical-align:top; }
+        table.info th { background:#f5f9fc; text-align:left; width:180px; font-weight:800; color:#0f2430; white-space:nowrap; }
+        table.info td strong { color:#0f2430; white-space:nowrap; }
+        .label { white-space:nowrap; }
+        .value { word-break:break-word; }
+
+        .note { font-size:12px; color:var(--muted); margin-top:8px; }
+    </style>
+</head>
+<body>
+<div class="page">
+    <!-- 헤더 -->
+    <div class="header">
+        <div class="brand">
+            <img class="brand__logo" src="file://{{logoPath}}" alt="Organization Logo">
+            <div class="brand__title">
+                <span>물품대여확인서</span>
+                <span>Rental Confirmation</span>
+            </div>
+        </div>
+        <div class="doc-meta">
+            <div><strong style="color:#7B9EB6" class="label">대여번호 / Rental No.</strong>: <span class="mono">#{{id}}</span></div>
+            <div><strong style="color:#7B9EB6" class="label">발급일 / Issued Date</strong>: <span class="mono">{{rentalFrom}}</span></div>
+        </div>
+    </div>
+
+    <!-- 개요 -->
+    <div class="section">
+        <h1>대여 개요 / <span class="muted">Overview</span></h1>
+        <table class="info">
+            <tr>
+                <th><span class="label">대여 기간 / Rental Period</span></th>
+                <td class="value">
+                    <div><strong class="label">대여 시작 / Start</strong>: <span class="mono">{{rentalFrom}}</span></div>
+                    <div><strong class="label">대여 종료 / End</strong>: <span class="mono">{{rentalTo}}</span></div>
+                    <div><strong class="label">총 대여일수 / Duration (days)</strong>: {{rentalDuration}}</div>
+                </td>
+            </tr>
+            <tr>
+                <th><span class="label">대여자 / Renter</span></th>
+                <td class="value">
+                    {{user.nameKr}} / {{user.nameEn}}
+                </td>
+            </tr>
+            <tr>
+                <th><span class="label">연락처 (이메일)<br/>Contact (E-Mail)</span></th>
+                <td class="value">
+                    {{#if contact}}{{contact}}{{else}}<span class="muted">N/A</span>{{/if}}
+                </td>
+            </tr>
+            <tr>
+                <th><span class="label">소속(조직) / Organization</span></th>
+                <td class="value">
+                    {{#if organization}}{{organization.name}}{{else}}<span class="muted">N/A</span>{{/if}}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- 물품 -->
+    <div class="section section-item">
+        <div class="section__title">대여 물품 / Rented Item</div>
+        <table class="info">
+            <tr>
+                <th><span class="label">물품명 / Item Name</span></th>
+                <td class="value">
+                    {{#if goods.name}}{{goods.name}}{{else}}<span class="muted">N/A</span>{{/if}}
+                </td>
+            </tr>
+            <tr>
+                <th><span class="label">물품 식별자 / Item ID</span></th>
+                <td class="value">
+                    {{#if goods.id}}{{goods.id}}{{else}}<span class="muted">N/A</span>{{/if}}
+                </td>
+            </tr>
+            <tr>
+                <th><span class="label">수량 / Quantity</span></th>
+                <td class="value">{{rentalQuantity}}</td>
+            </tr>
+            <tr>
+                <th><span class="label">사용 목적 / Purpose of Use</span></th>
+                <td class="value">
+                    {{#if usage}}{{usage}}{{else}}<span class="muted">N/A</span>{{/if}}
+                </td>
+            </tr>
+            <tr>
+                <th><span class="label">비고 / Remarks</span></th>
+                <td class="value">
+                    {{#if description}}{{description}}{{else}}<span class="muted">N/A</span>{{/if}}
+                </td>
+            </tr>
+        </table>
+
+        <p class="note">
+            ※ 상기 물품은 지정된 기간 내 반납해야 하며, 파손·분실 시 관련 규정에 따라 변상 책임이 발생할 수 있습니다. /
+            Items must be returned within the specified period. Damage or loss may incur compensation according to relevant policies.
+        </p>
+    </div>
+</div>
+</body>
+</html>
