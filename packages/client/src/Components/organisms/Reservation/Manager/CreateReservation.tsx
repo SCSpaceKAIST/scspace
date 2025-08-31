@@ -43,7 +43,7 @@ export default function CreateReservation() {
     const [inner, setInner] = useState<number>(10);
     const [outer, setOuter] = useState<number>(0);
     const [food, setFood] = useState<string>("");
-    const [worker, setWorker] = useState<number>(0);
+    const [worker, setWorker] = useState<boolean>(false);
     const [check, setCheck] = useState<boolean>(false);
 
     const createMultiReservation = useReservationAPI().createMultipleRes;
@@ -121,7 +121,7 @@ export default function CreateReservation() {
                     outerParticipantNumber: outer,
                     food: food,
                     busking: check && (spaceId === 13),
-                    workerNeed: false
+                    workerNeed: worker
                 },
                 // userId: userInfo.id,
                 userId: 1,

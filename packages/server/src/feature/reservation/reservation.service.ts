@@ -66,7 +66,7 @@ export class ReservationService {
           user: users.find(user => user.id === reservation.userId)!,
           organization: organizations.find(org => org.id === reservation.organizationId)!,
           space: spaces.find(space => space.id === reservation.spaceId)!,
-          worker: (content.workerId === 0) ? null : users.find(user => user.id === content.workerId) ?? null,
+          worker: (content.workerId === 0) ? null : users.find(user => user.id === content.workerId)!,
           content
         };
       }),
@@ -108,7 +108,7 @@ export class ReservationService {
           user: users.find(user => user.id === reservation.userId)!,
           organization: organizations.find(org => org.id === reservation.organizationId)!,
           space: spaces.find(space => space.id === reservation.spaceId)!,
-          worker: (content.workerId === 0) ? null : users.find(user => user.id === content.workerId) ?? null,
+          worker: (content.workerId === 0) ? null : users.find(user => user.id === content.workerId)!,
           content
         };
       }),
@@ -498,7 +498,7 @@ export class ReservationService {
         organization: organizations.find((org) => org.id === reservation.organizationId,)!,
         space: spaces.find((space) => space.id === reservation.spaceId)!,
         content,
-        worker: users.find((user) => user.id === content.workerId)!,
+        worker: (content.workerId === 0) ? null : users.find((user) => user.id === content.workerId)!,
       };
     });
   }

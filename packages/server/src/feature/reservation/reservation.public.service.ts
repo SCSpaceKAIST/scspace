@@ -263,12 +263,13 @@ export class ReservationPublicService {
 
     return reservations.map((reservation) => {
       const content = reservationContents.find(content => content.id === reservation.id)!;
+      Logger.log(JSON.stringify(content, null, 2));
       return {
         ...reservation,
         user: users.find(user => user.id === reservation.userId)!,
         organization: organizations.find(org => org.id === reservation.organizationId)!,
         space,
-        worker: (content.workerId === 0) ? null : users.find(user => user.id === content.workerId) ?? null,
+        worker: (content.workerId === 0) ? null : users.find(user => user.id === content.workerId)!,
         content
       };
     });
