@@ -332,7 +332,24 @@ export class RentalService {
             });
         }
 
-        await this.rentalRepository.confirmReturn(id, getNow());
+
+        //File Deletetion
+
+        await this.fileService.deletePrivateFile(rental.certName)
+
+        await this.rentalRepository.confirmReturn(id, getNow())
+
+        //mailer
+
+        //a mol lang
+        //soon TM
+
+
+        const user = await this.userPublicService.fetchById(rental.userId);
+        // Organization << 언젠간 추가되지 않을까? (모름)
+
+
+
 
         return { success: true };
     }
@@ -422,9 +439,9 @@ export class RentalService {
 
         await this.rentalRepository.deleteGoods(id);
 
+
         return { success: true };
     }
-
     async getOverdueRentals(): Promise<IRentalAll[]> {
         const overdueRentals = await this.rentalPublicService.getOverdueRentals();
 
