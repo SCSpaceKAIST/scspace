@@ -164,7 +164,8 @@ export class RentalController {
     @UseInterceptors(FileInterceptor('file', {
         storage: publicStorage,
         limits: {
-            fieldSize: 5 * 1024 * 1024
+            fieldSize: 5 * 1024 * 1024,
+            fileSize: 5 * 1024 * 1024
         }, // 5MB 파일 크기 제한
     }))
     @UseGuards(ManagerGuard)
@@ -175,6 +176,7 @@ export class RentalController {
         }
     ): Promise<{ success: boolean; data: { id: number } }> {
         const imageURI = `/uploads/${file.filename}`;
+        Logger.log(file);
 
         return await this.rentalService.createGoods({
             ...goodsData,
