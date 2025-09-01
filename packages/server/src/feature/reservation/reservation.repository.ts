@@ -277,6 +277,14 @@ export class ReservationRepository {
     return reservationContent[0];
   }
 
+  async fetchByWorkerId(workerId: number): Promise<MReservationSimple[]> {
+    return this.db.select(getTableColumns(Reservation))
+      .from(Reservation)
+      .innerJoin(ReservationContent, eq(ReservationContent.id, Reservation.id))
+      .where(eq(ReservationContent.workerId, workerId))
+      .limit(100);
+  }
+
   async insert(
     reservationInput: IReservationCreate,
   ): Promise<[MReservationSimple, MReservationContent]> {

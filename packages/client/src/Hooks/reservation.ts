@@ -3,7 +3,7 @@
 import { ReservationStateEnum } from "@scspace-depot/enums/reservation.enum";
 import { useMutationApi, useQueryApi } from "./api"
 import { IReservation, IReservationAll, IReservationApplyWorker, IReservationCreate, IReservationCreateMultiple, IReservationMultipleCreateResurt, IReservationUpdate } from "@scspace-depot/types/reservation"
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { IDataResponse, ISuccessResponse } from "@scspace-depot/types/common/common.type";
 import { useDate } from "./utils";
 
@@ -117,6 +117,8 @@ export function useReservationAPI(param: {
         dataForCalendar: dateReservation,
     }
 
+    const workHistory = useQueryApi<IReservationAll[]>(`/reservation/work`);
+
     const createRes = useMutationApi<IReservation, IReservationCreate>(
         "/reservation/",
         "POST"
@@ -146,6 +148,7 @@ export function useReservationAPI(param: {
         allReservation,
         userReservation,
         spaceReservation,
+        workHistory,
 
         createRes,
         createMultipleRes,

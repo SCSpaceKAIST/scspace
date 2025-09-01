@@ -27,6 +27,7 @@ import { AdminGuard, ManagerGuard, MemberGuard, MemberGuardWithReservation, User
 import { IUser } from '@scspace-depot/types/user';
 import { SpacePublicService } from '../space/space.public.service';
 import { ReservationPublicService } from './reservation.public.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('reservation')
 export class ReservationController {
@@ -53,7 +54,7 @@ export class ReservationController {
 
   // AuthGuard - user
   //HOOK: useUserReservation
-  @UseGuards(UserGuard)
+  @UseGuards(AuthGuard("jwt"))
   @Get('user')
   async getReservationListByUserId(
     @Query('uid', ParseIntPipe) userId: number,
@@ -68,6 +69,16 @@ export class ReservationController {
       offset,
     )
   };
+
+  // @UseGuards(WorkerGuard)
+  @UseGuards(AuthGuard("jwt"))
+  @Get('work')
+  async getWorkHistory(
+    @Req() req: Request,
+  ): Promise<IReservationAll[]> {
+    const user = req.user as IUser;
+    return await this.reservationService.getWorkHistory(user.id)
+  }
 
   @UseGuards(ManagerGuard)
   @Get()

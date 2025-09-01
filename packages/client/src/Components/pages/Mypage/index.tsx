@@ -5,9 +5,10 @@ import UserOrganization from "./UserOrganization";
 import UserRental from "./UserRental";
 import UserReservation from "./UserReservation";
 import { useAuth } from "@scspace-client/Hooks/auth";
+import WorkHistory from "./WorkHistory";
 
 export default function Mypage() {
-  const { needLogin } = useAuth();
+  const { needLogin, isWorker } = useAuth();
   needLogin();
 
   const pages: IPage[] = [
@@ -28,12 +29,19 @@ export default function Mypage() {
       eng: "Rental List",
       preview: (<UserRental />),
       href: "/mypage/rental"
+    },
+    {
+      kor: "근로 기록",
+      eng: "Work History",
+      preview: (<WorkHistory />),
+      href: "/mypage/work",
+      invisible: !isWorker,
     }
   ];
 
   return (
     <PageSelector
-      pages={pages}
+      pages={pages.filter(page => !page.invisible)}
     />
   );
 }
