@@ -1,5 +1,6 @@
 import { Badge, Blockquote, Field, Fieldset, Heading, HStack, Mark, Separator, Stack, Text, Wrap } from "@chakra-ui/react";
 import SimpleLink from "@scspace-client/Components/atoms/SimpleLink";
+import { BlueMark, RedMark } from "../utils";
 
 export default function OrgRule() {
     return (
@@ -145,7 +146,7 @@ export default function OrgRule() {
                                     위에 대한 자세한 내용은 <SimpleLink href="https://student.kaist.ac.kr/wiki/%ED%95%99%EB%B6%80_%EC%B4%9D%ED%95%99%EC%83%9D%ED%9A%8C" text="KAIPEDIA" /> 및 <SimpleLink href="https://clubs.sparcs.org/clubs" text="CLUBS KAIST" /> 에서 확인 가능합니다.
                                 </Text>
                                 <Text>
-                                    또한 위에 언급되지 않은 단체에서 인증을 받고자 하는 경우, <Mark variant={"text"} fontWeight={"semibold"} color={"blue"}>인증 신청을 한 뒤</Mark> 공간위에 메일로 문의하여 인증 신청을 할 수 있습니다.
+                                    또한 위에 언급되지 않은 단체에서 인증을 받고자 하는 경우, <BlueMark>인증 신청을 한 뒤</BlueMark> 공간위에 메일로 문의하여 인증 신청을 할 수 있습니다.
                                 </Text>
                                 <Separator />
                                 <Text>
@@ -154,8 +155,8 @@ export default function OrgRule() {
                                 <Text>
                                     이를 위해 인증된 조직은 조직 관리에서 단체실 소유 여부를 설정하여야 합니다.
                                 </Text>
-                                <Text color={"red"} fontWeight={"semibold"}>
-                                    세미나실 정기예약 추첨에서 우위를 점하기 위해 단체실 소유 여부를 사실과 다르게 설정한 경우, 예약 강제 삭제 및 일정 기간 조직의 인증이 취소될 수 있습니다.
+                                <Text>
+                                    <RedMark>세미나실 정기예약 추첨에서 우위를 점하기 위해 단체실 소유 여부를 사실과 다르게 설정한 경우, 예약 강제 삭제 및 일정 기간 조직의 인증이 취소될 수 있습니다.</RedMark>
                                 </Text>
                             </Stack>
                         </Blockquote.Content>

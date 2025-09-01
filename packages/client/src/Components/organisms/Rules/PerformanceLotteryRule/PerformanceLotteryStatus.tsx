@@ -23,14 +23,14 @@ export default function PerformanceLotteryStatus() {
                     </Heading>
                 )}
                 <Alert.Title>
-                    {(activeLotteryInfo && activeLotteryInfo.length > 0) ? (
+                    {(activeLotteryInfo && activeLotteryInfo.length > 0 && !activeLotteryInfo[0].applied) ? (
                         "공연집중기간 추첨이 진행 중입니다."
                     ) : (
                         "공연집중기간 추첨 기간이 아닙니다."
                     )}
                 </Alert.Title>
                 <Alert.Description>
-                    {activeLotteryInfo && activeLotteryInfo.length > 0 ? (
+                    {(activeLotteryInfo && activeLotteryInfo.length > 0 && !activeLotteryInfo[0].applied) ? (
                         "The Performance Concentration Period lottery is currently in progress."
                     ) : (
                         "The Performance Concentration Period lottery is NOT in progress."

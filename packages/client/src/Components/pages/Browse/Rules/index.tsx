@@ -8,12 +8,14 @@ import React, { use, useEffect } from "react";
 import SeminarLotteryRule from "@scspace-client/Components/organisms/Rules/SeminarLotteryRule";
 import PerformanceLotteryRule from "@scspace-client/Components/organisms/Rules/PerformanceLotteryRule";
 import { useRuleTopicStore } from "@scspace-client/Store/ruleTopic";
+import RentalRule from "@scspace-client/Components/organisms/Rules/RentalRule";
 
 const topics: { [key: string]: React.ReactNode } = {
     Reservation: (<ResRule />),
     Organization: (<OrgRule />),
     "Seminar-room Lottery": (<SeminarLotteryRule />),
-    "Performance Period Lottery": (<PerformanceLotteryRule />)
+    "Performance Period Lottery": (<PerformanceLotteryRule />),
+    Rental: (<RentalRule />)
 };
 
 export default function Rules() {

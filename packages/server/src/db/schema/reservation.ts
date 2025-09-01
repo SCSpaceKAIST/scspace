@@ -38,7 +38,7 @@ export const ReservationContent = mysqlTable('reservation_content', {
   description: varchar('description', { length: 1024 }).notNull().default(''),
   innerParticipantNumber: int('inner_participant_number').notNull().default(0),
   outerParticipantNumber: int('outer_participant_number').notNull().default(0),
-  food: varchar('food', { length: 255 }).notNull().default(''), // For Mirae & Sumi
+  food: varchar('food', { length: 255 }).notNull().default('X'), // For Mirae & Sumi
   busking: boolean('busking').notNull().default(false),
   workerNeed: boolean('worker_need').notNull().default(false),
   workerId: int('worker_id').notNull().default(0),
