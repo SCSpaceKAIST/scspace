@@ -4,6 +4,7 @@ import { AdminGuard, DelegatorGuard } from "@scspace-server/feature/auth/jwt/jwt
 import { ILotteryInfo, ILotteryInfoCreate, ILotteryInfoUpdate } from "@scspace-depot/types/lottery/lottery.info.type";
 import { IPerformanceLottery, IPerformanceLotteryCreate } from "@scspace-depot/types/lottery/lottery.performance.type";
 import { ISuccessResponse } from "@scspace-depot/types/common";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller('lottery/performance')
 export class LotteryPerformanceController {
@@ -108,7 +109,8 @@ export class LotteryPerformanceController {
         return await this.lotteryPerformanceService.getDrawnPerformanceLottery({ spaceId, infoId });
     }
 
-    @UseGuards(DelegatorGuard)
+    // @UseGuards(DelegatorGuard)
+    @UseGuards(AuthGuard("jwt"))
     @Post()
     async postPerformanceLottery(
         @Body() lottery: IPerformanceLotteryCreate
@@ -117,7 +119,8 @@ export class LotteryPerformanceController {
         return await this.lotteryPerformanceService.postPerformanceLottery({ lottery });
     }
 
-    @UseGuards(DelegatorGuard)
+    // @UseGuards(DelegatorGuard)
+    @UseGuards(AuthGuard("jwt"))
     @Delete(":id")
     async deletePerformanceLottery(
         @Param('id', ParseIntPipe) id: number
