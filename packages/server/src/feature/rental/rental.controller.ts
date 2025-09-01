@@ -164,9 +164,9 @@ export class RentalController {
     @UseInterceptors(FileInterceptor('file', {
         storage: publicStorage,
         limits: {
-            fieldSize: 5 * 1024 * 1024,
-            fileSize: 5 * 1024 * 1024
-        }, // 5MB 파일 크기 제한
+            fieldSize: 10 * 1024 * 1024,
+            // fileSize: 10 * 1024 * 1024
+        }, // 10MB 파일 크기 제한
     }))
     @UseGuards(ManagerGuard)
     async createGoods(

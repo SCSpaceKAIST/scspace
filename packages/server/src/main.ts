@@ -4,11 +4,16 @@ import cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   // const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('/api');
+
+  // Body parser 제한 설정 (파일 업로드용)
+  app.use(express.json({ limit: '10mb' }));
+  app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
   // uploads/public 폴더의 절대 경로 설정 (dev 모드에서는 packages/server가 cwd)
   const uploadsPath = join(process.cwd(), 'uploads', 'public');

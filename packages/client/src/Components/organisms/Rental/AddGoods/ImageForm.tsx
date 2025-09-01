@@ -35,7 +35,10 @@ export default function GoodsImageForm({ fileUpload }: { fileUpload: UseFileUplo
     return (
         <FileUpload.RootProvider value={fileUpload}>
             <FileUpload.HiddenInput />
-            <Field.Root required invalid>
+            <Field.Root
+                required
+                invalid={fileUpload.acceptedFiles && fileUpload.acceptedFiles.length > 0 && fileUpload.acceptedFiles[0].size > 10 * 1024 * 1024}
+            >
                 <Field.Label>
                     {fileUpload.acceptedFiles.length > 0 ?
                         fileUpload.acceptedFiles[0].name : "No files selected"}
@@ -46,6 +49,9 @@ export default function GoodsImageForm({ fileUpload }: { fileUpload: UseFileUplo
                         <LuFileImage /> {fileUpload.acceptedFiles.length > 0 ? "Change Image" : "Upload Image"}
                     </Button>
                 </FileUpload.Trigger>
+                <Field.ErrorText>
+                    이미지의 크기는 10MB를 초과할 수 없습니다.
+                </Field.ErrorText>
             </Field.Root>
             <FileUploadList />
         </FileUpload.RootProvider>
