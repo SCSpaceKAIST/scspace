@@ -6,8 +6,8 @@ import {
 } from 'drizzle-orm/mysql-core';
 import { User } from './user';
 
-// business 테이블 정의
-export const Business = mysqlTable('business', {
+// article 테이블 정의
+export const Article = mysqlTable('article', {
     id: int('id').primaryKey().autoincrement().unique(),
     userId: int('user_id')
         .notNull()
@@ -17,6 +17,9 @@ export const Business = mysqlTable('business', {
     timePost: bigint('time_post', { mode: 'number' }).notNull(),
     timeUpdate: bigint('time_update', { mode: 'number' }).notNull(),
     state: int('state').notNull().default(1), // ['hide', 'show']
+    type: int('type').notNull().default(0),
     // Foreign keys
     // userId references users.userId O
 });
+
+

@@ -1,11 +1,10 @@
-import { Business } from './business';
 import {
   PerformanceLotteryInfo,
   PerformanceLottery,
   SeminarLotteryInfo,
   SeminarLottery
 } from './lottery';
-import { Notice } from './notice';
+import { Article } from './article';
 import { Organization, OrganizationMember } from './organization';
 import { Passpin } from './passpin';
 import { Qna } from './qna';
@@ -17,8 +16,7 @@ import { User } from './user';
 
 // 스키마에 정의된 모든 테이블을 모아 내보냅니다.
 const schema = {
-  Business,
-  Notice,
+  Notice: Article,
   Organization,
   OrganizationMember,
   Passpin,
@@ -39,8 +37,7 @@ const schema = {
 export {
   schema,
 
-  Business,
-  Notice,
+  Article as Notice,
   Organization,
   OrganizationMember,
   Passpin,
