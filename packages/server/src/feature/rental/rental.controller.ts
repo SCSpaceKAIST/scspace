@@ -161,15 +161,15 @@ export class RentalController {
 
     // 물품 생성
     @Post('goods')
-    @UseInterceptors(FileInterceptor('file', { storage: publicStorage, }))
+    @UseInterceptors(FilesInterceptor('file', 1, { storage: publicStorage, }))
     @UseGuards(ManagerGuard)
     async createGoods(
-        @UploadedFile() file: Express.Multer.File,
+        @UploadedFile() file: Express.Multer.File[],
         @Body() goodsData: Omit<IGoodsCreate, 'imageURI' | "countAll"> & {
             countAll?: string;
         }
     ): Promise<{ success: boolean; data: { id: number } }> {
-        const imageURI = `/uploads/${file.filename}`;
+        const imageURI = `/uploads/${file[0].filename}`;
 
         return await this.rentalService.createGoods({
             ...goodsData,
