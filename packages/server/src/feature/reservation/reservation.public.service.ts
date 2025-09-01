@@ -258,18 +258,22 @@ export class ReservationPublicService {
       this.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
     ]) as [IUser[], ISpace, IOrganization[], IReservationContent[]];
 
+    const workerIds = reservationContents.map(content => content.workerId).filter(id => id !== 0);
+    const workers = await this.userPublicService.fetchAllByIds(workerIds)
+      .then(takeAll(workerIds, 'workers'));
+
     checkContainAllId(userIds, users, 'users');
     checkContainAllId(organizationIds, organizations, 'organizations');
+    checkContainAllId(workerIds, workers, 'workers');
 
     return reservations.map((reservation) => {
       const content = reservationContents.find(content => content.id === reservation.id)!;
-      Logger.log(JSON.stringify(content, null, 2));
       return {
         ...reservation,
         user: users.find(user => user.id === reservation.userId)!,
         organization: organizations.find(org => org.id === reservation.organizationId)!,
         space,
-        worker: (content.workerId === 0) ? null : users.find(user => user.id === content.workerId)!,
+        worker: (content.workerId === 0) ? null : workers.find(worker => worker.id === content.workerId)!,
         content
       };
     });

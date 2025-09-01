@@ -54,9 +54,14 @@ export class ReservationService {
       this.reservationPublicService.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
     ]) as [IUser[], IOrganization[], ISpace[], IReservationContent[]];
 
+    const workerIds = reservationContents.map(content => content.workerId).filter(id => id !== 0);
+    const workers = await this.userPublicService.fetchAllByIds(workerIds)
+      .then(takeAll(workerIds, 'workers'));
+
     checkContainAllId(userIds, users, 'users');
     checkContainAllId(organizationIds, organizations, 'organizations');
     checkContainAllId(spaceIds, spaces, 'spaces');
+    checkContainAllId(workerIds, workers, 'workers');
 
     return {
       data: reservations.map((reservation) => {
@@ -66,7 +71,7 @@ export class ReservationService {
           user: users.find(user => user.id === reservation.userId)!,
           organization: organizations.find(org => org.id === reservation.organizationId)!,
           space: spaces.find(space => space.id === reservation.spaceId)!,
-          worker: (content.workerId === 0) ? null : users.find(user => user.id === content.workerId)!,
+          worker: (content.workerId === 0) ? null : workers.find(worker => worker.id === content.workerId)!,
           content
         };
       }),
@@ -96,9 +101,15 @@ export class ReservationService {
       this.reservationPublicService.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
     ]) as [IUser[], IOrganization[], ISpace[], IReservationContent[]];
 
+
+    const workerIds = reservationContents.map(content => content.workerId).filter(id => id !== 0);
+    const workers = await this.userPublicService.fetchAllByIds(workerIds)
+      .then(takeAll(workerIds, 'workers'));
+
     checkContainAllId(userIds, users, 'users');
     checkContainAllId(organizationIds, organizations, 'organizations');
     checkContainAllId(spaceIds, spaces, 'spaces');
+    checkContainAllId(workerIds, workers, 'workers');
 
     return {
       data: reservations.map((reservation) => {
@@ -108,7 +119,7 @@ export class ReservationService {
           user: users.find(user => user.id === reservation.userId)!,
           organization: organizations.find(org => org.id === reservation.organizationId)!,
           space: spaces.find(space => space.id === reservation.spaceId)!,
-          worker: (content.workerId === 0) ? null : users.find(user => user.id === content.workerId)!,
+          worker: (content.workerId === 0) ? null : workers.find(worker => worker.id === content.workerId)!,
           content
         };
       }),
@@ -486,9 +497,14 @@ export class ReservationService {
         ),
       ])) as [IUser[], IOrganization[], ISpace[], IReservationContent[]];
 
+    const workerIds = reservationContents.map(content => content.workerId).filter(id => id !== 0);
+    const workers = await this.userPublicService.fetchAllByIds(workerIds)
+      .then(takeAll(workerIds, 'workers'));
+
     checkContainAllId(userIds, users, 'users');
     checkContainAllId(organizationIds, organizations, 'organizations');
     checkContainAllId(spaceIds, spaces, 'spaces');
+    checkContainAllId(workerIds, workers, 'workers');
 
     return reservations.map((reservation) => {
       const content = reservationContents.find((content) => content.id === reservation.id,)!;
@@ -498,7 +514,7 @@ export class ReservationService {
         organization: organizations.find((org) => org.id === reservation.organizationId,)!,
         space: spaces.find((space) => space.id === reservation.spaceId)!,
         content,
-        worker: (content.workerId === 0) ? null : users.find((user) => user.id === content.workerId)!,
+        worker: (content.workerId === 0) ? null : workers.find((worker) => worker.id === content.workerId)!,
       };
     });
   }
