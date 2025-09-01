@@ -334,13 +334,17 @@ export class ReservationService {
         space : space,
       }
 
-      const metaAuthor = {
-        ...metaWorker,
-        meta: {
+      const metaAuthor =  {
+        meta : {
           ...WorkerMeta.forAuthor,
           timeFrom,
           timeTo,
-        }
+        },
+        reservation : reservationUpdated,
+        worker : worker,
+        user : user,
+        organizationName : organizationName,
+        space : space,
       }
 
       //Send to Author
