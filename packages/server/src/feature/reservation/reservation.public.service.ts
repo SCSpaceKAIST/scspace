@@ -796,6 +796,7 @@ export class ReservationPublicService {
       }
     }
   }
+
   async validateSpaceTimeConstraints(
     userId: number,
     organizationId: number,
@@ -811,9 +812,14 @@ export class ReservationPublicService {
       return;
     }
 
+    if (organizationId === 1) {
+      return;
+    }
+
     const { weekStart, weekEnd } = getWeekPeriod(timeFrom);
     const reservations = await this.reservationRepository.fetch({
       spaceId: space.id,
+      organizationId,
       timeRange: {
         timeFrom: weekStart,
         timeTo: weekEnd,
