@@ -35,7 +35,7 @@ export default function GoodsImageForm({ fileUpload }: { fileUpload: UseFileUplo
     return (
         <FileUpload.RootProvider value={fileUpload}>
             <FileUpload.HiddenInput />
-            <Field.Root required>
+            <Field.Root required invalid>
                 <Field.Label>
                     {fileUpload.acceptedFiles.length > 0 ?
                         fileUpload.acceptedFiles[0].name : "No files selected"}
