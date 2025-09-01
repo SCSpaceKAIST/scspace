@@ -171,7 +171,10 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
                                         )}
                                     >
                                         {selectedRes.worker ? (
-                                            <DataList.Root orientation="horizontal" width="100%">
+                                            <DataList.Root
+                                                orientation={isWide ? "horizontal" : "vertical"}
+                                                width="100%"
+                                            >
                                                 <DataListItem label="Name">
                                                     {selectedRes.worker.nameKr}
                                                 </DataListItem>
