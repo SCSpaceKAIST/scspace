@@ -3,7 +3,7 @@ import { IOrganizationAll } from "../organization";
 
 export interface IMail {
     subject: string;
-    template: "orgStatusUpdate" | "welcome" | "orgDelegatorUpdate" | "reservationPosted" | "errorLog" | "postMultipleReservation" | "orgDescription" | "lotteryResult";
+    template: "orgStatusUpdate" | "welcome" | "orgDelegatorUpdate" | "reservationPosted" | "errorLog" | "postMultipleReservation" | "orgDescription" | "lotteryResult" | 'worker';
     to: string | string[];
     cc?: string | string[];
     bcc?: string | string[];

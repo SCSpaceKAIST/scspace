@@ -16,7 +16,7 @@ import { MReservation } from '@scspace-server/feature/reservation/reservation.mo
 import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { MailService } from '@scspace-server/tools/mailer/mail.service';
-import { ReservationMeta } from '@scspace-depot/enums/mail.enum';
+import { ReservationMeta, WorkerMeta } from '@scspace-depot/enums/mail.enum';
 import { getString } from '@scspace-server/common/utils'
 import { ReservationRepository } from '@scspace-server/feature/reservation/reservation.repository';
 import { ReservationPublicService } from '@scspace-server/feature/reservation/reservation.public.service';
@@ -310,7 +310,64 @@ export class ReservationService {
 
     ////////////
     // Mailer //
-    ////////////
+    ////////////∑
+
+    try {
+      //mail const
+      const timeFrom = getString(reservationUpdated.timeFrom)
+      const timeTo = getString(reservationUpdated.timeTo)
+
+      const user = await this.userPublicService.fetchById(reservationUpdated.userId)
+      const organizationName = reservationUpdated.organizationId === 1 ? 'individual' : await this.organizationPublicService.fetchById(reservationUpdated.organizationId).then(org => org.name)
+      const space=  await this.spacePublicService.fetchById(reservationUpdated.spaceId)
+
+      const metaWorker =  {
+        meta : {
+          ...WorkerMeta.forWorker,
+          timeFrom,
+          timeTo,
+        },
+        reservation : reservationUpdated,
+        worker : worker,
+        user : user,
+        organizationName : organizationName,
+        space : space,
+      }
+
+      const metaAuthor = {
+        ...metaWorker,
+        meta: {
+          ...WorkerMeta.forAuthor,
+          timeFrom,
+          timeTo,
+        }
+      }
+
+      //Send to Author
+      await this.mailService.sendMail({
+        to : user.email,
+        bcc : "scspace.kaist@gmail.com",
+        subject : "[SCSpace] 근로장학생 배정 안내,",
+        context : metaAuthor,
+        template : "worker"
+      })
+
+      //Send to Worker
+      await this.mailService.sendMail({
+        to : worker.email,
+        bcc : "scspace.kaist@gmail.com",
+        subject : "[SCSpace] 근로 신규 할당 안내,",
+        context : metaWorker,
+        template : "worker"
+      })
+    } catch (error) {
+      console.log(error)
+      await this.mailService.reportError(
+          error instanceof Error
+              ? error
+              : new Error(String(error)),
+          "Worker - Mail Sector")
+    }
 
     return MReservation.fromDB(reservationUpdated, reservationContentUpdated);
   }

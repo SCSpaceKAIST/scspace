@@ -241,10 +241,41 @@ export const LotteryMeta = {
             },
             contentUpperDesc : {
                 kr : "예약 실패 (낙첨)",
-                en : "Reservation Failed",      // i love this
+                en : "Reservation Failed",
             },
             templatefooter :  "이 메일은 공연집중기간 예약 추첨 신청 조직의 위임자 (Delegator) 에게 발송되었습니다.",
             templatefooterEn : "This email is sent to the Delegator of the reservation lottery organization.",
         }
+    }
+} as const
+
+export const WorkerMeta  = {
+    forWorker : {
+        color: '#8d71b6',
+        emoji: DEFAULT_EMOJI_RESERVATION,
+        header: {
+            kr: "근로 배정 안내",
+            en: "Work Assigned Confirmation"
+        },
+        body: {
+            kr: "귀하에게 근로예약이 배정되었습니다.",
+            en: "New work has been assigned to you."
+        },
+        templatefooter :  "예약자에게 귀하(근로장학생)의 성명과 이메일이 공유되었습니다.",
+        templatefooterEn : "Your name and email has been shared with the author of reservation assigned to you.",
+    },
+    forAuthor : {
+        color: '#8d71b6',
+        emoji: DEFAULT_EMOJI_RESERVATION,
+        header: {
+            kr: "근로 배정 안내",
+            en: "Work Assigned Confirmation"
+        },
+        body: {
+            kr: "귀하에게 근로예약이 배정되었습니다.",
+            en: "New work has been assigned to you."
+        },
+        templatefooter :  "예약자에게 귀하(근로장학생)의 성명과 이메일이 공유되었습니다.",
+        templatefooterEn : "Your name and email has been shared with the author of reservation assigned to you.",
     }
 } as const
