@@ -160,7 +160,7 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
                     <Separator />
                     <Dialog.Footer>
                         <Link
-                            href={`${baseUrl}/file/download?filename=${encodeURIComponent(rental?.certName)}&displayName=Rental_Confirmationi_No${rental?.id}.pdf`}
+                            href={`${baseUrl}/file/download?filename=${encodeURIComponent(rental?.certName)}&displayName=Rental_Confirmation_No${rental?.id}.pdf`}
                         >
                             <Button
                                 variant={"outline"}
