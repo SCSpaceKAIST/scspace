@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Logger, Post, Query, Req, Res, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Logger, Post, Query,  Res, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { privateStorage, publicStorage } from "./file.storage";
 import { Response } from "express";
@@ -50,12 +50,13 @@ export class FileController {
     async downloadFile(
         @Res() res: Response,
         @Query("filename") file: string,
+        @Query("displayName") dpName?: string
     ) {
         const filePath = `${PRIVATE_FOLDER}/${file}`;
 
         await this.fileService.fileExistValidator(filePath);
 
-        res.download(filePath, file, (err) => {
+        res.download(filePath, dpName ?? file, (err) => {
             if (err) {
                 throw new BadRequestException(`Error occured: ${err.message}`);
             }

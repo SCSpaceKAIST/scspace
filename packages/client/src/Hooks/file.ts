@@ -12,7 +12,7 @@ export function useFileAPI() {
         'POST'
     ).mutateAsync;
 
-    const downloadFile = async (filename: string)  : Promise<Response> => {
+    const downloadFile = async (filename: string, displayName?: string)  : Promise<Response> => {
         // return await fetch(
         //     `/file/download?filename=${encodeURIComponent(filename)}`,
         //     {
@@ -24,7 +24,7 @@ export function useFileAPI() {
         //     }
         // ).then(r => r.json());
         const res = await fetch(
-            `/file/download?filename=${encodeURIComponent(filename)}`,
+            `/file/download?filename=${encodeURIComponent(filename)}` + displayName ? `?displayName=${encodeURIComponent(displayName ?? filename)}` : '',
             {
                 method: 'GET',
                 credentials: 'include',

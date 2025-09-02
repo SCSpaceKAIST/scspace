@@ -15,7 +15,7 @@ import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { HiOutlineRefresh } from "react-icons/hi";
 
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction,  } from "react";
 import { useDate } from "@scspace-client/Hooks/utils";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
@@ -43,10 +43,11 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
     const downloadFile = useFileAPI().downloadFile;
     const { linkPush } = useLinkPush();
 
+    //not used in this file
     const handleDownload = () => {
         toaster.promise(
             async () => {
-                const res = await downloadFile(rental?.certName ?? '');
+                const res = await downloadFile(rental?.certName ?? '', rental?.timeBorrow ? getString(rental?.timeBorrow) : undefined);
                 // if (!res.ok) throw new Error(res.error.message || 'Download failed');
                 if (!res.ok) throw new Error('Download failed');
             },
@@ -159,7 +160,7 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
                     <Separator />
                     <Dialog.Footer>
                         <Link
-                            href={`${baseUrl}/file/download?filename=${encodeURIComponent(rental?.certName ?? '')}`}
+                            href={`${baseUrl}/file/download?filename=${encodeURIComponent(rental?.certName)}&displayName=Rental_Confirmationi_No${rental?.id}.pdf`}
                         >
                             <Button
                                 variant={"outline"}

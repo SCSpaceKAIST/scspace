@@ -339,10 +339,7 @@ export class RentalService {
 
         await this.rentalRepository.confirmReturn(id, getNow())
 
-        //mailer
-
-        //a mol lang
-        //soon TM
+        //mailer << Unnecessary - Currently Delayed
 
 
         const user = await this.userPublicService.fetchById(rental.userId);
