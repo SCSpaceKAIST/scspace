@@ -159,16 +159,20 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
                     </Dialog.Body >
                     <Separator />
                     <Dialog.Footer>
-                        <Link
-                            href={`${baseUrl}/file/download?filename=${encodeURIComponent(rental?.certName)}&displayName=Rental_Confirmation_No${rental?.id}.pdf`}
-                        >
-                            <Button
-                                variant={"outline"}
-                                colorPalette={"blue"}
+                            <Link
+                                href={`${baseUrl}/file/download?filename=${encodeURIComponent(rental?.certName)}&displayName=Rental_Confirmation_No${rental?.id}.pdf`}
                             >
-                                Download Certification
-                            </Button>
-                        </Link>
+                                <Button
+                                    variant={"outline"}
+                                    colorPalette={"blue"}
+                                    disabled={rental.timeConfirm !== 0}
+                                    title = { rental.timeConfirm !== 0
+                                ? "Rental Certificaton was deleted upon rental completion"
+                                : undefined}
+                                >
+                                    {rental.timeConfirm !== 0 ? "Certification Deleted" : "Download Certification"}
+                                </Button>
+                            </Link>
                         <Dialog.ActionTrigger asChild>
                             <Button variant="outline" rounded="sm">
                                 Close
