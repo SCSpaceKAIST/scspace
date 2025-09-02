@@ -351,7 +351,7 @@ export class ReservationService {
       await this.mailService.sendMail({
         to : user.email,
         bcc : "scspace.kaist@gmail.com",
-        subject : "[SCSpace] 근로장학생 배정 안내,",
+        subject : "[SCSpace] 근로장학생 배정 안내",
         context : metaAuthor,
         template : "worker"
       })
@@ -360,7 +360,7 @@ export class ReservationService {
       await this.mailService.sendMail({
         to : worker.email,
         bcc : "scspace.kaist@gmail.com",
-        subject : "[SCSpace] 근로 신규 할당 안내,",
+        subject : "[SCSpace] 근로 신규 할당 안내",
         context : metaWorker,
         template : "worker"
       })
