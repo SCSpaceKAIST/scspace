@@ -176,6 +176,8 @@ export const ReservationMeta = {
             kr: "신규 근로 요청",
             en: "New Work-Request"
         },
+        templateFooter : "이 메일은 근로자로 등록되어 있는 모든 사용자에게 발송되었습니다. ",
+        templateFooterEn : "This email is sent to all users who have registered as workers. ",
 
     }
 } as const
@@ -198,7 +200,7 @@ export const LotteryMeta = {
             },
             contentUpperDesc : {
                 kr : "예약 성공 (당첨)",
-                en : "Reservation Successful",      // i hate this
+                en : "Reservation Successful",
             },
             templatefooter :  "이 메일은 정기예약 추첨 신청 조직의 위임자 (Delegator) 에게 발송되었습니다.",
             templatefooterEn : "This email is sent to the Delegator of the reservation lottery organization.",
@@ -217,7 +219,7 @@ export const LotteryMeta = {
             },
             contentUpperDesc : {
                 kr : "예약 실패 (낙첨)",
-                en : "Reservation Failed",      // i love this
+                en : "Reservation Failed",
             },
             templatefooter :  "이 메일은 정기예약 추첨 신청 조직의 위임자 (Delegator) 에게 발송되었습니다.",
             templatefooterEn : "This email is sent to the Delegator of the reservation lottery organization.",
@@ -239,7 +241,7 @@ export const LotteryMeta = {
             },
             contentUpperDesc : {
                 kr : "예약 성공 (당첨)",
-                en : "Reservation Successful",      // i hate this
+                en : "Reservation Successful",
             },
             templatefooter :  "이 메일은 공연집중기간 예약 추첨 신청 조직의 위임자 (Delegator) 에게 발송되었습니다.",
             templatefooterEn : "This email is sent to the Delegator of the reservation lottery organization.",
