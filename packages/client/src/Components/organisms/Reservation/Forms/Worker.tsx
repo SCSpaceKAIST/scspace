@@ -9,7 +9,7 @@ export function WorkerForm({ value, setValue }: {
   return (
     <FieldComponent
       options={{
-        label: "Worker",
+        label: "Request Worker / 근로자 요청",
       }}
     >
       <Switch.Root
