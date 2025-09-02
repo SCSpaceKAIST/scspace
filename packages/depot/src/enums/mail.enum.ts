@@ -287,14 +287,14 @@ export const WorkerMeta  = {
         color: '#8d71b6',
         emoji: DEFAULT_EMOJI_RESERVATION,
         header: {
-            kr: "근로 배정 안내",
-            en: "Work Assigned Confirmation"
+            kr: "근로자 배정 안내",
+            en: "Worker Assigned Confirmation"
         },
         body: {
-            kr: "귀하에게 근로예약이 배정되었습니다.",
-            en: "New work has been assigned to you."
+            kr: "귀하의 예약에 근로장학생이 배정되었습니다.",
+            en: "Work has been assigned to your reservation."
         },
-        templatefooter :  "예약자에게 귀하(근로장학생)의 성명과 이메일이 공유되었습니다.",
-        templatefooterEn : "Your name and email has been shared with the author of reservation assigned to you.",
+        templatefooter :  "이 메일은 '근로자'를 요청한 예약의 예약자에게 발송되었습니다. 귀하의 예약 정보가 근로자에게 전달되었습니다. ",
+        templatefooterEn : "This mail is sent to the author of the reservation that requested 'worker'. Your reservation information has been sent to the assigned worker. ",
     }
 } as const

@@ -293,7 +293,7 @@ export class ReservationService {
               organization,
               workerNeed
             },
-            workerMeta
+            meta :workerMeta
           }
         })
       }
