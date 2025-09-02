@@ -79,6 +79,10 @@
                 {{reservation.user.nameKr}}</span>
             </li>
             <li>
+              <strong>연락처:</strong>
+                <span>{{reservation.user.email}}</span>
+            </li>
+            <li>
               <strong>소속 조직:</strong>
               <span>
                 {{#if (eq reservation.organization.name "individual")}}
@@ -102,6 +106,15 @@
               <strong>종료 시간:</strong>
               <span>{{meta.timeTo}} KST</span>
             </li>
+              <li>
+                  <strong>근로자 요청</strong>
+                  <span>
+                      {{#if workerNeed}}
+                          요청됨 (근로자 배정 시 메일이 전송됩니다)
+                      {{else}}
+                          N/A
+                      {{/if}}</span>
+              </li>
           </ul>
         </div>
 <!-- 임시 -->

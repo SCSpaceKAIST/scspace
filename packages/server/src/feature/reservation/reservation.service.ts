@@ -194,6 +194,7 @@ export class ReservationService {
       reservationInput.timeTo
     );
 
+
     const [user, organization, space] = await Promise.all([
       this.userPublicService.fetchById(reservationInput.userId),
       this.organizationPublicService.fetchById(reservationInput.organizationId),
@@ -238,13 +239,11 @@ export class ReservationService {
 
     const timeFrom = getString(reservation.timeFrom)
     const timeTo = getString(reservation.timeTo)
+    const workerNeed: boolean = reservationContent.workerNeed
 
-    //조직의 경우 모든 구성원에게 발송함 Notif
     const templateFooter: string = organization.id === 1 ? "문의사항이 있으시면 언제든 연락해 주세요." : "이 메일은 예약자 본인 및 조직에 등록된 모든 구성원에게 발송되었습니다."
     const templateFooterEn: string = organization.id === 1 ? "Please feel free to contact us if you have any questions." : "This email has been sent to the reservation holder and all members registered with the organization."
     const meta = { ...ReservationMeta.ReservationCompleted, timeFrom, timeTo, templateFooter, templateFooterEn }
-
-    // organizations의 모든 멤버 가져오기 when org.id !== 1 >> 성능 개선
     const organizationWithMembers = organization.id !== 1 ? await this.organizationPublicService.fetchDeepById(organization.id) : undefined
 
     if (!organizationWithMembers && organization.id !== 1) {
@@ -263,11 +262,41 @@ export class ReservationService {
             ...reservation,
             user,
             space,
-            organization
+            organization,
+            workerNeed
           },
           meta
         }
       })
+
+      if (workerNeed) {
+        const workers = await this.userPublicService.fetchAllbyType(UserTypeEnum.WORKER)
+
+        const workerMeta = {
+          ...ReservationMeta.WorkerNotif,
+          timeTo,
+          timeFrom,
+        }
+
+        await this.mailService.sendMail({
+          to: workers.map(worker => worker.email),
+          subject: `[SCSpace] New Work-Request Reservation Created`,
+          cc: 'scspace.kaist@gmail.com', // for scspace workers
+          bcc :'jhlee012@kaist.ac.kr',
+          template: "reservationPosted",
+          replyTo: "scspace@kaist.ac.kr",
+          context: {
+            reservation: {
+              ...reservation,
+              user,
+              space,
+              organization,
+              workerNeed
+            },
+            workerMeta
+          }
+        })
+      }
     } catch (error) {
       console.log(error)
       await this.mailService.reportError(
@@ -308,9 +337,7 @@ export class ReservationService {
       }
     });
 
-    ////////////
-    // Mailer //
-    ////////////∑
+    //MAILER
 
     try {
       //mail const
@@ -360,7 +387,7 @@ export class ReservationService {
       await this.mailService.sendMail({
         to : worker.email,
         bcc : "scspace.kaist@gmail.com",
-        subject : "[SCSpace] 근로 신규 할당 안내",
+        subject : "[SCSpace] 근로 할당 확정 안내",
         context : metaWorker,
         template : "worker"
       })
@@ -436,6 +463,7 @@ export class ReservationService {
     try {
       const timeFrom = getString(reservationUpdated.timeFrom)
       const timeTo = getString(reservationUpdated.timeTo)
+      const workerNeed: boolean = reservationContentUpdated.workerNeed
       const templateFooter: string =
         organization.id === 1
           ? '문의사항이 있으시면 언제든 연락해 주세요.'
@@ -472,6 +500,7 @@ export class ReservationService {
             user,
             space,
             organization,
+            workerNeed
           },
           meta,
         },
@@ -515,8 +544,8 @@ export class ReservationService {
     //Mail관련은 전부 try-catch with await for Error Control
     try {
       const timeFrom = getString(reservation[0].timeFrom);
-
       const timeTo = getString(reservation[0].timeTo);
+      const workerNeed:boolean = false
 
       //조직의 경우 모든 구성원에게 발송함 Notif
       const templateFooter: string =
@@ -555,6 +584,7 @@ export class ReservationService {
             user,
             space,
             organization,
+            workerNeed
           },
           meta,
         },

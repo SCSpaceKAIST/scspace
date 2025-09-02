@@ -17,6 +17,7 @@ export class UserRepository {
     id?: number;
     ids?: number[];
     studentNumber?: number;
+    type? : number;
   }): Promise<MUser[]> {
     const whereConditions: SQL[] = [];
 
@@ -28,6 +29,9 @@ export class UserRepository {
     }
     if (params.studentNumber) {
       whereConditions.push(eq(User.studentNumber, params.studentNumber));
+    }
+    if (params.type) {
+      whereConditions.push(eq(User.type, params.type));
     }
 
     const users = await this.db

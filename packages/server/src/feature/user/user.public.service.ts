@@ -41,6 +41,13 @@ export class UserPublicService {
     return (await this.userRepository.fetchAll(studentNumber)).map(MUser.fromDB);
   }
 
+  /**
+   * @param type : use type ENUM - worker, admin, manager, etc
+   */
+  async fetchAllbyType(type : number) : Promise<IUser[]> {
+    return (await this.userRepository.fetch( { type : UserTypeEnum.WORKER  }))
+  }
+
   async insert(user: IUserCreate): Promise<IUser> {
     return this.userService.insert(user);
   }

@@ -161,6 +161,23 @@ export const ReservationMeta = {
         templateFooter : "이 메일은 다중예약 해당 조직의 위임자 (Delegator) 에게 발송되었습니다.",
         templateFooterEn : "This email is sent to the Delegator of the multi-reservation organization.",
     },
+    WorkerNotif : {
+        color: '#c5a535',
+        emoji: DEFAULT_EMOJI_RESERVATION,
+        header: {
+            kr: "근로 요청 예약 안내",
+            en: "New Work-Request Reservation"
+        },
+        body: {
+            kr: "새로운 근로 요청 예약이 생성되었습니다.",
+            en: "New work-request reservation just created. "
+        },
+        contentUpperDesc: {
+            kr: "신규 근로 요청",
+            en: "New Work-Request"
+        },
+
+    }
 } as const
 
 
