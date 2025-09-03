@@ -11,7 +11,7 @@ export function useRedirects() {
     const { spaces } = useAllSpace();
     const [spaceLinks, setSpaceLinks] = useState<IRedirect[]>([]);
     const [calendarLinks, setCalendarLinks] = useState<IRedirect[]>([]);
-    const { userInfo, isAdmin, isManager, isLogined } = useAuth();
+    const { userInfo, isAdmin, isManager, isLogined, isWorker } = useAuth();
     const pathname = usePathname();
 
     useEffect(() => {
@@ -128,6 +128,12 @@ export function useRedirects() {
                         label: "현황",
                         helperText: "Status",
                         subdomains: calendarLinks
+                    },
+                    {
+                        href: "/reservation/worker",
+                        label: "근로 신청 예약",
+                        helperText: "Reservation needs Worker",
+                        invisible: !isWorker
                     },
                     {
                         href: "/mypage/reservation",
