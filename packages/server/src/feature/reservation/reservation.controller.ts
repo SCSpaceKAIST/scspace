@@ -77,7 +77,13 @@ export class ReservationController {
     @Req() req: Request,
   ): Promise<IReservationAll[]> {
     const user = req.user as IUser;
-    return await this.reservationService.getWorkHistory(user.id)
+    return await this.reservationService.getWorkHistory(user.id);
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Get('work/needs')
+  async getWorkerNeeds(): Promise<IReservationAll[]> {
+    return await this.reservationService.getWorkNeeds();
   }
 
   @UseGuards(ManagerGuard)

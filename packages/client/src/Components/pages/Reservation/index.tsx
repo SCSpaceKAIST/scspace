@@ -5,9 +5,10 @@ import ReservationApplication from "./Application";
 import ResStatus from "./Status";
 import UserReservation from "../Mypage/UserReservation";
 import { useAuth } from "@scspace-client/Hooks/auth";
+import WorkerReservation from "@scspace-client/Components/pages/Reservation/Worker";
 
 export default function Reservation() {
-    const { isLogined } = useAuth();
+    const { isLogined, isWorker } = useAuth();
 
     const pages: IPage[] = [
         {
@@ -22,6 +23,13 @@ export default function Reservation() {
             preview: (<ReservationApplication />),
             href: "/reservation/application",
             invisible: !isLogined
+        },
+        {
+            kor: "근로 신청 예약",
+            eng: "Reservation needs Worker",
+            preview: (<WorkerReservation />),
+            href: "/reservation/worker",
+            invisible: !isWorker
         },
         {
             kor: "내 예약",

@@ -159,6 +159,41 @@ export class ReservationService {
       this.reservationPublicService.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
     ]) as [IUser[], IOrganization[], ISpace[], IReservationContent[]];
 
+    const workerIds = reservationContents.map(content => content.workerId).filter(id => id !== 0);
+    const workers = await this.userPublicService.fetchAllByIds(workerIds)
+      .then(takeAll(workerIds, 'workers'));
+
+    checkContainAllId(userIds, users, 'users');
+    checkContainAllId(organizationIds, organizations, 'organizations');
+    checkContainAllId(spaceIds, spaces, 'spaces');
+    checkContainAllId(workerIds, workers, 'workers');
+
+    return reservations.map((reservation) => {
+      const content = reservationContents.find(content => content.id === reservation.id)!;
+      return {
+        ...reservation,
+        user: users.find(user => user.id === reservation.userId)!,
+        organization: organizations.find(org => org.id === reservation.organizationId)!,
+        space: spaces.find(space => space.id === reservation.spaceId)!,
+        worker: (content.workerId === 0) ? null : workers.find(worker => worker.id === content.workerId)!,
+        content
+      };
+    });
+  }
+
+  async getWorkNeeds() {
+    const reservations = await this.reservationRepository.fetchWorkNeeds();
+
+    const userIds = reservations.map((reservation) => reservation.userId);
+    const organizationIds = reservations.map((reservation) => reservation.organizationId);
+    const spaceIds = reservations.map((reservation) => reservation.spaceId);
+
+    const [users, organizations, spaces, reservationContents] = await Promise.all([
+      this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
+      this.organizationPublicService.fetchByIds(organizationIds),
+      this.spacePublicService.fetchAllByIds(spaceIds),
+      this.reservationPublicService.getReservationContentByIds(reservations.map((reservation) => reservation.id)),
+    ]) as [IUser[], IOrganization[], ISpace[], IReservationContent[]];
 
     const workerIds = reservationContents.map(content => content.workerId).filter(id => id !== 0);
     const workers = await this.userPublicService.fetchAllByIds(workerIds)
@@ -282,7 +317,7 @@ export class ReservationService {
           to: workers.map(worker => worker.email),
           subject: `[SCSpace] New Work-Request Reservation Created`,
           cc: 'scspace.kaist@gmail.com', // for scspace workers
-          bcc :'jhlee012@kaist.ac.kr',
+          bcc: 'jhlee012@kaist.ac.kr',
           template: "reservationPosted",
           replyTo: "scspace@kaist.ac.kr",
           context: {
@@ -293,8 +328,8 @@ export class ReservationService {
               organization,
               workerNeed
             },
-            workerMail : true,
-            meta :workerMeta
+            workerMail: true,
+            meta: workerMeta
           }
         })
       }
@@ -347,58 +382,58 @@ export class ReservationService {
 
       const user = await this.userPublicService.fetchById(reservationUpdated.userId)
       const organizationName = reservationUpdated.organizationId === 1 ? 'individual' : await this.organizationPublicService.fetchById(reservationUpdated.organizationId).then(org => org.name)
-      const space=  await this.spacePublicService.fetchById(reservationUpdated.spaceId)
+      const space = await this.spacePublicService.fetchById(reservationUpdated.spaceId)
 
-      const metaWorker =  {
-        meta : {
+      const metaWorker = {
+        meta: {
           ...WorkerMeta.forWorker,
           timeFrom,
           timeTo,
         },
-        reservation : reservationUpdated,
-        worker : worker,
-        user : user,
-        organizationName : organizationName,
-        space : space,
+        reservation: reservationUpdated,
+        worker: worker,
+        user: user,
+        organizationName: organizationName,
+        space: space,
       }
 
-      const metaAuthor =  {
-        meta : {
+      const metaAuthor = {
+        meta: {
           ...WorkerMeta.forAuthor,
           timeFrom,
           timeTo,
         },
-        reservation : reservationUpdated,
-        worker : worker,
-        user : user,
-        organizationName : organizationName,
-        space : space,
+        reservation: reservationUpdated,
+        worker: worker,
+        user: user,
+        organizationName: organizationName,
+        space: space,
       }
 
       //Send to Author
       await this.mailService.sendMail({
-        to : user.email,
-        bcc : "scspace.kaist@gmail.com",
-        subject : "[SCSpace] 근로장학생 배정 안내",
-        context : metaAuthor,
-        template : "worker"
+        to: user.email,
+        bcc: "scspace.kaist@gmail.com",
+        subject: "[SCSpace] 근로장학생 배정 안내",
+        context: metaAuthor,
+        template: "worker"
       })
 
       //Send to Worker
       await this.mailService.sendMail({
-        to : worker.email,
-        bcc : "scspace.kaist@gmail.com",
-        subject : "[SCSpace] 근로 할당 확정 안내",
-        context : metaWorker,
-        template : "worker"
+        to: worker.email,
+        bcc: "scspace.kaist@gmail.com",
+        subject: "[SCSpace] 근로 할당 확정 안내",
+        context: metaWorker,
+        template: "worker"
       })
     } catch (error) {
       console.log(error)
       await this.mailService.reportError(
-          error instanceof Error
-              ? error
-              : new Error(String(error)),
-          "Worker - Mail Sector")
+        error instanceof Error
+          ? error
+          : new Error(String(error)),
+        "Worker - Mail Sector")
     }
 
     return MReservation.fromDB(reservationUpdated, reservationContentUpdated);
@@ -546,7 +581,7 @@ export class ReservationService {
     try {
       const timeFrom = getString(reservation[0].timeFrom);
       const timeTo = getString(reservation[0].timeTo);
-      const workerNeed:boolean = false
+      const workerNeed: boolean = false
 
       //조직의 경우 모든 구성원에게 발송함 Notif
       const templateFooter: string =

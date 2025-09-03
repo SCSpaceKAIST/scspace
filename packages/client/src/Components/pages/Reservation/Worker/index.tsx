@@ -20,7 +20,7 @@ import ReservationDetail from "@scspace-client/Components/organisms/Reservation/
 import TooltipComponent from "../../../atoms/Tooptip";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 
-export default function WorkHistory() {
+export default function WorkerReservation() {
     const { needLogin } = useAuth();
     needLogin();
 
@@ -30,7 +30,7 @@ export default function WorkHistory() {
     const [open, setOpen] = useState<boolean>(false);
     const isWide = useBreakpointValue({ base: false, md: true });
 
-    const { data: reservation, refetch } = useReservationAPI().workHistory;
+    const { data: reservation, refetch } = useReservationAPI().workNeeds;
 
     useEffect(() => {
         setSelected(reservation?.at(0) ?? null);

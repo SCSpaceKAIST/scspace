@@ -117,7 +117,13 @@ export function useReservationAPI(param: {
         dataForCalendar: dateReservation,
     }
 
-    const workHistory = useQueryApi<IReservationAll[]>(`/reservation/work`);
+    const workHistory = useQueryApi<IReservationAll[]>(
+        `/reservation/work`
+    );
+
+    const workNeeds = useQueryApi<IReservationAll[]>(
+        `/reservation/work/needs`
+    );
 
     const createRes = useMutationApi<IReservation, IReservationCreate>(
         "/reservation/",
@@ -149,6 +155,7 @@ export function useReservationAPI(param: {
         userReservation,
         spaceReservation,
         workHistory,
+        workNeeds,
 
         createRes,
         createMultipleRes,
