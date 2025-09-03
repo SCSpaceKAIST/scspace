@@ -1,21 +1,27 @@
+"use client"
+
 import { Card, Center } from "@chakra-ui/react";
 import { useDate } from "@scspace-client/Hooks/utils";
 import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 import { reservationMinDate, reservationMaxDate } from "@scspace-depot/consts/reservation.const";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function AvailableDate({ spaceType }: { spaceType: SpaceTypeEnum }) {
     const { getDateString, getTime } = useDate();
-    let startDate = new Date();
-    let endDate = new Date();
+
+    const [startString, setStartString] = useState<string>("loading...");
+    const [endString, setEndString] = useState<string>("loading...");
 
     useEffect(() => {
-        startDate = new Date();
-        endDate = new Date();
+        const startDate = new Date();
+        const endDate = new Date();
 
         startDate.setDate(startDate.getDate() + reservationMinDate[spaceType]);
         endDate.setDate(endDate.getDate() + reservationMaxDate[spaceType]);
-    }, []);
+
+        setStartString(getDateString(getTime(startDate)));
+        setEndString(getDateString(getTime(endDate)));
+    });
 
     return (
         <Card.Root border={"1px solid"} borderColor={"gray.200"} size={"sm"} bg={"inherit"}>
@@ -27,7 +33,7 @@ export default function AvailableDate({ spaceType }: { spaceType: SpaceTypeEnum 
             <Card.Body>
                 <Center>
                     <Card.Title>
-                        {getDateString(getTime(startDate))} To {getDateString(getTime(endDate))}
+                        {startString} To {endString}
                     </Card.Title>
                 </Center>
             </Card.Body>

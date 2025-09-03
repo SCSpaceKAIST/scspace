@@ -65,9 +65,6 @@ export default function RentalRule() {
                                     연체 일수는 반납 기한으로부터 실제 반납일까지의 날짜로 계산하며, 실제 반납 일수로부터 연체 일수만큼 대여 신청이 제한됩니다.
                                 </Text>
                                 <Text>
-                                    <RedMark>동아리방/회의실이 없는 조직이 우선 배정을 받습니다.</RedMark> 이를 악용하다 적발될 시 공간위가 제공하는 추첨에 불이익이 따를 수 있습니다.
-                                </Text>
-                                <Text>
                                     <RedMark>물품 분실 혹은 손상 시 공간위가 배상을 청구할 수 있습니다.</RedMark>
                                 </Text>
                             </Stack>
