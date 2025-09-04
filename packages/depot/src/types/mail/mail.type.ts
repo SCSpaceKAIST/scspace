@@ -1,9 +1,21 @@
 import { OrganizationStatusEnum } from "../../enums/organization.enum";
 import { IOrganizationAll } from "../organization";
 
+type MailTemplate =
+    | "orgStatusUpdate"
+    | "welcome"
+    | "orgDelegatorUpdate"
+    | "reservationPosted"
+    | "errorLog"
+    | "postMultipleReservation"
+    | "orgDescription"
+    | "lotteryResult"
+    | 'worker'
+    | 'rentalNotif';
+
 export interface IMail {
     subject: string;
-    template: "orgStatusUpdate" | "welcome" | "orgDelegatorUpdate" | "reservationPosted" | "errorLog" | "postMultipleReservation" | "orgDescription" | "lotteryResult" | 'worker';
+    template: MailTemplate;
     to: string | string[];
     cc?: string | string[];
     bcc?: string | string[];
