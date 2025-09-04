@@ -134,6 +134,18 @@ export class RentalService {
 
             await this.rentalRepository.updateRentalCert(id, res.filename);
 
+            //rental mail notif
+
+            await this.mailService.sendMail({
+                to : "scspace.kaist@gmail.com",
+                bcc : "jhlee012@kaist.ac.kr",
+                template : "rentalNotif",
+                subject : "[SCSpace] 새로운 대여가 있습니다.",
+                context : {
+                    meta : meta,
+                }
+            })
+
         } catch (error) {
             console.log(error)
 
