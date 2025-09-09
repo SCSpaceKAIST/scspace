@@ -41,7 +41,6 @@ export const useRedirectStore = create<{
             href: "/article",
             label: "게시판",
             helperText: "Article",
-            disabled: true
         },
         {
             href: "/organization",

@@ -15,8 +15,8 @@ import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { HiOutlineRefresh } from "react-icons/hi";
 
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { Dispatch, SetStateAction,  } from "react";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { Dispatch, SetStateAction, } from "react";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { IRentalAll } from "@scspace-depot/types/rental";
@@ -36,7 +36,7 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
     refetchList: () => any;
 }) {
     const { isManager } = useAuth();
-    const { getString } = useDate();
+    const { getString } = dateUtils();
 
     const isWide = useBreakpointValue({ base: false, md: true });
 
@@ -159,20 +159,20 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
                     </Dialog.Body >
                     <Separator />
                     <Dialog.Footer>
-                            <Link
-                                href={`${baseUrl}/file/download?filename=${encodeURIComponent(rental?.certName)}&displayName=Rental_Confirmation_No${rental?.id}.pdf`}
+                        <Link
+                            href={`${baseUrl}/file/download?filename=${encodeURIComponent(rental?.certName)}&displayName=Rental_Confirmation_No${rental?.id}.pdf`}
+                        >
+                            <Button
+                                variant={"outline"}
+                                colorPalette={"blue"}
+                                disabled={rental.timeConfirm !== 0}
+                                title={rental.timeConfirm !== 0
+                                    ? "Rental Certificaton was deleted upon rental completion"
+                                    : undefined}
                             >
-                                <Button
-                                    variant={"outline"}
-                                    colorPalette={"blue"}
-                                    disabled={rental.timeConfirm !== 0}
-                                    title = { rental.timeConfirm !== 0
-                                ? "Rental Certificaton was deleted upon rental completion"
-                                : undefined}
-                                >
-                                    {rental.timeConfirm !== 0 ? "Certification Deleted" : "Download Certification"}
-                                </Button>
-                            </Link>
+                                {rental.timeConfirm !== 0 ? "Certification Deleted" : "Download Certification"}
+                            </Button>
+                        </Link>
                         <Dialog.ActionTrigger asChild>
                             <Button variant="outline" rounded="sm">
                                 Close

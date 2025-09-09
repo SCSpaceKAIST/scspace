@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState, } from "react";
 
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import { IRentalAll } from "@scspace-depot/types/rental";
@@ -33,7 +33,7 @@ export default function RentalTable({
 
     const [open, setOpen] = useState<boolean>(false);
 
-    const { getString } = useDate();
+    const { getString } = dateUtils();
 
     const isWide = useBreakpointValue({ base: false, md: true });
 
@@ -47,7 +47,7 @@ export default function RentalTable({
 
     const [tab, setTab] = useState<string>(RENTAL_STATE.ALL);
 
-    const { getTime } = useDate();
+    const { getTime } = dateUtils();
     const [now, setNow] = useState<number>(0);
 
     useEffect(() => {

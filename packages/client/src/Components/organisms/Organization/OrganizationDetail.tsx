@@ -17,7 +17,7 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import AddMemberBtn from "./AddMemberBtn";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
@@ -39,7 +39,7 @@ export default function OrganizationDialog({ open, setOpen, id, refetchList }: {
     const { data: organizationDetail, refetch: refetchDetail } = useOrganizationAPI({ id }).organizationDetail;
     const { userInfo, isManager, isAdmin } = useAuth();
     const [isDelegator, setIsDelegator] = useState<boolean>(false);
-    const { getString } = useDate();
+    const { getString } = dateUtils();
 
     useEffect(() => {
         setIsDelegator((userInfo?.id ?? -1) === (organizationDetail?.delegatorId ?? -2));

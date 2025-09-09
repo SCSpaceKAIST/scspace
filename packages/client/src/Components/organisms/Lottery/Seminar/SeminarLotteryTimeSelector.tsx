@@ -25,7 +25,7 @@ import { useSeminarLotteryAPI, useSeminarLotteryInfoAPI } from "@scspace-client/
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
 import AlertBtn from "@scspace-client/Components/atoms/AlertBtn";
 
@@ -38,7 +38,7 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
     const [readOnly, setReadOnly] = useState<boolean>(false);
     const [appliedId, setAppliedId] = useState<number>(-1);
     const { linkPush } = useLinkPush();
-    const { getTime } = useDate();
+    const { getTime } = dateUtils();
 
     const {
         activeLotteryInfo: {

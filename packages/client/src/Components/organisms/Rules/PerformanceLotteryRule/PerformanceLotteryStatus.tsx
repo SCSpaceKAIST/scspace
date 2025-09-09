@@ -2,12 +2,12 @@
 
 import { Alert, Center, Heading } from "@chakra-ui/react";
 import { usePerformanceLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import { useEffect } from "react";
 
 export default function PerformanceLotteryStatus() {
     const { data: activeLotteryInfo, refetch } = usePerformanceLotteryInfoAPI().activeLotteryInfo;
-    const { getDateString } = useDate();
+    const { getDateString } = dateUtils();
 
     useEffect(() => {
         refetch();

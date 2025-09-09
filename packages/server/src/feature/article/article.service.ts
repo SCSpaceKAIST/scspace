@@ -1,0 +1,164 @@
+import {
+    Injectable,
+    NotFoundException,
+    ForbiddenException,
+    BadRequestException,
+} from '@nestjs/common';
+import { ArticleRepository } from './article.repository';
+import {
+    IArticleCreate,
+    IArticleUpdate,
+    IArticleQuery,
+    IArticle,
+    IArticleWithUser,
+    ARTICLE_STATE,
+    ARTICLE_TYPE,
+} from '@scspace-depot/types/article';
+
+@Injectable()
+export class ArticleService {
+    constructor(
+        private readonly articleRepository: ArticleRepository,
+    ) { }
+
+    async createArticle(userId: number, articleData: Omit<IArticleCreate, 'userId'>): Promise<IArticle> {
+        const createData: IArticleCreate = {
+            ...articleData,
+            userId,
+        };
+
+        return await this.articleRepository.createArticle(createData);
+    }
+
+    async getArticleById(id: number): Promise<IArticleWithUser> {
+        return await this.articleRepository.getArticleWithUserById(id);
+    }
+
+    async getArticles(query: IArticleQuery = {}): Promise<{
+        articles: IArticleWithUser[];
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+    }> {
+        const limit = query.limit || 20;
+        const offset = query.offset || 0;
+        const page = Math.floor(offset / limit) + 1;
+
+        const result = await this.articleRepository.getArticles(query);
+        const totalPages = Math.ceil(result.total / limit);
+
+        return {
+            ...result,
+            page,
+            limit,
+            totalPages,
+        };
+    }
+
+    async getPublicArticles(query: Omit<IArticleQuery, 'state'> = {}): Promise<{
+        articles: IArticleWithUser[];
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+    }> {
+        // Only show visible articles for public access
+        return await this.getArticles({ ...query, state: ARTICLE_STATE.VISIBLE });
+    }
+
+    async updateArticle(
+        id: number,
+        userId: number,
+        updateData: IArticleUpdate,
+        isAdmin: boolean = false
+    ): Promise<IArticle> {
+        const article = await this.articleRepository.getArticleById(id);
+
+        // Check permission: only author or admin can update
+        if (!isAdmin && article.userId !== userId) {
+            throw new ForbiddenException('You can only update your own articles');
+        }
+
+        return await this.articleRepository.updateArticle(id, updateData);
+    }
+
+    async deleteArticle(id: number, userId: number, isAdmin: boolean = false): Promise<void> {
+        const article = await this.articleRepository.getArticleById(id);
+
+        // Check permission: only author or admin can delete
+        if (!isAdmin && article.userId !== userId) {
+            throw new ForbiddenException('You can only delete your own articles');
+        }
+
+        await this.articleRepository.deleteArticle(id);
+    }
+
+    async getUserArticles(userId: number, query: Omit<IArticleQuery, 'userId'> = {}): Promise<{
+        articles: IArticle[];
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+    }> {
+        const limit = query.limit || 20;
+        const offset = query.offset || 0;
+        const page = Math.floor(offset / limit) + 1;
+
+        const result = await this.articleRepository.getArticlesByUserId(userId, query);
+        const totalPages = Math.ceil(result.total / limit);
+
+        return {
+            ...result,
+            page,
+            limit,
+            totalPages,
+        };
+    }
+
+    async hideArticle(id: number, userId: number, isAdmin: boolean = false): Promise<IArticle> {
+        const article = await this.articleRepository.getArticleById(id);
+
+        // Check permission: only author or admin can hide
+        if (!isAdmin && article.userId !== userId) {
+            throw new ForbiddenException('You can only hide your own articles');
+        }
+
+        return await this.articleRepository.hideArticle(id);
+    }
+
+    async showArticle(id: number, userId: number, isAdmin: boolean = false): Promise<IArticle> {
+        const article = await this.articleRepository.getArticleById(id);
+
+        // Check permission: only author or admin can show
+        if (!isAdmin && article.userId !== userId) {
+            throw new ForbiddenException('You can only show your own articles');
+        }
+
+        return await this.articleRepository.showArticle(id);
+    }
+
+    async getArticlesByType(type: number, query: Omit<IArticleQuery, 'type'> = {}): Promise<{
+        articles: IArticleWithUser[];
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+    }> {
+        return await this.getArticles({ ...query, type });
+    }
+
+    async searchArticles(searchTerm: string, query: Omit<IArticleQuery, 'search'> = {}): Promise<{
+        articles: IArticleWithUser[];
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+    }> {
+        if (!searchTerm || searchTerm.trim().length === 0) {
+            throw new BadRequestException('Search term cannot be empty');
+        }
+
+        return await this.getArticles({ ...query, search: searchTerm.trim() });
+    }
+}

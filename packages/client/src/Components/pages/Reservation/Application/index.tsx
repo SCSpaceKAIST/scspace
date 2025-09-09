@@ -28,7 +28,7 @@ import { SmallLoading } from "@scspace-client/Components/atoms/Loading";
 import { CalendarView } from "@scspace-client/Components/organisms/Reservation/Calendar";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 
 export default function ReservationApplication() {
   const { userInfo, needLogin } = useAuth();
@@ -63,7 +63,7 @@ export default function ReservationApplication() {
 
   const [e, setE] = useState<string | null>(null);
 
-  const { getTime } = useDate();
+  const { getTime } = dateUtils();
 
   function submit() {
     if (title === "") {

@@ -1,13 +1,13 @@
 "use client"
 
 import { Card, Center } from "@chakra-ui/react";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 import { reservationMinDate, reservationMaxDate } from "@scspace-depot/consts/reservation.const";
 import { useEffect, useState } from "react";
 
 export default function AvailableDate({ spaceType }: { spaceType: SpaceTypeEnum }) {
-    const { getDateString, getTime } = useDate();
+    const { getDateString, getTime } = dateUtils();
 
     const [startString, setStartString] = useState<string>("loading...");
     const [endString, setEndString] = useState<string>("loading...");

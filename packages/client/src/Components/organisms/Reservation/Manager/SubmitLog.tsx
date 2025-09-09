@@ -4,7 +4,7 @@ import { Button, Card, DataList, Dialog, DownloadTrigger, Stack } from "@chakra-
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { Dispatch, SetStateAction } from "react";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import { IReservationMultipleCreateResurt } from "@scspace-depot/types/reservation";
 
 export default function SubmitLog({ submitLog, open, setOpen }: {
@@ -12,7 +12,7 @@ export default function SubmitLog({ submitLog, open, setOpen }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-    const { getString } = useDate();
+    const { getString } = dateUtils();
 
     const downloadData = {
         title: submitLog.title,

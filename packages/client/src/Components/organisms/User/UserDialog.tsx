@@ -13,7 +13,7 @@ import OrganizationTable from "../Organization/OrganizationTable";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import ReservationDetail from "../Reservation/Detail";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import SimplePagination from "@scspace-client/Components/molecules/page/SimplePagenation";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 
@@ -44,7 +44,7 @@ export default function UserDialog({
     useEffect(() => { refetchRes(); }, [page, user?.id || 0]);
     useEffect(() => { setSelectedRes(reservation?.data[0] ?? null); }, [reservation]);
 
-    const { getString } = useDate();
+    const { getString } = dateUtils();
 
     return (<>
         <ReservationDetail

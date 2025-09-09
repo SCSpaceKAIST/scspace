@@ -3,7 +3,7 @@
 import { Card, IconButton, Stack } from "@chakra-ui/react";
 import React from "react";
 import { HiMinus, HiPlus } from "react-icons/hi2";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import ResTime from "./NewTime";
 
 export interface IReservationRepeat {
@@ -18,7 +18,7 @@ export default function ReservationCard({ resList, setResList }: {
     resList: IReservationRepeat[];
     setResList: React.Dispatch<React.SetStateAction<IReservationRepeat[]>>;
 }) {
-    const { getTime } = useDate();
+    const { getTime } = dateUtils();
 
     return (
         <Stack>

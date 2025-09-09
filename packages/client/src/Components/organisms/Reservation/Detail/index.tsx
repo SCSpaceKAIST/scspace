@@ -2,7 +2,7 @@
 
 import { Dialog, Portal, HStack, useBreakpointValue, DataList, Separator, Text, Button, Center, Stack, Badge, Show } from "@chakra-ui/react";
 import { useAuth } from "@scspace-client/Hooks/auth";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
@@ -22,7 +22,7 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
     selectedRes: IReservationAll | null;
     refetch: () => any;
 }) {
-    const { getString } = useDate();
+    const { getString } = dateUtils();
     const { userInfo, isManager, isWorker } = useAuth();
 
     const { data: organizationDetail } = useOrganizationAPI({ id: selectedRes?.organizationId ?? 0 }).organizationDetail;

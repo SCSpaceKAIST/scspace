@@ -11,7 +11,7 @@ import {
 import { useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import { HiPlus } from "react-icons/hi2";
 import SeminarLotteryInfoModal from "@scspace-client/Components/organisms/Lottery/Seminar/SeminarLotteryInfoModal";
@@ -28,7 +28,7 @@ export default function SeminarLotteryInfo() {
         }
     } = useSeminarLotteryInfoAPI();
 
-    const { getDateString } = useDate();
+    const { getDateString } = dateUtils();
 
     const [open, setOpen] = useState<boolean>(false);
     const [selectedId, setSelectedId] = useState<number>(0);

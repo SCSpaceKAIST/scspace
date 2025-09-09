@@ -5,7 +5,7 @@ import { useMutationApi, useQueryApi } from "./api"
 import { IReservation, IReservationAll, IReservationApplyWorker, IReservationCreate, IReservationCreateMultiple, IReservationMultipleCreateResurt, IReservationUpdate } from "@scspace-depot/types/reservation"
 import { use, useEffect, useState } from "react";
 import { IDataResponse, ISuccessResponse } from "@scspace-depot/types/common/common.type";
-import { useDate } from "./utils";
+import { dateUtils } from "./utils";
 
 export interface IRes {
     id: number;
@@ -50,7 +50,7 @@ export function useReservationAPI(param: {
     const dateFrom = param.dateFrom ?? new Date();
     const dateTo = param.dateTo ?? new Date();
 
-    const { getDate, getDateString, getTime, getMidnightTime, timeUnit } = useDate();
+    const { getDate, getDateString, getTime, getMidnightTime, timeUnit } = dateUtils();
 
     const allReservation = useQueryApi<IDataResponse<IReservationAll[]>>(
         `/reservation?oid=${oid}&limit=${limit}&offset=${offset}`

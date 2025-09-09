@@ -13,7 +13,7 @@ import { useState, } from "react";
 import { IOrganizationDelegator, } from "@scspace-depot/types/organization";
 import { HiOutlineRefresh } from "react-icons/hi";
 
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
@@ -35,7 +35,7 @@ export default function OrganizationTable({ uid, disabled, organization, refetch
 
     const [open, setOpen] = useState<boolean>(false);
 
-    const { getString } = useDate();
+    const { getString } = dateUtils();
 
     const isWide = useBreakpointValue({ base: false, md: true });
 

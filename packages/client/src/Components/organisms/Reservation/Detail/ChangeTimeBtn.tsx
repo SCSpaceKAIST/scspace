@@ -4,7 +4,7 @@ import { Text } from "@chakra-ui/react";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useEffect, useState } from "react";
 import ResTime from "../Manager/NewTime";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import UpdateBtn from "@scspace-client/Components/molecules/buttons/UpdateBtn";
 
@@ -14,7 +14,7 @@ export default function ChangeTimeBtn({ rid, refetch, timeFrom, timeTo }: {
     timeTo: number;
     refetch: () => any;
 }) {
-    const { getDateUnit, getTime } = useDate();
+    const { getDateUnit, getTime } = dateUtils();
     const { updateRes } = useReservationAPI({ rid });
 
     const timeToUnit = getDateUnit(timeTo);

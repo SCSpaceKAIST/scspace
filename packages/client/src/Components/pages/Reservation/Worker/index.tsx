@@ -15,7 +15,7 @@ import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { useEffect, useState } from "react";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { IReservationAll } from "@scspace-depot/types/reservation";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import ReservationDetail from "@scspace-client/Components/organisms/Reservation/Detail";
 import TooltipComponent from "../../../atoms/Tooptip";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
@@ -24,7 +24,7 @@ export default function WorkerReservation() {
     const { needLogin } = useAuth();
     needLogin();
 
-    const { getString } = useDate();
+    const { getString } = dateUtils();
 
     const [selected, setSelected] = useState<IReservationAll | null>(null);
     const [open, setOpen] = useState<boolean>(false);

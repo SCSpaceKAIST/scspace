@@ -17,7 +17,7 @@ import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { useEffect, useState } from "react";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { IReservationAll } from "@scspace-depot/types/reservation";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import ReservationDetail from "@scspace-client/Components/organisms/Reservation/Detail";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import TooltipComponent from "../../../atoms/Tooptip";
@@ -35,7 +35,7 @@ export default function UserReservation() {
     const [page, setPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(10);
     const [_limit, _setLimit] = useState<string>("10");
-    const { getString } = useDate();
+    const { getString } = dateUtils();
 
     useEffect(() => {
         if (parseInt(_limit) != limit) setLimit(parseInt(_limit));

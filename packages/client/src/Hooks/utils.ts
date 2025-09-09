@@ -1,6 +1,4 @@
-import { useBreakpointValue } from "@chakra-ui/react";
-
-export function useDate() {
+export function dateUtils() {
     function getTime(date: Date | { year?: number | 0, month?: number, day?: number, hour?: number, minute?: number }): number {
         if (date instanceof Date) {
             const year = date.getFullYear();

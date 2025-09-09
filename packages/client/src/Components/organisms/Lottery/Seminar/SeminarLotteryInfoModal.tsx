@@ -5,7 +5,7 @@ import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import { useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import { ILotteryInfo } from "@scspace-depot/types/lottery/lottery.info.type";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
@@ -23,7 +23,7 @@ export default function SeminarLotteryInfoModal({ info, open, setOpen, refetch }
         updateLotteryInfo,
     } = useSeminarLotteryInfoAPI(info?.id || 0);
 
-    const { getTime, getDateString, getDate } = useDate();
+    const { getTime, getDateString, getDate } = dateUtils();
 
     const [dateLotteryStart, setDateLotteryStart] = useState<Date>(new Date());
     const [dateLotteryEnd, setDateLotteryEnd] = useState<Date>(new Date());

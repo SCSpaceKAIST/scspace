@@ -92,7 +92,6 @@ export function useRedirects() {
                 href: "/article",
                 label: "게시판",
                 helperText: "Article",
-                disabled: true
             },
             {
                 href: "/organization",
@@ -194,11 +193,6 @@ export function useRedirects() {
                         href: "/admin/user",
                         label: "유저 관리",
                         helperText: "Manage User"
-                    },
-                    {
-                        href: "/manage/rules",
-                        label: "세칙",
-                        helperText: "Rules"
                     },
                     {
                         href: "/admin/lottery-seminar",

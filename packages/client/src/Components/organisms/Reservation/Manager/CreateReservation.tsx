@@ -24,7 +24,7 @@ import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import ReservationCard, { IReservationRepeat } from "./ReservationCard";
 import { RepeatForm } from "./Repeat";
 import SubmitLog from "./SubmitLog";
@@ -48,7 +48,7 @@ export default function CreateReservation() {
 
     const createMultiReservation = useReservationAPI().createMultipleRes;
 
-    const { getTime, getDate } = useDate();
+    const { getTime, getDate } = dateUtils();
 
     const [resList, setResList] = useState<IReservationRepeat[]>([
         {

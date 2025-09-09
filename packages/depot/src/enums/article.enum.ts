@@ -3,7 +3,8 @@ export enum ArticleStateEnum {
     SHOW = 2,
 };
 
-export enum ArticleClassEnum {
+export enum ArticleTypeEnum {
     NOTICE = 1,
     BUSINESS = 2,
+    PROMOTION = 3
 };

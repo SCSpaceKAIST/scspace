@@ -2,7 +2,7 @@
 
 import { AbsoluteCenter, Box, Button, Center, DataList, Grid, GridItem, Separator, Stack, StackSeparator, Text } from "@chakra-ui/react";
 import DataListItem from "@scspace-client/Components/atoms/DataListItem";
-import { useDate } from "@scspace-client/Hooks/utils";
+import { dateUtils } from "@scspace-client/Hooks/utils";
 import { useEffect, useState } from "react";
 
 interface DateSlotProps {
@@ -24,7 +24,7 @@ export function DateSlot({
     drawnOrgName,
     isOrgRequested
 }: DateSlotProps) {
-    const { getDateString, getTime, getDate } = useDate();
+    const { getDateString, getTime, getDate } = dateUtils();
     const [isHovered, setIsHovered] = useState(false);
 
     const [slotDate, setSlotDate] = useState<Date>(getDate(startTime));
