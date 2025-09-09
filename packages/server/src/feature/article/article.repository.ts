@@ -15,14 +15,9 @@ import {
     eq,
     and,
     SQL,
-    gt,
-    lt,
     desc,
     or,
-    gte,
-    lte,
     count,
-    ne,
     asc,
     like,
 } from 'drizzle-orm';
@@ -76,11 +71,7 @@ export class ArticleRepository {
         const [result] = await this.db
             .select({
                 article: Article,
-                user: {
-                    id: User.id,
-                    name: User.nameKr,
-                    email: User.email,
-                },
+                user: User,
             })
             .from(Article)
             .leftJoin(User, eq(Article.userId, User.id))

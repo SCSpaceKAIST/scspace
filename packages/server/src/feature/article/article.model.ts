@@ -1,5 +1,5 @@
 import { IArticle, IArticleWithUser } from '@scspace-depot/types/article';
-import { Notice as Article, schema } from '@schema';
+import { Notice as Article, schema, User } from '@schema';
 
 export class MArticle implements IArticle {
     id: IArticle['id'];
@@ -52,7 +52,7 @@ export class MArticleWithUser extends MArticle implements IArticleWithUser {
 
     static fromDBWithUser(
         article: typeof Article.$inferSelect,
-        user: { id: number; name: string; email: string }
+        user: typeof User.$inferSelect
     ): IArticleWithUser {
         return {
             ...MArticle.fromDB(article),
