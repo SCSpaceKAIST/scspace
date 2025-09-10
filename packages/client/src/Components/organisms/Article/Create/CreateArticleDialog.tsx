@@ -31,8 +31,8 @@ export default function CreateArticleDialog({ open, setOpen }: {
         }
 
         const formData = new FormData();
-        formData.append("title", title);
-        formData.append("content", content);
+        formData.append("title", title.trim());
+        formData.append("content", content.trim());
         formData.append("type", type.toString());
 
         toaster.promise(

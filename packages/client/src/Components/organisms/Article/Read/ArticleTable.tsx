@@ -1,6 +1,7 @@
 "use client"
 
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
+import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useArticleAPI } from "@scspace-client/Hooks/article";
 import { dateUtils } from "@scspace-client/Hooks/utils";
 import { IArticleQuery, IArticleWithUser } from "@scspace-depot/types/article";
@@ -17,9 +18,11 @@ export default function ArticleTable({ refetchTrigger, query }: {
         refetch();
     }, [refetchTrigger]);
 
+    const { linkPush } = useLinkPush();
+
     return (
         <SimpleTable
-            onIdChange={(id) => alert(`Selected Article ID: ${id}`)}
+            onIdChange={(id) => linkPush(`/article/${id}`)}
             header={["Id", "Title", "Author", "Created At"]}
             content={data?.articles?.map((article: IArticleWithUser) => ({
                 id: article.id,
