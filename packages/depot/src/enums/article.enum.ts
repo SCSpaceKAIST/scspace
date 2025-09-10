@@ -4,7 +4,8 @@ export enum ArticleStateEnum {
 };
 
 export enum ArticleTypeEnum {
-    NOTICE = 1,
+    NOTICE = 0,
+    GENERAL = 1,
     BUSINESS = 2,
     PROMOTION = 3
 };

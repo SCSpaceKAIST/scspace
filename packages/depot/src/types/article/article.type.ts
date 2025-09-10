@@ -16,8 +16,8 @@ export interface IArticle {
 export interface IArticleCreate {
     userId: number;
     title: string;
-    content?: string;
-    type?: number;
+    content: string;
+    type: number;
     images?: string;
     files?: string;
 }

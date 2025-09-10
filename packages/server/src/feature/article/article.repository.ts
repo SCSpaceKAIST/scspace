@@ -29,6 +29,7 @@ import {
     IArticleWithUser,
 } from '@scspace-depot/types/article';
 import { getNow } from '@scspace-server/common/utils';
+import { ArticleTypeEnum } from '@scspace-depot/enums/article.enum';
 
 @Injectable()
 export class ArticleRepository {
@@ -47,7 +48,7 @@ export class ArticleRepository {
                 timePost: now,
                 timeUpdate: now,
                 state: 1, // visible by default
-                type: articleData.type || 0, // general type by default
+                type: articleData.type || ArticleTypeEnum.NOTICE, // general type by default
             });
 
         const articleId = insertResult.insertId;

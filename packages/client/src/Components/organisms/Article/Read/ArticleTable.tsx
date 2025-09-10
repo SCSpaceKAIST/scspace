@@ -4,10 +4,18 @@ import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import { useArticleAPI } from "@scspace-client/Hooks/article";
 import { dateUtils } from "@scspace-client/Hooks/utils";
 import { IArticleQuery, IArticleWithUser } from "@scspace-depot/types/article";
+import { useEffect } from "react";
 
-export default function ArticleTable(query: IArticleQuery) {
-    const { data } = useArticleAPI({ query }).articles;
-    const { getDateString } = dateUtils();
+export default function ArticleTable({ refetchTrigger, query }: {
+    refetchTrigger: number;
+    query: IArticleQuery
+}) {
+    const { data, refetch } = useArticleAPI({ query }).articles;
+    const { getString } = dateUtils();
+
+    useEffect(() => {
+        refetch();
+    }, [refetchTrigger]);
 
     return (
         <SimpleTable
@@ -18,8 +26,8 @@ export default function ArticleTable(query: IArticleQuery) {
                 row: [
                     article.id,
                     article.title,
-                    article.user.nameKr || 'Unknown',
-                    getDateString(article.timePost)
+                    article.user.nameKr,
+                    getString(article.timePost)
                 ]
             })) ?? []}
         />
