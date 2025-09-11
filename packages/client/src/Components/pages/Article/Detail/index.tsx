@@ -1,6 +1,6 @@
 "use client"
 
-import { Badge, Card, Flex, Grid, HStack, IconButton, Spacer, Stack, Textarea } from "@chakra-ui/react";
+import { Badge, Card, Flex, Grid, HStack, IconButton, Separator, Spacer, Stack, Textarea, useBreakpointValue } from "@chakra-ui/react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
 import ArticleImages from "@scspace-client/Components/organisms/Article/Read/ArticleImages";
@@ -14,6 +14,8 @@ export default function ArticleDetail({ id }: { id: number }) {
 
     const { linkPush } = useLinkPush();
     const images: string[] = JSON.parse(data?.images ?? "[]");
+
+    const isWide = useBreakpointValue({ base: false, md: true });
 
     return (
         <Grid
@@ -34,14 +36,19 @@ export default function ArticleDetail({ id }: { id: number }) {
                 <RefetchBtn refetch={refetch} />
             </Flex>
 
+            {!isWide && <Separator />}
             <Card.Root
                 minH={0}
                 maxH={"100%"}
                 height="100%"
                 overflow="hidden"
+                gap={4}
+                p={isWide ? 4 : 0}
+                borderWidth={isWide ? "1px" : "0"}
+                background={isWide ? "white" : "transparent"}
             >
                 {data ? (<>
-                    <Card.Header>
+                    <Card.Header p={0}>
                         <HStack>
                             <Badge colorPalette={"blue"}>
                                 {ArticleTypeString[data.type as keyof typeof ArticleTypeString]}
@@ -52,6 +59,7 @@ export default function ArticleDetail({ id }: { id: number }) {
                         </HStack>
                     </Card.Header>
                     <Card.Body
+                        p={0}
                         flex={1}
                         minH={0}
                         overflowY="auto"
