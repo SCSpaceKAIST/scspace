@@ -6,7 +6,6 @@ import {
     Center,
     Field,
     FileUpload,
-    Float,
     HStack,
     IconButton,
     useFileUploadContext,
@@ -19,7 +18,6 @@ import { LuFileImage } from "react-icons/lu"
 function FileUploadList() {
     const fileUpload = useFileUploadContext();
     const files = fileUpload.acceptedFiles;
-    if (files.length === 0) return null;
 
     const [select, setSelect] = useState<number>(0);
     useEffect(() => {
@@ -27,6 +25,8 @@ function FileUploadList() {
             setSelect(files.length - 1);
         }
     }, [files, select]);
+
+    if (files.length === 0) return null;
 
     return (
         <Center
