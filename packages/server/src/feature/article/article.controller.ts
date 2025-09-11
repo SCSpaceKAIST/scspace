@@ -17,13 +17,14 @@ import {
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { AuthGuard } from '@nestjs/passport';
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import {
     IArticleCreate,
     IArticleUpdate,
     IArticleQuery,
     ARTICLE_TYPE,
 } from '@scspace-depot/types/article';
+import { publicStorage } from '@scspace-server/tools/file/file.storage';
 
 @Controller('article')
 export class ArticleController {
@@ -35,7 +36,9 @@ export class ArticleController {
         FileFieldsInterceptor([
             { name: 'images', maxCount: 20 },
             { name: 'files', maxCount: 20 },
-        ])
+        ], {
+            storage: publicStorage,
+        })
     )
     async createArticle(
         @Request() req: any,

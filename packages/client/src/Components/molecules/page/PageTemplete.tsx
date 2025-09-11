@@ -48,6 +48,8 @@ export default function PageTemplete({
             gap={2}
             height="100%"
             templateRows="auto 1fr"
+            h={"100%"}
+            maxH={"full"}
         >
             <Stack
                 height="100%"

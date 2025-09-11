@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, Dialog, Stack } from "@chakra-ui/react";
+import { Button, Dialog, Stack, useFileUpload } from "@chakra-ui/react";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import InputComponent from "@scspace-client/Components/molecules/forms/Input";
@@ -9,6 +9,7 @@ import TextareaComponent from "@scspace-client/Components/molecules/forms/Textar
 import { useArticleAPI } from "@scspace-client/Hooks/article";
 import { ArticleTypeEnum } from "@scspace-depot/enums/article.enum";
 import { useState, Dispatch, SetStateAction } from "react";
+import ArticleImageUpload from "./ArticleImageUpload";
 
 export default function CreateArticleDialog({ open, setOpen }: {
     open: boolean;
@@ -17,6 +18,11 @@ export default function CreateArticleDialog({ open, setOpen }: {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [type, setType] = useState<ArticleTypeEnum>(ArticleTypeEnum.NOTICE);
+
+    const fileUpload = useFileUpload({
+        maxFiles: 20,
+        accept: { "image/*": [] },
+    });
 
     const [error, setError] = useState<string>("");
 
@@ -34,6 +40,10 @@ export default function CreateArticleDialog({ open, setOpen }: {
         formData.append("title", title.trim());
         formData.append("content", content.trim());
         formData.append("type", type.toString());
+
+        fileUpload.acceptedFiles.forEach((file) => {
+            formData.append("images", file);
+        });
 
         toaster.promise(
             createArticle(formData, {
@@ -88,6 +98,9 @@ export default function CreateArticleDialog({ open, setOpen }: {
                         value={title}
                         onChange={setTitle}
                         required={true}
+                    />
+                    <ArticleImageUpload
+                        fileUpload={fileUpload}
                     />
                     <TextareaComponent
                         label="Content"

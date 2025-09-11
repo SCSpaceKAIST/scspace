@@ -24,6 +24,7 @@ import { FileModule } from '@scspace-server/tools/file/file.module';
                     // Allow images and common document types
                     const allowedMimes = [
                         'image/jpeg',
+                        'image/jpg',
                         'image/png',
                         'image/gif',
                         'image/webp',
