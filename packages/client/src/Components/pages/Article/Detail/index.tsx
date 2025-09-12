@@ -19,7 +19,7 @@ export default function ArticleDetail({ id }: { id: number }) {
 
     return (
         <Grid
-            templateRows={"auto 1fr"}
+            templateRows={isWide ? "auto 1fr" : "auto auto 1fr"}
             height="100%"
             minH={0}
             maxH={"100%"}

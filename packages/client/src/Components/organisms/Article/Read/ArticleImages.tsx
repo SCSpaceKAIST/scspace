@@ -11,7 +11,7 @@ export default function ArticleImages({ images }: { images: string[] }) {
 
     return (
         <Center overflow={"hidden"} minH={0} w="100%" maxW="100%" whiteSpace="nowrap">
-            <HStack w="fit-content" minWidth="max-content" h="450px">
+            <HStack w="fit-content" minWidth="max-content" h={"fit-content"}>
                 <Box
                     key={`empty-before`}
                     w={`${248 * (images.length - select - 1) + 8}px`}
