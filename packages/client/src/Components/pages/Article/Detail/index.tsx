@@ -1,6 +1,6 @@
 "use client"
 
-import { Badge, Card, Flex, Grid, HStack, IconButton, Separator, Spacer, Stack, Textarea, useBreakpointValue } from "@chakra-ui/react";
+import { Badge, Card, Flex, Grid, HStack, IconButton, Separator, Spacer, Stack, StackSeparator, Textarea, useBreakpointValue } from "@chakra-ui/react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
 import ArticleImages from "@scspace-client/Components/organisms/Article/Read/ArticleImages";
@@ -66,7 +66,7 @@ export default function ArticleDetail({ id }: { id: number }) {
                         scrollBehavior="smooth"
                         scrollbar="hidden"
                     >
-                        <Stack>
+                        <Stack separator={<StackSeparator />}>
                             <ArticleImages images={images} />
                             <Textarea
                                 readOnly

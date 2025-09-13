@@ -23,8 +23,10 @@ function FileUploadList() {
     useEffect(() => {
         if (select >= files.length) {
             setSelect(files.length - 1);
+        } else {
+            setSelect(0);
         }
-    }, [files, select]);
+    }, [files]);
 
     if (files.length === 0) return null;
 
@@ -37,18 +39,20 @@ function FileUploadList() {
             whiteSpace="nowrap"
         >
             <HStack w="fit-content" minWidth="max-content" h="450px">
-                {Array.from({ length: files.length }).map((_, idx) => (
-                    <Box
-                        key={`empty-${idx}-before`}
-                        w={idx < files.length - select - 1 ? "240px" : "0"}
-                        transition={"all"}
-                        transitionDuration={"moderate"}
-                    />
-                ))}
+                <Box
+                    key={`empty-before`}
+                    w={`${248 * (files.length - select - 1) + 8}px`}
+                    // h={'100px'}
+                    transition={"all"}
+                    transitionDuration={"moderate"}
+                // background={"gray.200"}
+                />
                 {files.map((file, idx) => (
                     <FileUpload.Item
                         w={(select === idx ? "360px" : "240px")}
                         h={(select === idx ? "450px" : "300px")}
+                        maxW={"72svw"}
+                        maxH={"96svw"}
                         file={file}
                         key={`${file.name}-${idx}`}
                         justifyContent={"center"}
@@ -58,6 +62,7 @@ function FileUploadList() {
                         transitionDuration={"moderate"}
                         border={0}
                         background={"gray.50"}
+                        p={0}
                     >
                         <FileUpload.ItemPreviewImage
                             maxH={"full"}
@@ -72,14 +77,14 @@ function FileUploadList() {
                         </Box>
                     </FileUpload.Item>
                 ))}
-                {Array.from({ length: files.length }).map((_, idx) => (
-                    <Box
-                        key={`empty-${idx}-after`}
-                        w={idx < select ? "240px" : "0"}
-                        transition={"all"}
-                        transitionDuration={"moderate"}
-                    />
-                ))}
+                <Box
+                    key={`empty-after`}
+                    w={`${248 * (select) + 8}px`}
+                    // h={'100px'}
+                    transition={"all"}
+                    transitionDuration={"moderate"}
+                // background={"gray.200"}
+                />
             </HStack>
         </Center>
     )
