@@ -22,9 +22,6 @@ import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";
 import { IRentalAll } from "@scspace-depot/types/rental";
 import ReturnBtn from "./ReturnBtn";
 import ConfirmBtn from "./ConfirmBtn";
-import { useFileAPI } from "@scspace-client/Hooks/file";
-import { toaster } from "@scspace-client/Components/atoms/Toaster";
-import { useLinkPush } from "@scspace-client/Hooks/api";
 import Link from "next/link";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
@@ -39,8 +36,6 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
     const { getString } = dateUtils();
 
     const isWide = useBreakpointValue({ base: false, md: true });
-
-    const downloadFile = useFileAPI().downloadFile;
 
     return (
         <SimpleDialog

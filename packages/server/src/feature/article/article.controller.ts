@@ -14,9 +14,6 @@ import {
     HttpStatus,
     UseInterceptors,
     UploadedFiles,
-    Res,
-    BadRequestException,
-    Logger,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -27,9 +24,8 @@ import {
     IArticleQuery,
 } from '@scspace-depot/types/article';
 import { publicStorage } from '@scspace-server/tools/file/file.storage';
-import { PUBLIC_FOLDER } from '@scspace-depot/consts/file.const';
 import { FileService } from '@scspace-server/tools/file/file.service';
-import { Response } from 'express';
+import { ISuccessResponse } from '@scspace-depot/types/common';
 
 @Controller('article')
 export class ArticleController {
@@ -134,12 +130,13 @@ export class ArticleController {
 
     @Delete(':id')
     @UseGuards(AuthGuard('jwt'))
-    @HttpCode(HttpStatus.NO_CONTENT)
-    async deleteArticle(@Param('id', ParseIntPipe) id: number, @Request() req: any) {
+    async deleteArticle(@Param('id', ParseIntPipe) id: number, @Request() req: any): Promise<ISuccessResponse> {
         const userId = req.user.id;
         const isAdmin = req.user.type >= 3; // Assuming admin type is 3 or higher
 
         await this.articleService.deleteArticle(id, userId, isAdmin);
+
+        return { success: true };
     }
 
     @Put(':id/hide')

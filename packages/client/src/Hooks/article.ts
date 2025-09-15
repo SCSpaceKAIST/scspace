@@ -52,7 +52,7 @@ export function useArticleAPI(params?: {
         "PUT"
     ).mutateAsync;
 
-    const deleteArticle = useMutationApi<void, {}>(
+    const deleteArticle = useMutationApi<{}, {}>(
         id ? `/article/${id}` : "",
         "DELETE"
     ).mutateAsync;
