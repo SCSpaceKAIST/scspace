@@ -1,13 +1,12 @@
 "use client"
 
 import { Button, Wrap } from "@chakra-ui/react";
-import { useArticleAPI } from "@scspace-client/Hooks/article";
 import { useFileAPI } from "@scspace-client/Hooks/file";
 
 export default function ArticleFiles({ files }: { files: string[] }) {
-    if (files.length === 0) return null;
-
     const downloadFile = useFileAPI().downloadFile;
+
+    if (files.length === 0) return null;
 
     return (
         <Wrap>
