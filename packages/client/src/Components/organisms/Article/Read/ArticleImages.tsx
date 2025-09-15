@@ -9,6 +9,8 @@ const localhostBaseURL = "http://localhost:3001/uploads/";
 export default function ArticleImages({ images }: { images: string[] }) {
     const [select, setSelect] = useState<number>(0);
 
+    if (images.length === 0) return null;
+
     return (
         <Center
             overflow={"hidden"}

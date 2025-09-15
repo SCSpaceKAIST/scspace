@@ -14,21 +14,29 @@ import {
     HttpStatus,
     UseInterceptors,
     UploadedFiles,
+    Res,
+    BadRequestException,
+    Logger,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { AuthGuard } from '@nestjs/passport';
-import { FileFieldsInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import {
     IArticleCreate,
     IArticleUpdate,
     IArticleQuery,
-    ARTICLE_TYPE,
 } from '@scspace-depot/types/article';
 import { publicStorage } from '@scspace-server/tools/file/file.storage';
+import { PUBLIC_FOLDER } from '@scspace-depot/consts/file.const';
+import { FileService } from '@scspace-server/tools/file/file.service';
+import { Response } from 'express';
 
 @Controller('article')
 export class ArticleController {
-    constructor(private readonly articleService: ArticleService) { }
+    constructor(
+        private readonly articleService: ArticleService,
+        private readonly fileService: FileService
+    ) { }
 
     @Post()
     @UseGuards(AuthGuard('jwt'))

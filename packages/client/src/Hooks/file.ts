@@ -1,6 +1,8 @@
 import { IFileUploadPublicResponse, IFileUploadResponse } from "@scspace-depot/types/file";
 import { useFormDataMutation } from "./api";
 
+const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
+
 export function useFileAPI() {
     const uploadFile = useFormDataMutation<IFileUploadResponse>(
         "/file/upload",
@@ -12,42 +14,32 @@ export function useFileAPI() {
         'POST'
     ).mutateAsync;
 
-    const downloadFile = async (filename: string, displayName?: string)  : Promise<Response> => {
-        // return await fetch(
-        //     `/file/download?filename=${encodeURIComponent(filename)}`,
-        //     {
-        //         method: 'GET',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         credentials: 'include',
-        //     }
-        // ).then(r => r.json());
+    const downloadFile = async (param: {
+        filename: string;
+        displayName?: string;
+        isPublic?: boolean;
+    }): Promise<void> => {
         const res = await fetch(
-            `/file/download?filename=${encodeURIComponent(filename)}` + displayName ? `?displayName=${encodeURIComponent(displayName ?? filename)}` : '',
+            `${baseUrl}/file/download?${new URLSearchParams(Object.entries(param).map(([k, v]) => [k, v.toString()]))}`,
             {
                 method: 'GET',
                 credentials: 'include',
             }
         );
 
-        if (!res.ok) throw new Error("Download failed");
-
-        const blob = await res.blob();
-        const url = window.URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = filename;
-
-        document.body.appendChild(a);
-
-        a.click();
-        a.remove();
-
-        window.URL.revokeObjectURL(url);
-
-        return res;
+        if (res.ok) {
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = param.displayName ?? param.filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        } else {
+            throw new Error('파일 다운로드 실패: ' + res.status);
+        }
     }
 
     return { uploadFile, uploadPublicFile, downloadFile };

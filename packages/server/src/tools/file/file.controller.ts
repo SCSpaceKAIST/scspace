@@ -1,10 +1,11 @@
-import { BadRequestException, Body, Controller, Get, Logger, Post, Query,  Res, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Logger, Post, Query, Res, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { privateStorage, publicStorage } from "./file.storage";
 import { Response } from "express";
 import { FileService } from "./file.service";
-import { PRIVATE_FOLDER } from "@scspace-depot/consts/file.const";
+import { PRIVATE_FOLDER, PUBLIC_FOLDER } from "@scspace-depot/consts/file.const";
 import { IFileUploadPublicResponse, IFileUploadResponse } from "@scspace-depot/types/file";
+import { resolve } from "path";
 
 @Controller("file")
 export class FileController {
@@ -50,16 +51,20 @@ export class FileController {
     async downloadFile(
         @Res() res: Response,
         @Query("filename") file: string,
-        @Query("displayName") dpName?: string
+        @Query("displayName") dpName?: string,
+        @Query("isPublic") isPublic?: boolean
     ) {
-        const filePath = `${PRIVATE_FOLDER}/${file}`;
+        const filePath = resolve(isPublic ? PUBLIC_FOLDER : PRIVATE_FOLDER, file);
 
         await this.fileService.fileExistValidator(filePath);
 
         res.download(filePath, dpName ?? file, (err) => {
             if (err) {
+                Logger.error(`[downloadFile] Download error: ${err.message}`);
                 throw new BadRequestException(`Error occured: ${err.message}`);
+            } else {
+                Logger.log(`[downloadFile] Download success: ${filePath}`);
             }
-        })
+        });
     }
 }

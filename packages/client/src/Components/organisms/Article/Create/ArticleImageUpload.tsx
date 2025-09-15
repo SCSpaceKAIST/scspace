@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import { HiX } from "react-icons/hi";
 import { LuFileImage } from "react-icons/lu"
 
-function FileUploadList() {
+function ImageUploadList() {
     const fileUpload = useFileUploadContext();
     const files = fileUpload.acceptedFiles;
 
@@ -94,7 +94,6 @@ export default function ArticleImageUpload({ fileUpload }: { fileUpload: UseFile
     return (
         <FileUpload.RootProvider
             value={fileUpload}
-
         >
             <FileUpload.HiddenInput />
             <Field.Root
@@ -111,14 +110,14 @@ export default function ArticleImageUpload({ fileUpload }: { fileUpload: UseFile
                 </Field.Label>
                 <FileUpload.Trigger asChild>
                     <Button variant="outline" width={"full"}>
-                        <LuFileImage /> Upload File
+                        <LuFileImage /> Upload Images
                     </Button>
                 </FileUpload.Trigger>
                 <Field.ErrorText>
                     이미지의 크기는 10MB를 초과할 수 없습니다.
                 </Field.ErrorText>
             </Field.Root>
-            <FileUploadList />
+            <ImageUploadList />
         </FileUpload.RootProvider>
     )
 }

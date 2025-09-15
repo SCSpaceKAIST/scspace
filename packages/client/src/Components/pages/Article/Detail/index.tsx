@@ -3,6 +3,7 @@
 import { Badge, Card, Flex, Grid, HStack, IconButton, Separator, Spacer, Stack, StackSeparator, Textarea, useBreakpointValue } from "@chakra-ui/react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
+import ArticleFiles from "@scspace-client/Components/organisms/Article/Read/ArticleFiles";
 import ArticleImages from "@scspace-client/Components/organisms/Article/Read/ArticleImages";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useArticleAPI } from "@scspace-client/Hooks/article";
@@ -14,6 +15,7 @@ export default function ArticleDetail({ id }: { id: number }) {
 
     const { linkPush } = useLinkPush();
     const images: string[] = JSON.parse(data?.images ?? "[]");
+    const files: string[] = JSON.parse(data?.files ?? "[]");
 
     const isWide = useBreakpointValue({ base: false, md: true });
 
@@ -74,7 +76,15 @@ export default function ArticleDetail({ id }: { id: number }) {
                                 autoresize
                                 cursor={"default"}
                                 defaultValue={data.content ?? ""}
+                                border={0}
+                                outlineColor={"transparent"}
+                                _focus={{
+                                    outline: "none",
+                                    boxShadow: "none",
+                                    borderColor: "transparent"
+                                }}
                             />
+                            <ArticleFiles files={files} />
                         </Stack>
                     </Card.Body>
                 </>) : (<LoadingComponent />)}

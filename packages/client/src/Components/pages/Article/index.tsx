@@ -5,14 +5,21 @@ import AddBtn from "@scspace-client/Components/molecules/buttons/AddBtn";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
 import CreateArticleDialog from "@scspace-client/Components/organisms/Article/Create/CreateArticleDialog";
 import ArticleTable from "@scspace-client/Components/organisms/Article/Read/ArticleTable";
+import { useArticleTypeStore } from "@scspace-client/Store/articleType";
 import { ArticleTypeString } from "@scspace-depot/consts/article.const";
 import { ArticleTypeEnum } from "@scspace-depot/enums/article.enum";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HiMenu } from "react-icons/hi";
 
 export default function Article() {
     const { open, onToggle } = useDisclosure();
-    const [type, setType] = useState<ArticleTypeEnum>(ArticleTypeEnum.NOTICE);
+
+    const { type, update } = useArticleTypeStore();
+    useEffect(() => {
+        if (!type) {
+            update(ArticleTypeEnum.NOTICE);
+        }
+    }, [type, update]);
 
     const [refetchCounter, setRefetchCounter] = useState(0);
 
@@ -57,7 +64,7 @@ export default function Article() {
                                 <Button
                                     variant={(Number(key) === type) ? "subtle" : "ghost"}
                                     key={key}
-                                    onClick={() => setType(Number(key) as ArticleTypeEnum)}
+                                    onClick={() => update(Number(key) as ArticleTypeEnum)}
                                     colorPalette={(Number(key) === type) ? "blue" : "current"}
                                 >
                                     {value}

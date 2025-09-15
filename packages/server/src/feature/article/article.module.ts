@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { BadRequestException, Module } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { ArticleRepository } from './article.repository';
 import { ArticleController } from './article.controller';
@@ -39,7 +39,7 @@ import { FileModule } from '@scspace-server/tools/file/file.module';
                     if (allowedMimes.includes(file.mimetype)) {
                         cb(null, true);
                     } else {
-                        cb(new Error('Invalid file type'), false);
+                        cb(new BadRequestException('Invalid file type'), false);
                     }
                 },
             }),

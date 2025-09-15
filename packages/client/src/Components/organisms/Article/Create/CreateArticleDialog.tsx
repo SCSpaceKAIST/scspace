@@ -10,6 +10,7 @@ import { useArticleAPI } from "@scspace-client/Hooks/article";
 import { ArticleTypeEnum } from "@scspace-depot/enums/article.enum";
 import { useState, Dispatch, SetStateAction } from "react";
 import ArticleImageUpload from "./ArticleImageUpload";
+import ArticleFileUpload from "./ArticleFileUpload";
 
 export default function CreateArticleDialog({ open, setOpen }: {
     open: boolean;
@@ -19,9 +20,13 @@ export default function CreateArticleDialog({ open, setOpen }: {
     const [content, setContent] = useState("");
     const [type, setType] = useState<ArticleTypeEnum>(ArticleTypeEnum.NOTICE);
 
-    const fileUpload = useFileUpload({
+    const imageUpload = useFileUpload({
         maxFiles: 20,
         accept: { "image/*": [] },
+    });
+
+    const fileUpload = useFileUpload({
+        maxFiles: 20,
     });
 
     const [error, setError] = useState<string>("");
@@ -41,8 +46,12 @@ export default function CreateArticleDialog({ open, setOpen }: {
         formData.append("content", content.trim());
         formData.append("type", type.toString());
 
-        fileUpload.acceptedFiles.forEach((file) => {
+        imageUpload.acceptedFiles.forEach((file) => {
             formData.append("images", file);
+        });
+
+        fileUpload.acceptedFiles.forEach((file) => {
+            formData.append("files", file);
         });
 
         toaster.promise(
@@ -100,7 +109,7 @@ export default function CreateArticleDialog({ open, setOpen }: {
                         required={true}
                     />
                     <ArticleImageUpload
-                        fileUpload={fileUpload}
+                        fileUpload={imageUpload}
                     />
                     <TextareaComponent
                         label="Content"
@@ -108,6 +117,9 @@ export default function CreateArticleDialog({ open, setOpen }: {
                         value={content}
                         onChange={setContent}
                         required={true}
+                    />
+                    <ArticleFileUpload
+                        fileUpload={fileUpload}
                     />
                 </Stack>
             </Dialog.Body>
