@@ -17,7 +17,7 @@ export const reservationMaxWeekTime: { [key in SpaceTypeEnum]: number } = {
   [SpaceTypeEnum.PIANO]: 120 * 7, // 피아노실, 일주일 최대 14시간
   [SpaceTypeEnum.SEMINAR]: 180 * 2, // 세미나실 1주일 최대 6시간 (세미나1실/세미나2실 합계)
   [SpaceTypeEnum.DANCE]: 120 * 7, // 무예실, 하루 최대 2시간
-  [SpaceTypeEnum.GROUP]: 120 * 7, // 합주실, 하루 최대 2시간
+  [SpaceTypeEnum.GROUP]: 60 * 5, // 합주실, 일주일 최대 5시간
   [SpaceTypeEnum.MIRAE]: 240 * 2, // 미래홀, 최대 8시간
   [SpaceTypeEnum.SUMI]: 240 * 2, // 조수미홀, 최대 8시간
   [SpaceTypeEnum.OPEN]: 240 * 7, // 오픈스페이스, 최대 28시간
@@ -28,7 +28,7 @@ export const reservationTimeWeightOrg: { [key in SpaceTypeEnum]: number } = {
   [SpaceTypeEnum.INDIVIDUAL]: 1, // 개인과 동일
   [SpaceTypeEnum.PIANO]: 1, // 개인과 동일
   [SpaceTypeEnum.SEMINAR]: 1, // 개인과 동일
-  [SpaceTypeEnum.DANCE]: 2, // 개인의 2배 (4시간)
+  [SpaceTypeEnum.DANCE]: 2, // 개인의 2배 (4시간, 10시간)
   [SpaceTypeEnum.GROUP]: 2, // 개인의 2배 (4시간)
   [SpaceTypeEnum.MIRAE]: 6, // 개인의 6배 (24시간)
   [SpaceTypeEnum.SUMI]: 6, // 개인의 6배 (24시간)
