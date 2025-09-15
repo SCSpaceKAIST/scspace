@@ -41,32 +41,6 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
     const isWide = useBreakpointValue({ base: false, md: true });
 
     const downloadFile = useFileAPI().downloadFile;
-    const { linkPush } = useLinkPush();
-
-    //not used in this file
-    const handleDownload = () => {
-        toaster.promise(
-            async () => {
-                const res = await downloadFile(rental?.certName ?? '', rental?.timeBorrow ? getString(rental?.timeBorrow) : undefined);
-                // if (!res.ok) throw new Error(res.error.message || 'Download failed');
-                if (!res.ok) throw new Error('Download failed');
-            },
-            {
-                loading: {
-                    title: 'Downloading...',
-                    description: 'Please wait while we download your file.',
-                },
-                success: {
-                    title: 'Download complete',
-                    description: 'Your file has been downloaded successfully.',
-                },
-                error: {
-                    title: 'Download failed',
-                    description: 'There was an error downloading your file.',
-                },
-            }
-        )
-    }
 
     return (
         <SimpleDialog

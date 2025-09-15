@@ -18,7 +18,7 @@ export function useFileAPI() {
         filename: string;
         displayName?: string;
         isPublic?: boolean;
-    }): Promise<void> => {
+    }): Promise<Response> => {
         const res = await fetch(
             `${baseUrl}/file/download?${new URLSearchParams(Object.entries(param).map(([k, v]) => [k, v.toString()]))}`,
             {
@@ -40,6 +40,8 @@ export function useFileAPI() {
         } else {
             throw new Error('파일 다운로드 실패: ' + res.status);
         }
+
+        return res;
     }
 
     return { uploadFile, uploadPublicFile, downloadFile };
