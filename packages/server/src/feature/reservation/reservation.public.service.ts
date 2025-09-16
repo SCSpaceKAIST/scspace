@@ -426,7 +426,7 @@ export class ReservationPublicService {
       getDateDiffInMinute(nowDay, timeFrom)
     ) {
       throw new BadRequestException(
-        `Check the minimum reservation date. ${space.nameEn} can be reserved at least ${reservationMinDate[space.spaceType]} days in advance.`,
+        `Check the minimum reservation date. ${space.nameEn} can be reserved at least ${reservationMinDate[space.spaceType]} days in advance. (Left days: ${reservationMinDate[space.spaceType] - Math.floor(getDateDiffInMinute(nowDay, timeFrom) / (24 * 60))})`,
       );
     }
     if (
@@ -434,7 +434,7 @@ export class ReservationPublicService {
       getDateDiffInMinute(nowDay, timeFrom)
     ) {
       throw new BadRequestException(
-        `Check the maximum reservation date. ${space.nameEn} can be reserved at most ${reservationMaxDate[space.spaceType]} days in advance.`,
+        `Check the maximum reservation date. ${space.nameEn} can be reserved at most ${reservationMaxDate[space.spaceType]} days in advance. (Left days: ${reservationMaxDate[space.spaceType] - Math.floor(getDateDiffInMinute(nowDay, timeFrom) / (24 * 60))})`,
       );
     }
 

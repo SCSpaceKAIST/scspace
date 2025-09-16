@@ -1,10 +1,12 @@
 "use client";
 
-import { createToaster, HStack, Stack, Toast, Toaster, } from "@chakra-ui/react";
+import { Button, createToaster, HStack, IconButton, Stack, Toast, Toaster, } from "@chakra-ui/react";
+import { HiX } from "react-icons/hi";
 
 export const toaster = createToaster({
     placement: "bottom-end",
     removeDelay: 500,
+
 });
 
 export default function ToasterComponent() {
@@ -24,6 +26,11 @@ export default function ToasterComponent() {
                                 </Toast.Description>
                             )}
                         </Stack>
+                        <Toast.CloseTrigger asChild>
+                            <IconButton variant="ghost" size="sm">
+                                <HiX />
+                            </IconButton>
+                        </Toast.CloseTrigger>
                     </HStack>
                 </Toast.Root>
             )}

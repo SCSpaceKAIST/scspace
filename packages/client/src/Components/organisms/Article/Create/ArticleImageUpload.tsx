@@ -8,6 +8,7 @@ import {
     FileUpload,
     HStack,
     IconButton,
+    Stack,
     Text,
     useFileUploadContext,
     UseFileUploadReturn,
@@ -91,7 +92,11 @@ function ImageUploadList() {
                             transition={"all"}
                             transitionDuration={"moderate"}
                         >
-                            <HStack>
+                            <HStack
+                                backdropFilter="blur(8px)"
+                                background="rgba(255,255,255,0.3)"
+                                rounded={"md"}
+                            >
                                 <IconButton
                                     size={"xs"}
                                     variant={"ghost"}
@@ -104,7 +109,7 @@ function ImageUploadList() {
                                 >
                                     <HiMinus />
                                 </IconButton>
-                                <Text>
+                                <Text fontWeight={"semibold"}>
                                     {idx + 1}
                                 </Text>
                                 <IconButton
