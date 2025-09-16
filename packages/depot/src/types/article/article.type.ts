@@ -20,9 +20,10 @@ export interface IArticleCreate {
     type: number;
     images?: string;
     files?: string;
+    state: number;
 }
 
-export type IArticleUpdate = Partial<IArticleCreate>;
+export type IArticleUpdate = Partial<Omit<IArticleCreate, "id">>;
 
 export interface IArticleQuery {
     userId?: number;
