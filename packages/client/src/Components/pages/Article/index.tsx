@@ -79,6 +79,7 @@ export default function Article() {
                         transitionDuration={"moderate"}
                         overflow={"hidden"}
                         borderWidth={open ? (isWide ? "1px" : "0") : "1px"}
+                        size={"sm"}
                     >
                         <Card.Header>
                             <Card.Title>

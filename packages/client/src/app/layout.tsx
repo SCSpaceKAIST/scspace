@@ -55,7 +55,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <Header />
             <Box
               flexGrow={1}
-              padding={8}
+              px={6}
+              py={4}
               scrollbar="hidden"
               overflowY="hidden"
               scrollBehavior="smooth"
