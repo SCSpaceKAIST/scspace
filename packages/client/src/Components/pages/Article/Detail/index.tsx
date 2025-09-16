@@ -1,6 +1,6 @@
 "use client"
 
-import { Badge, Card, Flex, Grid, HStack, IconButton, Separator, Spacer, Stack, StackSeparator, Textarea, useBreakpointValue } from "@chakra-ui/react";
+import { Badge, Card, Flex, Grid, HStack, IconButton, Input, Separator, Spacer, Stack, StackSeparator, Textarea, useBreakpointValue } from "@chakra-ui/react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
@@ -125,9 +125,22 @@ export default function ArticleDetail({ id }: { id: number }) {
                             <Badge colorPalette={"blue"}>
                                 {ArticleTypeString[data.type as keyof typeof ArticleTypeString]}
                             </Badge>
-                            <Card.Title truncate>
-                                {data.title}
-                            </Card.Title>
+                            <Input
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                readOnly={!editable}
+                                variant={editable ? "outline" : "flushed"}
+                                cursor={"default"}
+                                borderWidth={editable ? "1px" : 0}
+                                outlineColor={editable ? "gray.300" : "transparent"}
+                                _focus={!editable ? {
+                                    outline: "none",
+                                    boxShadow: "none",
+                                    borderColor: "transparent"
+                                } : undefined}
+                                fontSize={"lg"}
+                                fontWeight={"semibold"}
+                            />
                             <Spacer />
                             <ArticleUpdateBtn
                                 editable={editable}
