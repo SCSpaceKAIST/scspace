@@ -109,7 +109,7 @@ export default function CreateArticleDialog({ open, setOpen }: {
                         required={true}
                     />
                     <ArticleImageUpload
-                        fileUpload={imageUpload}
+                        imageUpload={imageUpload}
                     />
                     <TextareaComponent
                         label="Content"

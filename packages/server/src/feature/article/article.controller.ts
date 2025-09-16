@@ -109,34 +109,36 @@ export class ArticleController {
 
     @Put(':id')
     @UseGuards(AuthGuard('jwt'))
-    @UseInterceptors(
-        FileFieldsInterceptor([
-            { name: 'images', maxCount: 20 },
-            { name: 'files', maxCount: 20 },
-        ])
-    )
+    // @UseInterceptors(
+    //     FileFieldsInterceptor([
+    //         { name: 'images', maxCount: 20 },
+    //         { name: 'files', maxCount: 20 },
+    //     ], {
+    //         storage: publicStorage,
+    //     })
+    // )
     async updateArticle(
         @Param('id', ParseIntPipe) id: number,
         @Req() req: Request,
         @Body() updateData: Omit<IArticleUpdate, 'images' | 'files'>,
-        @UploadedFiles() files: { images?: Express.Multer.File[], files?: Express.Multer.File[] }
+        // @UploadedFiles() files: { images?: Express.Multer.File[], files?: Express.Multer.File[] }
     ) {
         const user = req.user as IUser;
         const userId = user.id;
         const isManager = user.type === UserTypeEnum.MANAGER || user.type === UserTypeEnum.ADMIN;
 
         // Handle uploaded files if provided
-        const articleUpdate: IArticleUpdate = { ...updateData };
+        // const articleUpdate: IArticleUpdate = { ...updateData };
 
-        if (files?.images) {
-            articleUpdate.images = JSON.stringify(files.images.map(f => f.filename));
-        }
+        // if (files?.images) {
+        //     articleUpdate.images = JSON.stringify(files.images.map(f => f.filename));
+        // }
 
-        if (files?.files) {
-            articleUpdate.files = JSON.stringify(files.files.map(f => f.filename));
-        }
+        // if (files?.files) {
+        //     articleUpdate.files = JSON.stringify(files.files.map(f => f.filename));
+        // }
 
-        return await this.articleService.updateArticle(id, userId, articleUpdate, isManager);
+        return await this.articleService.updateArticle(id, userId, updateData, isManager);
     }
 
     @Delete(':id')

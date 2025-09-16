@@ -141,18 +141,18 @@ function ImageUploadList() {
     )
 }
 
-export default function ArticleImageUpload({ fileUpload }: { fileUpload: UseFileUploadReturn }) {
+export default function ArticleImageUpload({ imageUpload }: { imageUpload: UseFileUploadReturn }) {
     return (
         <FileUpload.RootProvider
-            value={fileUpload}
+            value={imageUpload}
         >
             <FileUpload.HiddenInput />
             <Field.Root
                 required
                 invalid={
-                    fileUpload.acceptedFiles &&
-                    fileUpload.acceptedFiles.length > 0 &&
-                    fileUpload.acceptedFiles[0].size > 10 * 1024 * 1024
+                    imageUpload.acceptedFiles &&
+                    imageUpload.acceptedFiles.length > 0 &&
+                    imageUpload.acceptedFiles[0].size > 10 * 1024 * 1024
                 }
             >
                 <Field.Label>

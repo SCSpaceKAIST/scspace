@@ -1,12 +1,14 @@
 "use client"
 
-import { Badge, Card, Flex, Grid, HStack, IconButton, Input, Separator, Spacer, Stack, StackSeparator, Textarea, useBreakpointValue } from "@chakra-ui/react";
+import { Badge, Card, Flex, Grid, HStack, IconButton, Input, Separator, Spacer, Stack, StackSeparator, Textarea, useBreakpointValue, useFileUpload, VStack } from "@chakra-ui/react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
+import ArticleImageUpload from "@scspace-client/Components/organisms/Article/Create/ArticleImageUpload";
 import ArticleDeleteBtn from "@scspace-client/Components/organisms/Article/Delete/ArticleDeleteBtn";
 import ArticleFiles from "@scspace-client/Components/organisms/Article/Read/ArticleFiles";
 import ArticleImages from "@scspace-client/Components/organisms/Article/Read/ArticleImages";
+import ArticleTypeUpdate from "@scspace-client/Components/organisms/Article/Update/ArticleTypeUpdate";
 import ArticleUpdateBtn from "@scspace-client/Components/organisms/Article/Update/ArticleUpdateBtn";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useArticleAPI } from "@scspace-client/Hooks/article";
@@ -31,13 +33,22 @@ export default function ArticleDetail({ id }: { id: number }) {
     const [type, setType] = useState<ArticleTypeEnum>(ArticleTypeEnum.NOTICE);
     const [error, setError] = useState<string>("");
 
+    const imageUpload = useFileUpload({
+        maxFiles: 20,
+        accept: { "image/*": [] },
+    });
+
+    const fileUpload = useFileUpload({
+        maxFiles: 20,
+    });
+
     useEffect(() => {
         if (data) {
             setTitle(data.title ?? "");
             setContent(data.content ?? "");
             setType(data.type ?? ArticleTypeEnum.NOTICE);
         }
-    }, [data]);
+    }, [data?.title, data?.content, data?.type, editable]);
 
     const updateArticle = useArticleAPI({ id }).updateArticle;
 
@@ -53,14 +64,6 @@ export default function ArticleDetail({ id }: { id: number }) {
         formData.append("title", title.trim());
         formData.append("content", content.trim());
         formData.append("type", type.toString());
-
-        // imageUpload.acceptedFiles.forEach((file) => {
-        //     formData.append("images", file);
-        // });
-
-        // fileUpload.acceptedFiles.forEach((file) => {
-        //     formData.append("files", file);
-        // });
 
         toaster.promise(
             updateArticle(formData, {
@@ -121,34 +124,41 @@ export default function ArticleDetail({ id }: { id: number }) {
             >
                 {data ? (<>
                     <Card.Header p={0}>
-                        <HStack>
-                            <Badge colorPalette={"blue"}>
-                                {ArticleTypeString[data.type as keyof typeof ArticleTypeString]}
-                            </Badge>
-                            <Input
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                readOnly={!editable}
-                                variant={editable ? "outline" : "flushed"}
-                                cursor={"default"}
-                                borderWidth={editable ? "1px" : 0}
-                                outlineColor={editable ? "gray.300" : "transparent"}
-                                _focus={!editable ? {
-                                    outline: "none",
-                                    boxShadow: "none",
-                                    borderColor: "transparent"
-                                } : undefined}
-                                fontSize={"lg"}
-                                fontWeight={"semibold"}
-                            />
-                            <Spacer />
-                            <ArticleUpdateBtn
-                                editable={editable}
-                                setEditable={setEditable}
-                                handleUpdate={handleUpdate}
-                            />
-                            <ArticleDeleteBtn id={id} refetch={refetch} />
-                        </HStack>
+                        <Stack>
+                            <HStack>
+                                <Badge colorPalette={"blue"}>
+                                    {ArticleTypeString[data.type as keyof typeof ArticleTypeString]}
+                                </Badge>
+                                <Input
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    readOnly={!editable}
+                                    variant={editable ? "outline" : "flushed"}
+                                    cursor={"default"}
+                                    borderWidth={editable ? "1px" : 0}
+                                    outlineColor={editable ? "gray.300" : "transparent"}
+                                    _focus={!editable ? {
+                                        outline: "none",
+                                        boxShadow: "none",
+                                        borderColor: "transparent"
+                                    } : undefined}
+                                    fontSize={"lg"}
+                                    fontWeight={"semibold"}
+                                    height={"fit-content"}
+                                    p={1}
+                                />
+                                <Spacer />
+                                <ArticleUpdateBtn
+                                    editable={editable}
+                                    setEditable={setEditable}
+                                    handleUpdate={handleUpdate}
+                                />
+                                <ArticleDeleteBtn id={id} refetch={refetch} />
+                            </HStack>
+                            {editable && (
+                                <ArticleTypeUpdate type={type} setType={setType} />
+                            )}
+                        </Stack>
                     </Card.Header>
                     <Separator />
                     <Card.Body
