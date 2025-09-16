@@ -8,11 +8,12 @@ import {
     FileUpload,
     HStack,
     IconButton,
+    Text,
     useFileUploadContext,
     UseFileUploadReturn,
 } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
-import { HiX } from "react-icons/hi";
+import { HiMinus, HiPlus, HiX } from "react-icons/hi";
 import { LuFileImage } from "react-icons/lu"
 
 function ImageUploadList() {
@@ -26,9 +27,19 @@ function ImageUploadList() {
         } else {
             setSelect(0);
         }
-    }, [files]);
+    }, [files.length]);
 
     if (files.length === 0) return null;
+
+    const exchangeFiles = async (from: number, to: number) => {
+        if (from < 0 || from >= files.length || to < 0 || to >= files.length) return;
+        const newFiles = [...files];
+        const temp = newFiles[from];
+        newFiles[from] = newFiles[to];
+        newFiles[to] = temp;
+
+        fileUpload.setFiles(newFiles);
+    }
 
     return (
         <Center
@@ -75,6 +86,41 @@ function ImageUploadList() {
                                 </IconButton>
                             </FileUpload.ItemDeleteTrigger>
                         </Box>
+                        <Box position={"absolute"} bottom={2}
+                            display={(idx === select) ? "block" : "none"}
+                            transition={"all"}
+                            transitionDuration={"moderate"}
+                        >
+                            <HStack>
+                                <IconButton
+                                    size={"xs"}
+                                    variant={"ghost"}
+                                    disabled={idx === 0}
+                                    onClick={async () => {
+                                        exchangeFiles(idx, idx - 1).then(() => {
+                                            setSelect(idx - 1);
+                                        });
+                                    }}
+                                >
+                                    <HiMinus />
+                                </IconButton>
+                                <Text>
+                                    {idx + 1}
+                                </Text>
+                                <IconButton
+                                    size={"xs"}
+                                    variant={"ghost"}
+                                    disabled={idx === files.length - 1}
+                                    onClick={async () => {
+                                        exchangeFiles(idx, idx + 1).then(() => {
+                                            setSelect(idx + 1);
+                                        });
+                                    }}
+                                >
+                                    <HiPlus />
+                                </IconButton>
+                            </HStack>
+                        </Box>
                     </FileUpload.Item>
                 ))}
                 <Box
@@ -86,7 +132,7 @@ function ImageUploadList() {
                 // background={"gray.200"}
                 />
             </HStack>
-        </Center>
+        </Center >
     )
 }
 

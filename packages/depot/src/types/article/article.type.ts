@@ -22,14 +22,7 @@ export interface IArticleCreate {
     files?: string;
 }
 
-export interface IArticleUpdate {
-    title?: string;
-    content?: string;
-    state?: number;
-    type?: number;
-    images?: string;
-    files?: string;
-}
+export type IArticleUpdate = Partial<IArticleCreate>;
 
 export interface IArticleQuery {
     userId?: number;
