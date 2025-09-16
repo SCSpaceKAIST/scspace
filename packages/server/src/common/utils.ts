@@ -107,7 +107,7 @@ export function getString(time: number) {
 export function getDateDiffInMinute(timeBefore: number, timeAfter: number) {
   const dateBefore = getDate(timeBefore);
   const dateAfter = getDate(timeAfter);
-  return getTime(dateAfter) - getTime(dateBefore);
+  return (dateAfter.getTime() - dateBefore.getTime()) / (1000 * 60);
 }
 
 export function getOrganizationStatusString(status: OrganizationStatusEnum): {
