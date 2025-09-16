@@ -3,7 +3,6 @@
 import { Badge, Card, Flex, Grid, HStack, IconButton, Separator, Spacer, Stack, StackSeparator, Textarea, useBreakpointValue } from "@chakra-ui/react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
-import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
 import ArticleDeleteBtn from "@scspace-client/Components/organisms/Article/Delete/ArticleDeleteBtn";
 import ArticleFiles from "@scspace-client/Components/organisms/Article/Read/ArticleFiles";
@@ -12,7 +11,8 @@ import ArticleUpdateBtn from "@scspace-client/Components/organisms/Article/Updat
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useArticleAPI } from "@scspace-client/Hooks/article";
 import { ArticleTypeString } from "@scspace-depot/consts/article.const";
-import { useState } from "react";
+import { ArticleTypeEnum } from "@scspace-depot/enums/article.enum";
+import { useEffect, useState } from "react";
 import { HiHome } from "react-icons/hi";
 
 export default function ArticleDetail({ id }: { id: number }) {
@@ -23,6 +23,70 @@ export default function ArticleDetail({ id }: { id: number }) {
     const files: string[] = JSON.parse(data?.files ?? "[]");
 
     const isWide = useBreakpointValue({ base: false, md: true });
+
+    const [editable, setEditable] = useState<boolean>(false);
+
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+    const [type, setType] = useState<ArticleTypeEnum>(ArticleTypeEnum.NOTICE);
+    const [error, setError] = useState<string>("");
+
+    useEffect(() => {
+        if (data) {
+            setTitle(data.title ?? "");
+            setContent(data.content ?? "");
+            setType(data.type ?? ArticleTypeEnum.NOTICE);
+        }
+    }, [data]);
+
+    const updateArticle = useArticleAPI({ id }).updateArticle;
+
+    const handleUpdate = () => {
+        if (!title.trim() || !content.trim()) {
+            toaster.error({
+                title: "Title and Content cannot be empty."
+            });
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("title", title.trim());
+        formData.append("content", content.trim());
+        formData.append("type", type.toString());
+
+        // imageUpload.acceptedFiles.forEach((file) => {
+        //     formData.append("images", file);
+        // });
+
+        // fileUpload.acceptedFiles.forEach((file) => {
+        //     formData.append("files", file);
+        // });
+
+        toaster.promise(
+            updateArticle(formData, {
+                onError: (err) => {
+                    setError(err.message);
+                },
+                onSuccess: () => {
+                    setTitle("");
+                    setContent("");
+                    setEditable(false);
+                }
+            }),
+            {
+                loading: {
+                    title: "Creating Article..."
+                },
+                success: {
+                    title: "Article Created Successfully!"
+                },
+                error: {
+                    title: "Failed to Create Article.",
+                    description: error || "Please try again"
+                }
+            }
+        );
+    }
 
     return (
         <Grid
@@ -65,9 +129,11 @@ export default function ArticleDetail({ id }: { id: number }) {
                                 {data.title}
                             </Card.Title>
                             <Spacer />
-                            <ArticleUpdateBtn onClick={() => {
-                                toaster.info({ title: "준비중입니다." });
-                            }} />
+                            <ArticleUpdateBtn
+                                editable={editable}
+                                setEditable={setEditable}
+                                handleUpdate={handleUpdate}
+                            />
                             <ArticleDeleteBtn id={id} refetch={refetch} />
                         </HStack>
                     </Card.Header>
@@ -83,18 +149,19 @@ export default function ArticleDetail({ id }: { id: number }) {
                         <Stack separator={<StackSeparator />}>
                             <ArticleImages images={images} />
                             <Textarea
-                                readOnly
-                                variant={"flushed"}
+                                readOnly={!editable}
+                                variant={editable ? "outline" : "flushed"}
                                 autoresize
                                 cursor={"default"}
-                                defaultValue={data.content ?? ""}
-                                border={0}
-                                outlineColor={"transparent"}
-                                _focus={{
+                                value={content}
+                                onChange={(e) => setContent(e.target.value)}
+                                borderWidth={editable ? "1px" : 0}
+                                outlineColor={editable ? "gray.300" : "transparent"}
+                                _focus={!editable ? {
                                     outline: "none",
                                     boxShadow: "none",
                                     borderColor: "transparent"
-                                }}
+                                } : undefined}
                             />
                             <ArticleFiles files={files} />
                         </Stack>
