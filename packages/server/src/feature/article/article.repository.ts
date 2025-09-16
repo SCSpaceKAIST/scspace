@@ -129,12 +129,12 @@ export class ArticleRepository {
             case 'title':
                 orderBy = direction(Article.title);
                 break;
-            case 'timeUpdate':
-                orderBy = direction(Article.timeUpdate);
-                break;
             case 'timePost':
-            default:
                 orderBy = direction(Article.timePost);
+                break;
+            case 'timeUpdate':
+            default:
+                orderBy = direction(Article.timeUpdate);
                 break;
         }
 

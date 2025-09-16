@@ -5,8 +5,10 @@ import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
+import ArticleDeleteBtn from "@scspace-client/Components/organisms/Article/Delete/ArticleDeleteBtn";
 import ArticleFiles from "@scspace-client/Components/organisms/Article/Read/ArticleFiles";
 import ArticleImages from "@scspace-client/Components/organisms/Article/Read/ArticleImages";
+import ArticleUpdateBtn from "@scspace-client/Components/organisms/Article/Update/ArticleUpdateBtn";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useArticleAPI } from "@scspace-client/Hooks/article";
 import { ArticleTypeString } from "@scspace-depot/consts/article.const";
@@ -21,37 +23,6 @@ export default function ArticleDetail({ id }: { id: number }) {
     const files: string[] = JSON.parse(data?.files ?? "[]");
 
     const isWide = useBreakpointValue({ base: false, md: true });
-
-    const { deleteArticle } = useArticleAPI({ id });
-
-    const [e, setE] = useState<string>("");
-
-    const handleDelete = () => {
-        toaster.promise(
-            deleteArticle({}, {
-                onSuccess: () => {
-                    refetch();
-                    linkPush("/article");
-                },
-                onError: (e) => {
-                    setE(e.message);
-                }
-            }),
-            {
-                loading: {
-                    title: "삭제중...",
-                },
-                success: {
-                    title: "삭제되었습니다.",
-                    description: "게시글 목록으로 이동합니다.",
-                },
-                error: {
-                    title: "삭제 실패",
-                    description: e ?? "다시 시도해주세요.",
-                },
-            }
-        );
-    }
 
     return (
         <Grid
@@ -90,9 +61,14 @@ export default function ArticleDetail({ id }: { id: number }) {
                             <Badge colorPalette={"blue"}>
                                 {ArticleTypeString[data.type as keyof typeof ArticleTypeString]}
                             </Badge>
-                            <Card.Title>
+                            <Card.Title truncate>
                                 {data.title}
                             </Card.Title>
+                            <Spacer />
+                            <ArticleUpdateBtn onClick={() => {
+                                toaster.info({ title: "준비중입니다." });
+                            }} />
+                            <ArticleDeleteBtn id={id} refetch={refetch} />
                         </HStack>
                     </Card.Header>
                     <Separator />
@@ -123,14 +99,6 @@ export default function ArticleDetail({ id }: { id: number }) {
                             <ArticleFiles files={files} />
                         </Stack>
                     </Card.Body>
-                    <Separator />
-                    <Card.Footer
-                        p={0}
-                    >
-                        <Flex width="100%" justifyContent={"flex-end"}>
-                            <DeleteBtn onDelete={handleDelete} />
-                        </Flex>
-                    </Card.Footer>
                 </>) : (<LoadingComponent />)}
             </Card.Root>
         </Grid>

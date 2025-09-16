@@ -1,10 +1,10 @@
 "use client"
 
-import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
+import { Table, useBreakpointValue } from "@chakra-ui/react";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useArticleAPI } from "@scspace-client/Hooks/article";
 import { dateUtils } from "@scspace-client/Hooks/utils";
-import { IArticleQuery, IArticleWithUser } from "@scspace-depot/types/article";
+import { IArticleQuery } from "@scspace-depot/types/article";
 import { useEffect } from "react";
 
 export default function ArticleTable({ refetchTrigger, query }: {
@@ -20,19 +20,65 @@ export default function ArticleTable({ refetchTrigger, query }: {
 
     const { linkPush } = useLinkPush();
 
+    const isWide = useBreakpointValue({ base: false, md: true });
+
     return (
-        <SimpleTable
-            onIdChange={(id) => linkPush(`/article/${id}`)}
-            header={["Id", "Title", "Author", "Created At"]}
-            content={data?.articles?.map((article: IArticleWithUser) => ({
-                id: article.id,
-                row: [
-                    article.id,
-                    article.title,
-                    article.user.nameKr,
-                    getString(article.timePost)
-                ]
-            })) ?? []}
-        />
+        <Table.ScrollArea
+            w="100%" h="100%" maxW="100%" maxH="100%"
+            scrollbar="hidden"
+            scrollBehavior="smooth"
+        >
+            <Table.Root
+                stickyHeader
+                interactive
+                colorPalette="cyan"
+                maxW="inherit"
+                tableLayout="fixed" // 테이블 레이아웃을 고정으로 설정
+            >
+                <Table.ColumnGroup>
+                    <Table.Column htmlWidth={isWide ? "60%" : "80%"} />
+                    <Table.Column htmlWidth={isWide ? "15%" : "20%"} />
+                    {isWide && (
+                        <Table.Column htmlWidth={"25%"} />
+                    )}
+                </Table.ColumnGroup>
+                <Table.Header>
+                    <Table.Row bg="bg.muted">
+                        <Table.ColumnHeader truncate>
+                            {"Title"}
+                        </Table.ColumnHeader>
+                        <Table.ColumnHeader truncate>
+                            {"Author"}
+                        </Table.ColumnHeader>
+                        {isWide && (
+                            <Table.ColumnHeader truncate>
+                                {"Updated At"}
+                            </Table.ColumnHeader>
+                        )}
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                    {data?.articles?.map((c) => (
+                        <Table.Row
+                            key={c.id}
+                            onClick={() => linkPush(`/article/${c.id}`)}
+                            cursor="pointer"
+                        >
+                            <Table.Cell truncate>
+                                {c.title}
+                            </Table.Cell>
+                            <Table.Cell truncate>
+                                {c.user.nameKr}
+                            </Table.Cell>
+                            {isWide && (
+                                <Table.Cell truncate>
+                                    {getString(c.timeUpdate)}
+                                </Table.Cell>
+                            )}
+                        </Table.Row>
+                    ))}
+                </Table.Body>
+            </Table.Root>
+        </Table.ScrollArea>
     );
 }
