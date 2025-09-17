@@ -21,8 +21,8 @@ export default function ArticleDetail({ id }: { id: number }) {
     const { data, refetch } = useArticleAPI({ id }).articleById;
 
     const { linkPush } = useLinkPush();
-    const images: string[] = JSON.parse(data?.images ?? "[]");
-    const files: string[] = JSON.parse(data?.files ?? "[]");
+    const [images, setImages] = useState<string[]>([]);
+    const [files, setFiles] = useState<string[]>([]);
 
     const isWide = useBreakpointValue({ base: false, md: true });
 
@@ -33,22 +33,15 @@ export default function ArticleDetail({ id }: { id: number }) {
     const [type, setType] = useState<ArticleTypeEnum>(ArticleTypeEnum.NOTICE);
     const [error, setError] = useState<string>("");
 
-    const imageUpload = useFileUpload({
-        maxFiles: 20,
-        accept: { "image/*": [] },
-    });
-
-    const fileUpload = useFileUpload({
-        maxFiles: 20,
-    });
-
     useEffect(() => {
         if (data) {
             setTitle(data.title ?? "");
             setContent(data.content ?? "");
             setType(data.type ?? ArticleTypeEnum.NOTICE);
+            setImages(JSON.parse(data.images ?? "[]"));
+            setFiles(JSON.parse(data.files ?? "[]"));
         }
-    }, [data?.title, data?.content, data?.type, editable]);
+    }, [data?.title, data?.content, data?.type, data?.images, data?.files, editable]);
 
     const updateArticle = useArticleAPI({ id }).updateArticle;
 
@@ -60,20 +53,25 @@ export default function ArticleDetail({ id }: { id: number }) {
             return;
         }
 
-        const formData = new FormData();
-        formData.append("title", title.trim());
-        formData.append("content", content.trim());
-        formData.append("type", type.toString());
-
         toaster.promise(
-            updateArticle(formData, {
+            updateArticle({
+                title,
+                content,
+                type,
+                images: JSON.stringify(images),
+                files: JSON.stringify(files)
+            }, {
                 onError: (err) => {
                     setError(err.message);
                 },
-                onSuccess: () => {
-                    setTitle("");
-                    setContent("");
+                onSuccess: (res) => {
                     setEditable(false);
+
+                    setTitle(res.title ?? "");
+                    setContent(res.content ?? "");
+                    setType(res.type ?? ArticleTypeEnum.NOTICE);
+                    setImages(JSON.parse(res.images ?? "[]"));
+                    setFiles(JSON.parse(res.files ?? "[]"));
                 }
             }),
             {
@@ -170,7 +168,11 @@ export default function ArticleDetail({ id }: { id: number }) {
                         scrollbar="hidden"
                     >
                         <Stack separator={<StackSeparator />}>
-                            <ArticleImages images={images} />
+                            <ArticleImages
+                                editable={editable}
+                                images={images}
+                                setImages={setImages}
+                            />
                             <Textarea
                                 readOnly={!editable}
                                 variant={editable ? "outline" : "flushed"}

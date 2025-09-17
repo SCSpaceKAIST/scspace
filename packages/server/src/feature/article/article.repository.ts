@@ -161,7 +161,7 @@ export class ArticleRepository {
     }
 
     async updateArticle(id: number, updateData: IArticleUpdate): Promise<IArticle> {
-        const existingArticle = await this.getArticleById(id);
+        await this.getArticleById(id);
 
         await this.db
             .update(Article)
@@ -175,7 +175,7 @@ export class ArticleRepository {
     }
 
     async deleteArticle(id: number): Promise<void> {
-        const existingArticle = await this.getArticleById(id);
+        await this.getArticleById(id);
 
         await this.db
             .delete(Article)

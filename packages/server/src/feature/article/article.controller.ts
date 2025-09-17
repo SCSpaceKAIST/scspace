@@ -120,7 +120,7 @@ export class ArticleController {
     async updateArticle(
         @Param('id', ParseIntPipe) id: number,
         @Req() req: Request,
-        @Body() updateData: Omit<IArticleUpdate, 'images' | 'files'>,
+        @Body() updateData: IArticleUpdate,
         // @UploadedFiles() files: { images?: Express.Multer.File[], files?: Express.Multer.File[] }
     ) {
         const user = req.user as IUser;

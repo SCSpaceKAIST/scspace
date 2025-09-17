@@ -4,6 +4,7 @@ import { useFormDataMutation, useMutationApi, useQueryApi } from "./api";
 import {
     IArticle,
     IArticleQuery,
+    IArticleUpdate,
     IArticleWithUser,
 } from "@scspace-depot/types/article";
 
@@ -47,7 +48,7 @@ export function useArticleAPI(params?: {
         "POST"
     ).mutateAsync;
 
-    const updateArticle = useFormDataMutation<IArticle>(
+    const updateArticle = useMutationApi<IArticle, IArticleUpdate>(
         id ? `/article/${id}` : "",
         "PUT"
     ).mutateAsync;

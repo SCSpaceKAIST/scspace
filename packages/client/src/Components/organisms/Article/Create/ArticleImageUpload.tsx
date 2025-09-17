@@ -32,7 +32,7 @@ function ImageUploadList() {
 
     if (files.length === 0) return null;
 
-    const exchangeFiles = async (from: number, to: number) => {
+    const exchangeImages = async (from: number, to: number) => {
         if (from < 0 || from >= files.length || to < 0 || to >= files.length) return;
         const newFiles = [...files];
         const temp = newFiles[from];
@@ -102,7 +102,7 @@ function ImageUploadList() {
                                     variant={"ghost"}
                                     disabled={idx === 0}
                                     onClick={async () => {
-                                        exchangeFiles(idx, idx - 1).then(() => {
+                                        exchangeImages(idx, idx - 1).then(() => {
                                             setSelect(idx - 1);
                                         });
                                     }}
@@ -117,7 +117,7 @@ function ImageUploadList() {
                                     variant={"ghost"}
                                     disabled={idx === files.length - 1}
                                     onClick={async () => {
-                                        exchangeFiles(idx, idx + 1).then(() => {
+                                        exchangeImages(idx, idx + 1).then(() => {
                                             setSelect(idx + 1);
                                         });
                                     }}
