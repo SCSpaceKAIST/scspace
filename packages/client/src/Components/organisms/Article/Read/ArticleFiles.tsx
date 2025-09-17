@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, ButtonGroup, HStack, IconButton, Wrap } from "@chakra-ui/react";
+import { Button, ButtonGroup, IconButton, Wrap } from "@chakra-ui/react";
 import { useFileAPI } from "@scspace-client/Hooks/file";
 import { HiX } from "react-icons/hi";
 

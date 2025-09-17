@@ -53,6 +53,11 @@ export function useArticleAPI(params?: {
         "PUT"
     ).mutateAsync;
 
+    const updateArticleFile = useFormDataMutation<IArticle>(
+        id ? `/article/${id}/file` : "",
+        "PUT"
+    ).mutateAsync;
+
     const deleteArticle = useMutationApi<{}, {}>(
         id ? `/article/${id}` : "",
         "DELETE"
@@ -77,6 +82,7 @@ export function useArticleAPI(params?: {
         // CUD 메서드들
         createArticle,
         updateArticle,
+        updateArticleFile,
         deleteArticle,
         hideArticle,
         showArticle,

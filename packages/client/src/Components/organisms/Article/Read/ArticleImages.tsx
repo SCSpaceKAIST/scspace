@@ -2,7 +2,7 @@
 
 import { Box, Center, HStack, IconButton, Text } from "@chakra-ui/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HiMinus, HiPlus, HiX } from "react-icons/hi";
 
 const localhostBaseURL = "http://localhost:3001/uploads/";
@@ -13,6 +13,13 @@ export default function ArticleImages({ editable, images, setImages }: {
     setImages: (images: string[]) => void;
 }) {
     const [select, setSelect] = useState<number>(0);
+    useEffect(() => {
+        if (select >= images.length) {
+            setSelect(images.length - 1);
+        } else {
+            setSelect(0);
+        }
+    }, [images.length]);
 
     if (images.length === 0) return null;
 

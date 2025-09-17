@@ -8,6 +8,7 @@ import ArticleImageUpload from "@scspace-client/Components/organisms/Article/Cre
 import ArticleDeleteBtn from "@scspace-client/Components/organisms/Article/Delete/ArticleDeleteBtn";
 import ArticleFiles from "@scspace-client/Components/organisms/Article/Read/ArticleFiles";
 import ArticleImages from "@scspace-client/Components/organisms/Article/Read/ArticleImages";
+import ArticleAddFileBtn from "@scspace-client/Components/organisms/Article/Update/ArticleAddFileBtn";
 import ArticleTypeUpdate from "@scspace-client/Components/organisms/Article/Update/ArticleTypeUpdate";
 import ArticleUpdateBtn from "@scspace-client/Components/organisms/Article/Update/ArticleUpdateBtn";
 import { useLinkPush } from "@scspace-client/Hooks/api";
@@ -151,6 +152,7 @@ export default function ArticleDetail({ id }: { id: number }) {
                                     setEditable={setEditable}
                                     handleUpdate={handleUpdate}
                                 />
+                                <ArticleAddFileBtn id={id} refetch={refetch} />
                                 <ArticleDeleteBtn id={id} refetch={refetch} />
                             </HStack>
                             {editable && (

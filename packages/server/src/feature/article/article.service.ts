@@ -83,6 +83,31 @@ export class ArticleService {
         return await this.articleRepository.updateArticle(id, updateData);
     }
 
+    async updateArticleFile(
+        id: number,
+        userId: number,
+        updateData: Pick<IArticleUpdate, "images" | "files">,
+        isAdmin: boolean = false
+    ): Promise<IArticle> {
+        const article = await this.articleRepository.getArticleById(id);
+
+        // Check permission: only author or admin can update
+        if (!isAdmin && article.userId !== userId) {
+            throw new ForbiddenException('You can only update your own articles');
+        }
+
+        const currentImages = JSON.parse(article.images ?? "[]") ?? [];
+        const currentFiles = JSON.parse(article.files ?? "[]") ?? [];
+
+        const newImages = JSON.parse(updateData.images ?? "[]") ?? [];
+        const newFiles = JSON.parse(updateData.files ?? "[]") ?? [];
+
+        return await this.articleRepository.updateArticle(id, {
+            images: JSON.stringify([...currentImages, ...newImages]),
+            files: JSON.stringify([...currentFiles, ...newFiles]),
+        });
+    }
+
     async deleteArticle(id: number, userId: number, isAdmin: boolean = false): Promise<void> {
         const article = await this.articleRepository.getArticleById(id);
 

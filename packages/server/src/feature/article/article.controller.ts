@@ -109,36 +109,67 @@ export class ArticleController {
 
     @Put(':id')
     @UseGuards(AuthGuard('jwt'))
-    // @UseInterceptors(
-    //     FileFieldsInterceptor([
-    //         { name: 'images', maxCount: 20 },
-    //         { name: 'files', maxCount: 20 },
-    //     ], {
-    //         storage: publicStorage,
-    //     })
-    // )
     async updateArticle(
         @Param('id', ParseIntPipe) id: number,
         @Req() req: Request,
         @Body() updateData: IArticleUpdate,
-        // @UploadedFiles() files: { images?: Express.Multer.File[], files?: Express.Multer.File[] }
     ) {
         const user = req.user as IUser;
         const userId = user.id;
         const isManager = user.type === UserTypeEnum.MANAGER || user.type === UserTypeEnum.ADMIN;
 
-        // Handle uploaded files if provided
-        // const articleUpdate: IArticleUpdate = { ...updateData };
-
-        // if (files?.images) {
-        //     articleUpdate.images = JSON.stringify(files.images.map(f => f.filename));
-        // }
-
-        // if (files?.files) {
-        //     articleUpdate.files = JSON.stringify(files.files.map(f => f.filename));
-        // }
-
         return await this.articleService.updateArticle(id, userId, updateData, isManager);
+    }
+
+    @Put(':id/image')
+    @UseGuards(AuthGuard('jwt'))
+    @UseInterceptors(
+        FileFieldsInterceptor([
+            { name: 'images', maxCount: 20 },
+        ], {
+            storage: publicStorage,
+        })
+    )
+    async updateArticleImage(
+        @Param('id', ParseIntPipe) id: number,
+        @Req() req: Request,
+        @UploadedFiles() files: { images?: Express.Multer.File[] }
+    ) {
+        const user = req.user as IUser;
+        const userId = user.id;
+        const isManager = user.type === UserTypeEnum.MANAGER || user.type === UserTypeEnum.ADMIN;
+
+        const imageData = files?.images ? JSON.stringify(files.images.map(f => f.filename)) : undefined;
+
+        return await this.articleService.updateArticle(id, userId, { images: imageData }, isManager);
+    }
+
+    @Put(':id/file')
+    @UseGuards(AuthGuard('jwt'))
+    @UseInterceptors(
+        FileFieldsInterceptor([
+            { name: 'images', maxCount: 20 },
+            { name: 'files', maxCount: 20 },
+        ], {
+            storage: publicStorage,
+        })
+    )
+    async updateArticleFile(
+        @Param('id', ParseIntPipe) id: number,
+        @Req() req: Request,
+        @UploadedFiles() files: { images?: Express.Multer.File[], files?: Express.Multer.File[] }
+    ) {
+        const user = req.user as IUser;
+        const userId = user.id;
+        const isManager = user.type === UserTypeEnum.MANAGER || user.type === UserTypeEnum.ADMIN;
+
+        const imageData = files?.images ? JSON.stringify(files.images.map(f => f.filename)) : undefined;
+        const fileData = files?.files ? JSON.stringify(files.files.map(f => f.filename)) : undefined;
+
+        return await this.articleService.updateArticleFile(id, userId, {
+            images: imageData,
+            files: fileData
+        }, isManager);
     }
 
     @Delete(':id')
