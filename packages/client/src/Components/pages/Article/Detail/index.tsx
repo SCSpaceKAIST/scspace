@@ -11,14 +11,19 @@ import ArticleImages from "@scspace-client/Components/organisms/Article/Read/Art
 import ArticleAddFileBtn from "@scspace-client/Components/organisms/Article/Update/ArticleAddFileBtn";
 import ArticleTypeUpdate from "@scspace-client/Components/organisms/Article/Update/ArticleTypeUpdate";
 import ArticleUpdateBtn from "@scspace-client/Components/organisms/Article/Update/ArticleUpdateBtn";
+import ArticleVisibility from "@scspace-client/Components/organisms/Article/Update/ArticleVisibility";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useArticleAPI } from "@scspace-client/Hooks/article";
+import { useAuth } from "@scspace-client/Hooks/auth";
 import { ArticleTypeString } from "@scspace-depot/consts/article.const";
-import { ArticleTypeEnum } from "@scspace-depot/enums/article.enum";
+import { ArticleStateEnum, ArticleTypeEnum } from "@scspace-depot/enums/article.enum";
 import { useEffect, useState } from "react";
 import { HiHome } from "react-icons/hi";
 
 export default function ArticleDetail({ id }: { id: number }) {
+    const { needLogin, userInfo } = useAuth();
+    needLogin();
+
     const { data, refetch } = useArticleAPI({ id }).articleById;
 
     const { linkPush } = useLinkPush();
@@ -145,15 +150,23 @@ export default function ArticleDetail({ id }: { id: number }) {
                                     fontWeight={"semibold"}
                                     height={"fit-content"}
                                     p={1}
+                                    truncate
                                 />
-                                <Spacer />
-                                <ArticleUpdateBtn
-                                    editable={editable}
-                                    setEditable={setEditable}
-                                    handleUpdate={handleUpdate}
-                                />
-                                <ArticleAddFileBtn id={id} refetch={refetch} />
-                                <ArticleDeleteBtn id={id} refetch={refetch} />
+                                {(userInfo?.id === data?.userId) && (<>
+                                    <Spacer />
+                                    <ArticleVisibility
+                                        visible={data?.state === ArticleStateEnum.SHOW}
+                                        id={id}
+                                        refetch={refetch}
+                                    />
+                                    <ArticleUpdateBtn
+                                        editable={editable}
+                                        setEditable={setEditable}
+                                        handleUpdate={handleUpdate}
+                                    />
+                                    <ArticleAddFileBtn id={id} refetch={refetch} />
+                                    <ArticleDeleteBtn id={id} refetch={refetch} />
+                                </>)}
                             </HStack>
                             {editable && (
                                 <ArticleTypeUpdate type={type} setType={setType} />

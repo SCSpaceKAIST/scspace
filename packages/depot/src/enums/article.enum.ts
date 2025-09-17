@@ -1,11 +1,10 @@
 export enum ArticleStateEnum {
-    HIDE = 1,
-    SHOW = 2,
+    HIDE = 0,
+    SHOW = 1,
 };
 
 export enum ArticleTypeEnum {
     NOTICE = 0,
-    GENERAL = 1,
-    BUSINESS = 2,
-    PROMOTION = 3
+    BUSINESS = 1,
+    PROMOTION = 2
 };

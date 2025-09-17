@@ -183,21 +183,16 @@ export class ArticleController {
         return { success: true };
     }
 
-    @Put(':id/hide')
+    @Put(':id/visibility')
     @UseGuards(AuthGuard('jwt'))
-    async hideArticle(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
+    async showArticle(
+        @Param('id', ParseIntPipe) id: number,
+        @Req() req: any,
+        @Body() body: { visible: boolean }
+    ) {
         const userId = req.user.id;
         const isAdmin = req.user.type >= 3;
 
-        return await this.articleService.hideArticle(id, userId, isAdmin);
-    }
-
-    @Put(':id/show')
-    @UseGuards(AuthGuard('jwt'))
-    async showArticle(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
-        const userId = req.user.id;
-        const isAdmin = req.user.type >= 3;
-
-        return await this.articleService.showArticle(id, userId, isAdmin);
+        return await this.articleService.setArticleVisibility(id, userId, body.visible, isAdmin);
     }
 }

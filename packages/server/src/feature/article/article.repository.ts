@@ -29,7 +29,7 @@ import {
     IArticleWithUser,
 } from '@scspace-depot/types/article';
 import { getNow } from '@scspace-server/common/utils';
-import { ArticleTypeEnum } from '@scspace-depot/enums/article.enum';
+import { ArticleStateEnum, ArticleTypeEnum } from '@scspace-depot/enums/article.enum';
 
 @Injectable()
 export class ArticleRepository {
@@ -47,7 +47,7 @@ export class ArticleRepository {
                 ...articleData,
                 timePost: now,
                 timeUpdate: now,
-                state: 1, // visible by default
+                state: ArticleStateEnum.HIDE, // visible by default
                 type: articleData.type || ArticleTypeEnum.NOTICE, // general type by default
             });
 
@@ -193,11 +193,7 @@ export class ArticleRepository {
         };
     }
 
-    async hideArticle(id: number): Promise<IArticle> {
-        return await this.updateArticle(id, { state: 0 });
-    }
-
-    async showArticle(id: number): Promise<IArticle> {
-        return await this.updateArticle(id, { state: 1 });
+    async setArticleVisibility(id: number, isVisible: boolean): Promise<IArticle> {
+        return await this.updateArticle(id, { state: isVisible ? 1 : 0 });
     }
 }

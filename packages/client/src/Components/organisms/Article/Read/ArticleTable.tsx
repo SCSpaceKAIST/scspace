@@ -1,11 +1,13 @@
 "use client"
 
-import { Table, useBreakpointValue } from "@chakra-ui/react";
+import { Flex, HStack, Icon, Table, Text, useBreakpointValue } from "@chakra-ui/react";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useArticleAPI } from "@scspace-client/Hooks/article";
 import { dateUtils } from "@scspace-client/Hooks/utils";
+import { ArticleStateEnum } from "@scspace-depot/enums/article.enum";
 import { IArticleQuery } from "@scspace-depot/types/article";
 import { useEffect } from "react";
+import { AiOutlineEyeInvisible } from "react-icons/ai";
 
 export default function ArticleTable({ refetchTrigger, query }: {
     refetchTrigger: number;
@@ -65,7 +67,16 @@ export default function ArticleTable({ refetchTrigger, query }: {
                             cursor="pointer"
                         >
                             <Table.Cell truncate>
-                                {c.title}
+                                <HStack>
+                                    {c.state === ArticleStateEnum.HIDE && (
+                                        <Icon color={"gray"}>
+                                            <AiOutlineEyeInvisible />
+                                        </Icon>
+                                    )}
+                                    <Text truncate>
+                                        {c.title}
+                                    </Text>
+                                </HStack>
                             </Table.Cell>
                             <Table.Cell truncate>
                                 {c.user.nameKr}

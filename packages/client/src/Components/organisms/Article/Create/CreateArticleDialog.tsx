@@ -95,7 +95,6 @@ export default function CreateArticleDialog({ open, setOpen }: {
                         defaultValue={type.toString()}
                         optionList={[
                             { value: ArticleTypeEnum.NOTICE.toString(), label: "Notice" },
-                            { value: ArticleTypeEnum.GENERAL.toString(), label: "General" },
                             { value: ArticleTypeEnum.BUSINESS.toString(), label: "Business" },
                             { value: ArticleTypeEnum.PROMOTION.toString(), label: "Promotion" }
                         ]}

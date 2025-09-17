@@ -58,20 +58,16 @@ export function useArticleAPI(params?: {
         "PUT"
     ).mutateAsync;
 
+    const updateArticleVisibility = useMutationApi<IArticle, {}>(
+        id ? `/article/${id}/visibility` : "",
+        "PUT"
+    ).mutateAsync;
+
     const deleteArticle = useMutationApi<{}, {}>(
         id ? `/article/${id}` : "",
         "DELETE"
     ).mutateAsync;
 
-    const hideArticle = useMutationApi<IArticle, {}>(
-        id ? `/article/${id}/hide` : "",
-        "PUT"
-    ).mutateAsync;
-
-    const showArticle = useMutationApi<IArticle, {}>(
-        id ? `/article/${id}/show` : "",
-        "PUT"
-    ).mutateAsync;
 
     return {
         // GET 데이터와 상태들
@@ -84,8 +80,7 @@ export function useArticleAPI(params?: {
         updateArticle,
         updateArticleFile,
         deleteArticle,
-        hideArticle,
-        showArticle,
+        updateArticleVisibility,
     };
 }
 

@@ -141,7 +141,7 @@ export class ArticleService {
         };
     }
 
-    async hideArticle(id: number, userId: number, isAdmin: boolean = false): Promise<IArticle> {
+    async setArticleVisibility(id: number, userId: number, isVisible: boolean, isAdmin: boolean = false): Promise<IArticle> {
         const article = await this.articleRepository.getArticleById(id);
 
         // Check permission: only author or admin can hide
@@ -149,18 +149,7 @@ export class ArticleService {
             throw new ForbiddenException('You can only hide your own articles');
         }
 
-        return await this.articleRepository.hideArticle(id);
-    }
-
-    async showArticle(id: number, userId: number, isAdmin: boolean = false): Promise<IArticle> {
-        const article = await this.articleRepository.getArticleById(id);
-
-        // Check permission: only author or admin can show
-        if (!isAdmin && article.userId !== userId) {
-            throw new ForbiddenException('You can only show your own articles');
-        }
-
-        return await this.articleRepository.showArticle(id);
+        return await this.articleRepository.setArticleVisibility(id, isVisible);
     }
 
     async getArticlesByType(type: number, query: Omit<IArticleQuery, 'type'> = {}): Promise<{
