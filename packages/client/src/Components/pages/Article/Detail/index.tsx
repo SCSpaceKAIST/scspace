@@ -188,7 +188,11 @@ export default function ArticleDetail({ id }: { id: number }) {
                                     borderColor: "transparent"
                                 } : undefined}
                             />
-                            <ArticleFiles files={files} />
+                            <ArticleFiles
+                                files={files}
+                                setFiles={setFiles}
+                                editable={editable}
+                            />
                         </Stack>
                     </Card.Body>
                 </>) : (<LoadingComponent />)}
