@@ -16,10 +16,6 @@ export default function SpaceIntro({ space }: { space: ISpace }) {
 
   return (
     <Grid templateRows="auto auto 1fr" h={"full"} gap={4}>
-      <Heading>
-        {space.nameKr} <br />
-        <Mark color={"gray"}>{space.nameEn}</Mark>
-      </Heading>
       <Center aspectRatio={5 / 4}>
         <Box
           position="relative"
@@ -36,6 +32,10 @@ export default function SpaceIntro({ space }: { space: ISpace }) {
           />
         </Box>
       </Center>
+      <Heading>
+        {space.nameKr} <br />
+        <Mark color={"gray"}>{space.nameEn}</Mark>
+      </Heading>
       <Text>
         {SpaceInfo[SpaceInfoMatcher[space.id]].desc}
       </Text>

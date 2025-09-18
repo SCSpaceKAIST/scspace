@@ -38,10 +38,10 @@ export default function ArticleTable({ refetchTrigger, query }: {
                 tableLayout="fixed" // 테이블 레이아웃을 고정으로 설정
             >
                 <Table.ColumnGroup>
-                    <Table.Column htmlWidth={isWide ? "60%" : "80%"} />
-                    <Table.Column htmlWidth={isWide ? "15%" : "20%"} />
+                    <Table.Column htmlWidth={isWide ? "55%" : "70%"} />
+                    <Table.Column htmlWidth={isWide ? "15%" : "30%"} />
                     {isWide && (
-                        <Table.Column htmlWidth={"25%"} />
+                        <Table.Column htmlWidth={"30%"} />
                     )}
                 </Table.ColumnGroup>
                 <Table.Header>

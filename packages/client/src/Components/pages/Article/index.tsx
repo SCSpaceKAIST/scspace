@@ -68,7 +68,10 @@ export default function Article() {
                                 <Button
                                     variant={(Number(key) === type) ? "subtle" : "ghost"}
                                     key={key}
-                                    onClick={() => update(Number(key) as ArticleTypeEnum)}
+                                    onClick={() => {
+                                        update(Number(key) as ArticleTypeEnum);
+                                        if (!isWide) onToggle();
+                                    }}
                                     colorPalette={(Number(key) === type) ? "blue" : "current"}
                                 >
                                     {value}
@@ -82,15 +85,18 @@ export default function Article() {
                         transition={"all"}
                         transitionDuration={"moderate"}
                         overflow={"hidden"}
-                        borderWidth={open ? (isWide ? "1px" : "0") : "1px"}
+                        borderWidth={isWide ? "1px" : "0"}
                         size={"sm"}
+                        backgroundColor={isWide ? "surface" : "gray.50"}
+                        p={isWide ? 4 : 0}
+                        gap={2}
                     >
-                        <Card.Header>
+                        <Card.Header p={0}>
                             <Card.Title>
                                 {ArticleTypeString[type]}
                             </Card.Title>
                         </Card.Header>
-                        <Card.Body>
+                        <Card.Body p={0}>
                             <ArticleTable
                                 refetchTrigger={refetchCounter}
                                 query={{ type }}
