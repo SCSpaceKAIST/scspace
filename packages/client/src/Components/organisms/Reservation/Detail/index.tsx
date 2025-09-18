@@ -15,6 +15,7 @@ import ChangeTimeBtn from "./ChangeTimeBtn";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useUserInfo } from "@scspace-client/Hooks/user";
+import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 
 export default function ReservationDetail({ open, setOpen, selectedRes, refetch }: {
     open: boolean;
@@ -142,54 +143,56 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
                                     )}
                                 </DataList.Root>
                             </DataListItem>
-                            <Separator />
-                            <DataListItem label="Worker">
-                                <Show when={selectedRes.content.workerNeed}
-                                    fallback={(
-                                        <Badge>
-                                            Not Applied
-                                        </Badge>
-                                    )}
-                                >
-                                    <Show when={selectedRes.content.workerId !== 0}
+                            {(selectedRes.space.spaceType === SpaceTypeEnum.SUMI || selectedRes.space.spaceType === SpaceTypeEnum.MIRAE) && (<>
+                                <Separator />
+                                <DataListItem label="Worker">
+                                    <Show when={selectedRes.content.workerNeed}
                                         fallback={(
-                                            <Show when={isWorker}
-                                                fallback={(
-                                                    <Badge colorPalette={"blue"}>
-                                                        Waiting for Assignment
-                                                    </Badge>
-                                                )}
-                                            >
-                                                <Button
-                                                    variant={"outline"}
-                                                    colorPalette={"blue"}
-                                                    onClick={handleAssignWorker}
-                                                >
-                                                    근로 지원
-                                                </Button>
-                                            </Show>
-                                        )}
-                                    >
-                                        {selectedRes.worker ? (
-                                            <DataList.Root
-                                                orientation={isWide ? "horizontal" : "vertical"}
-                                                width="100%"
-                                            >
-                                                <DataListItem label="Name">
-                                                    {selectedRes.worker.nameKr}
-                                                </DataListItem>
-                                                <DataListItem label="Contact Email">
-                                                    {selectedRes.worker.email}
-                                                </DataListItem>
-                                            </DataList.Root>
-                                        ) : (
                                             <Badge>
-                                                Loading...
+                                                Not Applied
                                             </Badge>
                                         )}
+                                    >
+                                        <Show when={selectedRes.content.workerId !== 0}
+                                            fallback={(
+                                                <Show when={isWorker}
+                                                    fallback={(
+                                                        <Badge colorPalette={"blue"}>
+                                                            Waiting for Assignment
+                                                        </Badge>
+                                                    )}
+                                                >
+                                                    <Button
+                                                        variant={"outline"}
+                                                        colorPalette={"blue"}
+                                                        onClick={handleAssignWorker}
+                                                    >
+                                                        근로 지원
+                                                    </Button>
+                                                </Show>
+                                            )}
+                                        >
+                                            {selectedRes.worker ? (
+                                                <DataList.Root
+                                                    orientation={isWide ? "horizontal" : "vertical"}
+                                                    width="100%"
+                                                >
+                                                    <DataListItem label="Name">
+                                                        {selectedRes.worker.nameKr}
+                                                    </DataListItem>
+                                                    <DataListItem label="Contact Email">
+                                                        {selectedRes.worker.email}
+                                                    </DataListItem>
+                                                </DataList.Root>
+                                            ) : (
+                                                <Badge>
+                                                    Loading...
+                                                </Badge>
+                                            )}
+                                        </Show>
                                     </Show>
-                                </Show>
-                            </DataListItem>
+                                </DataListItem>
+                            </>)}
                             <Separator />
                             <DataListItem label="Time">
                                 <HStack>
