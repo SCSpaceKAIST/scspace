@@ -93,7 +93,7 @@ export default function ReservationApplication() {
             outerParticipantNumber: outer,
             food: food,
             busking: check && (spaceId === 13),
-            workerNeed: worker
+            workerNeed: (spaceId === 10 || spaceId === 11) ? worker : false
           },
           userId: userInfo.id,
           organizationId: orgId,
@@ -229,12 +229,14 @@ export default function ReservationApplication() {
           <GridItem colSpan={{ base: 6, md: 2 }}>
             <ChairForm />
           </GridItem>
-          <GridItem colSpan={{ base: 6, md: 2 }}>
-            <WorkerForm
-              value={worker}
-              setValue={setWorker}
-            />
-          </GridItem>
+          {(spaceId === 10 || spaceId === 11) && (
+            <GridItem colSpan={{ base: 6, md: 2 }}>
+              <WorkerForm
+                value={worker}
+                setValue={setWorker}
+              />
+            </GridItem>
+          )}
         </Grid>
         <Separator />
         <Button rounded="sm" width="100%" onClick={submit}>
