@@ -9,6 +9,7 @@ export * from './types/rental';
 export * from './types/reservation';
 export * from './types/space';
 export * from './types/user';
+export * from './types/passpin';
 
 // Export enums
 export * from './enums/article.enum';
@@ -19,6 +20,8 @@ export * from './enums/reservation.enum';
 export * from './enums/rule.enum';
 export * from './enums/space.enum';
 export * from './enums/user.enum';
+export * from './enums/passpin.enum';
+
 
 // Export constants
 export * from "./consts/article.const";
