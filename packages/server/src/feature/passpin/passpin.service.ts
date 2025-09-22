@@ -24,11 +24,9 @@ export class PasspinService {
     }
 
     //return IPasspin type (id, spaceId, pin, status, createdAt)
-    async getPin(spaceId : number, status : number) : Promise<IPasspin> {
+    async getPin(id: number) : Promise<IPasspin> {
 
-        if (!await this.isValidStatus(status)) throw new NotFoundException("passpin not found");
-
-        const pin = await this.passpinRepository.fetchDetailed(spaceId, status);
+        const pin = await this.passpinRepository.fetch(id);
         if (!pin) {
             throw new NotFoundException("passpin not found");
         }
@@ -36,7 +34,7 @@ export class PasspinService {
     }
 
     //return pin string directly
-    async getCurrentPinNumber(spaceId : number ) : Promise<string> {
+    async getCurrentPinString(spaceId : number ) : Promise<string> {
         const pin = await this.passpinRepository.fetchDetailed(spaceId, PasspinEnum.USING);
         if (!pin) {
             throw new NotFoundException("passpin not found");
@@ -44,7 +42,7 @@ export class PasspinService {
         return pin.pin;
     }
 
-    async getNextPinNumber(spaceId : number ) : Promise<string> {
+    async getNextPinString(spaceId : number ) : Promise<string> {
         const pin = await this.passpinRepository.fetchDetailed(spaceId, PasspinEnum.NEXT);
         if (!pin) {
             throw new NotFoundException("passpin not found");

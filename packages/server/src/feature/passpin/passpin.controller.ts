@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { AdminGuard } from '../auth/jwt/jwt.guard';
 import { PasspinService } from "@scspace-server/feature/passpin/passpin.service";
-import { IPasspinChangeResponse, IPasspinSpace } from "@scspace-depot/types/passpin";
+import { IPasspin, IPasspinChangeResponse, IPasspinSpace } from "@scspace-depot/types/passpin";
 
 
 @Controller('passpin')
@@ -16,8 +16,16 @@ export class PasspinController {
         private readonly passpinService: PasspinService,
     ) { }
 
+    @Get()
+    @UseGuards(AdminGuard)
+    async pinId(
+        @Query('id', ParseIntPipe) id: number,
+    ) : Promise<IPasspin> {
+        return await this.passpinService.getPin(id);
+    }
 
-    @Get('changepin')
+
+    @Get('change')
     @UseGuards(AdminGuard)
     async changePin(
         @Query('spaceId', ParseIntPipe) spaceId: number,
@@ -30,16 +38,16 @@ export class PasspinController {
     async getPin(
         @Query('spaceId', ParseIntPipe) spaceId: number,
     ) : Promise<string> {
-        return await this.passpinService.getCurrentPinNumber(spaceId)
+        return await this.passpinService.getCurrentPinString(spaceId)
     }
-    
-    
+
+
     @Get('next')
     @UseGuards(AdminGuard)
     async getNewpin(
         @Query('spaceId', ParseIntPipe) spaceId: number,
     ) : Promise<string> {
-        return await this.passpinService.getNextPinNumber(spaceId);
+        return await this.passpinService.getNextPinString(spaceId);
     }
 
     @Get('space')
