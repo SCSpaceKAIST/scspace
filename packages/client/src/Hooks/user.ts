@@ -3,7 +3,6 @@
 import { IUser, IUserUpdate } from "@scspace-depot/types/user";
 import { useQueryApi, useMutationApi } from "./api"
 import { useEffect, useState } from "react";
-import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 import { UserUtils } from "@scspace-depot/utils/user.utils";
 
 export function useUserInfo({ uid }: { uid: Number }) {
@@ -62,7 +61,7 @@ export function useUserAPI({ uid }: { uid: number }) {
         "PATCH"
     ).mutate;
 
-    const getUserTypeCode = (type: UserTypeEnum): string => {
+    const getUserTypeCode = (type: number): string => {
         if (UserUtils.isAdmin(type))
             return "임원진/개발진";
         if (UserUtils.isManager(type))

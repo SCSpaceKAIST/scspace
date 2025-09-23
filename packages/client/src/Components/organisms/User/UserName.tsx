@@ -1,13 +1,12 @@
 import { Badge, HStack, Text } from "@chakra-ui/react";
 import { useUserAPI } from "@scspace-client/Hooks/user";
-import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 import { IUser } from "@scspace-depot/types/user/user.type";
 import { UserUtils } from "@scspace-depot/utils/user.utils";
 
 export default function UserName({ user }: { user: IUser }) {
     const { getUserTypeCode } = useUserAPI({ uid: user.id });
 
-    const color = (type: UserTypeEnum) => {
+    const color = (type: number) => {
         if (UserUtils.isAdmin(type)) return "blue";
         if (UserUtils.isManager(type)) return "orange";
         if (UserUtils.isWorker(type)) return "green";

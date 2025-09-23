@@ -5,7 +5,7 @@ import { schema, User } from 'src/db/schema';
 import { and, asc, desc, eq, gt, inArray, InferInsertModel, like, sql } from 'drizzle-orm';
 import { IUserCreate, IUserUpdate } from '@scspace-depot/types/user';
 import { MUser } from './user.model';
-import { UserAuthBinaryEnum, UserTypeEnum } from '@scspace-depot/enums/user.enum';
+import { UserAuthBinaryEnum } from '@scspace-depot/enums/user.enum';
 
 @Injectable()
 export class UserRepository {

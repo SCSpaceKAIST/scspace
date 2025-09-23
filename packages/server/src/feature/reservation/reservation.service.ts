@@ -14,7 +14,6 @@ import { IUser } from '@scspace-depot/types/user';
 import { ISpace } from '@scspace-depot/types/space';
 import { MReservation } from '@scspace-server/feature/reservation/reservation.model';
 import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
-import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { MailService } from '@scspace-server/tools/mailer/mail.service';
 import { ReservationMeta, WorkerMeta } from '@scspace-depot/enums/mail.enum';
 import { getString } from '@scspace-server/common/utils'

@@ -1,6 +1,5 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { IUser } from '@scspace-depot/types/user';
 import { UserUtils } from '@scspace-depot/utils/user.utils';
 import { OrganizationPublicService } from '@scspace-server/feature/organization/organization.public.service';

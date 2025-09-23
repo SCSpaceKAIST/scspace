@@ -4,7 +4,7 @@ import { SpacePublicService } from './feature/space/space.public.service';
 import { UserPublicService } from './feature/user/user.public.service';
 import { DBAsyncProvider } from './db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
-import { UserAuthBinaryEnum, UserTypeEnum } from '@scspace-depot/enums/user.enum';
+import { UserAuthBinaryEnum } from '@scspace-depot/enums/user.enum';
 import { IUserCreate } from '@scspace-depot/types/user';
 import { ISpace } from '@scspace-depot/types/space';
 import { SpaceTypeEnum } from '@scspace-depot/enums/space.enum';

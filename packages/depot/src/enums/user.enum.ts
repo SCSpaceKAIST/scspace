@@ -1,10 +1,3 @@
-export enum UserTypeEnum {
-  USER = 1,
-  WORKER = 2,
-  MANAGER = 3,
-  ADMIN = 4,
-}
-
 export enum UserAuthBinaryEnum {
   USER = 1 << 0,      // 1
   MANAGER = 1 << 1,   // 2

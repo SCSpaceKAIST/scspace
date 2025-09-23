@@ -46,7 +46,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
 import { OrganizationPublicService } from '../organization/organization.public.service';
-import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { MailService } from '@scspace-server/tools/mailer/mail.service';
 import { IUser } from '@scspace-depot/types/user';
 import { ReservationMeta } from '@scspace-depot/enums/mail.enum';

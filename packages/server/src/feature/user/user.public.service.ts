@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { MUser } from './user.model';
-import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { IUser, IUserCreate, IUserUpdate } from '@scspace-depot/types/user';
 import { UserService } from './user.service';
 import { UserUtils } from '@scspace-depot/utils/user.utils';

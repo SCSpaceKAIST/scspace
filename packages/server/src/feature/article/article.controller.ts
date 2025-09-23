@@ -26,7 +26,6 @@ import { FileService } from '@scspace-server/tools/file/file.service';
 import { ISuccessResponse } from '@scspace-depot/types/common';
 import { Request } from 'express';
 import { IUser } from '@scspace-depot/types/user';
-import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { UserUtils } from '@scspace-depot/utils/user.utils';
 
 @Controller('article')

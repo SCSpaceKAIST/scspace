@@ -3,7 +3,6 @@
 import { useLinkPush, useQueryApi } from "@scspace-client/Hooks/api";
 import { IUser } from "@scspace-depot/types/user";
 import { IVerificationResponse } from "@scspace-depot/types/auth/auth.type";
-import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 import { UserUtils } from "@scspace-depot/utils/user.utils";
 
 export const useAuth = () => {

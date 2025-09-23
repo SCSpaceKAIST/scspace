@@ -6,7 +6,6 @@ import { dateUtils } from "@scspace-client/Hooks/utils";
 import { IReservationAll } from "@scspace-depot/types/reservation";
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
-import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
 import SimpleDialog from "@scspace-client/Components/atoms/SimpleDialog";

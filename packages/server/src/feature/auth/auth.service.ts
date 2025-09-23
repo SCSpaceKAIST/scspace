@@ -4,8 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
 import { IUser, IUserCreate } from '@scspace-depot/types/user';
 import { UserSSOType2025 } from '@scspace-depot/types/user/user.sso.type';
-import { UserAuthBinaryEnum, UserTypeEnum } from '@scspace-depot/enums/user.enum';
-import { Response } from 'express';
+import { UserAuthBinaryEnum } from '@scspace-depot/enums/user.enum';
 import { UserPublicService } from '../user/user.public.service';
 import { OrganizationPublicService } from '../organization/organization.public.service';
 

@@ -6,7 +6,6 @@ import { UserPublicService } from './user.public.service';
 import { AdminGuard, ManagerGuard } from '../auth/jwt/jwt.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { UserRepository } from './user.repository';
-// import { UserAuthBinaryEnum, UserTypeEnum } from '@scspace-depot/enums/user.enum';
 @Controller('user')
 export class UserController {
   constructor(
@@ -14,23 +13,6 @@ export class UserController {
     private readonly userPublicService: UserPublicService,
     private readonly userRepository: UserRepository,
   ) { }
-
-  // @Get("migrate-type")
-  // async migrateType(): Promise<void> {
-  //   const allusers = await this.userRepository.fetchAll(0);
-  //   for (const user of allusers) {
-  // let t = UserAuthBinaryEnum.USER;
-  // if (user.type === UserTypeEnum.MANAGER) t += UserAuthBinaryEnum.MANAGER;
-  // if (user.type === UserTypeEnum.ADMIN) t += UserAuthBinaryEnum.ADMIN;
-  // if (user.type === UserTypeEnum.WORKER) t += UserAuthBinaryEnum.WORKER;
-  // await this.userRepository.updateType(user.id, { type: t });
-  // Logger.log(`User ID ${user.id}: ${user.nameKr} type migrated to ${t}`);
-  // if (user.nameKr === "공간위") {
-  //   await this.userRepository.updateType(user.id, { type: 7 });
-  //   Logger.log(`User ID ${user.id}: ${user.nameKr} type migrated to ADMIN`);
-  // }
-  //   }
-  // }
 
   @UseGuards(AdminGuard)
   @Get('all')
