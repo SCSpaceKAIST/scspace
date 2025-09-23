@@ -73,7 +73,7 @@ export default function UpdateType({ uid, onChange, type }: {
                             <RadioGroup.ItemHiddenInput />
                             <RadioGroup.ItemIndicator />
                             <RadioGroup.ItemText>
-                                임원진/개발진
+                                임원진/개발국
                             </RadioGroup.ItemText>
                         </RadioGroup.Item>
                     </HStack>
@@ -113,7 +113,7 @@ export default function UpdateType({ uid, onChange, type }: {
                     <Switch.HiddenInput />
                     <Switch.Control />
                     <Switch.Label>
-                        비밀번호 관리자
+                        비밀번호 관리
                     </Switch.Label>
                 </Switch.Root>
             </HStack>

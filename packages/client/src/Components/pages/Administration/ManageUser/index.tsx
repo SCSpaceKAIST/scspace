@@ -18,7 +18,7 @@ import { IUser } from "@scspace-depot/types/user";
 import UserDialog from "../../../organisms/User/UserDialog";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
-import UserName from "@scspace-client/Components/organisms/User/UserName";
+import UserBadges from "@scspace-client/Components/organisms/User/UserBadges";
 
 export default function ManageUser() {
     const { needManager } = useAuth();
@@ -82,14 +82,15 @@ export default function ManageUser() {
                                         setOpen(true);
                                     }
                                 }}
-                                header={["StudentNumber", "Name", "email", "Name (Eng)"]}
+                                header={["StudentNumber", "Name", "email", "Badges"]}
                                 content={users.map((u: IUser) => ({
                                     id: u.id,
                                     row: [
                                         u.studentNumber,
-                                        (<UserName key={u.id} user={u} />),
+                                        // (<UserName key={u.id} user={u} />),
+                                        u.nameKr,
                                         u.email,
-                                        u.nameEn,
+                                        <UserBadges key={u.id} type={u.type} />,
                                     ],
                                 }))}
                             />
