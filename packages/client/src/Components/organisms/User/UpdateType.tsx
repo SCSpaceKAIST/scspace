@@ -1,12 +1,14 @@
 "use client"
 
-import { Button, HStack, Text, VStack } from "@chakra-ui/react";
+import { HStack, RadioGroup, StackSeparator, Switch, Text, VStack } from "@chakra-ui/react";
 import { useUserAPI } from "@scspace-client/Hooks/user";
-import { UserAuthBinaryEnum, UserTypeEnum } from "@scspace-depot/enums/user.enum";
+import { UserAuthBinaryEnum } from "@scspace-depot/enums/user.enum";
+import { UserUtils } from "@scspace-depot/utils/user.utils";
 
-export default function UpdateType({ uid, onChange }: {
+export default function UpdateType({ uid, onChange, type }: {
     onChange: () => any;
     uid: number;
+    type: number;
 }) {
     const { updateUserType, getUserTypeCode } = useUserAPI({ uid });
 
@@ -19,32 +21,101 @@ export default function UpdateType({ uid, onChange }: {
         })
     }
 
+    const handleMemberTypeUpdate = (value: "user" | "manager" | "admin") => {
+        let newType = type;
+        switch (value) {
+            case "admin":
+                newType |= UserAuthBinaryEnum.ADMIN | UserAuthBinaryEnum.MANAGER | UserAuthBinaryEnum.USER;
+                break;
+            case "manager":
+                newType |= UserAuthBinaryEnum.MANAGER | UserAuthBinaryEnum.USER;
+                newType &= ~UserAuthBinaryEnum.ADMIN;
+                break;
+            case "user":
+                newType |= UserAuthBinaryEnum.USER;
+                newType &= ~(UserAuthBinaryEnum.MANAGER | UserAuthBinaryEnum.ADMIN);
+                break;
+        }
+        if (newType !== type) update(newType);
+    };
+
     return (
         <VStack>
             <Text>
                 아래 버튼을 클릭하여 유저 타입을 조정할 수 있습니다.
             </Text>
-            <HStack>
-                <Button variant="outline" px={2} py={1} height="fit-content" onClick={() => update(
-                    UserAuthBinaryEnum.USER
-                )}>
-                    일반
-                </Button>
-                <Button variant="outline" px={2} py={1} height="fit-content" colorPalette="green" onClick={() => update(
-                    UserAuthBinaryEnum.USER + UserAuthBinaryEnum.WORKER
-                )}>
-                    근로자
-                </Button>
-                <Button variant="outline" px={2} py={1} height="fit-content" colorPalette="orange" onClick={() => update(
-                    UserAuthBinaryEnum.USER + UserAuthBinaryEnum.MANAGER
-                )}>
-                    공간위원
-                </Button>
-                <Button variant="outline" px={2} py={1} height="fit-content" colorPalette="blue" onClick={() => update(
-                    UserAuthBinaryEnum.USER + UserAuthBinaryEnum.MANAGER + UserAuthBinaryEnum.ADMIN
-                )}>
-                    임원진/개발진
-                </Button>
+            <HStack gap={8} separator={<StackSeparator />}>
+                <RadioGroup.Root
+                    value={
+                        UserUtils.isAdmin(type) ? "admin" :
+                            UserUtils.isManager(type) ? "manager" : "user"
+                    }
+                    onValueChange={(e) => {
+                        handleMemberTypeUpdate(e.value as "user" | "manager" | "admin");
+                    }}
+                >
+                    <HStack gap={4}>
+                        <RadioGroup.Item value={"user"}>
+                            <RadioGroup.ItemHiddenInput />
+                            <RadioGroup.ItemIndicator />
+                            <RadioGroup.ItemText>
+                                일반
+                            </RadioGroup.ItemText>
+                        </RadioGroup.Item>
+                        <RadioGroup.Item value={"manager"} colorPalette={"green"}>
+                            <RadioGroup.ItemHiddenInput />
+                            <RadioGroup.ItemIndicator />
+                            <RadioGroup.ItemText>
+                                공간위원
+                            </RadioGroup.ItemText>
+                        </RadioGroup.Item>
+                        <RadioGroup.Item value={"admin"} colorPalette={"blue"}>
+                            <RadioGroup.ItemHiddenInput />
+                            <RadioGroup.ItemIndicator />
+                            <RadioGroup.ItemText>
+                                임원진/개발진
+                            </RadioGroup.ItemText>
+                        </RadioGroup.Item>
+                    </HStack>
+                </RadioGroup.Root>
+                <Switch.Root
+                    colorPalette={"green"}
+                    checked={UserUtils.isWorker(type)}
+                    onCheckedChange={(e) => {
+                        let newType = type;
+                        if (e.checked) {
+                            newType |= UserAuthBinaryEnum.WORKER;
+                        } else {
+                            newType &= ~UserAuthBinaryEnum.WORKER;
+                        }
+                        if (newType !== type) update(newType);
+                    }}
+                >
+                    <Switch.HiddenInput />
+                    <Switch.Control />
+                    <Switch.Label>
+                        근로
+                    </Switch.Label>
+                </Switch.Root>
+                <Switch.Root
+                    colorPalette={"blue"}
+                    checked={UserUtils.isPasspinMaster(type)}
+                    onCheckedChange={(e) => {
+                        let newType = type;
+                        if (e.checked) {
+                            newType |= UserAuthBinaryEnum.PASSPIN_MASTER;
+                        } else {
+                            newType &= ~UserAuthBinaryEnum.PASSPIN_MASTER;
+                        }
+                        if (newType !== type) update(newType);
+                    }}
+                >
+                    <Switch.HiddenInput />
+                    <Switch.Control />
+                    <Switch.Label>
+                        비밀번호 관리자
+                    </Switch.Label>
+                </Switch.Root>
             </HStack>
         </VStack>
     );

@@ -20,7 +20,12 @@ const isPasspinMaster = (auth: number): boolean => {
     return Boolean(auth & UserAuthBinaryEnum.PASSPIN_MASTER);
 }
 
+const isBasicUser = (auth: number): boolean => {
+    return auth === UserAuthBinaryEnum.USER;
+}
+
 export const UserUtils = {
+    isBasicUser,
     isUser,
     isManager,
     isAdmin,

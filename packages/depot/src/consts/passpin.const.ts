@@ -1,1 +1,0 @@
-export const PASSPIN_MASTER = 3;

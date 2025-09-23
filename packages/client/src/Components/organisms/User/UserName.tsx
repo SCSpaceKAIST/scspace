@@ -19,7 +19,7 @@ export default function UserName({ user }: { user: IUser }) {
             <Text truncate maxW={"full"}>
                 {user.nameKr}
             </Text>
-            {!UserUtils.isUser(user.type) && (
+            {!UserUtils.isBasicUser(user.type) && (
                 <Badge colorPalette={color(user.type)} variant="outline">
                     {getUserTypeCode(user.type)}
                 </Badge>

@@ -16,7 +16,6 @@ import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import { dateUtils } from "@scspace-client/Hooks/utils";
 import SimplePagination from "@scspace-client/Components/molecules/page/SimplePagenation";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
-import { PASSPIN_MASTER } from "@scspace-depot/consts/passpin.const";
 
 export default function UserDialog({
     open: openDetail,
@@ -64,18 +63,14 @@ export default function UserDialog({
                         <Dialog.Title whiteSpace="nowrap">
                             {user.nameKr}
                         </Dialog.Title>
-                        <Badge colorPalette={"green"}>
-                            UserID: {user.id}
-                        </Badge>
-                        {(user.id === PASSPIN_MASTER) && (
-                            <Badge colorPalette={"blue"}>
-                                Passpin Master
-                            </Badge>
-                        )}
                     </Dialog.Header>
                     <Separator />
                     <Dialog.Body>
-                        <UpdateType uid={user.id} onChange={refetchList} />
+                        <UpdateType
+                            uid={user.id}
+                            onChange={refetchList}
+                            type={user.type}
+                        />
                         <Separator my={4} />
                         <DataList.Root orientation={isWide ? "horizontal" : "vertical"} width="100%">
                             <DataListItem label="Eng Name">

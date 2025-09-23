@@ -29,4 +29,3 @@ export * from "./consts/file.const";
 export * from "./consts/rental.const";
 export * from './consts/reservation.const';
 export * from "./consts/space.const";
-export * from "./consts/passpin.const";
