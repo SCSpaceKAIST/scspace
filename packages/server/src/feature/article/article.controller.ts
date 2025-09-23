@@ -27,6 +27,7 @@ import { ISuccessResponse } from '@scspace-depot/types/common';
 import { Request } from 'express';
 import { IUser } from '@scspace-depot/types/user';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
+import { UserUtils } from '@scspace-depot/utils/user.utils';
 
 @Controller('article')
 export class ArticleController {
@@ -73,7 +74,7 @@ export class ArticleController {
         @Req() req: Request
     ) {
         const user = req.user as IUser;
-        const isManager = user.type === UserTypeEnum.MANAGER || user.type === UserTypeEnum.ADMIN;
+        const isManager = UserUtils.isManager(user.type);
 
         if (!isManager) return await this.articleService.getPublicArticles(query);
         return await this.articleService.getArticles(query);
@@ -116,7 +117,7 @@ export class ArticleController {
     ) {
         const user = req.user as IUser;
         const userId = user.id;
-        const isManager = user.type === UserTypeEnum.MANAGER || user.type === UserTypeEnum.ADMIN;
+        const isManager = UserUtils.isManager(user.type);
 
         return await this.articleService.updateArticle(id, userId, updateData, isManager);
     }
@@ -137,7 +138,7 @@ export class ArticleController {
     ) {
         const user = req.user as IUser;
         const userId = user.id;
-        const isManager = user.type === UserTypeEnum.MANAGER || user.type === UserTypeEnum.ADMIN;
+        const isManager = UserUtils.isManager(user.type);
 
         const imageData = files?.images ? JSON.stringify(files.images.map(f => f.filename)) : undefined;
 
@@ -161,7 +162,7 @@ export class ArticleController {
     ) {
         const user = req.user as IUser;
         const userId = user.id;
-        const isManager = user.type === UserTypeEnum.MANAGER || user.type === UserTypeEnum.ADMIN;
+        const isManager = UserUtils.isManager(user.type);
 
         const imageData = files?.images ? JSON.stringify(files.images.map(f => f.filename)) : undefined;
         const fileData = files?.files ? JSON.stringify(files.files.map(f => f.filename)) : undefined;

@@ -2,7 +2,7 @@
 
 import { Button, HStack, Text, VStack } from "@chakra-ui/react";
 import { useUserAPI } from "@scspace-client/Hooks/user";
-import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
+import { UserAuthBinaryEnum, UserTypeEnum } from "@scspace-depot/enums/user.enum";
 
 export default function UpdateType({ uid, onChange }: {
     onChange: () => any;
@@ -10,7 +10,7 @@ export default function UpdateType({ uid, onChange }: {
 }) {
     const { updateUserType, getUserTypeCode } = useUserAPI({ uid });
 
-    function update(type: UserTypeEnum) {
+    function update(type: number) {
         updateUserType({ type }, {
             onSuccess: () => {
                 alert(`유저의 타입이 변경되었습니다: ${getUserTypeCode(type)}`);
@@ -26,22 +26,22 @@ export default function UpdateType({ uid, onChange }: {
             </Text>
             <HStack>
                 <Button variant="outline" px={2} py={1} height="fit-content" onClick={() => update(
-                    UserTypeEnum.USER
+                    UserAuthBinaryEnum.USER
                 )}>
                     일반
                 </Button>
                 <Button variant="outline" px={2} py={1} height="fit-content" colorPalette="green" onClick={() => update(
-                    UserTypeEnum.WORKER
+                    UserAuthBinaryEnum.USER + UserAuthBinaryEnum.WORKER
                 )}>
                     근로자
                 </Button>
                 <Button variant="outline" px={2} py={1} height="fit-content" colorPalette="orange" onClick={() => update(
-                    UserTypeEnum.MANAGER
+                    UserAuthBinaryEnum.USER + UserAuthBinaryEnum.MANAGER
                 )}>
                     공간위원
                 </Button>
                 <Button variant="outline" px={2} py={1} height="fit-content" colorPalette="blue" onClick={() => update(
-                    UserTypeEnum.ADMIN
+                    UserAuthBinaryEnum.USER + UserAuthBinaryEnum.MANAGER + UserAuthBinaryEnum.ADMIN
                 )}>
                     임원진/개발진
                 </Button>

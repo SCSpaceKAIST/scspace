@@ -2,10 +2,10 @@ import { Injectable, Inject, Logger, NotFoundException } from '@nestjs/common';
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema, User } from 'src/db/schema';
-import { and, asc, desc, eq, gt, inArray, InferInsertModel, like, SQL } from 'drizzle-orm';
+import { and, asc, desc, eq, gt, inArray, InferInsertModel, like, sql } from 'drizzle-orm';
 import { IUserCreate, IUserUpdate } from '@scspace-depot/types/user';
 import { MUser } from './user.model';
-import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
+import { UserAuthBinaryEnum, UserTypeEnum } from '@scspace-depot/enums/user.enum';
 
 @Injectable()
 export class UserRepository {
@@ -17,9 +17,9 @@ export class UserRepository {
     id?: number;
     ids?: number[];
     studentNumber?: number;
-    type? : number;
+    type?: number;
   }): Promise<MUser[]> {
-    const whereConditions: SQL[] = [];
+    const whereConditions = [];
 
     if (params.id) {
       whereConditions.push(eq(User.id, params.id));
@@ -45,10 +45,23 @@ export class UserRepository {
     return users;
   }
 
+  async fetchAllWorker(): Promise<MUser[]> {
+    const users = await this.db
+      .select()
+      .from(User)
+      // Use raw SQL to evaluate bitwise AND and compare to 0
+      .where(gt(sql`${User.type} & ${UserAuthBinaryEnum.WORKER}`, 0))
+      .orderBy(
+        asc(User.studentNumber)
+      );
+
+    return users;
+  }
+
   async fetchAll(
     studentNumber: number
   ): Promise<MUser[]> {
-    const whereConditions: SQL[] = [];
+    const whereConditions = [];
 
     if (studentNumber != 0)
       whereConditions.push(like(User.studentNumber, `${studentNumber}%`))

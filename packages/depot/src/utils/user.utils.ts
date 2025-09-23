@@ -1,21 +1,29 @@
 import { UserAuthBinaryEnum } from "../enums/user.enum";
 
-export const isAdmin = (auth: number) => {
-    return (auth & UserAuthBinaryEnum.ADMIN) === UserAuthBinaryEnum.ADMIN;
+const isUser = (auth: number): boolean => {
+    return Boolean(auth & UserAuthBinaryEnum.USER) || isManager(auth);
 }
 
-export const isManager = (auth: number) => {
-    return (auth & UserAuthBinaryEnum.MANAGER) === UserAuthBinaryEnum.MANAGER;
+const isManager = (auth: number): boolean => {
+    return Boolean(auth & UserAuthBinaryEnum.MANAGER) || isAdmin(auth);
 }
 
-export const isWorker = (auth: number) => {
-    return (auth & UserAuthBinaryEnum.WORKER) === UserAuthBinaryEnum.WORKER;
+const isAdmin = (auth: number): boolean => {
+    return Boolean(auth & UserAuthBinaryEnum.ADMIN);
 }
 
-export const isPasspinMaster = (auth: number) => {
-    return (auth & UserAuthBinaryEnum.PASSPIN_MASTER) === UserAuthBinaryEnum.PASSPIN_MASTER;
+const isWorker = (auth: number): boolean => {
+    return Boolean(auth & UserAuthBinaryEnum.WORKER);
 }
 
-export const isUser = (auth: number) => {
-    return (auth & UserAuthBinaryEnum.USER) === UserAuthBinaryEnum.USER;
+const isPasspinMaster = (auth: number): boolean => {
+    return Boolean(auth & UserAuthBinaryEnum.PASSPIN_MASTER);
 }
+
+export const UserUtils = {
+    isUser,
+    isManager,
+    isAdmin,
+    isWorker,
+    isPasspinMaster
+};

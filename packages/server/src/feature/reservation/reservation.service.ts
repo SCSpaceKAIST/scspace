@@ -23,6 +23,7 @@ import { ReservationPublicService } from '@scspace-server/feature/reservation/re
 import { SpacePublicService } from '@scspace-server/feature/space/space.public.service';
 import { UserPublicService } from '@scspace-server/feature/user/user.public.service';
 import { OrganizationPublicService } from '@scspace-server/feature/organization/organization.public.service';
+import { UserUtils } from '@scspace-depot/utils/user.utils';
 
 @Injectable()
 export class ReservationService {
@@ -240,7 +241,7 @@ export class ReservationService {
     if (!organization) throw new BadRequestException('Organization not found');
     if (!space) throw new BadRequestException('Space not found');
 
-    if (user.type !== UserTypeEnum.MANAGER && user.type !== UserTypeEnum.ADMIN) {
+    if (!UserUtils.isManager(user.type)) {
       const userOrganizations = await this.organizationPublicService.fetchByUserId(reservationInput.userId);
       if (!userOrganizations.some(org => org.id === reservationInput.organizationId)) {
         throw new BadRequestException('User does not belong to the specified organization');
@@ -305,7 +306,7 @@ export class ReservationService {
       })
 
       if (workerNeed) {
-        const workers = await this.userPublicService.fetchAllbyType(UserTypeEnum.WORKER)
+        const workers = await this.userPublicService.fetchAllWorker()
 
         const workerMeta = {
           ...ReservationMeta.WorkerNotif,

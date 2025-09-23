@@ -1,6 +1,6 @@
 "use client"
 
-import { Dialog, Portal, HStack, useBreakpointValue, DataList, Separator, Text, Button, Center, Stack, Badge, Show } from "@chakra-ui/react";
+import { Dialog, HStack, useBreakpointValue, DataList, Separator, Text, Button, Center, Stack, Badge, Show } from "@chakra-ui/react";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { dateUtils } from "@scspace-client/Hooks/utils";
 import { IReservationAll } from "@scspace-depot/types/reservation";
@@ -14,8 +14,8 @@ import DataListItem from "@scspace-client/Components/atoms/DataListItem";
 import ChangeTimeBtn from "./ChangeTimeBtn";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
-import { useUserInfo } from "@scspace-client/Hooks/user";
 import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
+import { UserUtils } from "@scspace-depot/utils/user.utils";
 
 export default function ReservationDetail({ open, setOpen, selectedRes, refetch }: {
     open: boolean;
@@ -229,7 +229,7 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
                                     <Text>
                                         {selectedRes.user.nameKr}
                                     </Text>
-                                    {(selectedRes.user.type === UserTypeEnum.ADMIN || selectedRes.user.type === UserTypeEnum.MANAGER) && (
+                                    {UserUtils.isManager(selectedRes.user.type) && (
                                         <Badge colorPalette={"blue"}>SCSpace</Badge>
                                     )}
                                 </HStack>
@@ -237,7 +237,7 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
                         </DataList.Root>
                     </Dialog.Body>
                     <Dialog.Footer>
-                        {userInfo && ((userInfo.id === selectedRes.userId) || (userInfo.type === UserTypeEnum.MANAGER) || (userInfo.type === UserTypeEnum.ADMIN)) && (
+                        {userInfo && ((userInfo.id === selectedRes.userId) || UserUtils.isManager(userInfo.type)) && (
                             <DeleteBtn onDelete={onDelete} />
                         )}
                         <Dialog.ActionTrigger asChild>

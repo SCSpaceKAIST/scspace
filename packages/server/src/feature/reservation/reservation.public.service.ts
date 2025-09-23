@@ -52,6 +52,7 @@ import { IUser } from '@scspace-depot/types/user';
 import { ReservationMeta } from '@scspace-depot/enums/mail.enum';
 import { LotteryPerformanceService } from '../lottery/performance/lottery.performance.service';
 import { IOrganization } from '@scspace-depot/types/organization/organization.type';
+import { UserUtils } from '@scspace-depot/utils/user.utils';
 
 const writeFile = promisify(fs.writeFile);
 const mkdir = promisify(fs.mkdir);
@@ -83,10 +84,7 @@ export class ReservationPublicService {
     if (!reservationInput.time)
       throw new BadRequestException('Time cannot be empty');
 
-    if (
-      user.type !== UserTypeEnum.MANAGER &&
-      user.type !== UserTypeEnum.ADMIN
-    ) {
+    if (!UserUtils.isManager(user.type)) {
       const userOrganizations =
         await this.organizationPublicService.fetchByUserId(
           reservationInput.userId,

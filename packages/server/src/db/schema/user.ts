@@ -1,3 +1,4 @@
+import { UserAuthBinaryEnum } from '@scspace-depot/enums/user.enum';
 import {
   mysqlTable,
   varchar,
@@ -12,6 +13,6 @@ export const User = mysqlTable('user', {
   nameKr: varchar('name_kr', { length: 128 }).notNull(),
   nameEn: varchar('name_en', { length: 128 }).notNull(),
   email: varchar('email', { length: 128 }).notNull().unique(),
-  type: int('type').notNull().default(1), // type은 enum 필드 user, worker, manager, admin
+  type: int('type').notNull().default(UserAuthBinaryEnum.USER), // type은 enum 필드 user, worker, manager, admin
   timeOverdue: bigint('time_overdue', { mode: 'number' }).notNull().default(0)
 });

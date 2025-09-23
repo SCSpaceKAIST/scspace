@@ -8,8 +8,7 @@ import { ISuccessResponse } from '@scspace-depot/types/common';
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
-  ) {
-  }
+  ) { }
 
   async insert(user: IUserCreate): Promise<IUser> {
     const userExist = await this.userRepository.fetch({ studentNumber: user.studentNumber });

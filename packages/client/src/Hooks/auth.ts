@@ -4,6 +4,7 @@ import { useLinkPush, useQueryApi } from "@scspace-client/Hooks/api";
 import { IUser } from "@scspace-depot/types/user";
 import { IVerificationResponse } from "@scspace-depot/types/auth/auth.type";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
+import { UserUtils } from "@scspace-depot/utils/user.utils";
 
 export const useAuth = () => {
   const { data, isLoading, refetch } = useQueryApi<IVerificationResponse>("/auth/verify");
@@ -12,9 +13,9 @@ export const useAuth = () => {
   const isLogined = !!userInfo;
   const { linkPush } = useLinkPush();
 
-  const isAdmin = isLogined && userInfo.type === UserTypeEnum.ADMIN;
-  const isManager = isLogined && userInfo.type === UserTypeEnum.MANAGER || isAdmin;
-  const isWorker = isLogined && userInfo.type === UserTypeEnum.WORKER || isManager;
+  const isAdmin = isLogined && UserUtils.isAdmin(userInfo.type);
+  const isManager = isLogined && UserUtils.isManager(userInfo.type);
+  const isWorker = isLogined && UserUtils.isWorker(userInfo.type);
 
   function alertMessage(message: string) {
     if (typeof window !== "undefined")

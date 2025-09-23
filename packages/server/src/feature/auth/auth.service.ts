@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
 import { IUser, IUserCreate } from '@scspace-depot/types/user';
 import { UserSSOType2025 } from '@scspace-depot/types/user/user.sso.type';
-import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
+import { UserAuthBinaryEnum, UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { Response } from 'express';
 import { UserPublicService } from '../user/user.public.service';
 import { OrganizationPublicService } from '../organization/organization.public.service';
@@ -16,13 +16,13 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private readonly organizationPublicService: OrganizationPublicService,
-  ) {}
+  ) { }
 
-  verifyState(state: number){
+  verifyState(state: number) {
     const v1 = parseInt(this.configService.get<string>("SSO_STATE1"));
     const v2 = parseInt(this.configService.get<string>("SSO_STATE2"));
 
-    if ((state ^ v1) === v2){
+    if ((state ^ v1) === v2) {
       return true;
     }
     return false;
@@ -75,7 +75,7 @@ export class AuthService {
       const createdUser = !user ? await this.userPublicService.insert(payload) : user;
 
       const memberExist = await this.organizationPublicService.fetchMembersById(1);
-      if (!memberExist.some(member => member.userId === createdUser.id)){
+      if (!memberExist.some(member => member.userId === createdUser.id)) {
         await this.organizationPublicService.insertMember(1, createdUser.id);
       }
 
@@ -100,7 +100,7 @@ export class AuthService {
         nameKr: process.env.ADMIN_NAME_KR,
         nameEn: process.env.ADMIN_NAME_EN,
         email: process.env.ADMIN_EMAIL,
-        type: UserTypeEnum.ADMIN,
+        type: UserAuthBinaryEnum.USER + UserAuthBinaryEnum.MANAGER + UserAuthBinaryEnum.ADMIN,
       };
       Logger.log('PAYLOAD ' + JSON.stringify(payload));
       const user = await this.userPublicService.fetchByStudentNumber(
@@ -123,7 +123,7 @@ export class AuthService {
         httpOnly: true,
         path: '/',
       });
-      
+
       res.redirect(
         this.configService.get<string>('NEXT_PUBLIC_APP_URL') + '/',
       );
@@ -159,7 +159,7 @@ export class AuthService {
       nameKr: ssoPayload.user_nm,
       nameEn: ssoPayload.user_eng_nm,
       email: ssoPayload.email,
-      type: UserTypeEnum.USER,
+      type: UserAuthBinaryEnum.USER,
       studentNumber: parseInt(ssoPayload.std_no)
         ? parseInt(ssoPayload.std_no)
         : (parseInt(ssoPayload.emp_no) ?? 1),

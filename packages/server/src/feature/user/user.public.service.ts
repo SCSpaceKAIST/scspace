@@ -1,9 +1,10 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { MUser } from './user.model';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { IUser, IUserCreate, IUserUpdate } from '@scspace-depot/types/user';
 import { UserService } from './user.service';
+import { UserUtils } from '@scspace-depot/utils/user.utils';
 
 @Injectable()
 export class UserPublicService {
@@ -44,8 +45,8 @@ export class UserPublicService {
   /**
    * @param type : use type ENUM - worker, admin, manager, etc
    */
-  async fetchAllbyType(type : number) : Promise<IUser[]> {
-    return (await this.userRepository.fetch( { type : UserTypeEnum.WORKER  }))
+  async fetchAllWorker(): Promise<IUser[]> {
+    return (await this.userRepository.fetchAllWorker())
   }
 
   async insert(user: IUserCreate): Promise<IUser> {
@@ -58,10 +59,7 @@ export class UserPublicService {
 
   async isManager(userId: number): Promise<boolean> {
     const user = await this.fetchById(userId);
-    return (
-      user.type === UserTypeEnum.MANAGER ||
-      user.type === UserTypeEnum.ADMIN
-    );
+    return UserUtils.isManager(user.type);
   }
 
   async updateOverdue(id: number, user: Pick<IUserUpdate, "timeOverdue">): Promise<IUser> {

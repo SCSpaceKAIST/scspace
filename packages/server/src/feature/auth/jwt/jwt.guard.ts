@@ -2,13 +2,9 @@ import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserTypeEnum } from '@scspace-depot/enums/user.enum';
 import { IUser } from '@scspace-depot/types/user';
+import { UserUtils } from '@scspace-depot/utils/user.utils';
 import { OrganizationPublicService } from '@scspace-server/feature/organization/organization.public.service';
 import { ReservationPublicService } from '@scspace-server/feature/reservation/reservation.public.service';
-
-function isManage(user: IUser): boolean {
-  return user.type === UserTypeEnum.ADMIN
-    || user.type === UserTypeEnum.MANAGER;
-}
 
 @Injectable()
 export class ManagerGuard extends AuthGuard('jwt') {
@@ -19,7 +15,7 @@ export class ManagerGuard extends AuthGuard('jwt') {
     const request = context.switchToHttp().getRequest();
     const user = request.user as IUser;
 
-    if (isManage(user)) {
+    if (UserUtils.isManager(user.type)) {
       return true;
     }
     return false;
@@ -35,7 +31,7 @@ export class AdminGuard extends AuthGuard('jwt') {
     const request = context.switchToHttp().getRequest();
     const user = request.user as IUser;
 
-    if (user.type === UserTypeEnum.ADMIN) {
+    if (UserUtils.isAdmin(user.type)) {
       return true;
     }
     return false;
@@ -51,7 +47,7 @@ export class WorkerGuard extends AuthGuard('jwt') {
     const request = context.switchToHttp().getRequest();
     const user = request.user as IUser;
 
-    if (user.type === UserTypeEnum.WORKER || isManage(user)) {
+    if (UserUtils.isWorker(user.type)) {
       return true;
     }
     return false;
@@ -67,7 +63,7 @@ export class UserGuard extends AuthGuard('jwt') {
     const request = context.switchToHttp().getRequest();
     const user = (request.user as IUser);
 
-    if (isManage(user)) {
+    if (UserUtils.isManager(user.type)) {
       return true;
     }
 
@@ -93,7 +89,7 @@ export class MemberGuard extends AuthGuard('jwt') {
 
     const request = context.switchToHttp().getRequest();
     const user = request.user as IUser;
-    if (isManage(user)) {
+    if (UserUtils.isManager(user.type)) {
       return true;
     }
 
@@ -101,7 +97,7 @@ export class MemberGuard extends AuthGuard('jwt') {
     if (request.params?.id) {
       id = parseInt(request.params.id);
       if (id === 1) {
-        if (user.type === UserTypeEnum.ADMIN || user.type === UserTypeEnum.MANAGER) {
+        if (UserUtils.isManager(user.type)) {
           return true;
         } else {
           return false
@@ -142,7 +138,7 @@ export class MemberGuardWithReservation extends AuthGuard('jwt') {
 
     const request = context.switchToHttp().getRequest();
     const user = request.user as IUser;
-    if (isManage(user)) {
+    if (UserUtils.isManager(user.type)) {
       return true;
     }
 
@@ -176,7 +172,7 @@ export class DelegatorGuard extends AuthGuard('jwt') {
 
     const request = context.switchToHttp().getRequest();
     const user = (request.user as IUser);
-    if (isManage(user)) {
+    if (UserUtils.isManager(user.type)) {
       return true;
     }
 

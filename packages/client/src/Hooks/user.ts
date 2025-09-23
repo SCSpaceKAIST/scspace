@@ -4,6 +4,7 @@ import { IUser, IUserUpdate } from "@scspace-depot/types/user";
 import { useQueryApi, useMutationApi } from "./api"
 import { useEffect, useState } from "react";
 import { UserTypeEnum } from "@scspace-depot/enums/user.enum";
+import { UserUtils } from "@scspace-depot/utils/user.utils";
 
 export function useUserInfo({ uid }: { uid: Number }) {
     const { data, isLoading, refetch } = useQueryApi<IUser>(`/user/profile/${uid}`);
@@ -62,16 +63,13 @@ export function useUserAPI({ uid }: { uid: number }) {
     ).mutate;
 
     const getUserTypeCode = (type: UserTypeEnum): string => {
-        switch (type) {
-            case UserTypeEnum.ADMIN:
-                return "임원진/개발진";
-            case UserTypeEnum.MANAGER:
-                return "공간위원";
-            case UserTypeEnum.WORKER:
-                return "근로자";
-            default:
-                return "일반";
-        }
+        if (UserUtils.isAdmin(type))
+            return "임원진/개발진";
+        if (UserUtils.isManager(type))
+            return "공간위원";
+        if (UserUtils.isWorker(type))
+            return "근로자";
+        return "일반";
     }
 
     return {
