@@ -26,7 +26,7 @@ export class MPasspin implements IPasspin {
         return {
             id: passpin.id,
             spaceId: passpin.spaceId,
-            pin: parseInt(passpin.pin),
+            pin: passpin.pin,
             timeCreated: passpin.timeCreated,
             status: passpin.status,
         };

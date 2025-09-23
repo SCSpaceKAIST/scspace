@@ -1,10 +1,11 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { DBModule } from 'src/db/db.module';
 import { SpaceModule } from 'src/feature/space/space.module';
 import { UserModule } from 'src/feature/user/user.module';
 import { OrganizationModule } from 'src/feature/organization/organization.module';
-import { PasspinController } from "@scspace-server/feature/passpin/passpin.controller";
-import { PasspinService } from "@scspace-server/feature/passpin/passpin.service";
+import { PasspinController } from "./passpin.controller";
+import { PasspinService } from "./passpin.service";
+import { PasspinRepository } from "@scspace-server/feature/passpin/passpin.repository";
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { PasspinService } from "@scspace-server/feature/passpin/passpin.service"
     controllers: [PasspinController],
     providers: [
         PasspinService,
+        PasspinRepository,
     ],
     exports: [PasspinService],
 })
