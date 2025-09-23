@@ -4,8 +4,8 @@ import ManagePerformanceLottery from "@scspace-client/Components/pages/Administr
 export default function PerformanceLotteryAdminPage() {
     return (
         <PageTemplete
-            title="공연집중기간 추첨 관리"
-            subtitle="Performance Intensive Period Lottery Management"
+            title={["운영", "공연집중기간 추첨 관리"]}
+            subtitle={["Administration", "Performance Lottery Management"]}
         >
             <ManagePerformanceLottery />
         </PageTemplete>

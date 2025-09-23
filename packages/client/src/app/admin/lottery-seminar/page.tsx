@@ -4,8 +4,8 @@ import ManageSeminarLottery from "@scspace-client/Components/pages/Administratio
 export default function LotteryPage() {
     return (
         <PageTemplete
-            title="세미나실 정기예약 추첨 관리"
-            subtitle="Seminar-room Lottery Management"
+            title={["세미나실 정기예약 추첨 관리"]}
+            subtitle={["Administration", "Seminar Lottery Management"]}
         >
             <ManageSeminarLottery />
         </PageTemplete>

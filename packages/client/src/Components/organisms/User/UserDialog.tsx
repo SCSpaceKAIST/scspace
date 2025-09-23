@@ -1,6 +1,6 @@
 "use client"
 
-import { Dialog, DataList, Separator, Button, Center, useBreakpointValue, Stack } from "@chakra-ui/react";
+import { Dialog, DataList, Separator, Button, Center, useBreakpointValue, Stack, Badge } from "@chakra-ui/react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { IUser } from "@scspace-depot/types/user";
@@ -16,6 +16,7 @@ import SimpleTable from "@scspace-client/Components/atoms/SimpleTable";
 import { dateUtils } from "@scspace-client/Hooks/utils";
 import SimplePagination from "@scspace-client/Components/molecules/page/SimplePagenation";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
+import { PASSPIN_MASTER } from "@scspace-depot/consts/passpin.const";
 
 export default function UserDialog({
     open: openDetail,
@@ -63,6 +64,14 @@ export default function UserDialog({
                         <Dialog.Title whiteSpace="nowrap">
                             {user.nameKr}
                         </Dialog.Title>
+                        <Badge colorPalette={"green"}>
+                            UserID: {user.id}
+                        </Badge>
+                        {(user.id === PASSPIN_MASTER) && (
+                            <Badge colorPalette={"blue"}>
+                                Passpin Master
+                            </Badge>
+                        )}
                     </Dialog.Header>
                     <Separator />
                     <Dialog.Body>

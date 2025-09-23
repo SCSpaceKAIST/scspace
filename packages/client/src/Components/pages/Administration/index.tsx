@@ -20,13 +20,13 @@ export default function Administration() {
         },
         {
             kor: "세미나실 정기예약 추첨 관리",
-            eng: "Seminar Room Lottery Management",
+            eng: "Seminar Lottery Management",
             preview: <ManageSeminarLottery />,
             href: "/admin/lottery"
         },
         {
             kor: "공연집중기간 추첨 관리",
-            eng: "Performance Intensive Period Lottery Management",
+            eng: "Performance Lottery Management",
             preview: <ManagePerformanceLottery />,
             href: "/admin/lottery"
         }
