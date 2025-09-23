@@ -18,7 +18,7 @@ export class MSpace implements ISpace {
     this.spaceType = data.spaceType;
   }
 
-  static fromDB(space: typeof Space.$inferSelect): ISpace {
+  static fromDB(space: SpaceDBResult): ISpace {
     return {
       id: space.id,
       nameKr: space.nameKr,
