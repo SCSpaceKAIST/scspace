@@ -18,7 +18,7 @@ import { FileModule } from '@scspace-server/tools/file/file.module';
                 dest: './uploads/article',
                 limits: {
                     fileSize: 10 * 1024 * 1024, // 10MB
-                    files: 15, // max 15 files (10 images + 5 files)
+                    files: 20, // max 20 files (12 images + 8 files)
                 },
                 fileFilter: (req, file, cb) => {
                     // Allow images and common document types

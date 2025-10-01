@@ -14,11 +14,13 @@ import {
     ARTICLE_STATE,
     ARTICLE_TYPE,
 } from '@scspace-depot/types/article';
+import { FileService } from "@scspace-server/tools/file/file.service";
 
 @Injectable()
 export class ArticleService {
     constructor(
         private readonly articleRepository: ArticleRepository,
+        private readonly fileService: FileService,
     ) { }
 
     async createArticle(userId: number, articleData: Omit<IArticleCreate, 'userId'>): Promise<IArticle> {
@@ -108,6 +110,20 @@ export class ArticleService {
         });
     }
 
+    //file deletion
+    async deleteArticleFiles(id:number): Promise<void> {
+        const article = await this.articleRepository.getArticleById(id);
+        const currentImages = JSON.parse(article.images ?? "[]") ?? [];
+        const currentFiles = JSON.parse(article.files ?? "[]") ?? [];
+
+        const targets = Array.from(new Set([...currentImages, ...currentFiles]));
+
+        for (const i in targets) {
+            console.log(i);
+            await this.fileService.deletePublicFile(i);
+        }
+    }
+
     async deleteArticle(id: number, userId: number, isAdmin: boolean = false): Promise<void> {
         const article = await this.articleRepository.getArticleById(id);
 
@@ -116,6 +132,7 @@ export class ArticleService {
             throw new ForbiddenException('You can only delete your own articles');
         }
 
+        await this.deleteArticleFiles(id);
         await this.articleRepository.deleteArticle(id);
     }
 
