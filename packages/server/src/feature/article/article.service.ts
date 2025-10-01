@@ -118,7 +118,7 @@ export class ArticleService {
 
         const targets = Array.from(new Set([...currentImages, ...currentFiles]));
 
-        for (const i in targets) {
+        for (const i of targets) {
             console.log(i);
             await this.fileService.deletePublicFile(i);
         }
