@@ -23,7 +23,7 @@ export class FileService {
     }
 
     async deletePublicFile(publicUri: string) {
-        const filePath = `${PUBLIC_FOLDER}/${publicUri.split('/')[2]}`;
+        const filePath = `${PUBLIC_FOLDER}/${publicUri.split('/')[2] ?? publicUri}`;
         try {
             fs.unlinkSync(filePath);
         } catch (error) {
