@@ -7,6 +7,7 @@ import { useState } from "react";
 import Counter from "./Counter";
 import { useRentalAPI } from "@scspace-client/Hooks/rental";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
+import ConfirmBtn from "./ConfirmBtn";
 
 const localhostBaseURL = "http://localhost:3001";
 
@@ -164,9 +165,11 @@ export default function GoodsListItem({
                                     setCount={setCount}
                                     max={countAvailable}
                                 />
-                                <Button size={"sm"} colorPalette={"blue"} onClick={handleCreate}>
-                                    Confirm
-                                </Button>
+                                <ConfirmBtn
+                                    handleConfirm={handleCreate}
+                                    count={count}
+                                    goodsName={item.name}
+                                />
                             </Flex>
                         </Collapsible.Content>
                     </Collapsible.Root>
