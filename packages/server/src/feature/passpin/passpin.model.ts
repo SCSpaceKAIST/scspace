@@ -37,21 +37,22 @@ export class MPasspin implements IPasspin {
 export class MPasspinSpace implements IPasspinSpace {
     spaceId: IPasspinSpace['spaceId'];
     currentPin : IPasspinSpace['currentPin'];
-    nextPin : IPasspinSpace['nextPin'];
-    // changedAt : IPasspinSpace['changedAt'];
+    previousPin : IPasspinSpace['previousPin'];
+    changedAt : IPasspinSpace['changedAt'];
 
     constructor(passpinSpace : IPasspinSpace) {
         this.spaceId = passpinSpace.spaceId;
         this.currentPin = passpinSpace.currentPin;
-        this.nextPin = passpinSpace.nextPin;
-        // this.changedAt = passpinSpace.changedAt;
+        this.previousPin = passpinSpace.previousPin;
+        this.changedAt = passpinSpace.changedAt;
     }
 
-    static fromDB(current: PasspinDBResult, newpin:PasspinDBResult) : IPasspinSpace {
+    static fromDB(current: PasspinDBResult, previous?:PasspinDBResult) : IPasspinSpace {
         return {
             spaceId : current.spaceId,
             currentPin : MPasspin.fromDB(current),
-            nextPin : MPasspin.fromDB(newpin),
+            previousPin : MPasspin.fromDB(previous) ?? null,
+            changedAt : current.timeCreated,
         }
     }
 }

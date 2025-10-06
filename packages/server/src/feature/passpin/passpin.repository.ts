@@ -2,7 +2,7 @@ import { Injectable, Inject, NotFoundException, BadRequestException } from "@nes
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { Passpin, schema} from "@schema";
-import { and, count, eq} from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
 import { PasspinEnum } from '@scspace-depot/enums/passpin.enum';
 import { IPasspin, IPasspinSpace } from "@scspace-depot/types/passpin";
 import { MPasspin, MPasspinSpace } from "@scspace-server/feature/passpin/passpin.model";
@@ -14,7 +14,11 @@ export class PasspinRepository {
         @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
     ) {}
 
-    //fetch with ID
+    isValidString(val : string) : boolean {
+        if (val.length !== 6) return false;
+        return /^d{6}$/.test(val);
+    }
+
     async fetch(id: number): Promise<IPasspin> {
         const pin  = await this.db
             .select()
@@ -29,7 +33,6 @@ export class PasspinRepository {
         return MPasspin.fromDB(pin);
     }
 
-
     async fetchSpacepin(spaceId : number) : Promise<IPasspinSpace> {
         const current_pin = await this.db
             .select()
@@ -41,18 +44,18 @@ export class PasspinRepository {
             throw new NotFoundException(`Passpin with spaceId ${spaceId} & Stauts = 0 not found`);
         }
 
-        const next_pin = await this.db
+        const previous_pin = await this.db
             .select()
             .from(Passpin)
-            .where(and(eq(Passpin.spaceId, spaceId), eq(Passpin.status, 1)))
+            .where(and(eq(Passpin.spaceId, spaceId), eq(Passpin.status, -1)))
+            .orderBy(desc(Passpin.id))
+            .limit(1)
             .then((pins) => pins[0]);
 
-
-        if (!next_pin) {
-            throw new NotFoundException(`Passpin with spaceId ${spaceId} & Stauts = 1 not found`);
+        if (!previous_pin) {
+            return MPasspinSpace.fromDB(current_pin);
         }
-
-        return MPasspinSpace.fromDB(current_pin, next_pin);
+        return MPasspinSpace.fromDB(current_pin, previous_pin);
     }
 
     async fetchDetailed (spaceId : number, status : number) :Promise<IPasspin> {
@@ -60,12 +63,16 @@ export class PasspinRepository {
             .select()
             .from(Passpin)
             .where(and(eq(Passpin.spaceId, spaceId), eq(Passpin.status, status)))
-            .then((pins) => pins[0]);
+            .then((pins) => pins);
         if (!pin) {
             throw new NotFoundException(`Passpin with spaceId ${spaceId} & Stauts = ${status} not found`);
         }
 
-        return MPasspin.fromDB(pin);
+        if (pin[1]) {
+            throw new BadRequestException(`Passpin with spaceId ${spaceId} & Stauts = ${status} is not unique`);
+        }
+
+        return MPasspin.fromDB(pin[0]);
     }
 
     async updateStatus(id: number,status : number) : Promise<boolean> {
@@ -88,16 +95,10 @@ export class PasspinRepository {
             .groupBy(Passpin.status);
 
         const currentCount = results.find(r => r.status === PasspinEnum.USING)?.cnt ?? 0;
-        const nextCount    = results.find(r => r.status === PasspinEnum.NEXT)?.cnt ?? 0;
 
         if (currentCount !== 1) {
             throw new BadRequestException(
                 `Invalid passpin state: expected exactly 1 USING pin, got ${currentCount}`
-            );
-        }
-        if (nextCount !== 1) {
-            throw new BadRequestException(
-                `Invalid passpin state: expected exactly 1 NEXT pin, got ${nextCount}`
             );
         }
 
@@ -105,33 +106,82 @@ export class PasspinRepository {
     }
 
 
-    //create NEXT pin for spaceId => Only after passpin Changed !!
-    async createPin(spaceId: number, pin: string, status?: number) : Promise<IPasspin> {
-        if (!this.fetchDetailed(spaceId, PasspinEnum.NEXT).then(pin => pin[0])) {
-            throw new BadRequestException(`Pin already exists`);
+    /**
+     *
+     * @param spaceId
+     * @param pin
+     * @param status
+     */
+    async createPin(spaceId : number, pin : string, status ?: number) : Promise<IPasspin> {
+        if (!this.isValidString(pin)) {
+            throw new BadRequestException(`Invalid String for Passpin : ${pin}`);
         }
 
-        // !!!! getNow() 사용하는게 맞는지 확인 필요함 !!!
+        if (status !== PasspinEnum.OUTDATED && status !== PasspinEnum.USING) {
+            throw new BadRequestException(`Invalid pin status : ${status}`)
+        }
 
-        const [result] = await this.db
-            .update(Passpin)
-            .set({
-                status : status ?? PasspinEnum.NEXT,
-                pin : pin.toString(),
+        const [res] = await this.db
+            .insert(Passpin)
+            .values({
+                spaceId : spaceId,
+                pin : pin,
+                status : status ?? PasspinEnum.USING,
                 timeCreated : getNow(),
-            })
-            .where(eq(Passpin.spaceId, spaceId));
+            });
 
-        const generatedPin = await this.fetch(result.insertId);
-        if (!generatedPin) {
-            throw new Error ("something went wrong : new password generation")
+        if (!res.insertId) {
+            throw new Error("something went wrong : new password generation")
         }
 
-        return generatedPin;
+        const inserted = await this.fetch(res.insertId);
+        if (!inserted) throw new Error("something went wrong : new password generation")
+
+        return await this.fetch(res.insertId)
     }
 
-    //changesubmit
+    async fetchOlderPins(spaceId : number, limit : number, includeCurrent ?: boolean) : Promise<IPasspin[]> {
+        const pins = await this.db
+            .select()
+            .from(Passpin)
+            .where(and(eq(Passpin.spaceId, spaceId), eq(Passpin.status, PasspinEnum.OUTDATED)))
+            .orderBy(desc(Passpin.id))
+            .limit(limit)
+        const res : IPasspin[] = pins.map(pin => MPasspin.fromDB(pin));
+        if (includeCurrent) {
+            const currentPin = await this.fetchDetailed(spaceId, PasspinEnum.USING);
+            res.unshift(currentPin);
+            res.pop(); //then the total length = limit !
+        }
+        return res;
+    }
 
+
+    /** OUTDATED
+     *     async createPin(spaceId: number, pin: string, status?: number) : Promise<IPasspin> {
+     *         if (!this.fetchDetailed(spaceId, PasspinEnum.NEXT).then(pin => pin[0])) {
+     *             throw new BadRequestException(`Pin already exists`);
+     *         }
+     *
+     *         // !!!! getNow() 사용하는게 맞는지 확인 필요함 !!!
+     *
+     *         const [result] = await this.db
+     *             .update(Passpin)
+     *             .set({
+     *                 status : status ?? PasspinEnum.NEXT,
+     *                 pin : pin.toString(),
+     *                 timeCreated : getNow(),
+     *             })
+     *             .where(eq(Passpin.spaceId, spaceId));
+     *
+     *         const generatedPin = await this.fetch(result.insertId);
+     *         if (!generatedPin) {
+     *             throw new Error ("something went wrong : new password generation")
+     *         }
+     *
+     *         return generatedPin;
+     *     }
+     */
 
 
 }
