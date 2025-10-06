@@ -1,8 +1,5 @@
 import {
     Controller,
-    Get,
-    Query,
-    ParseIntPipe,
     UseGuards, Post, Body,
 } from "@nestjs/common";
 import { AdminGuard } from '../auth/jwt/jwt.guard';
@@ -31,7 +28,7 @@ export class PasspinController {
 
     @Post('space')
     @UseGuards(AdminGuard)
-    async getCurrentPin(
+    async getCurrentPinSpace(
         @Body() body : {
             spaceId : number,
         }
@@ -41,12 +38,13 @@ export class PasspinController {
 
     @Post('current')
     @UseGuards(AdminGuard)
-    async getCurrentPinString(
+    async getCurrentPin(
         @Body() body : {
             spaceId : number,
         }
-    ):Promise<string> {
-        return await this.passpinService.getCurrentPinString(body.spaceId);
+    ):Promise<IPasspin> {
+        const res = await this.passpinService.getSpacePin(body.spaceId);
+        return res.currentPin;
     }
 
     @Post('history')
