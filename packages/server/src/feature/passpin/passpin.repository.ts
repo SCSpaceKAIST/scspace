@@ -1,7 +1,7 @@
 import { Injectable, Inject, NotFoundException, BadRequestException } from "@nestjs/common";
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
-import { Passpin, schema} from "@schema";
+import { Passpin, schema } from "@schema";
 import { and, count, desc, eq } from "drizzle-orm";
 import { PasspinEnum } from '@scspace-depot/enums/passpin.enum';
 import { IPasspin, IPasspinSpace } from "@scspace-depot/types/passpin";
@@ -12,15 +12,15 @@ import { getNow } from "@scspace-server/common/utils";
 export class PasspinRepository {
     constructor(
         @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
-    ) {}
+    ) { }
 
-    isValidString(val : string) : boolean {
+    isValidString(val: string): boolean {
         if (val.length !== 6) return false;
         return /^d{6}$/.test(val);
     }
 
     async fetch(id: number): Promise<IPasspin> {
-        const pin  = await this.db
+        const pin = await this.db
             .select()
             .from(Passpin)
             .where(eq(Passpin.id, id))
@@ -33,7 +33,7 @@ export class PasspinRepository {
         return MPasspin.fromDB(pin);
     }
 
-    async fetchSpacepin(spaceId : number) : Promise<IPasspinSpace> {
+    async fetchSpacepin(spaceId: number): Promise<IPasspinSpace> {
         const current_pin = await this.db
             .select()
             .from(Passpin)
@@ -58,8 +58,8 @@ export class PasspinRepository {
         return MPasspinSpace.fromDB(current_pin, previous_pin);
     }
 
-    async fetchDetailed (spaceId : number, status : number) :Promise<IPasspin> {
-        const pin  = await this.db
+    async fetchDetailed(spaceId: number, status: number): Promise<IPasspin> {
+        const pin = await this.db
             .select()
             .from(Passpin)
             .where(and(eq(Passpin.spaceId, spaceId), eq(Passpin.status, status)))
@@ -75,10 +75,10 @@ export class PasspinRepository {
         return MPasspin.fromDB(pin[0]);
     }
 
-    async updateStatus(id: number,status : number) : Promise<boolean> {
+    async updateStatus(id: number, status: number): Promise<boolean> {
         const [result] = await this.db
             .update(Passpin)
-            .set({status : status})
+            .set({ status: status })
             .where(eq(Passpin.id, id));
 
         return result.affectedRows > 0;
@@ -112,7 +112,7 @@ export class PasspinRepository {
      * @param pin
      * @param status
      */
-    async createPin(spaceId : number, pin : string, status ?: number) : Promise<IPasspin> {
+    async createPin(spaceId: number, pin: string, status?: number): Promise<IPasspin> {
         if (!this.isValidString(pin)) {
             throw new BadRequestException(`Invalid String for Passpin : ${pin}`);
         }
@@ -124,10 +124,10 @@ export class PasspinRepository {
         const [res] = await this.db
             .insert(Passpin)
             .values({
-                spaceId : spaceId,
-                pin : pin,
-                status : status ?? PasspinEnum.USING,
-                timeCreated : getNow(),
+                spaceId: spaceId,
+                pin: pin,
+                status: status ?? PasspinEnum.USING,
+                timeCreated: getNow(),
             });
 
         if (!res.insertId) {
@@ -140,14 +140,14 @@ export class PasspinRepository {
         return await this.fetch(res.insertId)
     }
 
-    async fetchOlderPins(spaceId : number, limit : number, includeCurrent ?: boolean) : Promise<IPasspin[]> {
+    async fetchOlderPins(spaceId: number, limit: number, includeCurrent?: boolean): Promise<IPasspin[]> {
         const pins = await this.db
             .select()
             .from(Passpin)
             .where(and(eq(Passpin.spaceId, spaceId), eq(Passpin.status, PasspinEnum.OUTDATED)))
             .orderBy(desc(Passpin.id))
             .limit(limit)
-        const res : IPasspin[] = pins.map(pin => MPasspin.fromDB(pin));
+        const res: IPasspin[] = pins.map(pin => MPasspin.fromDB(pin));
         if (includeCurrent) {
             const currentPin = await this.fetchDetailed(spaceId, PasspinEnum.USING);
             res.unshift(currentPin);

@@ -1,10 +1,14 @@
 import {
     Controller,
     UseGuards, Post, Body,
+    Get,
+    Query,
+    ParseIntPipe,
 } from "@nestjs/common";
-import { AdminGuard } from '../auth/jwt/jwt.guard';
+import { AdminGuard, PasspinMasterGuard } from '../auth/jwt/jwt.guard';
 import { PasspinService } from "@scspace-server/feature/passpin/passpin.service";
 import { IPasspin, IPasspinSpace } from "@scspace-depot/types/passpin";
+import { AuthGuard } from "@nestjs/passport";
 
 
 @Controller('passpin')
@@ -13,50 +17,42 @@ export class PasspinController {
         private readonly passpinService: PasspinService,
     ) { }
 
-    //need to change guard.. like PasspinGuard or something else
-
     @Post('change')
-    @UseGuards(AdminGuard)
+    @UseGuards(PasspinMasterGuard)
     async changePasspin(
-        @Body() body : {
-            spaceId : number,
-            next ? : string,
+        @Body() body: {
+            spaceId: number,
+            next?: string,
         }
     ): Promise<IPasspinSpace> {
         return await this.passpinService.changePin(body.spaceId, body.next ?? null)
     }
 
-    @Post('space')
-    @UseGuards(AdminGuard)
+    @Get('space')
+    @UseGuards(AuthGuard('jwt'))
     async getCurrentPinSpace(
-        @Body() body : {
-            spaceId : number,
-        }
-    ):Promise<IPasspinSpace> {
-        return await this.passpinService.getSpacePin(body.spaceId);
+        @Query('spaceId', ParseIntPipe) spaceId: number,
+    ): Promise<IPasspinSpace> {
+        return await this.passpinService.getSpacePin(spaceId);
     }
 
-    @Post('current')
-    @UseGuards(AdminGuard)
+    @Get('current')
+    @UseGuards(AuthGuard('jwt'))
     async getCurrentPin(
-        @Body() body : {
-            spaceId : number,
-        }
-    ):Promise<IPasspin> {
-        const res = await this.passpinService.getSpacePin(body.spaceId);
+        @Query('spaceId', ParseIntPipe) spaceId: number,
+    ): Promise<IPasspin> {
+        const res = await this.passpinService.getSpacePin(spaceId);
         return res.currentPin;
     }
 
-    @Post('history')
-    @UseGuards(AdminGuard)
+    @Get('history')
+    @UseGuards(AuthGuard('jwt'))
     async getHistory(
-        @Body() body : {
-            spaceId : number,
-            limit  : number,
-            includeCurrent ? : boolean,
-        }
+        @Query('spaceId', ParseIntPipe) spaceId: number,
+        @Query('limit', ParseIntPipe) limit: number,
+        @Query('includeCurrent') includeCurrent?: boolean,
     ): Promise<IPasspin[]> {
-        return await this.passpinService.getOlderPins(body.spaceId, body.limit, body.includeCurrent ?? false);
+        return await this.passpinService.getOlderPins(spaceId, limit, includeCurrent ?? false);
     }
 }
 

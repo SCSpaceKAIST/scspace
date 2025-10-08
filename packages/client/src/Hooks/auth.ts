@@ -15,6 +15,7 @@ export const useAuth = () => {
   const isAdmin = isLogined && UserUtils.isAdmin(userInfo.type);
   const isManager = isLogined && UserUtils.isManager(userInfo.type);
   const isWorker = isLogined && UserUtils.isWorker(userInfo.type);
+  const isPasspinMaster = isLogined && UserUtils.isPasspinMaster(userInfo.type);
 
   function alertMessage(message: string) {
     if (typeof window !== "undefined")
@@ -64,6 +65,11 @@ export const useAuth = () => {
     notAllowedMessage: "The page only for administrator, a executive of SCSpace.",
   });
 
+  const needPasspinMaster = () => checkAuth({
+    hasPermission: isPasspinMaster,
+    notAllowedMessage: "The page only for passpin master, a special role in SCSpace.",
+  });
+
   return {
     refetch,
     userInfo,
@@ -73,9 +79,11 @@ export const useAuth = () => {
     needWorker,
     needManager,
     needAdmin,
+    needPasspinMaster,
     isAdmin,
     isManager,
     isWorker,
+    isPasspinMaster,
   };
 };
 

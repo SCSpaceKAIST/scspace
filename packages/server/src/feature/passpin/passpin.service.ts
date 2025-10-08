@@ -8,13 +8,13 @@ import { getNow } from "@scspace-server/common/utils";
 export class PasspinService {
     constructor(
         private readonly passpinRepository: PasspinRepository,
-    ) {}
+    ) { }
 
     /**
      * Check this space's passpin is valid status : It should have only 1 USING pins
      * @param spaceId
      */
-    async checkAvail(spaceId: number) : Promise<boolean> {
+    async checkAvail(spaceId: number): Promise<boolean> {
         return await this.passpinRepository.checkAvail(spaceId);
     }
 
@@ -23,7 +23,7 @@ export class PasspinService {
      *
      * @param val
      */
-    async isValidString(val : string) : Promise<boolean> {
+    async isValidString(val: string): Promise<boolean> {
         if (val.length !== 6) return false;
         return /^d{6}$/.test(val);
     }
@@ -33,8 +33,8 @@ export class PasspinService {
      *
      * @param status
      */
-    async isValidStatus(status : any) : Promise<boolean> {
-        const valid : number[] = [PasspinEnum.OUTDATED, PasspinEnum.USING]
+    async isValidStatus(status: any): Promise<boolean> {
+        const valid: number[] = [PasspinEnum.OUTDATED, PasspinEnum.USING]
         return valid.includes(parseInt(status));
     }
 
@@ -43,7 +43,7 @@ export class PasspinService {
      *
      * @param spaceId
      */
-    async getSpacePin(spaceId : number) : Promise<IPasspinSpace> {
+    async getSpacePin(spaceId: number): Promise<IPasspinSpace> {
         const passpin = await this.passpinRepository.fetchSpacepin(spaceId)
         if (!passpin) {
             throw new NotFoundException("passpin not found");
@@ -56,7 +56,7 @@ export class PasspinService {
      *
      * @param id
      */
-    async getPin(id: number) : Promise<IPasspin> {
+    async getPin(id: number): Promise<IPasspin> {
         const pin = await this.passpinRepository.fetch(id);
         if (!pin) {
             throw new NotFoundException("passpin not found");
@@ -70,7 +70,7 @@ export class PasspinService {
      *
      * @param spaceId
      */
-    async getCurrentPinString(spaceId : number ) : Promise<string> {
+    async getCurrentPinString(spaceId: number): Promise<string> {
         const pin = await this.passpinRepository.fetchDetailed(spaceId, PasspinEnum.USING);
         if (!pin) {
             throw new NotFoundException("passpin not found");
@@ -83,8 +83,8 @@ export class PasspinService {
      *
      * @returns random 6-digit string
      */
-    async makeRandom() : Promise<string> {
-        const res =  Math.floor(Math.random() * 1_100_100).toString().padStart(6, '0');
+    async makeRandom(): Promise<string> {
+        const res = Math.floor(Math.random() * 1_100_100).toString().padStart(6, '0');
         if (await this.isValidString(res)) {
             return res;
         }
@@ -98,7 +98,7 @@ export class PasspinService {
      * @param stat : optional, if not given, default to PasspinEnum.USING
      * @returns Newly generated IPasspin
      */
-    async generatePin(spaceId: number, pin ?: string, stat ? : number) : Promise<IPasspin> {
+    async generatePin(spaceId: number, pin?: string, stat?: number): Promise<IPasspin> {
         const pinString = pin ?? await this.makeRandom();
         if (!await this.isValidString(pinString)) {
             throw new BadRequestException("Invalid pin string");
@@ -118,7 +118,7 @@ export class PasspinService {
      * @param spaceId
      * @returns Updated IPasspin
      */
-    async setOutdated(spaceId : number) : Promise<IPasspin> {
+    async setOutdated(spaceId: number): Promise<IPasspin> {
         const spacePin = await this.passpinRepository.fetchSpacepin(spaceId);
         const currentPin = spacePin.currentPin;
 
@@ -136,15 +136,15 @@ export class PasspinService {
      * @param designated
      * @returns Updated IPasspinSpace
      */
-    async changePin(spaceId : number, designated ?: string) : Promise<IPasspinSpace> {
+    async changePin(spaceId: number, designated?: string): Promise<IPasspinSpace> {
         const previous = await this.setOutdated(spaceId);
         const newpin = designated ? await this.generatePin(spaceId, designated, PasspinEnum.USING) : await this.generatePin(spaceId)
 
         return {
-            spaceId : spaceId,
-            currentPin : newpin,
-            previousPin : previous ?? null,
-            changedAt : newpin.timeCreated
+            spaceId: spaceId,
+            currentPin: newpin,
+            previousPin: previous ?? null,
+            changedAt: newpin.timeCreated
         } as IPasspinSpace;
     }
 
@@ -156,7 +156,7 @@ export class PasspinService {
      * @param includeCurrent : optional, if true, include the current pin in the result. Default to false.
      * @returns Array of IPasspin
      */
-    async getOlderPins(spaceId : number, limit : number, includeCurrent ?: boolean): Promise<IPasspin[]> {
+    async getOlderPins(spaceId: number, limit: number, includeCurrent?: boolean): Promise<IPasspin[]> {
         return await this.passpinRepository.fetchOlderPins(spaceId, limit, includeCurrent ?? false);
     }
 

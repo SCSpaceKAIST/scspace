@@ -22,6 +22,21 @@ export class ManagerGuard extends AuthGuard('jwt') {
 }
 
 @Injectable()
+export class PasspinMasterGuard extends AuthGuard('jwt') {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const can = await super.canActivate(context);
+    if (!can) return false;
+
+    const request = context.switchToHttp().getRequest();
+    const user = request.user as IUser;
+
+    if (UserUtils.isPasspinMaster(user.type)) {
+      return true;
+    }
+    return false;
+  }
+}
+
 export class AdminGuard extends AuthGuard('jwt') {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const can = await super.canActivate(context);

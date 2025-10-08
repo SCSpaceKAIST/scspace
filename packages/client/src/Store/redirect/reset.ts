@@ -11,7 +11,7 @@ export function useRedirects() {
     const { spaces } = useAllSpace();
     const [spaceLinks, setSpaceLinks] = useState<IRedirect[]>([]);
     const [calendarLinks, setCalendarLinks] = useState<IRedirect[]>([]);
-    const { userInfo, isAdmin, isManager, isLogined, isWorker } = useAuth();
+    const { userInfo, isAdmin, isManager, isLogined, isWorker, isPasspinMaster } = useAuth();
     const pathname = usePathname();
 
     useEffect(() => {
@@ -211,7 +211,13 @@ export function useRedirects() {
                 label: "개발",
                 helperText: "Development",
                 invisible: !isAdmin,
-            }
+            },
+            {
+                href: "/passpin",
+                label: "비밀번호 관리",
+                helperText: "Passpin Management",
+                invisible: !isPasspinMaster,
+            },
         ]);
-    }, [spaceLinks, isLogined, isAdmin, userInfo]);
+    }, [spaceLinks, isLogined, isManager, isAdmin, isWorker, isPasspinMaster, userInfo]);
 }
