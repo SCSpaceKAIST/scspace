@@ -58,6 +58,16 @@ export class PasspinRepository {
         return MPasspinSpace.fromDB(current_pin, previous_pin);
     }
 
+    async fetchActivePins(): Promise<IPasspin[]> {
+        const pins = await this.db
+            .select()
+            .from(Passpin)
+            .where(eq(Passpin.status, PasspinEnum.USING))
+            .then((pins) => pins);
+
+        return pins.map(pin => MPasspin.fromDB(pin));
+    }
+
     async fetchDetailed(spaceId: number, status: number): Promise<IPasspin> {
         const pin = await this.db
             .select()

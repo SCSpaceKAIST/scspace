@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { IPasspin, IPasspinSpace } from "@scspace-depot/types/passpin";
 import { PasspinRepository } from "@scspace-server/feature/passpin/passpin.repository";
 import { PasspinEnum } from "@scspace-depot/enums/passpin.enum";
@@ -62,6 +62,12 @@ export class PasspinService {
             throw new NotFoundException("passpin not found");
         }
         return pin;
+    }
+
+    async getActivePins(uid: number): Promise<IPasspin[]> {
+        Logger.log(`User ${uid} requested active passpins at ${getNow()}`);
+
+        return await this.passpinRepository.fetchActivePins();
     }
 
     /**
