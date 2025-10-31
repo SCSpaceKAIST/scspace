@@ -18,7 +18,6 @@ export const usePasspinAPI = () => {
         >('/passpin', 'POST').mutateAsync;
 
     return {
-        // usePasspin,
         usePasspin,
         usePasspinHistory,
 

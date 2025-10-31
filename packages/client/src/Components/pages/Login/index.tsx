@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, Card, Center, CloseButton, Dialog, DialogPositioner, HStack, Portal, Separator, Stack, StackSeparator, Tabs, Text, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Button, Card, Center, CloseButton, Dialog, DialogPositioner, HStack, Mark, Portal, Separator, Stack, StackSeparator, Tabs, Text, useBreakpointValue } from "@chakra-ui/react";
 import Scroll from "../../molecules/page/Scroll";
 import PrivacyPolicy from "../../organisms/Login/PrivacyPolicy";
 import { useLinkPush } from "@scspace-client/Hooks/api";
@@ -75,11 +75,11 @@ export default function SSOLogin() {
                                             <Stack color="fg.subtle" fontSize="sm" gap={0}>
                                                 {isWide && (
                                                     <Card.Description>
-                                                        본 SSO 로그인을 통해 학생문화공간위원회의 개인정보처리방침에 동의하게 됩니다.
+                                                        SCSpace 개인정보처리방침을 <Mark color={"blue"} fontWeight={"semibold"}>읽고 동의</Mark>하셔야 KAIST SSO로 로그인할 수 있습니다.
                                                     </Card.Description>
                                                 )}
                                                 <Card.Description>
-                                                    By registering with this SSO, you agree to the SCSpace Privacy Policy.
+                                                    You <Mark color={"blue"} fontWeight={"semibold"}>must read and agree</Mark> to the SCSpace Privacy Policy to log in with KAIST SSO.
                                                 </Card.Description>
                                             </Stack>
                                             <Dialog.Trigger width='100%' asChild>
