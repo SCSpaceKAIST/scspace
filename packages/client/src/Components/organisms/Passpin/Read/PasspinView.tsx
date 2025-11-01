@@ -1,14 +1,23 @@
 "use client"
 
-import { usePasspinAPI } from "@scspace-client/Hooks/passpin";
+import { Box, Button, Textarea } from "@chakra-ui/react";
+import { PasspinHooks } from "@scspace-client/Hooks/passpin";
 
 export default function PasspinView() {
-    const { data: passpinData, refetch } = usePasspinAPI().usePasspin();
+    const { data: passpinData, refetch } = PasspinHooks.usePasspin();
+    const { changePasspin } = PasspinHooks.usePasspinAPI();
 
     return (
-        <div>
-            <h1>Passpin View</h1>
-            <pre>{JSON.stringify(passpinData, null, 2)}</pre>
-        </div>
+        <Box>
+            <Textarea
+                autoresize
+                value={JSON.stringify(passpinData, null, 2)}
+                readOnly
+            />
+            <Button onClick={() => {
+                changePasspin({ spaceId: 1 });
+                refetch();
+            }}>Create & Refetch</Button>
+        </Box>
     );
 };

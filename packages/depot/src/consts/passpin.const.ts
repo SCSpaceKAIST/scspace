@@ -1,0 +1,1 @@
+export const PASSPIN_LENGTH = 6;

@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useMutationApi, useQueryApi } from "./api";
 import { IPasspin, IPasspinSpace } from "@scspace-depot/types/passpin";
 
@@ -10,7 +11,7 @@ const usePasspin = () =>
 const usePasspinHistory = (spaceId: number) =>
     useQueryApi<IPasspin[]>(`/passpin/history?spaceId=${spaceId}`);
 
-export const usePasspinAPI = () => {
+const usePasspinAPI = () => {
     const changePasspin =
         useMutationApi<
             IPasspin,
@@ -18,9 +19,12 @@ export const usePasspinAPI = () => {
         >('/passpin', 'POST').mutateAsync;
 
     return {
-        usePasspin,
-        usePasspinHistory,
-
         changePasspin,
     }
+};
+
+export const PasspinHooks = {
+    usePasspin,
+    usePasspinHistory,
+    usePasspinAPI,
 };

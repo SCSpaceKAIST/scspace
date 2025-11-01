@@ -7,17 +7,14 @@ import { PasspinEnum } from '@scspace-depot/enums/passpin.enum';
 import { IPasspin, IPasspinSpace } from "@scspace-depot/types/passpin";
 import { MPasspin, MPasspinSpace } from "@scspace-server/feature/passpin/passpin.model";
 import { getNow } from "@scspace-server/common/utils";
+import { PasspinUtils } from "./passpin.utils";
 
 @Injectable()
 export class PasspinRepository {
     constructor(
         @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
+        private readonly passpinUtils: PasspinUtils,
     ) { }
-
-    isValidString(val: string): boolean {
-        if (val.length !== 6) return false;
-        return /^d{6}$/.test(val);
-    }
 
     async fetch(id: number): Promise<IPasspin> {
         const pin = await this.db
@@ -115,7 +112,6 @@ export class PasspinRepository {
         return true; // 정상
     }
 
-
     /**
      *
      * @param spaceId
@@ -123,7 +119,7 @@ export class PasspinRepository {
      * @param status
      */
     async createPin(spaceId: number, pin: string, status?: number): Promise<IPasspin> {
-        if (!this.isValidString(pin)) {
+        if (!this.passpinUtils.isValidString(pin)) {
             throw new BadRequestException(`Invalid String for Passpin : ${pin}`);
         }
 
