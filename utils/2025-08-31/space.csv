@@ -1,0 +1,17 @@
+id,name_kr,name_en,space_type
+1,개인연습실 1,Individual Practice Room 1,1
+2,개인연습실 2,Individual Practice Room 2,1
+3,개인연습실 3,Individual Practice Room 3,1
+4,피아노실 1,Piano Room 1,2
+5,피아노실 2,Piano Room 2,2
+6,세미나실 1,Seminar Room 1,3
+7,세미나실 2,Seminar Room 2,3
+8,무예실,Dance Studio,4
+9,합주실,Group Practice Room,5
+10,미래홀,Mirae Hall,6
+11,조수미홀,Sumi Jo Hall,7
+12,창작공방,Workshop,9
+13,오픈스페이스,Open Space,8
+14,전시계단,Exhibition Stairs,8
+15,1층 로비,1st Floor Lobby,8
+16,2층 로비,2nd Floor Lobby,8

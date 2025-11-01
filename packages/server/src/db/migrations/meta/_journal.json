@@ -5,43 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1741663796792,
-      "tag": "0000_wise_yellow_claw",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1747670951859,
-      "tag": "0001_cute_warpath",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1751299711482,
-      "tag": "0002_round_polaris",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1754298053160,
-      "tag": "0003_fluffy_leopardon",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1754485248012,
-      "tag": "0004_charming_dagger",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "5",
-      "when": 1754485731462,
-      "tag": "0005_dear_leader",
+      "when": 1761978462690,
+      "tag": "0000_heavy_blizzard",
       "breakpoints": true
     }
   ]

@@ -1,0 +1,546 @@
+id,student_number,name_kr,name_en,email,type,time_overdue
+1,0,공간위,scspace,scspace@kaist.ac.kr,3,0
+2,20250241,김휘림,"KIM, HYILIM",hyilim.kim@kaist.ac.kr,4,0
+3,20240131,김서호,"Kim, Seoho",seohokim@kaist.ac.kr,4,0
+4,20250720,조은빈,"Jo, Eunbin",cindy060208@kaist.ac.kr,4,0
+5,20230710,조영서,"Cho, Youngseo",0seo23@kaist.ac.kr,1,0
+6,20250107,김민서,"KIM, MINSEO",minseo0107@kaist.ac.kr,4,0
+7,20250563,이정희,"Lee, Jeonghee",ljh3756@kaist.ac.kr,4,0
+8,20240086,김동윤,"KIM, Dongyun",kimdon2005@kaist.ac.kr,4,0
+9,20250845,김승우,"KIM, Seungwoo",theboy922@kaist.ac.kr,3,0
+10,20250569,이주혁,"Lee, Juhyeok",jhlee012@kaist.ac.kr,4,0
+11,20250078,김다해,"KIM, Dahae",deojidada@kaist.ac.kr,3,0
+12,20250503,이다민,"Lee, damin",vitamindamin@kaist.ac.kr,3,0
+13,20210044,권혁원,"KWON, Hyukwon",gerbera3090@kaist.ac.kr,4,0
+14,20240023,강휘문,"kang, hwimun",kanghm0602@kaist.ac.kr,3,0
+15,20240180,김지윤,"Kim, Jiyoon",ujk88@kaist.ac.kr,3,0
+16,20240769,최태훈,"Choi, TaeHoon",ks121134@kaist.ac.kr,1,0
+17,20230304,박하원,"Park, Hawon",peppermint_herb@kaist.ac.kr,1,0
+18,20250479,윤나우,"Yoon, Nawoo",nowy@kaist.ac.kr,1,0
+19,20240081,김동언,"Kim, Dongeon",eontxl@kaist.ac.kr,1,0
+20,20240184,김진석,"KiM, Jinseok",oxymoron_9@kaist.ac.kr,1,0
+21,20253286,박강태,"Park, Gangtae",rkdxo0417@kaist.ac.kr,1,0
+22,20250318,박준형,"Park, Junhyoung",mmt0207@kaist.ac.kr,1,0
+23,20250490,윤지형,"Yoon, Ji Hyeong",yjh0223@kaist.ac.kr,1,0
+24,20240693,조수영,"Cho, Su-Yeong",chonardan@kaist.ac.kr,1,0
+25,20250160,김영진,"Kim, YoungJin",rla0jin2007@kaist.ac.kr,1,0
+26,20240176,김지수,"Kim, jisu",kjs10807@kaist.ac.kr,1,0
+27,20240289,박윤홍,"Park, Yoonhong",yoonhongpark@kaist.ac.kr,1,0
+28,20185052,김수민,KIM SOOMIN,soomink@kaist.ac.kr,1,0
+29,20230449,유효근,"You, Hyogeun",youhg0903@kaist.ac.kr,1,0
+30,20240123,김상화,"kim, sanghwa",kimsanghwa211@kaist.ac.kr,1,0
+31,20240357,서채원,"Seo, Chaewon",seochaewon1@kaist.ac.kr,1,0
+32,20250785,한수정,"Han, Sujeong",arevision@kaist.ac.kr,1,0
+33,20240098,김민서,"KIM, MINSEO",min5335@kaist.ac.kr,1,0
+34,20250688,정원준,"Jeong, Wonjune",geniusjwj@kaist.ac.kr,1,0
+35,20250695,정의진,"Jung, Uijin",uj_06@kaist.ac.kr,1,0
+36,20240804,홍석준,"HONG, SEOKJUN",seokjunhong@kaist.ac.kr,1,0
+37,20230060,김규리,"GYURI, KIM",lauraux@kaist.ac.kr,1,0
+38,20210763,Jaden Jorradol,"Jorradol, Jaden",jadenjorradol@kaist.ac.kr,1,0
+39,20230544,이정민,"Lee, Jeong Min",jmlee0221@kaist.ac.kr,1,0
+40,20250681,정시환,"Jeong, Sihwan",wjdtlghks06@kaist.ac.kr,1,0
+41,20240484,이건희,"Lee, Kunhee",plutokh@kaist.ac.kr,1,0
+42,20248016,김나연,"KIM, NAYEON",kim.ny@kaist.ac.kr,1,0
+43,20240451,유시우,"RYU, Siwoo",siwoo1031@kaist.ac.kr,1,0
+44,20185568,한승호,"Han, Seung Ho",seunghohan@kaist.ac.kr,1,0
+45,20240705,조정원,"jeongwon, Cho",kcho031521@kaist.ac.kr,1,0
+46,20240659,정여원,"CHUNG, YEOWON",yeowon153@kaist.ac.kr,1,0
+47,20230733,주한별,"Joo, Hanbyeol",j1star@kaist.ac.kr,1,0
+48,20190171,김준영,"Kim, Junyoung",loglemon0711@kaist.ac.kr,1,0
+49,20230274,박시현,"PARK, Sihyeon",shy124@kaist.ac.kr,1,0
+50,20240556,이주영,"Lee, jooyoung",doellee@kaist.ac.kr,1,0
+51,20228141,홍세명,"Hong, Semyeong",threeee97@kaist.ac.kr,1,0
+52,20200683,하승종,"Ha, SeungJong",hippo0419@kaist.ac.kr,1,0
+53,53432,김지수,Kim Jisu,jisukim@kaist.ac.kr,1,0
+54,20234585,"WANG, JIKAI","WANG, JIKAI",wangjikai@kaist.ac.kr,1,0
+55,20250063,금동민,"KEUM, DongMin",dongmin08@kaist.ac.kr,1,0
+56,20210263,박지윤,"Park, Jiyun",jiyun02@kaist.ac.kr,1,0
+57,1,테스트,test,test.scspace@kaist.ac.kr,1,0
+58,20253281,민두홍,"Min, Doohong",mind00@kaist.ac.kr,1,0
+59,20240177,김지원,"Kim, Jeewon",dylan0301@kaist.ac.kr,1,0
+60,20230914,이종원,"Lee, Jong Won",jongwon6209@kaist.ac.kr,1,0
+61,20250002,강도완,"KANG, DOWAN",qubellia@kaist.ac.kr,1,0
+62,20248134,유진희,"Ryu, Jinhee",jinheeryu@kaist.ac.kr,1,0
+63,20250419,안정호,"AHN, JUNGHO",jhahn3703@kaist.ac.kr,1,0
+64,20230590,이해인,"Lee, Haein",aquaman@kaist.ac.kr,1,0
+65,20240295,박정훈,"Park, Joenghoon",jounghoony2@kaist.ac.kr,1,0
+66,20200620,조준한,"Joe, Jun-Han",jhjoe2001@kaist.ac.kr,1,0
+67,20253060,김경민,"KIM, KYEONGMIN",newjeans@kaist.ac.kr,1,0
+68,20230657,정민호,"Chung, Jonathan Minho",minho@kaist.ac.kr,1,0
+69,20240634,장정우,"Jang, JeongWoo",jjangjw0908@kaist.ac.kr,1,0
+70,20210753,Minhajur Rahman Chowdhury Mahim,"Chowdhury Mahim, Minhajur Rahman",minhaj@kaist.ac.kr,1,0
+71,20244922,Myriam SABRANE,"SABRANE, Myriam",myriamsa@kaist.ac.kr,1,0
+72,20230762,최성호,"CHOI, Sung ho",c8h10n4o2.s2@kaist.ac.kr,1,0
+73,20243464,심승보,"Sim, Seungbo",seungbosim@kaist.ac.kr,1,0
+74,20205072,김재상,"Kim,Jaesang",oyoki@kaist.ac.kr,1,0
+75,20244301,신지우,"SHIN, JIWOO",jiwoo.shin77@kaist.ac.kr,1,0
+76,20215497,박석범,"Park, Seokbeom",fpfmxh@kaist.ac.kr,1,0
+77,20240121,김상민,"KIM, SANGMIN",kimsangmin0408@kaist.ac.kr,3,0
+78,20250637,장수호,"Jang, sooho",wkdtngj44@kaist.ac.kr,3,0
+79,20250356,백준우,"Baek, Junwoo",joonoob@kaist.ac.kr,1,0
+80,20243022,강형욱,"KANG, HYEONG UK",tongbol0619@kaist.ac.kr,1,0
+81,20225500,신혜민,"Shin, Hyemin",hmshinpsy@kaist.ac.kr,1,0
+82,20250393,송시형,"Song, Sihyeong",songsh@kaist.ac.kr,1,0
+83,20210293,변재민,"BYUN, Jaemin",staykeen@kaist.ac.kr,1,0
+84,20250276,박건욱,"PARK, GUNWOOK",gwpark@kaist.ac.kr,1,0
+85,20243327,박성민,"Park, Seongmin",william14@kaist.ac.kr,1,0
+86,20218109,정성훈,"Jung, Sunghoon",jjkjjk97@kaist.ac.kr,1,0
+87,20244456,정시은,"Chung, Shieun",snchung@kaist.ac.kr,1,0
+88,20243622,이용하,"LEE, yongha",yhl98@kaist.ac.kr,1,0
+89,20240784,한우진,"HAN, UJIN",han060508@kaist.ac.kr,1,0
+90,20250018,강준우,"KANG, JunWoo",imsoindecisive@kaist.ac.kr,1,0
+91,20250702,정지민,"CHUNG, JIMIN",slalw@kaist.ac.kr,1,0
+92,20240783,한예원,"Han, Yewon",yewon6708@kaist.ac.kr,1,0
+93,28657,이나래,"Lee, NaRae",skfo0809@kaist.ac.kr,1,0
+94,20225618,GORYWODA MICHAL ANDRZEJ,"GORYWODA, MICHAL ANDRZEJ",hotwater@kaist.ac.kr,1,0
+95,20244054,"Marchlewski, Eryk","Marchlewski, Eryk",eryk2307@kaist.ac.kr,1,0
+96,20258231,최현진,"Choi, Hyunjin",achoi210301@kaist.ac.kr,1,0
+97,20230681,정재윤,"Choung, Jaeyoon",samuelchoung@kaist.ac.kr,1,0
+98,20230712,조영준,"Cho, Youngjoon",quiet_jun@kaist.ac.kr,1,0
+99,20250228,김태훈,"Kim, Taehun",iix06@kaist.ac.kr,1,0
+100,20230422,오상준,"OH, Sangjun",steven04@kaist.ac.kr,1,0
+101,20230237,류재현,"Ryu, Jaehyeon",jaehyeon0237@kaist.ac.kr,1,0
+102,20228094,이승훈,"Lee, Seunghun",2seunghuns@kaist.ac.kr,1,0
+103,20250291,박선우,"PARK, Seonwoo",francisco0915@kaist.ac.kr,1,0
+104,20250800,홍승표,"HONG, Seungpyo",winticket28@kaist.ac.kr,1,0
+105,20230647,정경현,"jeong, gyeonghyeon",gyh05@kaist.ac.kr,1,0
+106,20240401,심은용,"Sim, Eun Yong",silverdragonsim@kaist.ac.kr,1,0
+107,20210886,Faeyza Rishad Ardi,"Ardi, Faeyza Rishad",faeyza.rishad@kaist.ac.kr,1,0
+108,20243796,조현우,"JO, HYEONWOO",woo4789@kaist.ac.kr,1,0
+109,20250244,나영채,"Na, Yeongchae",zmalqp@kaist.ac.kr,1,0
+110,20225356,함석훈,"Ham, Seok-Hoon",tjrgns4789@kaist.ac.kr,1,0
+111,20243301,민태연,"Taeyeon, Min",minty@kaist.ac.kr,1,0
+112,20250113,김민수,"Kim, Minsu",kimms3592@kaist.ac.kr,1,0
+113,20240024,고성빈,"KO, SEONGBIN",likebin5669@kaist.ac.kr,1,0
+114,20200209,라태형,"La, Taehyeong",laxogud@kaist.ac.kr,1,0
+115,20230707,조연서,"cho, yeonsuh",yeonsuh7@kaist.ac.kr,1,0
+116,20253599,이지현,"LEE, JIHYUN",gh9439@kaist.ac.kr,1,0
+117,20200493,이재현,"LEE, JAEHYEON",jic4656@kaist.ac.kr,1,0
+118,20240347,변희승,"Byun, Heeseung",andrewb05@kaist.ac.kr,1,0
+119,20250116,김민재,"KIM, MIN JAE",littleoldfriend@kaist.ac.kr,1,0
+120,20250577,이준표,"Lee, Joonpyo",spacefuture7@kaist.ac.kr,1,0
+121,20230637,전경민,"Jun, Daniel Kyeongmin",jdkm5312@kaist.ac.kr,1,0
+122,20230384,신혜성,"Shin, Hyesung",dlfqkqtlals@kaist.ac.kr,1,0
+123,20230413,양현서,"Yang, HyeonSeo",yhsyhs14@kaist.ac.kr,1,0
+124,20230724,조현우,"CHO, Hyeonwoo",jhw20050321@kaist.ac.kr,1,0
+125,20230604,이희성,"Lee, Heesung",lh2sung@kaist.ac.kr,1,0
+126,2495,장유진,"Jang, Yujin",yjjang21@kaist.ac.kr,1,0
+127,20220245,박동연,"Park, Dongyeon",denny78@kaist.ac.kr,1,0
+128,20218083,유슬기,"You, Seulki",seulki_u@kaist.ac.kr,1,0
+129,20240130,김서현,"Kim, SeoHyun",ksh050927@kaist.ac.kr,1,0
+130,20240807,홍승한,"HONG, seung han",hshkr1231@kaist.ac.kr,1,0
+131,20218011,공다을,"Kong, Daeul",0daeul@kaist.ac.kr,1,0
+132,20253206,김지윤,"Kim, Jiyun",g2yoon@kaist.ac.kr,1,0
+133,20250151,김시유,"kim, siyu",copperkim@kaist.ac.kr,1,0
+134,20253399,성수연,"Seong, Suyeon",ssuyeon0218@kaist.ac.kr,1,0
+135,20235070,김소연,"KIM, SOYEON",purplehibird@kaist.ac.kr,1,0
+136,20230321,배성원,"Bae, seongwon",seongwonbae04@kaist.ac.kr,1,0
+137,20240812,홍지연,"Hong, Jiyeon",snowflakes@kaist.ac.kr,1,0
+138,20234590,"YADAV, ANURAG","YADAV, ANURAG",anusim2003@kaist.ac.kr,1,0
+139,20233681,정진성,"Jeong, Jinseong",jinseong.jeong@kaist.ac.kr,1,0
+140,20246453,Martin Adam CRETTOL,"CRETTOL, Martin",martin.crettol@kaist.ac.kr,1,0
+141,20250779,하형준,"ha, hyeong jun",hahj0601@kaist.ac.kr,1,0
+142,20253171,김은우,"Kim, Eunwoo",briankim0624@kaist.ac.kr,1,0
+143,20240821,황주하,"HWANG, Juha",galapagos14500@kaist.ac.kr,1,0
+144,20248309,이현민,"Lee, Hyunmin",hyunminkj@kaist.ac.kr,1,0
+145,20230072,김대호,"kim, daeho",daehokim28@kaist.ac.kr,1,0
+146,20245582,이동욱,"Lee, Dongwook",dongwooklee1201@kaist.ac.kr,1,0
+147,20243273,노대경,"roh, daegyeong",dgroh2000@kaist.ac.kr,1,0
+148,20250562,이정훈,"LEE, JEONGHUN",jhl060411@kaist.ac.kr,1,0
+149,20250130,김서진,"Kim, Seo-JIn",xx__ji_n@kaist.ac.kr,1,0
+150,20254057,"Vasilev, Artem","Vasilev, Artem",saryalovich@kaist.ac.kr,1,0
+151,20245343,조현호,"Cho, Hyunho",wh6481@kaist.ac.kr,1,0
+152,20220928,Siam Absur Khan,"Siam, Absur Khan",absur.siam@kaist.ac.kr,1,0
+153,20215092,김하경,"KIM, HAKYEONG",hkkim95@kaist.ac.kr,1,0
+154,20250353,백승재,"BAEK, SEUNGJAE",baeksj1224@kaist.ac.kr,1,0
+155,20225634,RUIZ MONDRAGON MARINA IVETTE,"RUIZ MONDRAGON, MARINA IVETTE",miruizm@kaist.ac.kr,1,0
+156,20240752,최윤영,"CHOI, Yun Yeong",cyy0303@kaist.ac.kr,1,0
+157,20220851,Singh Aanya,"Singh, Aanya",aanya02@kaist.ac.kr,1,0
+158,20234059,권순현,"Kwon, SoonHyeon",skysoon02@kaist.ac.kr,1,0
+159,20250206,김지우,"Kim, Jiwoo",wldn1275@kaist.ac.kr,1,0
+160,20230804,하재홍,"Ha, Jaehong",jhongha1234@kaist.ac.kr,1,0
+161,20254043,"Phunyaphibarn, Prin","Phunyaphibarn, Prin",prin10517@kaist.ac.kr,1,0
+162,20210192,김희진,"kim, heejin",h_jjin@kaist.ac.kr,1,0
+163,20240230,노경민,"Noh, Kyeongmin",nkm5714@kaist.ac.kr,3,0
+164,20195520,윤지영,"Yun, Jiyoung",jiyoungyun@kaist.ac.kr,1,0
+165,20210004,강민승,"KANG, Minseung",allenms@kaist.ac.kr,1,0
+166,20250535,이예음,"Lee, Ye Eum",dldpdma4225@kaist.ac.kr,1,0
+167,20240388,신우주,"Shin, WooJu",cosmos0807@kaist.ac.kr,1,0
+168,20225090,김현재,"Kim, Hyunjae",present@kaist.ac.kr,1,0
+169,20230497,이서연,"Lee, Seoyeon",syeog.xx5@kaist.ac.kr,1,0
+170,20230320,배보성,"Bae, Bo Seong",boseong0099@kaist.ac.kr,1,0
+171,20250007,강민교,"Kang, Mingyo",mushroom@kaist.ac.kr,1,0
+172,20220149,김재용,"Kim, Jae yong",jyong04@kaist.ac.kr,1,0
+173,20250287,박서우,"Park, seowoo",tjdnqkr12@kaist.ac.kr,1,0
+174,20250354,백승준,"Baek, Seungjun",sjbaek5411@kaist.ac.kr,1,0
+175,20228070,송영우,"Song, Yeongwoo",ywsong1025@kaist.ac.kr,1,0
+176,20200743,임재석,"LIM, JAESUK",flight0454@kaist.ac.kr,1,0
+177,20240122,김상현,"KIM, Sanghyun",shkim050202@kaist.ac.kr,1,0
+178,20205123,민석환,Min Seokhwan,seokhwan.min@kaist.ac.kr,1,0
+179,20240033,구서현,"Gu, Seohyeon",gsh0407@kaist.ac.kr,1,0
+180,20253074,김대용,"Kim, Daeyong",daeyong521@kaist.ac.kr,1,0
+181,20240897,김성윤,"Kim, Seongyun",syoonkim@kaist.ac.kr,1,0
+182,20240258,박나영,"PARK, Nayeong",nayeong3492@kaist.ac.kr,1,0
+183,20238165,한윤경,"Han, Yunkyoung",ykhan28@kaist.ac.kr,1,0
+184,20240232,노수빈,"NOH, SUBIN",nohsb@kaist.ac.kr,1,0
+185,20230050,권효진,"KWON, Hyojin",hyojin0510@kaist.ac.kr,1,0
+186,20240904,빈호승,"Bin, Hoseung",hoseungbin@kaist.ac.kr,1,0
+187,20253044,국윤혁,"Kuk, Yunhyeok",gyh0944@kaist.ac.kr,1,0
+188,20230841,홍성혁,"HONG, SEONGHYEOK",hsh2906@kaist.ac.kr,1,0
+189,20220470,이동훈,"Lee, Donghun",donghun030103@kaist.ac.kr,1,0
+190,20240655,정성재,"Jeong, SeongJae",sincerityj@kaist.ac.kr,1,0
+191,20245292,이혜진,"Lee, Hye Jin",hyejin411@kaist.ac.kr,1,0
+192,20234481,한현영,"Han, Hyunyoung",hyhan@kaist.ac.kr,1,0
+193,20243368,박창현,"Park, Changhyeon",sac7160@kaist.ac.kr,1,0
+194,20248057,김필권,"Kim, Philgwon",philgwon@kaist.ac.kr,1,0
+195,20258153,이유경,"Lee, Yukyeong",yukyeonglee@kaist.ac.kr,1,0
+196,20234387,전예영,"Jeon, Yeahyoung",y.jeon@kaist.ac.kr,1,0
+197,20245557,연지민,"Youn, Jee Min",jimney928@kaist.ac.kr,1,0
+198,1353,안수연,"SUYEON, AHN",syahn@kaist.ac.kr,1,0
+199,20254046,"Ramahdani, Muhammad Izaaz Inhar","Ramahdani, Muhammad Izaaz Inhar",mizaazir2@kaist.ac.kr,1,0
+200,20240694,조아란,"CHO, ARAN",anni13@kaist.ac.kr,1,0
+201,20210858,이정민,"Lee, Jeong Min",jeongminl@kaist.ac.kr,1,0
+202,20230428,오진택,"Oh, Jin Taek",ojitech@kaist.ac.kr,1,0
+203,20230776,최원석,"CHOI, WONSEOK",chopin0706@kaist.ac.kr,1,0
+204,20190607,정재용,"Jung, Jaeyong",kaijjy@kaist.ac.kr,1,0
+205,20210594,정재윤,"Jeong, jae yoon",jjy030215@kaist.ac.kr,1,0
+206,20240124,김서연,"KIM, SEOYEON",sykimrok05@kaist.ac.kr,1,0
+207,20248336,한일규,"Han, Ilkyu",hanik0102@kaist.ac.kr,1,0
+208,20220122,김수진,"KIM, SUJIN",kwatereal@kaist.ac.kr,1,0
+209,20215288,임진아,"Lim, JinA",lja1225@kaist.ac.kr,1,0
+210,20205356,최다인,"CHOI, DA-IN",drchoi@kaist.ac.kr,1,0
+211,20245065,김어진,"Kim, Eojin",eojin@kaist.ac.kr,1,0
+212,20225181,신용민,"Shin, Yongmin",crecredit@kaist.ac.kr,1,0
+213,20253817,최지원,"Choi, Jiwon",choijw@kaist.ac.kr,1,0
+214,20245629,정예나,"Jeong, Yeanah",daliet1024@kaist.ac.kr,1,0
+215,20244187,김철현,"KIM, CHUL HYUN",chulhyun98@kaist.ac.kr,1,0
+216,20215548,유용성,"YOU, YONG SUNG",utility@kaist.ac.kr,1,0
+217,20250041,곽동하,"GWAK, DONGHA",dongha.gwak@kaist.ac.kr,1,0
+218,20233903,윤장옥,"Youn, Jangog",lylayoun@kaist.ac.kr,1,0
+219,20240392,신지민,"Shin, Jimin",jmshin@kaist.ac.kr,1,0
+220,20200460,이상현,"Lee, Sanghyeon",firstquarterd@kaist.ac.kr,1,0
+221,20218089,이기헌,"LEE, KIHEON",ssmg7154@kaist.ac.kr,1,0
+222,20245281,이준표,"Lee, Jun Pyo",jun2730@kaist.ac.kr,1,0
+223,20250743,천예성,"Cheon, yeseong",yeseong0312@kaist.ac.kr,1,0
+224,20225154,봉승민,"Bong, SeungMin",chaldog0529@kaist.ac.kr,1,0
+225,20220813,Akhmetbek Alina,"Akhmetbek, Alina",akhmetbekalina21@kaist.ac.kr,1,0
+226,20240170,김주해,"Kim, JuHae",printfkjh@kaist.ac.kr,1,0
+227,20218157,"Kim, Seo Hyun","Kim, Seo Hyun",kimseh2016@kaist.ac.kr,1,0
+228,20220680,차영주,"Cha, youngju",yjcha22@kaist.ac.kr,1,0
+229,20250601,이현서,"Lee, Hyeonseo",itsme@kaist.ac.kr,1,0
+230,20210108,김세영,"KIM, Seyeong",andy0718@kaist.ac.kr,1,0
+231,20250177,김재윤,"Kim, jae yoon",yoonkyo0218@kaist.ac.kr,1,0
+232,20240158,김윤,"Kim, Yoon",yk2024@kaist.ac.kr,1,0
+233,20238105,이상윤,"Lee, Sangyun",loki236@kaist.ac.kr,1,0
+234,20233193,김지선,"Kim, Jiseon",ddrs1234@kaist.ac.kr,1,0
+235,20228211,이승현,"Lee, Seung Hyun",lshyun6572@kaist.ac.kr,1,0
+236,20200373,양승은,"YANG, SEUNGEUN",yangse0101@kaist.ac.kr,1,0
+237,20238132,임호진,"YIM, HOJIN",hjin1015@kaist.ac.kr,1,0
+238,20240861,정준상,"Jung, joonsang",temimong2@kaist.ac.kr,1,0
+239,20243840,최진,"Choi, Jeanne",jeannechoi@kaist.ac.kr,1,0
+240,20250285,박민규,"PARK, MINGYU",mingyu6139@kaist.ac.kr,1,0
+241,20250585,이진영,"LEE, JINYEONG",shrewd6318@kaist.ac.kr,1,0
+242,20240127,김서위,"kim, seowi",tjdnl1578@kaist.ac.kr,1,0
+243,20250207,김지윤,"Kim, Jiyoon",jiyoon__127@kaist.ac.kr,1,0
+244,20244210,류수현,"RYU, SUHYEON",702fbtngus@kaist.ac.kr,1,0
+245,20244442,전종익,"Jeon, Jongik",matji@kaist.ac.kr,1,0
+246,20244197,김희지,"Kim, Heeji",jolieheejikim@kaist.ac.kr,1,0
+247,20253158,김예원,"Kim, Yewon",yewonkim@kaist.ac.kr,1,0
+248,20244434,장한비,"Jang, Hanbee",jhb0605@kaist.ac.kr,1,0
+249,20243334,박소윤,"Park, So Yoon",psyoon1116@kaist.ac.kr,1,0
+250,20235426,"Pendse, Shruti","Pendse, Shruti",shrutipendse30@kaist.ac.kr,1,0
+251,20200153,김준우,"kim, junwoo",woojunkim1228@kaist.ac.kr,1,0
+252,20235030,권혁준,"Kwon, Hyeokjun",hj990713@kaist.ac.kr,1,0
+253,20230792,최찬영,"CHOI, CHANYEONG",chlcksdud@kaist.ac.kr,1,0
+254,20250455,원대한,"Won, Daehan",daehan@kaist.ac.kr,1,0
+255,20250618,임수아,"Im, Suah",imsuah0326@kaist.ac.kr,1,0
+256,20250432,엄예담,"Eom, Yedam",ollavi1230@kaist.ac.kr,1,0
+257,20240213,김현서,"KIM, HYUN SEO",hseo2u@kaist.ac.kr,1,0
+258,20230574,이진우,"LEE, JINWOO",atoree@kaist.ac.kr,1,0
+259,20234632,TSENG CHIH CHIEN,"TSENG, CHIH CHIEN",cherien7@kaist.ac.kr,1,0
+260,20210530,이혁진,"LEE, HYUKJIN",hyukjin0312@kaist.ac.kr,1,0
+261,20240731,차민재,"Cha, Minjae",ckalswo0324@kaist.ac.kr,1,0
+262,20215492,박다원,"PARK, DAWON",brianpark93@kaist.ac.kr,1,0
+263,20250280,박동현,"PARK, Donghyun",easton2820@kaist.ac.kr,1,0
+264,20250164,김예진,"Kim, Yejin",yejinkk17@kaist.ac.kr,1,0
+265,20210747,Nadia Azzahra Putri Arvi,"Arvi, Nadia Azzahra Putri",nadia.arvi@kaist.ac.kr,1,0
+266,20195185,이강용,"LEE, KANGYONG",ky.lee@kaist.ac.kr,1,0
+267,20220759,황기현,"HWANG, KiHyun",hkh040405@kaist.ac.kr,1,0
+268,20253277,문정욱,"Moon, Junguk",junguk000@kaist.ac.kr,1,0
+269,20230735,지연우,"Ji, Yeonwoo",delaywoo@kaist.ac.kr,1,0
+270,20200610,조승익,"Jo, SeungIk",7whtmddlr@kaist.ac.kr,1,0
+271,20210372,여민혁,"YEO, Minhyeok",forsale88@kaist.ac.kr,1,0
+272,20210409,윤대한,"Yoon, Daehan",axiom0102@kaist.ac.kr,1,0
+273,20200187,김현호,"KIM, HyeonHo",khh3487@kaist.ac.kr,1,0
+274,20250312,박준성,"Park, Junseong",pjunestar@kaist.ac.kr,1,0
+275,20220075,김도빈,"KIM, DOVIN",labrador127@kaist.ac.kr,1,0
+276,20180723,허준용,"HEO, JUNYONG",hjsy4444@kaist.ac.kr,1,0
+277,20220836,Makhmutova Merey,"Makhmutova, Merey",mereymakh@kaist.ac.kr,1,0
+278,20240576,이창현,"lee, changhyun",chxuun@kaist.ac.kr,1,0
+279,20240150,김예린,"Kim, Yerin",kimyerin3125@kaist.ac.kr,1,0
+280,20250010,강산,"Kang, San",kangsan@kaist.ac.kr,1,0
+281,20230317,방민솔,"Bang, Minsol",msbang@kaist.ac.kr,1,0
+282,20250682,정아람,"CHUNG, ARAM",stardustkai@kaist.ac.kr,1,0
+283,20210522,이창섭,"LEE, CHANGSEOB",i_seekthe_truth@kaist.ac.kr,1,0
+284,20248278,서찬영,"SEO, CHANYOUNG",chan2358@kaist.ac.kr,1,0
+285,20250185,김조아,"KIM, Joah",joah06@kaist.ac.kr,1,0
+286,20240646,전현규,"Jeon, Hyeongyu",hyeongyu@kaist.ac.kr,1,0
+287,20253885,정재현,"jeong, JaeHyun",jay1311325@kaist.ac.kr,1,0
+288,20200468,이수민,"Lee, Sumin",sum37@kaist.ac.kr,1,0
+289,20230823,한채영,"HAN, CHAE YEONG",chaeyeong6523@kaist.ac.kr,1,0
+290,20250603,이형준,"Lee, Hyungjoon",hl80362@kaist.ac.kr,1,0
+291,20230221,남준우,"Nam, Jun woo",hiimnjw@kaist.ac.kr,1,0
+292,20230605,임규성,"LIM, GYUSEONG",gslim@kaist.ac.kr,1,0
+293,20253444,양세정,"YANG, SEJEONG",02yangsj@kaist.ac.kr,1,0
+294,20250173,김율희,"KIM, YULHEE",julius@kaist.ac.kr,1,0
+295,20138003,고기현,"Go, Gi-Hyun",gh_go@kaist.ac.kr,1,0
+296,20205552,이동구,"Lee, Dong-Gu",dong-gu@kaist.ac.kr,1,0
+297,20220359,송준서,"Song, Junseo",junseo613@kaist.ac.kr,1,0
+298,20230279,박이나,"PARK, LEENA",qlqjhiena87@kaist.ac.kr,1,0
+299,20210085,김민주,"KIM, Minjoo",minjoo0729@kaist.ac.kr,1,0
+300,20220924,Pranoto Amanda Zeline,"Pranoto, Amanda Zeline",a.zeline@kaist.ac.kr,1,0
+301,20250552,이의준,"LEE, euijun",leeejun0722@kaist.ac.kr,1,0
+302,20250783,한서희,"Han, seohee",hansh25@kaist.ac.kr,1,0
+303,20230359,송영,"Song, Young",songyoung1202@kaist.ac.kr,1,0
+304,20240515,이선호,"Lee, SeonHo",infizero@kaist.ac.kr,1,0
+305,20250201,김준이,"KIM, JUNEE",juneekim7@kaist.ac.kr,1,0
+306,20250770,최현준,"choi, hyunjun",rewatres789@kaist.ac.kr,1,0
+307,20250692,정율,"Chong, Yul",wjddbf0601@kaist.ac.kr,1,0
+308,20240493,이도현,"Lee, DoHyeon",dohyeon24@kaist.ac.kr,1,0
+309,20240145,김아리,"KIM, AREE",areekar@kaist.ac.kr,1,0
+310,20240189,김진홍,"Kim, Jin Hong",jinong@kaist.ac.kr,1,0
+311,20250025,강현빈,"KANG, HYEONBEEN",hbin0307@kaist.ac.kr,1,0
+312,20243493,양지수,"Yang, Jisoo",white_neuron@kaist.ac.kr,1,0
+313,20215021,고주희,"Ko, Juhee",juheeko@kaist.ac.kr,1,0
+314,20240503,이민욱,"Lee, Minwook",ryan-lee@kaist.ac.kr,1,0
+315,20240351,서준빈,"Seo, Junbin",mylovejunevin@gmail.com,1,0
+316,20230890,김민서,"Kim, Minseo",evlingbling@kaist.ac.kr,1,0
+317,20250580,이지후,"Lee, Jihoo",25jihoo@kaist.ac.kr,1,0
+318,20250043,곽민지,"Kwak, Minji",mjkwak0114@kaist.ac.kr,1,0
+319,20243650,이중녕,"LEE, JUNGNYEONG",xro_nyeong@kaist.ac.kr,1,0
+320,20240293,박정우,"Park, JungWoo",jwharry1206@kaist.ac.kr,1,0
+321,20250509,이동윤,"Lee, dongyoon",taru070919@kaist.ac.kr,1,0
+322,20250697,정인지,"Jung, Inji",dlszing13@kaist.ac.kr,1,0
+323,20244412,임성현,"Lim, Seonghyeon",shlim@kaist.ac.kr,1,0
+324,20250332,박채빈,"Park, Chaebin",cherry14@kaist.ac.kr,1,0
+325,20250112,김민수,"KIM, MINSOO",minsukim10102@kaist.ac.kr,1,0
+326,20250537,이예찬,"LEE, YECHAN",yctony97@kaist.ac.kr,1,0
+327,20208219,이우린,"Lee, Woorin",winrl043@kaist.ac.kr,1,0
+328,20250447,오태원,"OH, TAEWON",kagomtwo_2@kaist.ac.kr,1,0
+329,20250735,주희원,"Joo, Heewon",06heewonj@kaist.ac.kr,1,0
+330,20230769,최시현,"CHOI, SiHyun",choisihyun2315@kaist.ac.kr,1,0
+331,20230807,하창욱,"Ha, Changwook",kstructure@kaist.ac.kr,1,0
+332,20240151,김예준,"kim, yejun",kimyejun0113@kaist.ac.kr,1,0
+333,20245554,양현우,"Yang, HyunWoo",hiyang99@kaist.ac.kr,1,0
+334,20210032,구자윤,"Koo, Jayoon",jaykoo02@kaist.ac.kr,1,0
+335,20228139,허준영,"Heo, Junyoung",joeheomail@kaist.ac.kr,1,0
+336,20240610,임승휘,"LIM, Seunghwi",seunghwi929@kaist.ac.kr,1,0
+337,20210537,이현준,"LEE, HyeonJun",cozy2jun52@kaist.ac.kr,1,0
+338,20230828,허수영,"Heo, Sooyoung",i.zer0.c8h10n4o2@kaist.ac.kr,1,0
+339,20250202,김준호,"KIM, Jun-Ho",kimjunhodavid@kaist.ac.kr,1,0
+340,20240179,김지원,"Kim, Jiwon",support.kim@kaist.ac.kr,1,0
+341,20210724,RASHKEE/RIFAKAT ALIM/,"RASHKEE, RIFAKAT ALIM",rifakatrashkee@kaist.ac.kr,1,0
+342,20250125,김보민,"KIM, BOMIN",60m1n@kaist.ac.kr,1,0
+343,20244441,전재연,"Jun, Jaeyeon",jaeyeon370z@kaist.ac.kr,1,0
+344,20250657,전영서,"jeon, young seo",j-youngs@kaist.ac.kr,1,0
+345,20240319,박찬,"PARK, CHAN",pchan0532@kaist.ac.kr,1,0
+346,20230522,이아원,"LEE, Awon",tomoc0811@kaist.ac.kr,1,0
+347,20250624,임우진,"Lim, Woojin",godqhr2006@kaist.ac.kr,1,0
+348,20230920,최민성,"Choi, Minsung",minsungc@kaist.ac.kr,1,0
+349,20240446,유가은,"YU, GAEUN",gaeun.yu@kaist.ac.kr,1,0
+350,20240857,이준서,"lee, junseo",junple818@kaist.ac.kr,1,0
+351,20250523,이세호,"Lee, Seho",dltpgh07@kaist.ac.kr,1,0
+352,20244275,손본,"sohn, vaughn",webb41@kaist.ac.kr,1,0
+353,20240785,한은혜,"HAHN, EUNHYE",0421grace@kaist.ac.kr,1,0
+354,20230418,여진현,"YEO, JINHYEON",wlsgus050212@kaist.ac.kr,1,0
+355,20237006,김서현,"Kim, SeoHyeon",ksh13259@kaist.ac.kr,1,0
+356,20250021,강태영,"Kang, Taeyeong",kangty0913@kaist.ac.kr,1,0
+357,20220895,주우성,"Joo, Woosung",woosung@kaist.ac.kr,1,0
+358,20240424,엄정훈,"EOM, junghoon",lgcjtsu@kaist.ac.kr,1,0
+359,20220225,류도현,"Ryu, Doh-hyoun",kaistrdh1206@kaist.ac.kr,1,0
+360,20220811,Abduali Guldana,"Abduali, Guldana",guldanabdual@kaist.ac.kr,1,0
+361,20200488,이재서,"LEE, JAESEO",stackoverflow@kaist.ac.kr,1,0
+362,20220690,최성훈,"CHOI, Seonghun",shchoi1215@kaist.ac.kr,1,0
+363,20210408,윤겸,"Yoon, Gyeom",ygdbsrua6749@kaist.ac.kr,1,0
+364,20220403,양진혁,"Yang, Jinhyeok",yangjh05@kaist.ac.kr,1,0
+365,20250808,홍현준,"Hong, Hyunjun",spacejun06@kaist.ac.kr,1,0
+366,20230266,박선우,"PARK, Seonwoo",myday@kaist.ac.kr,1,0
+367,20220055,김경래,"Kim, Kyeongrae",kimkyeongrae@kaist.ac.kr,1,0
+368,20245603,이정원,"Lee, Jeongwon",jeongwon.lee@kaist.ac.kr,1,0
+369,20248005,강수완,"KANG, SU WAN ISAIAS",isaiasko@kaist.ac.kr,1,0
+370,20243074,김나영,"kim, nayeong",lucille25@kaist.ac.kr,1,0
+371,20250406,신재후,"Shin, Jaehoo",jaehookaist@kaist.ac.kr,1,0
+372,20241011,Shatar Yanjmaa,"Shatar, Yanjmaa",yj.sh@kaist.ac.kr,1,0
+373,20240914,이상우,"Lee, Sangwu",oroxnsn@kaist.ac.kr,1,0
+374,20230903,송애린,"Song, Irene",ddxirenex@kaist.ac.kr,1,0
+375,20250648,장혜림,"JANG, Hyelim",jhl0121@kaist.ac.kr,1,0
+376,20230630,장주하,"Jang, Juha",imhotep0813@kaist.ac.kr,1,0
+377,20230641,전지민,"JEON, JI MIN",j_jamm@kaist.ac.kr,1,0
+378,20240247,문선우,"Moon, Sunwoo",sunny102@kaist.ac.kr,1,0
+379,20220086,김동현,"dong hyun, kim",king1002@kaist.ac.kr,1,0
+380,20240169,김주하,"Kim, Juha",juha0606@kaist.ac.kr,1,0
+381,20230927,홍석민,"HONG, SUKMIN",ehong@kaist.ac.kr,1,0
+382,20255410,최진혁,"Choi, Jinhyeok",cjh0507@kaist.ac.kr,1,0
+383,20240718,주도영,"Ju, Doyoung",doyoung0608@kaist.ac.kr,1,0
+384,20240092,김두영,"Kim, DooYoung",milkcoffee@kaist.ac.kr,1,0
+385,20240627,장성원,"Jang, Sungwon",somato@kaist.ac.kr,1,0
+386,20210739,최서웅,"CHOI, SeoUng",choisw0823@kaist.ac.kr,1,0
+387,20228062,박현지,"Park, HyeonJi",hyeonnji@kaist.ac.kr,1,0
+388,20240602,임가은,"Lim, Gaeun",lge0511121@kaist.ac.kr,1,0
+389,20230846,홍하은,"Hong, Haeun",grace469@kaist.ac.kr,1,0
+390,20195096,류형욱,"Ryu, Hyeonguk",hyeonguk@kaist.ac.kr,1,0
+391,20210259,박준영,"Park, JunYoung",jxxny@kaist.ac.kr,1,0
+392,20240277,박세웅,"Park, Sae Woong",pswoong@kaist.ac.kr,1,0
+393,20250251,남혜린,"Nam, Hyerin",kaist25hyerin@kaist.ac.kr,1,0
+394,20250119,김민지,"Kim, Minji",mji060204@kaist.ac.kr,1,0
+395,20240152,김예환,"Kim, Ye Hwan",blackkarn@kaist.ac.kr,1,0
+396,20220058,김경수,"KIM, KYOUNGSOO",samkim1224@kaist.ac.kr,1,0
+397,20240050,권태완,"Kwon, Taewan",twkwon123@kaist.ac.kr,1,0
+398,20250263,류은성,"Ryu, Eunsung",res1028@kaist.ac.kr,1,0
+399,20200549,장준하,"Jang, Junha",andy.jang@kaist.ac.kr,1,0
+400,20235134,박가경,"Park, Gagyeong",ae_gpark@kaist.ac.kr,1,0
+401,20220361,송채빈,"SONG, CHAEBIN",julia2057@kaist.ac.kr,1,0
+402,20205642,TRIRAT PATARA,"TRIRAT, PATARA",patara.t@kaist.ac.kr,1,0
+403,20230121,김서진,"Kim, Seojin",kseojin23@kaist.ac.kr,1,0
+404,20240166,김주연,"Kim, Juyeon",jykim8016@kaist.ac.kr,1,0
+405,20256282,Kim Rena,"Kim, Rena",rkim82005@kaist.ac.kr,1,0
+406,20240687,조병재,"jo, byeongjae",byeongjae@kaist.ac.kr,1,0
+407,20240287,박예은,"Park, Yeeun",rmpark7@kaist.ac.kr,1,0
+408,20235514,김지원,"Kim, Jiwon",kjw10042989@kaist.ac.kr,1,0
+409,20253818,최진수,"Choi, Jinsu",jinsuchoi@kaist.ac.kr,1,0
+410,20240656,정세영,"Jeong, Se Young",ssyy0724@kaist.ac.kr,1,0
+411,20240835,남승우,"NAM, SEUNGWOO",nsw_austin@kaist.ac.kr,1,0
+412,20240811,홍의빈,"HONG, Euibin",dmlqls05@kaist.ac.kr,1,0
+413,20240839,박서연,"PARK, SEOYEON",arielpsy1102@kaist.ac.kr,1,0
+414,20240867,하경준,"Ha, Kyeong Jun",hadoze.j@kaist.ac.kr,1,0
+415,20250126,김서린,"Kim, Seorin",nothank0525@kaist.ac.kr,1,0
+416,20195067,김주원,"Kim,Ju Won",engarand@kaist.ac.kr,1,0
+417,20240438,오한서,"Oh, Hanseo",hanseooh@kaist.ac.kr,1,0
+418,20240378,송현서,"SONG, HyunSeo",ssongzzz@kaist.ac.kr,1,0
+419,20210339,신서원,"SHIN, SEOWON",sswilove1@kaist.ac.kr,1,0
+420,20235554,박지윤,"Park, Jiyun",june@kaist.ac.kr,1,0
+421,20248301,이승현,"Lee, Seunghyun",lshyun0689@kaist.ac.kr,1,0
+422,20230867,Thaweesuksatian Julaluk,"Thaweesuksatian, Julaluk",julaluk_jean@kaist.ac.kr,1,0
+423,20200408,유재동,"YU, JAEDONG",lephoes0718@kaist.ac.kr,1,0
+424,20235635,임철수,"LIM, CHULSOO",charleslim@kaist.ac.kr,1,0
+425,20250596,이하진,"LEE, Hajin",underjin@kaist.ac.kr,1,0
+426,20230278,박윤지,"Park, Yoonjee",yoonjee3543@kaist.ac.kr,1,0
+427,20254452,이상현,"Lee, Sanghyun",lysanghyun@kaist.ac.kr,1,0
+428,20240905,서범규,"Suh, Bumgyu",bumgyu@kaist.ac.kr,1,0
+429,20250140,김세현,"Kim, sehyeon",sebright07@kaist.ac.kr,1,0
+430,20250486,윤영찬,"Yun, Young-Chan",noeulyoon@kaist.ac.kr,1,0
+431,20210118,김승준,"Kim, Seungjun",dmsdmswns@kaist.ac.kr,1,0
+432,20250022,강하영,"Kang, Hayoung",gnuoyahgnak@kaist.ac.kr,1,0
+433,20255464,"Nguyen, Tan Dat","Nguyen, Tan Dat",tandat.kaist@kaist.ac.kr,1,0
+434,20250402,신동주,"Shin, Dongju",shin_tonize@kaist.ac.kr,1,0
+435,20253548,이승민,"Lee, seungmin",seung6706@kaist.ac.kr,1,0
+436,20244918,Rebecca Zwilling,"Zwilling, Rebecca",zwilling@kaist.ac.kr,1,0
+437,20200605,조성원,"CHO, SUNGWON",bakdonal@kaist.ac.kr,1,0
+438,20240066,김나영,"Kim, Na Young",nazero0912@kaist.ac.kr,1,0
+439,20250240,김효린,"Kim, Hyolyn",kaistlyn@kaist.ac.kr,1,0
+440,20235581,오승민,"Oh, Seungmin",seungmin.oh@kaist.ac.kr,1,0
+441,20245395,황연희,"hwang, yeun hee",hyh7689@kaist.ac.kr,1,0
+442,20220393,안희원,"Ahn, Huiwon",c.filorux@kaist.ac.kr,1,0
+443,20240855,이재윤,"LEE, JAEYOON",holnare@kaist.ac.kr,1,0
+444,20240665,정우재,"Chung, woojae",c.woozzai_13@kaist.ac.kr,1,0
+445,20240344,백진영,"Baek, JinYeong",jinyeong4845@kaist.ac.kr,1,0
+446,20220572,임예린,"Lim, yelin",dladpfls@kaist.ac.kr,1,0
+447,20240468,윤석준,"Yoon, SeokJoon",joon0725@kaist.ac.kr,1,0
+448,20210061,김대희,"Kim, Daehui",earthisfuture@kaist.ac.kr,1,0
+449,20210132,김유민,"Kim, Yumin",kym2thebest@kaist.ac.kr,1,0
+450,20230119,김상현,"KIM, SANG HYUN",levloon@kaist.ac.kr,1,0
+451,20220586,장우찬,"JANG, WooChan",egg0254@kaist.ac.kr,1,0
+452,20210588,정우령,"JEONG, Woo-Ryoung",jwr1127@kaist.ac.kr,1,0
+453,20210349,심연수,"SIM, Yeonsu",simeyonsu07@kaist.ac.kr,1,0
+454,20230269,박세준,"PARK, sejoon",psjoon@kaist.ac.kr,1,0
+455,20250328,박찬서,"Park, ChanSeo",pcs9534@kaist.ac.kr,1,0
+456,20234153,김효진,"Kim, Hyojin",mayzel99@kaist.ac.kr,1,0
+457,20250678,정승균,"jeong, seunggyun",jskmail0925@kaist.ac.kr,1,0
+458,20220434,유시열,"YOU, SIYEOL",seanyoo1008@kaist.ac.kr,1,0
+459,20250088,김도윤,"Kim, DoYoon",podo3939@kaist.ac.kr,1,0
+460,20240415,양성수,"Yang, Seongsoo",a01081215074@kaist.ac.kr,1,0
+461,20240527,이승준,"Lee, seungjune",lino09freddy@kaist.ac.kr,1,0
+462,20240965,Ismayilzada Amil,"Ismayilzada, Amil",amilismayilzade9@kaist.ac.kr,1,0
+463,20240732,차민재,"cha, minjae",chaminjae@kaist.ac.kr,1,0
+464,20250622,임시현,"LIM, SIHYUN",limsihyun@kaist.ac.kr,1,0
+465,20240517,이성우,"Lee, Sungwoo",2006fish@kaist.ac.kr,1,0
+466,20240315,박지훈,"Park, Jihun",asdf0@kaist.ac.kr,1,0
+467,20240085,김동욱,"KIM, DongUk",rlaehddnr12@kaist.ac.kr,1,0
+468,20240310,박지민,"Park, Jimin",xistoh162108@kaist.ac.kr,1,0
+469,20253680,전수연,"Jeon, Suyeon",jsooyeon@kaist.ac.kr,1,0
+470,20200756,박보성,"Park, Bosung",b0sgun@kaist.ac.kr,1,0
+471,20220875,박하연,"Park, Hayeon",hesse@kaist.ac.kr,1,0
+472,20240572,이지호,"lee, jiho",jihole1218@kaist.ac.kr,1,0
+473,20255110,김진,"Kim, Jin",jinkim@kaist.ac.kr,1,0
+474,20205658,HANS KASAN,"KASAN, HANS",hanskasan@kaist.ac.kr,1,0
+475,20240250,문찬희,"MOON, CHANHEE",cchangee06@kaist.ac.kr,1,0
+476,20230558,이준영,"Lee, Joonyoung",lanigera@kaist.ac.kr,1,0
+477,20200316,성민석,"Sung, Minseok",browntrees1@kaist.ac.kr,1,0
+478,20254427,윤지현,"YOUN, JIHYUN",jihyunkkyong@kaist.ac.kr,1,0
+479,20258223,최예성,"Choi, Yeseong",yeseong@kaist.ac.kr,1,0
+480,20250645,장채준,"Jang, Chaejun",kefalonia@kaist.ac.kr,1,0
+481,20250351,백서윤,"Baek, Seo Yun",ican0534@kaist.ac.kr,1,0
+482,20250163,김예본,"KIM, Yebon",yebon.kim0605@kaist.ac.kr,1,0
+483,20250650,전나현,"JUN, Nahyun",nahyun@kaist.ac.kr,1,0
+484,20210241,박수진,"PARK, SOOJIN",ys_soojin@kaist.ac.kr,1,0
+485,20250485,윤아현,"YUN, AHYEON",imani0321@kaist.ac.kr,1,0
+486,20240708,조태현,"CHO, Taehyun",jthwin@kaist.ac.kr,1,0
+487,20250224,김태윤,"KIM, TAEYOON",aston4215@kaist.ac.kr,1,0
+488,20250897,김동휘,"Kim, Dongwhi",dongwhikim906@kaist.ac.kr,1,0
+489,20250935,최하나,"Choi, Hana",hanachoi@kaist.ac.kr,1,0
+490,20250928,이희진,"Lee, Heejin",heejin.lee@kaist.ac.kr,1,0
+491,20251036,Kamoliddin Yulbarsov,"Yulbarsov, Kamoliddin",steamkama@kaist.ac.kr,1,0
+492,20240767,최진혁,"CHOI, Jin Hyeok",causch2369@kaist.ac.kr,1,0
+493,20250939,한지성,"Han, Jisung",jisung@kaist.ac.kr,1,0
+494,20217076,홍재민,Hong Jaemin,jaemin.hong@kaist.ac.kr,1,0
+495,20250893,강민석,"KANG, MIN-SUK",kevinkang@kaist.ac.kr,1,0
+496,20253833,한정훈,"Han, Jeonghoon",gkswjdgns59@kaist.ac.kr,1,0
+497,20220858,Uddin ASKM Sayeef,"Uddin, ASKM Sayeef",askm5@kaist.ac.kr,1,0
+498,20230625,장여준,"JANG, YeoJoon",dongsan26007@kaist.ac.kr,1,0
+499,20208096,유석렬,"Yoo, Seok Yeol",seokyeol@kaist.ac.kr,1,0
+500,20240321,박필,"Park, Phil",aerophilic@kaist.ac.kr,1,0
+501,20235164,백수연,"BAEK, SOOYEON",nicetomeetsoo@kaist.ac.kr,1,0
+502,20250265,류호연,"Lew, Hoyeon",hylew1225@kaist.ac.kr,1,0
+503,20255015,고준원,"Ko, Junwon",kojunewon@kaist.ac.kr,1,0
+504,20243351,박주현,"Park, Joohyun",pjhy0227@kaist.ac.kr,1,0
+505,20256420,Fabian Deigner,"Deigner, Fabian",f18112003@kaist.ac.kr,1,0
+506,20230423,오소연,"Oh, SoYeon",tory453@kaist.ac.kr,1,0
+507,20250227,김태이,"Kim, Taeyi",kimtaeyi@kaist.ac.kr,1,0
+508,20234128,김주원,"KIM, JOOWON",ssjazzss@kaist.ac.kr,1,0
+509,20230314,박혜은,"Park, HyeEun",drey04@kaist.ac.kr,1,0
+510,20250283,박민규,"PARK, MINGYU",pmg2810837@kaist.ac.kr,1,0
+511,20250127,김서연,"KIM, SEOYEON",yeon0110@kaist.ac.kr,1,0
+512,20230509,이수정,"LEE, SUJEONG",cloudfactorylee@kaist.ac.kr,1,0
+513,20240683,정휘라,"Jeong, Hwira",hwira0428@kaist.ac.kr,1,0
+514,20200267,박중현,"PARK, JUNGHYEON",jhpark0314@kaist.ac.kr,1,0
+515,20258095,변현빈,"Byeon, Hyeon Bhin",hyeonbhin.byeon@kaist.ac.kr,1,0
+516,20225283,장은영,"Jang, Eunyoung",jey960525@kaist.ac.kr,1,0
+517,20215032,김경서,"KIM, KYUNGSEO",chalseokim@kaist.ac.kr,1,0
+518,20250675,정세진,"CHUNG, SEJIN",sejinchung@kaist.ac.kr,1,0
+519,20240278,박소현,"park, sohyeon",thgus0407@kaist.ac.kr,1,0
+520,20237061,윤정인,"Yun, Jeongin",shine3yji@kaist.ac.kr,1,0
+521,20210844,배선우,"Bae, Sun Woo",sunwoo021010@kaist.ac.kr,1,0
+522,20250594,이하람,"YI, Haram",ideally@kaist.ac.kr,1,0
+523,20238087,오유상,"Oh, Yusang",kemgang_98@kaist.ac.kr,1,0
+524,20207007,김동환,"Kim, Donghwan",dget235@kaist.ac.kr,1,0
+525,20250588,이찬민,"Lee, Chanmin",peter0910@kaist.ac.kr,1,0
+526,20240701,조은강,"JO, Eunkang",joeungang0817@kaist.ac.kr,1,0
+527,20244591,"CHIU, Meng-Yu","CHIU, Meng-Yu",kellychiu718@kaist.ac.kr,1,0
+528,20240003,강다예,"KANG, DAYE",yeda11@kaist.ac.kr,1,0
+529,20240061,김규민,"kim, gyumin",gyumin0331@kaist.ac.kr,1,0
+530,20240112,김민찬,"Kim, Minchan",andymin2307@kaist.ac.kr,1,0
+531,20250066,김건우,"KIM, KEONWOO",nvguawh@kaist.ac.kr,1,0
+532,20240221,김형준,"Kim, HyeongJun",gudwns_05@kaist.ac.kr,1,0
+533,20240102,김민우,"Kim, Minwoo",minuminu@kaist.ac.kr,1,0
+534,20240300,박주영,"PARK, Jooyoung",jypark2024@kaist.ac.kr,1,0
+535,20240709,조하나,"cho, hana",zerone01@kaist.ac.kr,1,0
+536,20240698,조용준,"JO, YongJun",yongjun9487@kaist.ac.kr,1,0
+537,20250689,정유찬,"jeong, yoochan",yuchanj8@kaist.ac.kr,1,0
+538,20250309,박준서,"Park, Junseo",jeffjuice@kaist.ac.kr,1,0
+539,20240144,김시형,"Kim, Shihyeong",lionaes@kaist.ac.kr,1,0
+540,20240233,노수정,"RHO, SUJEONG",shtnwjd05@kaist.ac.kr,1,0
+541,20230893,김지민,"Kim, Ji Min",jinim89810@kaist.ac.kr,1,0
+542,20240679,정지훈,"Jeong, Jihun",stophoon@kaist.ac.kr,1,0
+543,20200071,김두현,"KIM, DU HYEON",dh020430@kaist.ac.kr,1,0
+544,20220782,Thio Johanna Aurelia,"Thio, Johanna Aurelia",aurel@kaist.ac.kr,1,0
+545,20220868,김병주,"Kim, Byungjoo",bjk.bears@kaist.ac.kr,1,0

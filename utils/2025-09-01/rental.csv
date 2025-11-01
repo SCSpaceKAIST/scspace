@@ -1,0 +1,2 @@
+id,user_id,goods_id,count,time_borrow,time_due,time_return,time_confirm,cert_name
+1,2,42,1,1120115380,1120125599,0,0,2dec0e40-d964-4bf6-b3ea-79d84e21aff6.pdf
