@@ -6,6 +6,7 @@ import { OrganizationModule } from 'src/feature/organization/organization.module
 import { PasspinController } from "./passpin.controller";
 import { PasspinService } from "./passpin.service";
 import { PasspinRepository } from "@scspace-server/feature/passpin/passpin.repository";
+import { PasspinUtils } from './passpin.utils';
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { PasspinRepository } from "@scspace-server/feature/passpin/passpin.repos
     providers: [
         PasspinService,
         PasspinRepository,
+        PasspinUtils,
     ],
     exports: [PasspinService],
 })

@@ -3,11 +3,13 @@ import { IPasspin, IPasspinSpace } from "@scspace-depot/types/passpin";
 import { PasspinRepository } from "@scspace-server/feature/passpin/passpin.repository";
 import { PasspinEnum } from "@scspace-depot/enums/passpin.enum";
 import { getNow } from "@scspace-server/common/utils";
+import { PasspinUtils } from './passpin.utils';
 
 @Injectable()
 export class PasspinService {
     constructor(
         private readonly passpinRepository: PasspinRepository,
+        private readonly passpinUtils: PasspinUtils,
     ) { }
 
     /**
@@ -16,26 +18,6 @@ export class PasspinService {
      */
     async checkAvail(spaceId: number): Promise<boolean> {
         return await this.passpinRepository.checkAvail(spaceId);
-    }
-
-    /**
-     * Check if the value is a valid string for passpin (6-digit && no char)
-     *
-     * @param val
-     */
-    async isValidString(val: string): Promise<boolean> {
-        if (val.length !== 6) return false;
-        return /^d{6}$/.test(val);
-    }
-
-    /**
-     * Check if the value is a valid status for passpin, i.e. 0 or -1
-     *
-     * @param status
-     */
-    async isValidStatus(status: any): Promise<boolean> {
-        const valid: number[] = [PasspinEnum.OUTDATED, PasspinEnum.USING]
-        return valid.includes(parseInt(status));
     }
 
     /**
@@ -84,18 +66,7 @@ export class PasspinService {
         return pin.pin;
     }
 
-    /**
-     * Make a random 6-digit string
-     *
-     * @returns random 6-digit string
-     */
-    async makeRandom(): Promise<string> {
-        const res = Math.floor(Math.random() * 1_100_100).toString().padStart(6, '0');
-        if (await this.isValidString(res)) {
-            return res;
-        }
-        else throw new Error("something went wrong : makeRandom");
-    }
+
 
     /**
      * Generate a new IPasspin with given SpaceId, Pin and Status (also add to DB)
@@ -105,14 +76,14 @@ export class PasspinService {
      * @returns Newly generated IPasspin
      */
     async generatePin(spaceId: number, pin?: string, stat?: number): Promise<IPasspin> {
-        const pinString = pin ?? await this.makeRandom();
-        if (!await this.isValidString(pinString)) {
-            throw new BadRequestException("Invalid pin string");
+        const pinString = pin ?? await this.passpinUtils.makeRandomPin();
+        if (!this.passpinUtils.isValidString(pinString)) {
+            throw new BadRequestException(`Invalid pin string: ${pinString}`);
         }
 
         const status = stat ?? PasspinEnum.USING;
-        if (!await this.isValidStatus(status)) {
-            throw new BadRequestException("Invalid pin status");
+        if (!this.passpinUtils.isValidStatus(status)) {
+            throw new BadRequestException(`Invalid pin status: ${status}`);
         }
 
         return await this.passpinRepository.createPin(spaceId, pinString, status);
@@ -143,13 +114,21 @@ export class PasspinService {
      * @returns Updated IPasspinSpace
      */
     async changePin(spaceId: number, designated?: string): Promise<IPasspinSpace> {
-        const previous = await this.setOutdated(spaceId);
-        const newpin = designated ? await this.generatePin(spaceId, designated, PasspinEnum.USING) : await this.generatePin(spaceId)
+        let previous: IPasspin | null = null;
+        try {
+            previous = await this.setOutdated(spaceId);
+        } catch (err) {
+            Logger.warn(`No previous pin to set as OUTDATED for spaceId ${spaceId}`);
+        }
+
+        const newpin = designated ?
+            await this.generatePin(spaceId, designated, PasspinEnum.USING) :
+            await this.generatePin(spaceId);
 
         return {
             spaceId: spaceId,
             currentPin: newpin,
-            previousPin: previous ?? null,
+            previousPin: previous,
             changedAt: newpin.timeCreated
         } as IPasspinSpace;
     }
