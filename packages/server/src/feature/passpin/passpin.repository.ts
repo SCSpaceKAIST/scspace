@@ -1,4 +1,4 @@
-import { Injectable, Inject, NotFoundException, BadRequestException } from "@nestjs/common";
+import { Injectable, Inject, NotFoundException, BadRequestException, Logger } from "@nestjs/common";
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { Passpin, schema } from "@schema";
@@ -31,17 +31,20 @@ export class PasspinRepository {
     }
 
     async fetchSpacepin(spaceId: number): Promise<IPasspinSpace> {
+        Logger.log('fetchSpacepin spaceId : ' + spaceId +  ' called');
         const current_pin = await this.db
             .select()
             .from(Passpin)
             .where(and(eq(Passpin.spaceId, spaceId), eq(Passpin.status, 0)))
-            .then((pins) => pins[0]);
+            .then((pins) => pins[pins.length - 1]);
 
         if (!current_pin) {
             throw new NotFoundException(`Passpin with spaceId ${spaceId} & Stauts = 0 not found`);
         }
 
-        const previous_pin = await this.db
+        Logger.log('fetchSpacepin spaceId : ' + spaceId +  ' current_pin : ' + JSON.stringify(current_pin));
+
+        const previous_pin  = await this.db
             .select()
             .from(Passpin)
             .where(and(eq(Passpin.spaceId, spaceId), eq(Passpin.status, -1)))
@@ -49,7 +52,10 @@ export class PasspinRepository {
             .limit(1)
             .then((pins) => pins[0]);
 
+        Logger.log('fetchSpacepin spaceId : ' + spaceId +  ' previous_pin : ' + JSON.stringify(previous_pin));
+
         if (!previous_pin) {
+            Logger.log('fetchSpacepin spaceId : ' + spaceId +  ' previous_pin is null');
             return MPasspinSpace.fromDB(current_pin);
         }
         return MPasspinSpace.fromDB(current_pin, previous_pin);

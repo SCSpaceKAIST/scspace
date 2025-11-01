@@ -41,13 +41,13 @@ export class PasspinController {
         return await this.passpinService.getActivePins((req.user as IUser).id);
     }
 
-    // @Get('space')
-    // @UseGuards(AuthGuard('jwt'))
-    // async getCurrentPinSpace(
-    //     @Query('spaceId', ParseIntPipe) spaceId: number,
-    // ): Promise<IPasspinSpace> {
-    //     return await this.passpinService.getSpacePin(spaceId);
-    // }
+    @Get('space')
+    @UseGuards(AuthGuard('jwt'))
+    async getCurrentPinSpace(
+        @Query('spaceId', ParseIntPipe) spaceId: number,
+    ): Promise<IPasspinSpace> {
+        return await this.passpinService.getSpacePin(spaceId);
+    }
 
     @Get('history')
     @UseGuards(AuthGuard('jwt'))
