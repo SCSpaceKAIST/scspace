@@ -51,7 +51,7 @@ export class MPasspinSpace implements IPasspinSpace {
         return {
             spaceId: current.spaceId,
             currentPin: MPasspin.fromDB(current),
-            previousPin: MPasspin.fromDB(previous) ?? null,
+            previousPin: previous ? MPasspin.fromDB(previous) : null,
             changedAt: current.timeCreated,
         }
     }
