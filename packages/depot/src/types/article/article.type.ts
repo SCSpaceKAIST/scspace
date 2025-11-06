@@ -1,3 +1,4 @@
+import { ArticleStateEnum, ArticleTypeEnum } from "../../enums/article.enum";
 import { IUser } from "../user";
 
 export interface IArticle {
@@ -27,8 +28,8 @@ export type IArticleUpdate = Partial<Omit<IArticleCreate, "id">>;
 
 export interface IArticleQuery {
     userId?: number;
-    state?: number;
-    type?: number;
+    state?: ArticleStateEnum;
+    type?: ArticleTypeEnum;
     search?: string; // for title/content search
     limit?: number;
     offset?: number;
@@ -39,17 +40,3 @@ export interface IArticleQuery {
 export interface IArticleWithUser extends IArticle {
     user: IUser;
 }
-
-// Article state constants
-export const ARTICLE_STATE = {
-    HIDDEN: 0,
-    VISIBLE: 1,
-} as const;
-
-// Article type constants  
-export const ARTICLE_TYPE = {
-    GENERAL: 0,
-    NOTICE: 1,
-    ANNOUNCEMENT: 2,
-    FAQ: 3,
-} as const;

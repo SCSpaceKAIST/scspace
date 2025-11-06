@@ -27,6 +27,7 @@ import { Request } from 'express';
 import { IUser } from '@scspace-depot/types/user';
 import { UserUtils } from '@scspace-depot/utils/user.utils';
 import { OptionalJwtAuthGuard } from '../auth/jwt/jwt.guard';
+import { ArticleStateEnum } from '@scspace-depot/enums/article.enum';
 
 @Controller('article')
 export class ArticleController {
@@ -71,10 +72,11 @@ export class ArticleController {
         @Query() query: IArticleQuery,
         @Req() req: Request
     ) {
-        const user = req.user as IUser;
-        const isManager = UserUtils.isManager(user.type);
+        const user = req.user as IUser | undefined;
+        const isManager = user ? UserUtils.isManager(user.type) : false;
 
-        if (!isManager) return await this.articleService.getPublicArticles(query);
+        if (!user) return await this.articleService.getArticles({ ...query, state: ArticleStateEnum.FOR_ALL });
+        if (!isManager) return await this.articleService.getArticles({ ...query, state: ArticleStateEnum.FOR_KAIST });
         return await this.articleService.getArticles(query);
     }
 

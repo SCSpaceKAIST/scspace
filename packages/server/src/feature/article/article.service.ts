@@ -11,10 +11,9 @@ import {
     IArticleQuery,
     IArticle,
     IArticleWithUser,
-    ARTICLE_STATE,
-    ARTICLE_TYPE,
 } from '@scspace-depot/types/article';
 import { FileService } from "@scspace-server/tools/file/file.service";
+import { ArticleStateEnum } from '@scspace-depot/enums/article.enum';
 
 @Injectable()
 export class ArticleService {
@@ -56,17 +55,6 @@ export class ArticleService {
             limit,
             totalPages,
         };
-    }
-
-    async getPublicArticles(query: Omit<IArticleQuery, 'state'> = {}): Promise<{
-        articles: IArticleWithUser[];
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-    }> {
-        // Only show visible articles for public access
-        return await this.getArticles({ ...query, state: ARTICLE_STATE.VISIBLE });
     }
 
     async updateArticle(
@@ -111,7 +99,7 @@ export class ArticleService {
     }
 
     //file deletion
-    async deleteArticleFiles(id:number): Promise<void> {
+    async deleteArticleFiles(id: number): Promise<void> {
         const article = await this.articleRepository.getArticleById(id);
         const currentImages = JSON.parse(article.images ?? "[]") ?? [];
         const currentFiles = JSON.parse(article.files ?? "[]") ?? [];

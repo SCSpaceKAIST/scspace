@@ -3,6 +3,7 @@
 import { Badge, Card, Flex, Grid, HStack, IconButton, Input, Separator, Spacer, Stack, StackSeparator, Textarea, useBreakpointValue } from "@chakra-ui/react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
+import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
 import ArticleDeleteBtn from "@scspace-client/Components/organisms/Article/Delete/ArticleDeleteBtn";
 import ArticleFiles from "@scspace-client/Components/organisms/Article/Read/ArticleFiles";
@@ -17,7 +18,7 @@ import { useAuth } from "@scspace-client/Hooks/auth";
 import { ArticleTypeString } from "@scspace-depot/consts/article.const";
 import { ArticleStateEnum, ArticleTypeEnum } from "@scspace-depot/enums/article.enum";
 import { useEffect, useState } from "react";
-import { HiHome } from "react-icons/hi";
+import { HiHome, HiOutlinePencilAlt } from "react-icons/hi";
 
 export default function ArticleDetail({ id }: { id: number }) {
     const { userInfo } = useAuth();
@@ -30,6 +31,7 @@ export default function ArticleDetail({ id }: { id: number }) {
 
     const isWide = useBreakpointValue({ base: false, md: true });
 
+    const [updating, setUpdating] = useState<boolean>(false);
     const [editable, setEditable] = useState<boolean>(false);
 
     const [title, setTitle] = useState("");
@@ -101,16 +103,52 @@ export default function ArticleDetail({ id }: { id: number }) {
             maxH={"100%"}
             gap={2}
         >
-            <Flex gap={2}>
-                <IconButton
-                    onClick={() => linkPush("/article")}
-                    variant={"outline"}
-                >
-                    <HiHome />
-                </IconButton>
-                <Spacer />
-                <RefetchBtn refetch={refetch} />
-            </Flex>
+            <Stack>
+                <Flex gap={2}>
+                    <IconButton
+                        onClick={() => linkPush("/article")}
+                        variant={"outline"}
+                        size={"xs"}
+                    >
+                        <HiHome />
+                    </IconButton>
+                    <Spacer />
+                    {(userInfo?.id === data?.userId) && (
+                        <TooltipComponent content="Refresh">
+                            <IconButton
+                                rounded="sm"
+                                variant={updating ? "surface" : "ghost"}
+                                onClick={() => setUpdating(u => !u)}
+                                size={"xs"}
+                            >
+                                <HiOutlinePencilAlt color="gray" />
+                            </IconButton>
+                        </TooltipComponent>
+                    )}
+                    <RefetchBtn refetch={refetch} size={"xs"} />
+                </Flex>
+                {updating && (
+                    <Stack>
+                        <ArticleVisibility
+                            state={data?.state as ArticleStateEnum}
+                            id={id}
+                            refetch={refetch}
+                        />
+                        <Flex justify={"end"} gap={2}>
+                            <ArticleUpdateBtn
+                                editable={editable}
+                                setEditable={setEditable}
+                                handleUpdate={handleUpdate}
+                            />
+                            <ArticleAddFileBtn id={id} refetch={refetch} />
+                            <ArticleDeleteBtn id={id} refetch={refetch} />
+                        </Flex>
+                    </Stack>
+                )}
+                {editable && (
+                    <ArticleTypeUpdate type={type} setType={setType} />
+                )}
+            </Stack>
 
             {!isWide && <Separator />}
             <Card.Root
@@ -126,50 +164,30 @@ export default function ArticleDetail({ id }: { id: number }) {
             >
                 {data ? (<>
                     <Card.Header p={0}>
-                        <Stack>
-                            <HStack>
-                                <Badge colorPalette={"blue"}>
-                                    {ArticleTypeString[data.type as keyof typeof ArticleTypeString]}
-                                </Badge>
-                                <Input
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                    readOnly={!editable}
-                                    variant={editable ? "outline" : "flushed"}
-                                    cursor={"default"}
-                                    borderWidth={editable ? "1px" : 0}
-                                    outlineColor={editable ? "gray.300" : "transparent"}
-                                    _focus={!editable ? {
-                                        outline: "none",
-                                        boxShadow: "none",
-                                        borderColor: "transparent"
-                                    } : undefined}
-                                    fontSize={"lg"}
-                                    fontWeight={"semibold"}
-                                    height={"fit-content"}
-                                    p={1}
-                                    truncate
-                                />
-                                {(userInfo?.id === data?.userId) && (<>
-                                    <Spacer />
-                                    <ArticleVisibility
-                                        visible={data?.state === ArticleStateEnum.SHOW}
-                                        id={id}
-                                        refetch={refetch}
-                                    />
-                                    <ArticleUpdateBtn
-                                        editable={editable}
-                                        setEditable={setEditable}
-                                        handleUpdate={handleUpdate}
-                                    />
-                                    <ArticleAddFileBtn id={id} refetch={refetch} />
-                                    <ArticleDeleteBtn id={id} refetch={refetch} />
-                                </>)}
-                            </HStack>
-                            {editable && (
-                                <ArticleTypeUpdate type={type} setType={setType} />
-                            )}
-                        </Stack>
+                        <HStack>
+                            <Badge colorPalette={"blue"}>
+                                {ArticleTypeString[data.type as keyof typeof ArticleTypeString]}
+                            </Badge>
+                            <Input
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                readOnly={!editable}
+                                variant={editable ? "outline" : "flushed"}
+                                cursor={"default"}
+                                borderWidth={editable ? "1px" : 0}
+                                outlineColor={editable ? "gray.300" : "transparent"}
+                                _focus={!editable ? {
+                                    outline: "none",
+                                    boxShadow: "none",
+                                    borderColor: "transparent"
+                                } : undefined}
+                                fontSize={"lg"}
+                                fontWeight={"semibold"}
+                                height={"fit-content"}
+                                p={1}
+                                truncate
+                            />
+                        </HStack>
                     </Card.Header>
                     <Separator />
                     <Card.Body
