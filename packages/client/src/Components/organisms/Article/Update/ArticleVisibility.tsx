@@ -1,23 +1,22 @@
 "use client";
 
-import { Flex, HStack, RadioGroup, Switch } from "@chakra-ui/react";
+import { Flex, RadioGroup } from "@chakra-ui/react";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useArticleAPI } from "@scspace-client/Hooks/article";
 import { ArticleStateEnum } from "@scspace-depot/enums/article.enum";
 import { useState } from "react";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export default function ArticleVisibility({ state, id, refetch }: {
     state: ArticleStateEnum;
     id: number;
     refetch: () => void;
 }) {
-    const updateArticleVisibility = useArticleAPI({ id }).updateArticleVisibility;
+    const updateArticleState = useArticleAPI({ id }).updateArticleState;
     const [error, setError] = useState<string>("");
 
-    const handleUpdate = (visible: boolean) => {
+    const handleUpdate = (state: ArticleStateEnum) => {
         toaster.promise(
-            updateArticleVisibility({ visible }, {
+            updateArticleState({ state }, {
                 onError: (err) => {
                     setError(err.message);
                 },
@@ -45,6 +44,7 @@ export default function ArticleVisibility({ state, id, refetch }: {
     return (
         <RadioGroup.Root
             value={state.toString()}
+            onValueChange={(target) => handleUpdate(Number(target.value) as ArticleStateEnum)}
         >
             <Flex justify={"start"} gap={4}>
                 {[

@@ -184,16 +184,16 @@ export class ArticleController {
         return { success: true };
     }
 
-    @Put(':id/visibility')
+    @Put(':id/state')
     @UseGuards(AuthGuard('jwt'))
     async showArticle(
         @Param('id', ParseIntPipe) id: number,
         @Req() req: any,
-        @Body() body: { visible: boolean }
+        @Body() body: { state: ArticleStateEnum }
     ) {
         const userId = req.user.id;
         const isAdmin = req.user.type >= 3;
 
-        return await this.articleService.setArticleVisibility(id, userId, body.visible, isAdmin);
+        return await this.articleService.setArticleState(id, userId, body.state, isAdmin);
     }
 }
