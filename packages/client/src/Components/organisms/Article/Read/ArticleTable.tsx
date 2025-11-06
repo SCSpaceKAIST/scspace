@@ -1,6 +1,6 @@
 "use client"
 
-import { Flex, HStack, Icon, Table, Text, useBreakpointValue } from "@chakra-ui/react";
+import { Badge, Flex, HStack, Icon, Table, Text, useBreakpointValue } from "@chakra-ui/react";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useArticleAPI } from "@scspace-client/Hooks/article";
 import { dateUtils } from "@scspace-client/Hooks/utils";
@@ -72,6 +72,11 @@ export default function ArticleTable({ refetchTrigger, query }: {
                                         <Icon color={"gray"}>
                                             <AiOutlineEyeInvisible />
                                         </Icon>
+                                    )}
+                                    {c.state === ArticleStateEnum.FOR_KAIST && (
+                                        <Badge colorPalette="blue" variant={"subtle"}>
+                                            {"KAIST"}
+                                        </Badge>
                                     )}
                                     <Text truncate>
                                         {c.title}
