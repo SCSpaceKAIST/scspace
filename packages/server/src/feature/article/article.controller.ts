@@ -22,17 +22,16 @@ import {
     IArticleQuery,
 } from '@scspace-depot/types/article';
 import { publicStorage } from '@scspace-server/tools/file/file.storage';
-import { FileService } from '@scspace-server/tools/file/file.service';
 import { ISuccessResponse } from '@scspace-depot/types/common';
 import { Request } from 'express';
 import { IUser } from '@scspace-depot/types/user';
 import { UserUtils } from '@scspace-depot/utils/user.utils';
+import { OptionalJwtAuthGuard } from '../auth/jwt/jwt.guard';
 
 @Controller('article')
 export class ArticleController {
     constructor(
         private readonly articleService: ArticleService,
-        private readonly fileService: FileService
     ) { }
 
     @Post()
@@ -67,7 +66,7 @@ export class ArticleController {
     }
 
     @Get()
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(OptionalJwtAuthGuard)
     async getArticles(
         @Query() query: IArticleQuery,
         @Req() req: Request

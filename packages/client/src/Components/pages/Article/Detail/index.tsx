@@ -1,10 +1,9 @@
 "use client"
 
-import { Badge, Card, Flex, Grid, HStack, IconButton, Input, Separator, Spacer, Stack, StackSeparator, Textarea, useBreakpointValue, useFileUpload, VStack } from "@chakra-ui/react";
+import { Badge, Card, Flex, Grid, HStack, IconButton, Input, Separator, Spacer, Stack, StackSeparator, Textarea, useBreakpointValue } from "@chakra-ui/react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
-import ArticleImageUpload from "@scspace-client/Components/organisms/Article/Create/ArticleImageUpload";
 import ArticleDeleteBtn from "@scspace-client/Components/organisms/Article/Delete/ArticleDeleteBtn";
 import ArticleFiles from "@scspace-client/Components/organisms/Article/Read/ArticleFiles";
 import ArticleImages from "@scspace-client/Components/organisms/Article/Read/ArticleImages";

@@ -6,6 +6,32 @@ import { OrganizationPublicService } from '@scspace-server/feature/organization/
 import { ReservationPublicService } from '@scspace-server/feature/reservation/reservation.public.service';
 
 @Injectable()
+export class OptionalJwtAuthGuard extends AuthGuard('jwt') {
+  // canActivate는 기본 동작(super.canActivate)을 그대로 사용해도 되고,
+  // 필요 시 커스텀 가능(대개 기본으로 충분)
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    // 기본 동작: passport 전략을 실행해 user를 주입 시도
+    const can = (await super.canActivate(context)) as boolean;
+    // 세션을 쓰는 전략이라면 super.logIn(request) 호출이 필요할 수 있음
+    // await super.logIn(context.switchToHttp().getRequest());
+    return can;
+  }
+
+  // 가장 중요: 예외를 삼키고 user만 반환
+  handleRequest<TUser = any>(
+    err: any,
+    user: TUser,
+    info: any,
+    context: ExecutionContext,
+    status?: any,
+  ): TUser | undefined {
+    // err나 info가 있어도 UnauthorizedException을 던지지 않음
+    // user가 없으면 undefined를 반환 → req.user가 undefined로 세팅됨
+    return user;
+  }
+}
+
+@Injectable()
 export class ManagerGuard extends AuthGuard('jwt') {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const can = await super.canActivate(context);
@@ -138,6 +164,7 @@ export class MemberGuard extends AuthGuard('jwt') {
     return false;
   }
 }
+
 @Injectable()
 export class MemberGuardWithReservation extends AuthGuard('jwt') {
   constructor(

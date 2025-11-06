@@ -5,6 +5,7 @@ import AddBtn from "@scspace-client/Components/molecules/buttons/AddBtn";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
 import CreateArticleDialog from "@scspace-client/Components/organisms/Article/Create/CreateArticleDialog";
 import ArticleTable from "@scspace-client/Components/organisms/Article/Read/ArticleTable";
+import { useAuth } from "@scspace-client/Hooks/auth";
 import { useArticleTypeStore } from "@scspace-client/Store/articleType";
 import { ArticleTypeString } from "@scspace-depot/consts/article.const";
 import { ArticleTypeEnum } from "@scspace-depot/enums/article.enum";
@@ -12,6 +13,8 @@ import { useEffect, useState } from "react";
 import { HiMenu } from "react-icons/hi";
 
 export default function Article() {
+    const { isManager } = useAuth();
+
     const { open, onToggle } = useDisclosure();
 
     const { type, update } = useArticleTypeStore();
@@ -42,9 +45,7 @@ export default function Article() {
                     <RefetchBtn
                         refetch={() => setRefetchCounter(c => c + 1)}
                     />
-                    <AddBtn
-                        onClick={() => setOpenCreateDialog(true)}
-                    />
+                    {isManager && (<AddBtn onClick={() => setOpenCreateDialog(true)} />)}
                 </Flex>
                 <Flex
                     height={"full"}
