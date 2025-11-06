@@ -20,6 +20,7 @@ import {
     count,
     asc,
     like,
+    lte,
 } from 'drizzle-orm';
 import {
     IArticleCreate,
@@ -99,7 +100,7 @@ export class ArticleRepository {
             conditions.push(eq(Article.userId, query.userId));
         }
         if (query.state !== undefined) {
-            conditions.push(eq(Article.state, query.state));
+            conditions.push(lte(Article.state, query.state));
         }
         if (query.type !== undefined) {
             conditions.push(eq(Article.type, query.type));

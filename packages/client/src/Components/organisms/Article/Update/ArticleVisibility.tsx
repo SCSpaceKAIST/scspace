@@ -1,13 +1,14 @@
 "use client";
 
-import { Switch } from "@chakra-ui/react";
+import { Flex, HStack, RadioGroup, Switch } from "@chakra-ui/react";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useArticleAPI } from "@scspace-client/Hooks/article";
+import { ArticleStateEnum } from "@scspace-depot/enums/article.enum";
 import { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
-export default function ArticleVisibility({ visible, id, refetch }: {
-    visible: boolean;
+export default function ArticleVisibility({ state, id, refetch }: {
+    state: ArticleStateEnum;
     id: number;
     refetch: () => void;
 }) {
@@ -39,21 +40,30 @@ export default function ArticleVisibility({ visible, id, refetch }: {
         )
     }
 
+    const text = ["숨기기", "KAIST 공개", "전체 공개"];
+
     return (
-        <Switch.Root
-            defaultChecked={visible}
-            onCheckedChange={(v) => handleUpdate(v.checked as boolean)}
+        <RadioGroup.Root
+            value={state.toString()}
         >
-            <Switch.HiddenInput />
-            <Switch.Control>
-                <Switch.Thumb>
-                    <Switch.ThumbIndicator fallback={
-                        <AiOutlineEyeInvisible />
-                    }>
-                        <AiOutlineEye />
-                    </Switch.ThumbIndicator>
-                </Switch.Thumb>
-            </Switch.Control>
-        </Switch.Root>
+            <Flex justify={"start"} gap={4}>
+                {[
+                    ArticleStateEnum.HIDE,
+                    ArticleStateEnum.FOR_KAIST,
+                    ArticleStateEnum.FOR_ALL
+                ].map((enumValue) => (
+                    <RadioGroup.Item
+                        key={enumValue}
+                        value={enumValue.toString()}
+                    >
+                        <RadioGroup.ItemHiddenInput />
+                        <RadioGroup.ItemIndicator />
+                        <RadioGroup.Label>
+                            {text[enumValue]}
+                        </RadioGroup.Label>
+                    </RadioGroup.Item>
+                ))}
+            </Flex>
+        </RadioGroup.Root>
     );
 }
