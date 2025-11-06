@@ -20,7 +20,7 @@ import {
     count,
     asc,
     like,
-    lte,
+    gte,
 } from 'drizzle-orm';
 import {
     IArticleCreate,
@@ -100,7 +100,7 @@ export class ArticleRepository {
             conditions.push(eq(Article.userId, query.userId));
         }
         if (query.state !== undefined) {
-            conditions.push(lte(Article.state, query.state));
+            conditions.push(gte(Article.state, query.state));
         }
         if (query.type !== undefined) {
             conditions.push(eq(Article.type, query.type));
@@ -194,7 +194,7 @@ export class ArticleRepository {
         };
     }
 
-    async setArticleVisibility(id: number, isVisible: boolean): Promise<IArticle> {
-        return await this.updateArticle(id, { state: isVisible ? 1 : 0 });
+    async setArticleState(id: number, state: ArticleStateEnum): Promise<IArticle> {
+        return await this.updateArticle(id, { state });
     }
 }

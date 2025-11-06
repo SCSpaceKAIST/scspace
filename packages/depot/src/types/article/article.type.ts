@@ -8,8 +8,8 @@ export interface IArticle {
     content: string | null;
     timePost: number;
     timeUpdate: number;
-    state: number; // 0: hide, 1: show
-    type: number; // article type
+    state: ArticleStateEnum; // article visibility state
+    type: ArticleTypeEnum; // article type
     images: string | null; // JSON string of image paths
     files: string | null; // JSON string of file paths
 }
