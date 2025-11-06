@@ -21,8 +21,7 @@ import { useEffect, useState } from "react";
 import { HiHome } from "react-icons/hi";
 
 export default function ArticleDetail({ id }: { id: number }) {
-    const { needLogin, userInfo } = useAuth();
-    needLogin();
+    const { userInfo } = useAuth();
 
     const { data, refetch } = useArticleAPI({ id }).articleById;
 
