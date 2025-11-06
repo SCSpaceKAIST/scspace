@@ -12,6 +12,7 @@ import {
     UseInterceptors,
     UploadedFiles,
     Req,
+    BadRequestException,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -104,8 +105,22 @@ export class ArticleController {
     }
 
     @Get(':id')
-    async getArticleById(@Param('id', ParseIntPipe) id: number) {
-        return await this.articleService.getArticleById(id);
+    @UseGuards(OptionalJwtAuthGuard)
+    async getArticleById(
+        @Param('id', ParseIntPipe) id: number,
+        @Req() req: Request
+    ) {
+        const user = req.user as IUser | undefined;
+        const isManager = user ? UserUtils.isManager(user.type) : false;
+
+        const data = await this.articleService.getArticleById(id);
+
+        if (data.state === ArticleStateEnum.FOR_ALL) return data;
+        if (data.state === ArticleStateEnum.FOR_KAIST && user) return data;
+        if (data.state === ArticleStateEnum.HIDE && isManager) return data;
+        if (user && data.userId === user.id) return data;
+
+        throw new BadRequestException('You do not have permission to view this article.');
     }
 
     @Put(':id')

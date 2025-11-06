@@ -23,7 +23,7 @@ import { HiHome, HiOutlinePencilAlt } from "react-icons/hi";
 export default function ArticleDetail({ id }: { id: number }) {
     const { userInfo } = useAuth();
 
-    const { data, refetch } = useArticleAPI({ id }).articleById;
+    const { data, refetch, isError, isLoadingError, isRefetchError } = useArticleAPI({ id }).articleById;
 
     const { linkPush } = useLinkPush();
     const [images, setImages] = useState<string[]>([]);
@@ -50,6 +50,16 @@ export default function ArticleDetail({ id }: { id: number }) {
     }, [data?.title, data?.content, data?.type, data?.images, data?.files, editable]);
 
     const updateArticle = useArticleAPI({ id }).updateArticle;
+
+    useEffect(() => {
+        if (isError || isLoadingError || isRefetchError) {
+            toaster.error({
+                title: "Failed to load article details.",
+                description: "The article may have been deleted or is inaccessible."
+            });
+            linkPush("/article");
+        }
+    }, [isError, isLoadingError, isRefetchError, linkPush]);
 
     const handleUpdate = () => {
         if (!title.trim() || !content.trim()) {
