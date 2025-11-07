@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useEffect, useState } from "react";
-import { Box, Center, HStack, IconButton, Text } from "@chakra-ui/react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Box, Center, HStack, IconButton, Text, useBreakpointValue } from "@chakra-ui/react";
 import Image from "next/image";
 import { HiMinus, HiPlus, HiX } from "react-icons/hi";
 
@@ -17,70 +17,107 @@ export default function ArticleImages({ editable, images, setImages }: {
     const [dragStartX, setDragStartX] = useState<number | null>(null);
     const [dragDeltaX, setDragDeltaX] = useState<number>(0);
     const [isDragging, setIsDragging] = useState<boolean>(false);
+    const viewportRef = useRef<HTMLDivElement | null>(null);
+    const [viewportWidth, setViewportWidth] = useState<number>(0);
     useEffect(() => {
-        if (select >= images.length) {
-            setSelect(images.length - 1);
-        } else {
+        if (images.length === 0) {
             setSelect(0);
+            return;
         }
+        setSelect((prev) => {
+            if (prev >= images.length) return images.length - 1;
+            if (prev < 0) return 0;
+            return prev;
+        });
     }, [images.length]);
+    useLayoutEffect(() => {
+        const node = viewportRef.current;
+        if (!node) return;
+        const updateWidth = () => setViewportWidth(node.clientWidth);
+        updateWidth();
+        if (typeof ResizeObserver !== "undefined") {
+            const observer = new ResizeObserver((entries) => {
+                const entry = entries[0];
+                if (entry) setViewportWidth(entry.contentRect.width);
+            });
+            observer.observe(node);
+            return () => observer.disconnect();
+        }
+        const handleResize = () => setViewportWidth(node.clientWidth);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
-    if (images.length === 0) return null;
+    // Compute geometry for a centered carousel layout
+    const slideGap = 4;
+    const maxSlideWidth = 360;
+    const baseHeight = 450;
+    const aspectRatio = baseHeight / maxSlideWidth;
+    const viewport = viewportWidth || maxSlideWidth;
+    const slideWidth = Math.min(viewport, maxSlideWidth);
+    const slideHeight = Math.round(slideWidth * aspectRatio);
+    const totalSlideWidth = slideWidth + slideGap;
+    const centerOffset = (viewport - slideWidth) / 2;
+    const edgePadding = Math.max(centerOffset, 0);
+    const translateX = -select * totalSlideWidth + dragDeltaX;
+    const swipeClamp = totalSlideWidth;
+    const swipeThreshold = Math.min(swipeClamp * 0.35, 120);
 
-    // pointer event handlers for swipe
     const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-        // start drag
+        const target = e.target as HTMLElement;
+        if (target.closest("button")) return;
         setDragStartX(e.clientX);
+        setDragDeltaX(0);
         setIsDragging(true);
-        // capture the pointer so we continue receiving events
         try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) { }
     }
 
     const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
         if (!isDragging || dragStartX === null) return;
         const raw = e.clientX - dragStartX;
-        // clamp to one slide distance so user can't drag past next slide
-        const slideClamp = 248; // approximate slide step used in layout
-        const clamped = Math.max(-slideClamp, Math.min(slideClamp, raw));
+        const clampValue = swipeClamp;
+        const clamped = Math.max(-clampValue, Math.min(clampValue, raw));
         setDragDeltaX(clamped);
     }
 
     const finishDrag = (e?: React.PointerEvent<HTMLDivElement>) => {
         if (!isDragging) return;
         const delta = dragDeltaX;
-        const threshold = 50; // px to qualify as a swipe
-        // only move by one slide regardless of how far user dragged
-        if (delta < -threshold && select < images.length - 1) {
-            setSelect((s) => s + 1);
-        } else if (delta > threshold && select > 0) {
-            setSelect((s) => s - 1);
+        const threshold = swipeThreshold || 50;
+        const currentSelect = select;
+        let nextIndex = currentSelect;
+
+        if (delta < -threshold && currentSelect < images.length - 1) {
+            nextIndex = currentSelect + 1;
+        } else if (delta > threshold && currentSelect > 0) {
+            nextIndex = currentSelect - 1;
         } else {
-            // if no substantial drag, treat as click/tap if pointer is over an image
-            const clickThreshold = 8; // px
+            const clickThreshold = 8;
             if (Math.abs(delta) <= clickThreshold && e) {
                 try {
                     const el = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;
                     let node = el;
                     while (node && node !== document.body) {
-                        const idxAttr = node.getAttribute?.('data-idx');
+                        const idxAttr = node.getAttribute?.("data-idx");
                         if (idxAttr != null) {
                             const idx = parseInt(idxAttr, 10);
-                            if (!Number.isNaN(idx)) setSelect(idx);
+                            if (!Number.isNaN(idx)) nextIndex = idx;
                             break;
                         }
                         node = node.parentElement;
                     }
                 } catch (err) {
-                    // ignore
+                    // ignore tap fallbacks
                 }
             }
         }
+
         setIsDragging(false);
-        setDragDeltaX(0);
         setDragStartX(null);
+        setDragDeltaX(0);
+        setSelect(nextIndex);
         try { if (e) e.currentTarget.releasePointerCapture(e.pointerId); } catch (err) { }
     }
-
 
     const exchangeImages = async (from: number, to: number) => {
         if (from < 0 || from >= images.length || to < 0 || to >= images.length) return;
@@ -99,135 +136,133 @@ export default function ArticleImages({ editable, images, setImages }: {
         setImages(newImages);
     }
 
+    if (images.length === 0) return null;
+
     return (
-        <Center
-            overflow={"hidden"}
-            minH={0}
-            w="100%" maxW="100%"
-            whiteSpace="nowrap"
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={finishDrag}
-            onPointerCancel={finishDrag}
-            // allow vertical scrolling while we handle horizontal drag
-            style={{ touchAction: 'pan-y' }}
-        >
-            <Box display={"flex"} flexDirection={"column"} alignItems={"center"} w="100%">
+        <Center w="100%" maxW="100%" flexDirection="column" gap={4}>
+            <Box
+                ref={viewportRef}
+                position="relative"
+                w="100%"
+                maxW="100%"
+                overflow="hidden"
+                onPointerDown={onPointerDown}
+                onPointerMove={onPointerMove}
+                onPointerUp={finishDrag}
+                onPointerCancel={finishDrag}
+                style={{ touchAction: "pan-y" }}
+                alignItems={"center"}
+            >
                 <HStack
-                    w="fit-content" minW="max-content"
-                    h={"450px"} maxH={"96svw"}
+                    alignItems="center"
                     style={{
-                        transform: isDragging ? `translateX(${dragDeltaX}px)` : undefined,
-                        transition: isDragging ? 'none' : 'transform 220ms ease',
+                        transform: `translateX(${translateX}px)`,
+                        transition: isDragging ? "none" : "transform 220ms ease",
+                        gap: `${slideGap}px`,
                     }}
+                    pl={`${edgePadding}px`}
+                    pr={`${edgePadding}px`}
                 >
-                    <Box
-                        key={`empty-before`}
-                        w={`${248 * (images.length - select - 1) + 8}px`}
-                        // h={'100px'}
-                        transition={"all"}
-                        transitionDuration={"moderate"}
-                    // background={"gray.200"}
-                    />
-                    {images.map((image, idx) => (
-                        <Center
-                            w={(select === idx ? "360px" : "240px")}
-                            h={(select === idx ? "450px" : "300px")}
-                            maxW={"72svw"}
-                            maxH={"96svw"}
-                            key={`${image}-${idx}`}
-                            data-idx={`${idx}`}
-                            justifyContent={"center"}
-                            alignContent={"center"}
-                            // selection handled on pointerup to distinguish drag vs click/tap
-                            transition={"all"}
-                            transitionDuration={"moderate"}
-                            // background={(select !== idx ? "gray.200" : "transparent")}
-                            background={"gray.200"}
-                            position={"relative"}
-                        >
-                            <Image
-                                src={image ? `${localhostBaseURL}${image}` : "/img/logo.svg"}
-                                alt={`Image ${idx + 1}`}
-                                layout="fill"
-                                objectFit="contain"
-                            />
-                            {editable && (<>
-                                <Box position={"absolute"} top={2} right={2}>
-                                    <IconButton
-                                        size={"xs"}
-                                        variant={"ghost"}
-                                        onClick={() => deleteImage(idx)}
-                                    >
-                                        <HiX />
-                                    </IconButton>
-                                </Box>
-                                <Box position={"absolute"} bottom={2}
-                                    display={(idx === select) ? "block" : "none"}
-                                >
-                                    <HStack
-                                        backdropFilter="blur(8px)"
-                                        background="rgba(255,255,255,0.3)"
-                                        rounded={"md"}
-                                    >
-                                        <IconButton
-                                            size={"xs"}
-                                            variant={"ghost"}
-                                            disabled={idx === 0}
-                                            onClick={async () => {
-                                                exchangeImages(idx, idx - 1).then(() => {
-                                                    setSelect(idx - 1);
-                                                });
-                                            }}
+                    {images.map((image, idx) => {
+                        const isSelected = select === idx;
+                        return (
+                            <Center
+                                key={`${image}-${idx}`}
+                                data-idx={`${idx}`}
+                                w={`${slideWidth}px`}
+                                h={`${slideHeight}px`}
+                                flexShrink={0}
+                                justifyContent="center"
+                                alignItems="center"
+                                background="gray.200"
+                                position="relative"
+                                borderRadius="md"
+                                overflow="hidden"
+                                transform={isSelected ? "scale(1)" : "scale(0.9)"}
+                                transition="transform 180ms ease"
+                            >
+                                <Image
+                                    src={image ? `${localhostBaseURL}${image}` : "/img/logo.svg"}
+                                    alt={`Image ${idx + 1}`}
+                                    layout="fill"
+                                    objectFit="contain"
+                                />
+                                {editable && (
+                                    <>
+                                        <Box position="absolute" top={2} right={2}>
+                                            <IconButton
+                                                size="xs"
+                                                variant="ghost"
+                                                onClick={() => deleteImage(idx)}
+                                            >
+                                                <HiX />
+                                            </IconButton>
+                                        </Box>
+                                        <Box
+                                            position="absolute"
+                                            bottom={2}
+                                            display={isSelected ? "block" : "none"}
                                         >
-                                            <HiMinus />
-                                        </IconButton>
-                                        <Text fontWeight={"semibold"}>
-                                            {idx + 1}
-                                        </Text>
-                                        <IconButton
-                                            size={"xs"}
-                                            variant={"ghost"}
-                                            disabled={idx === images.length - 1}
-                                            onClick={async () => {
-                                                exchangeImages(idx, idx + 1).then(() => {
-                                                    setSelect(idx + 1);
-                                                });
-                                            }}
-                                        >
-                                            <HiPlus />
-                                        </IconButton>
-                                    </HStack>
-                                </Box>
-                            </>)}
-                        </Center>
-                    ))}
-                    <Box
-                        key={`empty-after`}
-                        w={`${248 * (select) + 8}px`}
-                        // h={'100px'}
-                        transition={"all"}
-                        transitionDuration={"moderate"}
-                    // background={"gray.200"}
-                    />
+                                            <HStack
+                                                backdropFilter="blur(8px)"
+                                                background="rgba(255,255,255,0.3)"
+                                                rounded="md"
+                                            >
+                                                <IconButton
+                                                    size="xs"
+                                                    variant="ghost"
+                                                    disabled={idx === 0}
+                                                    onClick={async () => {
+                                                        exchangeImages(idx, idx - 1).then(() => {
+                                                            setSelect(Math.max(idx - 1, 0));
+                                                            setDragDeltaX(0);
+                                                        });
+                                                    }}
+                                                >
+                                                    <HiMinus />
+                                                </IconButton>
+                                                <Text fontWeight="semibold">{idx + 1}</Text>
+                                                <IconButton
+                                                    size="xs"
+                                                    variant="ghost"
+                                                    disabled={idx === images.length - 1}
+                                                    onClick={async () => {
+                                                        exchangeImages(idx, idx + 1).then(() => {
+                                                            setSelect(Math.min(idx + 1, images.length - 1));
+                                                            setDragDeltaX(0);
+                                                        });
+                                                    }}
+                                                >
+                                                    <HiPlus />
+                                                </IconButton>
+                                            </HStack>
+                                        </Box>
+                                    </>
+                                )}
+                            </Center>
+                        );
+                    })}
                 </HStack>
-                {/* pagination dots */}
-                <Box mt={3} display={"flex"} justifyContent={"center"} w="100%">
-                    <HStack gap={2}>
-                        {images.map((_, i) => (
-                            <Box
-                                key={`dot-${i}`}
-                                as={"button"}
-                                onClick={() => setSelect(i)}
-                                w={2}
-                                h={2}
-                                bg={i === select ? "gray.700" : "gray.400"}
-                                borderRadius="full"
-                                transition="all 120ms"
-                            />
-                        ))}
-                    </HStack>
-                </Box>
+            </Box>
+            <Box display="flex" justifyContent="center" w="100%">
+                <HStack gap={2}>
+                    {images.map((_, i) => (
+                        <Box
+                            key={`dot-${i}`}
+                            as="button"
+                            onClick={() => {
+                                setSelect(i);
+                                setDragDeltaX(0);
+                                setIsDragging(false);
+                            }}
+                            w={2}
+                            h={2}
+                            bg={i === select ? "gray.700" : "gray.400"}
+                            borderRadius="full"
+                            transition="all 120ms"
+                        />
+                    ))}
+                </HStack>
             </Box>
         </Center>
     );
