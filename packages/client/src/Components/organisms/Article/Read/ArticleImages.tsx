@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Box, Center, HStack, IconButton, Text, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Center, HStack, IconButton, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import { HiMinus, HiPlus, HiX } from "react-icons/hi";
 
@@ -18,7 +18,6 @@ export default function ArticleImages({ editable, images, setImages }: {
     const [dragDeltaX, setDragDeltaX] = useState<number>(0);
     const [isDragging, setIsDragging] = useState<boolean>(false);
     const viewportRef = useRef<HTMLDivElement | null>(null);
-    const [viewportWidth, setViewportWidth] = useState<number>(0);
     useEffect(() => {
         if (images.length === 0) {
             setSelect(0);
@@ -30,38 +29,56 @@ export default function ArticleImages({ editable, images, setImages }: {
             return prev;
         });
     }, [images.length]);
-    useLayoutEffect(() => {
-        const node = viewportRef.current;
-        if (!node) return;
-        const updateWidth = () => setViewportWidth(node.clientWidth);
-        updateWidth();
-        if (typeof ResizeObserver !== "undefined") {
-            const observer = new ResizeObserver((entries) => {
-                const entry = entries[0];
-                if (entry) setViewportWidth(entry.contentRect.width);
-            });
-            observer.observe(node);
-            return () => observer.disconnect();
-        }
-        const handleResize = () => setViewportWidth(node.clientWidth);
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
     // Compute geometry for a centered carousel layout
     const slideGap = 4;
     const maxSlideWidth = 360;
     const baseHeight = 450;
     const aspectRatio = baseHeight / maxSlideWidth;
-    const viewport = viewportWidth || maxSlideWidth;
-    const slideWidth = Math.min(viewport, maxSlideWidth);
-    const slideHeight = Math.round(slideWidth * aspectRatio);
+    const [viewportWidth, setViewportWidth] = useState<number>(maxSlideWidth);
+    const [slideWidth, setSlideWidth] = useState<number>(maxSlideWidth);
+
+    useLayoutEffect(() => {
+        const node = viewportRef.current;
+        if (!node) return;
+
+        let frame: number | null = null;
+
+        const measure = () => {
+            const width = node.clientWidth || maxSlideWidth;
+            setViewportWidth(width);
+            setSlideWidth(Math.min(width, maxSlideWidth));
+        };
+
+        frame = requestAnimationFrame(measure);
+
+        if (typeof ResizeObserver !== "undefined") {
+            const observer = new ResizeObserver(() => {
+                if (frame !== null) cancelAnimationFrame(frame);
+                frame = requestAnimationFrame(measure);
+            });
+            observer.observe(node);
+            return () => {
+                observer.disconnect();
+                if (frame !== null) cancelAnimationFrame(frame);
+            };
+        }
+
+        const handleResize = () => {
+            if (frame !== null) cancelAnimationFrame(frame);
+            frame = requestAnimationFrame(measure);
+        };
+        window.addEventListener("resize", handleResize);
+        return () => {
+            window.removeEventListener("resize", handleResize);
+            if (frame !== null) cancelAnimationFrame(frame);
+        };
+    }, [images.length]);
+
     const totalSlideWidth = slideWidth + slideGap;
-    const centerOffset = (viewport - slideWidth) / 2;
+    const centerOffset = (viewportWidth - slideWidth) / 2;
     const edgePadding = Math.max(centerOffset, 0);
     const translateX = -select * totalSlideWidth + dragDeltaX;
-    const swipeClamp = totalSlideWidth;
-    const swipeThreshold = Math.min(swipeClamp * 0.35, 120);
+    const swipeThreshold = Math.min(totalSlideWidth * 0.35, 120);
 
     const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
         const target = e.target as HTMLElement;
@@ -75,7 +92,7 @@ export default function ArticleImages({ editable, images, setImages }: {
     const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
         if (!isDragging || dragStartX === null) return;
         const raw = e.clientX - dragStartX;
-        const clampValue = swipeClamp;
+        const clampValue = totalSlideWidth;
         const clamped = Math.max(-clampValue, Math.min(clampValue, raw));
         setDragDeltaX(clamped);
     }
@@ -155,11 +172,9 @@ export default function ArticleImages({ editable, images, setImages }: {
             >
                 <HStack
                     alignItems="center"
-                    style={{
-                        transform: `translateX(${translateX}px)`,
-                        transition: isDragging ? "none" : "transform 220ms ease",
-                        gap: `${slideGap}px`,
-                    }}
+                    transform={`translateX(${translateX}px)`}
+                    transition={isDragging ? "none" : "transform 220ms ease"}
+                    gap={`${slideGap}px`}
                     pl={`${edgePadding}px`}
                     pr={`${edgePadding}px`}
                 >
@@ -170,7 +185,7 @@ export default function ArticleImages({ editable, images, setImages }: {
                                 key={`${image}-${idx}`}
                                 data-idx={`${idx}`}
                                 w={`${slideWidth}px`}
-                                h={`${slideHeight}px`}
+                                h={`${slideWidth * aspectRatio}px`}
                                 flexShrink={0}
                                 justifyContent="center"
                                 alignItems="center"
