@@ -9,7 +9,6 @@ import LoginBtn from "@scspace-client/Components/organisms/Header/LoginBtn";
 import BreadcrumbComponent from "@scspace-client/Components/organisms/Header/Breadcrumb";
 import Sidebar from "@scspace-client/Components/organisms/Header/Sidebar";
 import { useRedirects } from "@scspace-client/Store/redirect/reset";
-import LanguageSetup from "./LanguageSetup";
 
 export default function Header() {
   useRedirects();
@@ -32,7 +31,6 @@ export default function Header() {
         <Sidebar />
         <BreadcrumbComponent />
         <Spacer />
-        <LanguageSetup />
         <LoginBtn />
       </Flex>
     </Box>
