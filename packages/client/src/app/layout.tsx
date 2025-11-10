@@ -5,6 +5,7 @@ import { ReactNode } from "react";
 import Providers from "./providers";
 import { Box, Grid, } from "@chakra-ui/react";
 import ToasterComponent from "@scspace-client/Components/atoms/Toaster";
+import LayoutBox from "./padding";
 
 export const metadata = {
   title: "KAIST SCSpace",
@@ -53,15 +54,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             templateRows="auto 1fr"
           >
             <Header />
-            <Box
-              flexGrow={1}
-              scrollbar="hidden"
-              overflowY="hidden"
-              scrollBehavior="smooth"
-              bg="bg.subtle"
-            >
+            <LayoutBox>
               {children}
-            </Box>
+            </LayoutBox>
           </Grid>
         </Providers>
       </body>
