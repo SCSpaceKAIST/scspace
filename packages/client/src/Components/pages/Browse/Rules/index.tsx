@@ -19,7 +19,7 @@ const topics: { [key: string]: React.ReactNode } = {
 };
 
 export default function Rules() {
-    const { topic, update } = useRuleTopicStore();
+    const { rule: topic, update } = useRuleTopicStore();
 
     useEffect(() => {
         if (!topic) {
