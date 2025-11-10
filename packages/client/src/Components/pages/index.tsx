@@ -157,7 +157,7 @@ export default function Home() {
             <VStack gap={0} align="stretch">
                 <MotionBox
                     as="section"
-                    minH="calc(100vh - 56px)"
+                    minH="calc(100dvh - 56px)"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -203,7 +203,7 @@ export default function Home() {
 
                 <Box
                     as="section"
-                    minH="100vh"
+                    minH="calc(100dvh - 56px)"
                     bg="gray.50"
                     color="gray.900"
                     py={{ base: 16, md: 24 }}
