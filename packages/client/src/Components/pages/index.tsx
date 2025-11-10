@@ -182,7 +182,6 @@ export default function Home() {
                         <Text
                             fontSize={{ base: "md", md: "lg" }}
                             color="gray.600"
-                            maxW="560px"
                         >
                             캠퍼스 공간이 필요한 순간, 예약부터 운영까지 간결하게 연결되는 플랫폼을 만들어갑니다.
                         </Text>
