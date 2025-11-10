@@ -2,14 +2,14 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 interface ITopicStore {
-    topic: string | null;
-    update: (topic: string) => void;
+    rule: string | null;
+    update: (rule: string) => void;
 }
 
 export const useRuleTopicStore = create(
     persist<ITopicStore>((set) => ({
-        topic: null,
-        update: (topic) => set({ topic }),
+        rule: null,
+        update: (rule) => set({ rule }),
     }), {
         name: "rule-topic-store",
         storage: createJSONStorage(() => sessionStorage),

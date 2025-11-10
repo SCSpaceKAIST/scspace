@@ -7,9 +7,9 @@ import {
 } from "@chakra-ui/react";
 import LoginBtn from "@scspace-client/Components/organisms/Header/LoginBtn";
 import BreadcrumbComponent from "@scspace-client/Components/organisms/Header/Breadcrumb";
-import Information from "@scspace-client/Components/organisms/Header/Information";
 import Sidebar from "@scspace-client/Components/organisms/Header/Sidebar";
 import { useRedirects } from "@scspace-client/Store/redirect/reset";
+import LanguageSetup from "./LanguageSetup";
 
 export default function Header() {
   useRedirects();
@@ -21,6 +21,7 @@ export default function Header() {
       bg="white"
       boxShadow="sm"
       zIndex={100}
+      h={"56px"}
     >
       <Flex
         px={4}
@@ -31,7 +32,7 @@ export default function Header() {
         <Sidebar />
         <BreadcrumbComponent />
         <Spacer />
-        <Information />
+        <LanguageSetup />
         <LoginBtn />
       </Flex>
     </Box>

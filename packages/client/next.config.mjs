@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   // Turbopack 안정화 버전 사용
   turbopack: {},
