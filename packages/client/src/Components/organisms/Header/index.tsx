@@ -35,9 +35,9 @@ export default function Header() {
         <Sidebar />
         <BreadcrumbComponent />
         <Spacer />
+        <PasspinHeader />
         <LoginBtn />
       </Flex>
-      <PasspinHeader />
     </Stack>
   );
 };
