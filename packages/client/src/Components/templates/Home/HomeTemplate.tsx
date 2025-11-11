@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, Separator, VStack } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import HeroSection from "@scspace-client/Components/organisms/Home/HeroSection";
 import ArticleSection from "@scspace-client/Components/organisms/Home/ArticleSection";

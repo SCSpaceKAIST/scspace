@@ -209,11 +209,13 @@ export default function ArticleDetail({ id }: { id: number }) {
                         scrollbar="hidden"
                     >
                         <Stack separator={<StackSeparator />}>
-                            <ArticleImages
-                                editable={editable}
-                                images={images}
-                                setImages={setImages}
-                            />
+                            {images.length > 0 && (
+                                <ArticleImages
+                                    editable={editable}
+                                    images={images}
+                                    setImages={setImages}
+                                />
+                            )}
                             <Textarea
                                 readOnly={!editable}
                                 variant={editable ? "outline" : "flushed"}
@@ -229,11 +231,13 @@ export default function ArticleDetail({ id }: { id: number }) {
                                     borderColor: "transparent"
                                 } : undefined}
                             />
-                            <ArticleFiles
-                                files={files}
-                                setFiles={setFiles}
-                                editable={editable}
-                            />
+                            {files.length > 0 && (
+                                <ArticleFiles
+                                    files={files}
+                                    setFiles={setFiles}
+                                    editable={editable}
+                                />
+                            )}
                         </Stack>
                     </Card.Body>
                 </>) : (<LoadingComponent />)}
