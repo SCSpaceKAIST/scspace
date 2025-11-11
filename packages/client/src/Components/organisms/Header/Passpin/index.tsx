@@ -12,17 +12,11 @@ export default function PasspinHeader() {
         <Dialog.Root scrollBehavior={"inside"}>
             <Dialog.Trigger asChild>
                 <Button
-                    pos={"fixed"}
-                    top={"64px"}
-                    right={"16px"}
                     size={"xs"}
                     colorPalette={"blue"}
                     onClick={() => refetch()}
-                    zIndex={100}
-                    shadow={"2xl"}
-                    shadowColor={"blue"}
                 >
-                    Passpin (Click to Show)
+                    Show Passpins
                 </Button>
             </Dialog.Trigger>
             <Dialog.Backdrop />
