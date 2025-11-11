@@ -1,8 +1,8 @@
 import {
     BadRequestException,
-    Injectable,
+    Injectable, Logger,
     NotFoundException,
-} from '@nestjs/common';
+} from "@nestjs/common";
 import {
     IRentalUpdate,
     IRentalAll,
@@ -24,6 +24,7 @@ import { FileService } from '@scspace-server/tools/file/file.service';
 import { PdfService } from "@scspace-server/tools/pdf/pdf.service";
 import { ICertificatePdf } from "@scspace-depot/types/pdf/pdf.type";
 import { MailService } from "@scspace-server/tools/mailer/mail.service";
+import { RentalMeta } from "@scspace-depot/enums/mail.enum";
 
 @Injectable()
 export class RentalService {
@@ -474,5 +475,80 @@ export class RentalService {
             user: users.find(u => u.id === rental.userId)!,
             goods: goods.find(g => g.id === rental.goodsId)!,
         }));
+    }
+
+    //send return request mail to specific rental (FYI : overdue not required)
+    async rentalReturnRequest(id : number) : Promise<{
+        success : boolean,
+        id : number,
+    }> {
+        const rental = await this.rentalPublicService.getRentalById(id);
+        if (!rental) {
+            throw new NotFoundException('Rental not found');
+        }
+        const goods = await this.rentalPublicService.getGoodsById(rental.goodsId);
+        if (!goods) {
+            throw new NotFoundException('Goods not found');
+        }
+        const user = await this.userPublicService.fetchById(rental.userId);
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
+        const meta = RentalMeta.requestReturn
+
+        const dates = {
+            timeFrom : getDateString(rental.timeBorrow),
+            timeTo : getDateString(rental.timeDue),
+            overdue : rental.timeDue < getNow() ? String(Math.ceil(getDateDiffInMinute(getNow(), rental.timeDue)) / (60 * 24)) :'0'
+        }
+
+        const rentalMeta = {
+            title : goods.name,
+            user : user,
+            timeFrom : dates.timeFrom,
+            timeTo : dates.timeTo,
+            overdue : dates.overdue,
+        }
+
+        try {
+            Logger.log('Sending Return Request mail for Rental ID : ' + id + ' by User : ' + user.nameKr+ '')
+            Logger.log(meta)
+            Logger.log(rentalMeta)
+            await this.mailService.sendMail({
+                to : user.email,
+                bcc : "jhlee012@kaist.ac.kr",
+                template : "rentalReturnReq",
+                subject : "[SCSpace] 대여 기한 만료 안내 및 반납 요청",
+                context : {
+                    meta : meta,
+                    rental : rentalMeta,
+                }});
+        } catch (error) {
+            console.log(error)
+            await this.mailService.reportError(
+                error instanceof Error
+                    ? error
+                    : new Error(String(error)),
+                "Rental Return Request - Mail Sector")
+        }
+
+
+        return {
+            success : true,
+            id : id,
+        };
+    }
+
+    //send request return mail to all overdue rentals
+    async rentalReturnRequestAll() : Promise<{
+        success : boolean,
+        id : number,
+    }[]> {
+        const rentals = await this.rentalPublicService.getOverdueRentals();
+        const res = await Promise.allSettled(
+            rentals.map(r => this.rentalReturnRequest(r.id))
+        )
+        return res.filter(r => r.status === 'fulfilled').map(r => r.value)
     }
 }

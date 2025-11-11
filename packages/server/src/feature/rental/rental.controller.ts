@@ -12,7 +12,6 @@ import {
     Req,
     UseInterceptors,
     UploadedFile,
-    BadRequestException,
     Logger,
 } from '@nestjs/common';
 import { Request } from 'express';
@@ -28,20 +27,17 @@ import {
     IRentalCreateClient,
 } from '@scspace-depot/types/rental';
 import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
-import { ManagerGuard, MemberGuard, UserGuard } from '../auth/jwt/jwt.guard';
+import { ManagerGuard, MemberGuard, AdminGuard } from '../auth/jwt/jwt.guard';
 import { IUser } from '@scspace-depot/types/user';
 import { AuthGuard } from '@nestjs/passport';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { privateStorage, publicStorage } from '@scspace-server/tools/file/file.storage';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { publicStorage } from '@scspace-server/tools/file/file.storage';
 import { FileService } from '@scspace-server/tools/file/file.service';
-import { join } from 'path';
-import multer from 'multer';
 
 @Controller('rental')
 export class RentalController {
     constructor(
-        private readonly rentalService: RentalService,
-        private readonly fileService: FileService
+        private readonly rentalService: RentalService
     ) { }
 
     // Rental 관련 엔드포인트들
@@ -58,6 +54,28 @@ export class RentalController {
             ...rentalData,
             userId: user.id,
         });
+    }
+
+    //반납 요청 : 특정 렌탈
+    @Post('returnreq')
+    @UseGuards(ManagerGuard)
+    async returnRequest(
+        @Body('rentalId') rentalId : number,
+    ): Promise<{
+        success : boolean,
+        id : number,
+    }> {
+        return await this.rentalService.rentalReturnRequest(rentalId);
+    }
+
+    //반납 요청 : 모든 overdue 렌탈
+    @Post('returnreq/all')
+    @UseGuards(AdminGuard)
+    async returnRequestAll () : Promise<{
+        success : boolean,
+        id : number,
+    }[]> {
+        return await this.rentalService.rentalReturnRequestAll()
     }
 
     // 모든 대여 목록 조회 (관리자용)

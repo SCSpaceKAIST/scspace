@@ -1,0 +1,96 @@
+<html lang='ko'>
+<head>
+    <meta charset='utf-8' />
+    <title>{{meta.header.kr}} / {{meta.header.en}}</title>
+    <style>
+        body{ font-family: 'Malgun Gothic', Arial, sans-serif;
+            background:#f4f4f4;margin:0;padding:0;color:#333; line-height:1.6; }
+        .container{ max-width:600px;margin:0 auto;background:#fff;
+            border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.08); } .header{
+                                                                           background:{{meta.color}}; color:#fff;text-align:center;padding:30px 20px;
+                                                                           border-radius:8px 8px 0 0; } .header h1{margin:0;font-size:24px;} .header,
+                                                                                                                                             h2{margin:8px 0 0 0;font-weight:400;font-size:16px;} .content{padding:30px
+        20px;} .reservation-info{
+                   background:#f8f9fa;padding:20px;border-radius:6px;margin:20px 0;
+                   border-left:4px solid
+                   {{meta.color}}; } .reservation-title{ color:{{meta.color}};font-size:18px;font-weight:600;
+                                         margin:5px 0; } .informations{ margin:20px
+        0;background:#f8f9fa;padding:20px;border-radius:6px; border-left:4px solid
+        #17a2b8; } .informations ul{ list-style:none;padding:0;margin:10px 0; }
+        .informations li{ margin:10px
+        0;padding:10px;background:#fff;border-radius:4px; border-left:3px solid
+        #17a2b8;display:flex;align-items:center; } .informations li strong{
+                                                       color:#17a2b8;min-width:140px; }  @media only screen and (max-width: 600px) {
+            .container{margin:10px;border-radius:4px;} .header{padding:20px 15px;}
+            .content{padding:20px 15px;} .informations,
+                                         li{flex-direction:column;align-items:flex-start;} .informations li,
+                                                                                            strong{min-width:auto;margin-bottom:5px;} }
+        .footer {
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #6c757d;
+            border-radius: 0 0 8px 8px;
+        }
+    </style>
+</head>
+<body>
+<div class='container'>
+    <!-- ─── 헤더 ─── -->
+    <div class='header' style='background:{{meta.color}}'>
+        <h1>{{meta.emoji}} {{meta.header.kr}}</h1>
+        <h2>{{meta.header.en}}</h2>
+        <p style='margin-top:18px'>
+            {{meta.body.kr}}<br />
+            {{meta.body.en}}
+        </p>
+    </div>
+
+    <!-- ─── 본문 ─── -->
+    <div class='content'>
+        <div class='informations'>
+            <strong>상세 정보 / Detailed Information</strong>
+            <ul>
+                <li>
+                    <strong>대여 물품명:</strong>
+                    <span>{{rental.title}}</span>
+                </li>
+                <li>
+                    <strong>예약자:</strong>
+                    <span>{{rental.user.studentNumber}}
+                        {{rental.user.nameKr}}</span>
+                </li>
+                <li>
+                    <strong>대여 일시:</strong>
+                    <span>{{rental.timeFrom}} KST</span>
+                </li>
+                <li>
+                    <strong>반납 기한:</strong>
+                    <span>{{rental.timeTo}} KST</span>
+                </li>
+                <li>
+                    <strong>초과 기한:</strong>
+                    <span>{{rental.overdue}} KST</span>
+                </li>
+            </ul>
+        </div>
+        <!-- 임시 -->
+        <!--        <div class='status-info'>-->
+        <!--          <p style='margin:0;'><strong>📢 안내사항:</strong></p>-->
+        <!--          <p style='margin:8px 0 0 0;'>예약이 성공적으로 등록되었습니다. 예약-->
+        <!--            시간에 맞춰 공간을 이용해 주세요.</p>-->
+        <!--        </div>-->
+    </div>
+
+    <!-- ─── 푸터 ─── -->
+    <div class='footer'>
+        <p><strong>학생문화공간위원회 / Student Cultural Space Committee</strong></p>
+        <p>{{meta.templateFooter}}<br />
+            {{meta.templateFooterEn}}</p>
+        <p style='margin-top:15px;color:#999;'>Contact : ✉️ scspace@kaist.ac.kr</p>
+    </div>
+</div>
+</body>
+</html>
