@@ -40,3 +40,11 @@ export interface IArticleQuery {
 export interface IArticleWithUser extends IArticle {
     user: IUser;
 }
+
+export interface IArticleFetchResult {
+    articles: IArticleWithUser[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+}

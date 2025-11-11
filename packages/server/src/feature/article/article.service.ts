@@ -11,6 +11,7 @@ import {
     IArticleQuery,
     IArticle,
     IArticleWithUser,
+    IArticleFetchResult,
 } from '@scspace-depot/types/article';
 import { FileService } from "@scspace-server/tools/file/file.service";
 import { ArticleStateEnum } from '@scspace-depot/enums/article.enum';
@@ -35,13 +36,7 @@ export class ArticleService {
         return await this.articleRepository.getArticleWithUserById(id);
     }
 
-    async getArticles(query: IArticleQuery = {}): Promise<{
-        articles: IArticleWithUser[];
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-    }> {
+    async getArticles(query: IArticleQuery = {}): Promise<IArticleFetchResult> {
         const limit = query.limit || 20;
         const offset = query.offset || 0;
         const page = Math.floor(offset / limit) + 1;

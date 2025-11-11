@@ -21,6 +21,8 @@ import {
     IArticleCreate,
     IArticleUpdate,
     IArticleQuery,
+    IArticleWithUser,
+    IArticleFetchResult,
 } from '@scspace-depot/types/article';
 import { publicStorage } from '@scspace-server/tools/file/file.storage';
 import { ISuccessResponse } from '@scspace-depot/types/common';
@@ -72,7 +74,7 @@ export class ArticleController {
     async getArticles(
         @Query() query: IArticleQuery,
         @Req() req: Request
-    ) {
+    ): Promise<IArticleFetchResult> {
         const user = req.user as IUser | undefined;
         const isManager = user ? UserUtils.isManager(user.type) : false;
 

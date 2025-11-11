@@ -46,8 +46,7 @@ export default function HeroSection() {
                     </Text>
                 </VStack>
                 <Text fontSize={{ base: "md", md: "lg" }} color="gray.600">
-                    <Mark>KAIST 장영신 학생회관과 미래홀 <Mark color="blue" fontWeight="semibold">공간 예약</Mark>부터,</Mark> <Mark>의자, 책상 등
-                        <Mark color="blue" fontWeight="semibold"> 물품 대여</Mark>까지</Mark> <Mark>공간위의 모든 서비스를 한 곳에서 제공합니다.</Mark>
+                    <Mark>KAIST 장영신학생회관과 미래홀 <Mark color="blue" fontWeight="semibold">공간 예약</Mark>부터,</Mark> <Mark>의자, 책상 등 <Mark color="blue" fontWeight="semibold"> 물품 대여</Mark>까지</Mark> <Mark>공간위의 모든 서비스를 한 곳에서 제공합니다.</Mark>
                 </Text>
             </VStack>
             <MotionBox
