@@ -10,7 +10,6 @@ import {
     SimpleGrid,
     Text,
     VStack,
-    Wrap,
     parseColor,
     Stack,
     Mark,
@@ -18,7 +17,6 @@ import {
 import { motion } from "framer-motion";
 import Image from "next/image";
 import TeamCard, { TeamCardData } from "@scspace-client/Components/molecules/home/TeamCard";
-import { BlueMark } from "../Rules/utils";
 
 const MotionBox = motion(Box);
 
@@ -42,8 +40,9 @@ const missionHighlights = [
 
 const teams: TeamCardData[] = [
     {
+        parent: "사업국",
         name: "회계팀",
-        focus: "운영 기반",
+        focus: "재정 관리",
         summary: "회계, 신학관 내부 재물 관리, 리크루팅 등",
         details: [
             "단체 운영을 위한 회계, 상근 관리, 자료 정리",
@@ -52,6 +51,7 @@ const teams: TeamCardData[] = [
         palette: "blue",
     },
     {
+        parent: "사업국",
         name: "디자인팀",
         focus: "브랜딩",
         summary: "디자인, 홍보 포스터 제작",
@@ -62,6 +62,7 @@ const teams: TeamCardData[] = [
         palette: "teal",
     },
     {
+        parent: "관리국",
         name: "관리팀",
         focus: "공간 운영",
         summary: "공간위 산하 관리공간(장영신학생회관 및 미래홀) 관리",
@@ -72,8 +73,9 @@ const teams: TeamCardData[] = [
         palette: "orange",
     },
     {
+        parent: "개발국",
         name: "개발팀",
-        focus: "디지털",
+        focus: "사이트 관리",
         summary: "홈페이지 제작 및 내부 전산화",
         details: [
             "예약 시스템 설계와 서비스 경험 최적화",
@@ -89,7 +91,7 @@ export default function SCSpaceSection() {
     return (
         <Box
             as="section"
-            bgGradient="linear(to-b, #f8fbff, #ffffff)"
+            bg={"#f8fbff"}
             color="gray.900"
             py={{ base: 18, md: 28 }}
             px={{ base: 6, md: 20 }}
@@ -135,14 +137,14 @@ export default function SCSpaceSection() {
                         <Card.Root
                             borderRadius="xl"
                             bgGradient="linear(to-br, blue.500, teal.400)"
-                            shadow="2xl"
+                            shadow="md"
                             p={{ base: 8, md: 10 }}
                             display="flex"
                             alignItems="center"
                             size={"sm"}
                         >
                             <VStack align="flex-start" gap={6}>
-                                <Heading size="2xl" letterSpacing="-0.03em">
+                                <Heading size="2xl">
                                     함께 만드는 학생 문화 플랫폼
                                 </Heading>
                                 <Text fontSize="md" color="blue.950">
@@ -179,7 +181,7 @@ export default function SCSpaceSection() {
                 >
                     <VStack align="flex-start" gap={6}>
                         <HStack justify="space-between" width="100%" flexWrap="wrap" gap={4}>
-                            <Heading fontSize={{ base: "2xl", md: "3xl" }} letterSpacing="-0.02em">
+                            <Heading fontSize={{ base: "xl", sm: "2xl", md: "3xl" }}>
                                 팀 소개
                             </Heading>
                             <Text fontSize="sm" color="gray.500">
@@ -204,43 +206,50 @@ export default function SCSpaceSection() {
                     viewport={{ once: true, amount: 0.4 }}
                     transition={{ duration: 0.6, delay: 0.15 }}
                 >
-                    <Card.Root
-                        borderRadius="2xl"
-                        borderWidth="1px"
-                        borderColor="gray.200"
-                        bg="white"
-                        shadow="lg"
-                        p={{ base: 6, md: 10 }}
-                    >
-                        <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 8, md: 12 }} alignItems="center">
-                            <VStack align="flex-start" gap={5}>
-                                <Badge colorPalette="blue" variant="subtle" borderRadius="full" px={3} py={1} fontSize="xs" fontWeight="semibold">
-                                    CI 소개
-                                </Badge>
-                                <Heading size="lg" letterSpacing="-0.02em">
-                                    학생, 문화, 그리고 공간을 담은 아이덴티티
-                                </Heading>
-                                <Text color="gray.600" fontSize="sm" lineHeight={1.7}>
-                                    학생문화공간위원회 CI는 푸른 청춘, 붉은 장영신학생회관, 그리고 깨끗한 푸른빛 백색을 담아 학생, 문화, 공간이라는 세 가지 가치를 하나로 묶었습니다. 장영신학생회관을 형상화한 ㄱㄱㅇ 모양은 공간과 함께 성장해 온 공간위의 이야기를 전합니다.
-                                </Text>
-                            </VStack>
-                            <VStack gap={6} justify="center" align="center">
-                                <Box position="relative" height="144px" width="180px">
-                                    <Image fill style={{ objectFit: "contain" }} src="/img/logo.svg" alt="SCSpace logo" />
-                                </Box>
-                                <Wrap justify="center" gap={4}>
-                                    {ciColors.map((color) => (
-                                        <ColorPicker.Root defaultValue={parseColor(color)} key={color} readOnly>
-                                            <ColorPicker.Control>
-                                                <ColorPicker.ValueSwatch boxSize={5} />
-                                                <ColorPicker.ValueText />
-                                            </ColorPicker.Control>
-                                        </ColorPicker.Root>
-                                    ))}
-                                </Wrap>
-                            </VStack>
-                        </SimpleGrid>
-                    </Card.Root>
+                    <VStack align="flex-start" gap={6}>
+                        <HStack justify="space-between" width="100%" flexWrap="wrap" gap={4}>
+                            <Heading fontSize={{ base: "xl", sm: "2xl", md: "3xl" }}>
+                                CI 소개
+                            </Heading>
+                            <Text fontSize="sm" color="gray.500">
+                                공간위를 나타내는 상징입니다.
+                            </Text>
+                        </HStack>
+                        <Card.Root
+                            borderRadius="2xl"
+                            borderWidth="1px"
+                            borderColor="gray.200"
+                            bg="white"
+                            shadow="lg"
+                            p={{ base: 6, md: 10 }}
+                        >
+                            <SimpleGrid columns={{ base: 1, lg: 2 }} gap={6} alignItems="center">
+                                <VStack align="flex-start" gap={5}>
+                                    <Heading size={{ md: "lg" }} letterSpacing="-0.02em">
+                                        학생, 문화, 그리고 공간을 담은 아이덴티티
+                                    </Heading>
+                                    <Text color="gray.600" fontSize="sm" lineHeight={1.7}>
+                                        학생문화공간위원회 CI는 푸른 청춘, 붉은 장영신학생회관, 그리고 깨끗한 푸른빛 백색을 담아 학생, 문화, 공간이라는 세 가지 가치를 하나로 묶었습니다. 장영신학생회관을 형상화한 <Mark fontWeight={"extrabold"}>ㄱㄱㅇ</Mark> 모양은 공간과 함께 성장해 온 공간위의 이야기를 전합니다.
+                                    </Text>
+                                </VStack>
+                                <Stack direction={{ base: "column", xl: "row" }} gap={6} alignItems="center" w={"full"} justifyContent={"center"}>
+                                    <Box position="relative" height="144px" width="180px">
+                                        <Image fill style={{ objectFit: "contain" }} src="/img/logo.svg" alt="SCSpace logo" />
+                                    </Box>
+                                    <Stack justify="center" gap={4}>
+                                        {ciColors.map((color) => (
+                                            <ColorPicker.Root defaultValue={parseColor(color)} key={color} readOnly>
+                                                <ColorPicker.Control>
+                                                    <ColorPicker.ValueSwatch boxSize={5} />
+                                                    <ColorPicker.ValueText whiteSpace={"nowrap"} />
+                                                </ColorPicker.Control>
+                                            </ColorPicker.Root>
+                                        ))}
+                                    </Stack>
+                                </Stack>
+                            </SimpleGrid>
+                        </Card.Root>
+                    </VStack>
                 </MotionBox>
             </VStack>
         </Box>

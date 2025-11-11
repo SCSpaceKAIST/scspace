@@ -71,11 +71,6 @@ export function useRedirects() {
                 helperText: "Browse",
                 subdomains: [
                     {
-                        href: '/browse/scspace',
-                        label: "공간위",
-                        helperText: "SCSpace"
-                    },
-                    {
                         href: "/browse/space",
                         label: "공간",
                         helperText: "Spaces",
