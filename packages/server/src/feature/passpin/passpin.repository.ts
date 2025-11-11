@@ -76,7 +76,6 @@ export class PasspinRepository {
 
     async fetchActivePinsByUserId(userId: number): Promise<IPasspinWithSpace[]> {
         const now = getNow();
-        Logger.log(`fetchActivePinsByUserId called for userId: ${userId} at time: ${now}`);
 
         return await this.db
             .select({
@@ -92,7 +91,10 @@ export class PasspinRepository {
                 Reservation,
                 and(
                     eq(Passpin.spaceId, Reservation.spaceId),
-                    between(Reservation.timeFrom, now - 60, now + 60)
+                    or(
+                        between(Reservation.timeFrom, now - 60, now + 60),
+                        between(Reservation.timeTo, now - 60, now + 60),
+                    )
                 )
             )
             .innerJoin(
