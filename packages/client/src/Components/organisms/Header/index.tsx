@@ -1,6 +1,7 @@
 "use client"
 
 import {
+  Box,
   Flex,
   Spacer,
   Stack,
@@ -22,19 +23,21 @@ export default function Header() {
       boxShadow="sm"
       zIndex={100}
       gap={0}
+      justify={"center"}
     >
-      <PasspinHeader />
       <Flex
         px={4}
         py={2}
         gap={6}
         align="center"
+        h={"56px"}
       >
         <Sidebar />
         <BreadcrumbComponent />
         <Spacer />
         <LoginBtn />
       </Flex>
+      <PasspinHeader />
     </Stack>
   );
 };

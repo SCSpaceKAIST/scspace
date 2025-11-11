@@ -12,7 +12,7 @@ export default function HeroSection() {
     return (
         <MotionBox
             as="section"
-            minH="100dvh"
+            minH="calc(100dvh - 56px)"
             display="flex"
             alignItems="center"
             justifyContent="center"
