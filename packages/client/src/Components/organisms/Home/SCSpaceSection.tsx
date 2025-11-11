@@ -225,7 +225,7 @@ export default function SCSpaceSection() {
                         >
                             <SimpleGrid columns={{ base: 1, lg: 2 }} gap={6} alignItems="center">
                                 <VStack align="flex-start" gap={5}>
-                                    <Heading size={{ md: "lg" }} letterSpacing="-0.02em">
+                                    <Heading size={{ md: "lg" }}>
                                         학생, 문화, 그리고 공간을 담은 아이덴티티
                                     </Heading>
                                     <Text color="gray.600" fontSize="sm" lineHeight={1.7}>

@@ -43,7 +43,7 @@ export default function ArticleSection() {
                         게시판
                     </Heading>
                     <Text fontSize={{ base: "md", md: "lg" }} color="gray.600">
-                        공간 이야기를 더욱 풍부하게 전할 새로운 콘텐츠가 준비 중입니다. 정식 공개 전 미리 분위기를 확인해 보세요.
+                        공간위와 관련된 다양한 소식과 유용한 정보를 확인해 보세요. 공지, 행사, 그리고 홍보 3개의 게시판이 준비되어 있습니다.
                     </Text>
                 </Stack>
 
