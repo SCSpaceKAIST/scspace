@@ -298,3 +298,21 @@ export const WorkerMeta  = {
         templatefooterEn : "This mail is sent to the author of the reservation that requested 'worker'. Your reservation information has been sent to the assigned worker. ",
     }
 } as const
+
+
+export const RentalMeta = {
+    requestReturn: {
+        color: '#d72424',
+        emoji: DEFAULT_EMOJI_FAIL,
+        header: {
+        kr: "대여 반납 기한 경과 안내 및 반납 요청",
+        en: "Rental Return Due Expired"
+        },
+        body: {
+            kr: "귀하의 대여 반납 기한이 경과하였음을 알려드립니다. 빠른 시일 내 반납 완료 절차를 진행해주시기를 요청드리며, 그렇지 않을 경우 불이익이 있을 수 있습니다. ",
+            en: "Your rental return due has expired. Please complete the process of returning the rental as soon as possible. If you do not complete the process of returning the rental, there may be a disadvantage. "
+        },
+        templateFooter : "이 메일은 반납기한을 초과한 대여에 대하여 일괄 발송되었습니다. ",
+        templateFooterEn : "This mail is sent to all rental authors that have exceeded the return due. ",
+    }
+} as const
