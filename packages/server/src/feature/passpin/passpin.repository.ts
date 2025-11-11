@@ -1,8 +1,8 @@
 import { Injectable, Inject, NotFoundException, BadRequestException, Logger } from "@nestjs/common";
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
-import { Passpin, schema, Reservation, Space } from "@schema";
-import { and, between, count, desc, eq, getTableColumns, gt } from "drizzle-orm";
+import { Passpin, schema, Reservation, Space, OrganizationMember } from "@schema";
+import { and, between, count, desc, eq, or, inArray } from "drizzle-orm";
 import { PasspinEnum } from '@scspace-depot/enums/passpin.enum';
 import { IPasspin, IPasspinSpace, IPasspinWithSpace } from "@scspace-depot/types/passpin";
 import { MPasspin, MPasspinSpace } from "@scspace-server/feature/passpin/passpin.model";
@@ -76,17 +76,36 @@ export class PasspinRepository {
 
     async fetchActivePinsByUserId(userId: number): Promise<IPasspinWithSpace[]> {
         const now = getNow();
+        Logger.log(`fetchActivePinsByUserId called for userId: ${userId} at time: ${now}`);
 
         return await this.db
-            .select()
+            .select({
+                passpin: Passpin,
+                space: Space,
+            })
             .from(Passpin)
-            .innerJoin(Space, eq(Passpin.spaceId, Space.id))
-            .innerJoin(Reservation, eq(Passpin.spaceId, Reservation.spaceId))
+            .innerJoin(
+                Space,
+                eq(Passpin.spaceId, Space.id)
+            )
+            .innerJoin(
+                Reservation,
+                and(
+                    eq(Passpin.spaceId, Reservation.spaceId),
+                    between(Reservation.timeFrom, now - 60, now + 60)
+                )
+            )
+            .innerJoin(
+                OrganizationMember,
+                eq(Reservation.organizationId, OrganizationMember.organizationId)
+            )
             .where(
                 and(
-                    eq(Reservation.userId, userId),
+                    or(
+                        eq(Reservation.userId, userId),
+                        eq(OrganizationMember.userId, userId)
+                    ),
                     eq(Passpin.status, PasspinEnum.USING),
-                    between(Reservation.timeFrom, now - 60, now + 60)
                 )
             )
             .then((pins) => pins.map(pin => ({
