@@ -1,8 +1,9 @@
 "use client"
 
-import { Badge, Card, Heading, Separator, Text, VStack } from "@chakra-ui/react";
+import { Badge, Breadcrumb, Card, Flex, GridItem, Heading, Separator, SimpleGrid, Stack, StackSeparator, Text, VStack } from "@chakra-ui/react";
 
 export interface TeamCardData {
+    parent: string;
     name: string;
     focus: string;
     summary: string;
@@ -15,7 +16,7 @@ interface TeamCardProps {
 }
 
 export default function TeamCard({ team }: TeamCardProps) {
-    const { name, focus, summary, details, palette } = team;
+    const { parent, name, focus, summary, details, palette } = team;
 
     return (
         <Card.Root
@@ -29,23 +30,36 @@ export default function TeamCard({ team }: TeamCardProps) {
             display="flex"
             w={"full"}
         >
-            <VStack align="flex-start" gap={4} height="full">
-                <Badge colorPalette={palette} variant="subtle" borderRadius="full" px={3} py={1} fontSize="xs" fontWeight="semibold">
-                    {focus}
-                </Badge>
-                <Heading size="sm" letterSpacing="-0.01em">
-                    {name}
-                </Heading>
-                <Text color="gray.600" fontSize="sm">
-                    {summary}
-                </Text>
-                <Separator />
-                <VStack align="flex-start" gap={2} color="gray.500" fontSize="sm">
-                    {details.map((item) => (
-                        <Text key={item}>{`• ${item}`}</Text>
-                    ))}
-                </VStack>
-            </VStack>
+            <Stack gap={4} height="full">
+                <Flex justify={"space-between"}>
+                    <Breadcrumb.Root fontWeight={"semibold"}>
+                        <Breadcrumb.List>
+                            <Breadcrumb.Item>
+                                {parent}
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Separator />
+                            <Breadcrumb.Item>
+                                <Breadcrumb.CurrentLink>
+                                    {name}
+                                </Breadcrumb.CurrentLink>
+                            </Breadcrumb.Item>
+                        </Breadcrumb.List>
+                    </Breadcrumb.Root>
+                    <Badge colorPalette={palette} variant="subtle" borderRadius="full" px={3} py={1} fontSize="xs" fontWeight="semibold">
+                        # {focus}
+                    </Badge>
+                </Flex>
+                <Stack separator={<StackSeparator />}>
+                    <Text color="gray.600" fontSize="sm">
+                        {summary}
+                    </Text>
+                    <VStack align="flex-start" gap={2} color="gray.500" fontSize="sm">
+                        {details.map((item) => (
+                            <Text key={item}>{`• ${item}`}</Text>
+                        ))}
+                    </VStack>
+                </Stack>
+            </Stack>
         </Card.Root>
     );
 }

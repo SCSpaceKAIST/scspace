@@ -1,7 +1,7 @@
 "use client"
 
-import { Box, Heading, SimpleGrid, Text, VStack, useBreakpointValue } from "@chakra-ui/react";
-import ComingSoonCard from "@scspace-client/Components/molecules/home/ComingSoonCard";
+import { Box, Heading, SimpleGrid, Stack, Text, VStack, useBreakpointValue } from "@chakra-ui/react";
+import ArticleCard from "@scspace-client/Components/molecules/home/ArticleCard";
 
 const previewCards = [
     {
@@ -24,27 +24,35 @@ const previewCards = [
     },
 ];
 
-export default function ComingSoonSection() {
+export default function ArticleSection() {
     const columns = useBreakpointValue({ base: 1, md: 2, xl: 3 }) ?? 1;
 
     return (
-        <Box as="section" bg="white" color="gray.900" py={{ base: 16, md: 24 }} px={{ base: 6, md: 20 }}>
-            <VStack maxW="6xl" mx="auto" align="flex-start" gap={{ base: 10, md: 14 }}>
-                <VStack align="flex-start" gap={4}>
-                    <Heading fontSize={{ base: "2xl", md: "4xl" }} letterSpacing="-0.03em">
-                        곧 만나볼 게시물 미리보기
+        <Box
+            as="section"
+            color="gray.900"
+            py={{ base: 16, md: 24 }}
+            px={{ base: 6, md: 20 }}
+            bgGradient="to-b"
+            gradientFrom={"#f8fbff"}
+            gradientTo={"#ffffff"}
+        >
+            <Stack maxW="7xl" mx="auto" align="flex-start" gap={{ base: 10, md: 14 }}>
+                <Stack gap={4}>
+                    <Heading fontSize={{ base: "2xl", md: "4xl" }}>
+                        게시판
                     </Heading>
-                    <Text fontSize={{ base: "md", md: "lg" }} color="gray.600" maxW="3xl">
+                    <Text fontSize={{ base: "md", md: "lg" }} color="gray.600">
                         공간 이야기를 더욱 풍부하게 전할 새로운 콘텐츠가 준비 중입니다. 정식 공개 전 미리 분위기를 확인해 보세요.
                     </Text>
-                </VStack>
+                </Stack>
 
                 <SimpleGrid columns={columns} gap={{ base: 4, md: 6 }} width="100%">
                     {previewCards.map((card, index) => (
-                        <ComingSoonCard key={card.title} {...card} index={index} />
+                        <ArticleCard key={card.title} {...card} index={index} />
                     ))}
                 </SimpleGrid>
-            </VStack>
+            </Stack>
         </Box>
     );
 }

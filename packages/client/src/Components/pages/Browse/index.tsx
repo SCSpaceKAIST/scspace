@@ -1,16 +1,9 @@
-import Scspace from "./Scspace";
 import PageSelector, { IPage } from "../../molecules/page/PageSelector";
 import Rules from "./Rules";
 import Space from "./Spaces";
 
 export default function Browse() {
   const pages: IPage[] = [
-    {
-      kor: "공간위",
-      eng: "SCSpace",
-      preview: (<Scspace />),
-      href: "/browse/scspace"
-    },
     {
       kor: "공간",
       eng: "Spaces",
@@ -24,7 +17,6 @@ export default function Browse() {
       href: "/browse/rules"
     },
   ];
-  // { value: "Business", page: <Business /> },
 
   return (
     <PageSelector

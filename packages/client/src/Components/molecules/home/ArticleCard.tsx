@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 const MotionDiv = motion.div;
 
-export interface ComingSoonCardProps {
+export interface ArticleCardProps {
     title: string;
     description: string;
     status: string;
@@ -13,7 +13,7 @@ export interface ComingSoonCardProps {
     index: number;
 }
 
-export default function ComingSoonCard({ title, description, status, palette, index }: ComingSoonCardProps) {
+export default function ArticleCard({ title, description, status, palette, index }: ArticleCardProps) {
     return (
         <MotionDiv
             role="group"
