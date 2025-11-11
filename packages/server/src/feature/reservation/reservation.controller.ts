@@ -23,7 +23,7 @@ import {
   IReservationApplyWorker
 } from '@scspace-depot/types/reservation';
 import { IDataResponse, ISuccessResponse } from '@scspace-depot/types/common';
-import { AdminGuard, ManagerGuard, MemberGuard, MemberGuardWithReservation, UserGuard, WorkerGuard } from '../auth/jwt/jwt.guard';
+import { AdminGuard, ManagerGuard, MemberGuard, MemberGuardWithReservation, WorkerGuard } from '../auth/jwt/jwt.guard';
 import { IUser } from '@scspace-depot/types/user';
 import { SpacePublicService } from '../space/space.public.service';
 import { ReservationPublicService } from './reservation.public.service';

@@ -1,8 +1,7 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { IPasspin, IPasspinSpace } from "@scspace-depot/types/passpin";
+import { IPasspin, IPasspinSpace, IPasspinWithSpace } from "@scspace-depot/types/passpin";
 import { PasspinRepository } from "@scspace-server/feature/passpin/passpin.repository";
 import { PasspinEnum } from "@scspace-depot/enums/passpin.enum";
-import { getNow } from "@scspace-server/common/utils";
 import { PasspinUtils } from './passpin.utils';
 
 @Injectable()
@@ -46,10 +45,12 @@ export class PasspinService {
         return pin;
     }
 
-    async getActivePins(uid: number): Promise<IPasspin[]> {
-        Logger.log(`User ${uid} requested active passpins at ${getNow()}`);
-
+    async getActivePins(): Promise<IPasspinWithSpace[]> {
         return await this.passpinRepository.fetchActivePins();
+    }
+
+    async getActivePinsByUser(userId: number): Promise<IPasspinWithSpace[]> {
+        return await this.passpinRepository.fetchActivePinsByUserId(userId);
     }
 
     /**
@@ -65,8 +66,6 @@ export class PasspinService {
         }
         return pin.pin;
     }
-
-
 
     /**
      * Generate a new IPasspin with given SpaceId, Pin and Status (also add to DB)
@@ -131,6 +130,13 @@ export class PasspinService {
             previousPin: previous,
             changedAt: newpin.timeCreated
         } as IPasspinSpace;
+    }
+
+    async deleteCurrentPin(spaceId: number): Promise<void> {
+        const spacePin = await this.passpinRepository.fetchSpacepin(spaceId);
+        const currentPin = spacePin.currentPin;
+
+        await this.passpinRepository.deletePin(currentPin.id);
     }
 
     /**

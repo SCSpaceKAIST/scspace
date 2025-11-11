@@ -5,13 +5,11 @@ import { ISuccessResponse } from '@scspace-depot/types/common';
 import { UserPublicService } from './user.public.service';
 import { AdminGuard, ManagerGuard } from '../auth/jwt/jwt.guard';
 import { AuthGuard } from '@nestjs/passport';
-import { UserRepository } from './user.repository';
 @Controller('user')
 export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly userPublicService: UserPublicService,
-    private readonly userRepository: UserRepository,
   ) { }
 
   @UseGuards(AdminGuard)

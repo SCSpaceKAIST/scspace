@@ -16,7 +16,7 @@ export default function PasspinView() {
     const [selectedSpace, setSelectedSpace] = useState<ISpace | null>(null);
 
     const { data: passpinData, refetch: refetchPasspin } = PasspinHooks.usePasspin();
-    const { changePasspin } = PasspinHooks.usePasspinAPI();
+    const { changePasspin, deletePasspin } = PasspinHooks.usePasspinAPI();
     const { data: passpinHistory, refetch: refetchPasspinHistory } = PasspinHooks.usePasspinHistory(selectedSpace?.id ?? -1);
 
     const getString = dateUtils().getString;
@@ -121,11 +121,38 @@ export default function PasspinView() {
                     </Flex>
                     <DataList.Root flexGrow={1}>
                         <DataListItem label="Current Passpin">
-                            <Flex w={"full"}>
+                            <Flex w={"full"} gap={2} align={"center"}>
                                 <Heading>
                                     {passpinData?.find(p => p.spaceId === (selectedSpace?.id ?? -1))?.pin ?? (<Mark color={"gray"}>N/A</Mark>)}
                                 </Heading>
                                 <Spacer />
+                                <AlertBtn
+                                    onClick={() => {
+                                        deletePasspin({ spaceId: selectedSpace?.id ?? -1 }, {
+                                            onSettled: () => {
+                                                refetchPasspin();
+                                                refetchPasspinHistory();
+                                            },
+                                        });
+                                    }}
+                                    dialogTitle="비밀번호 삭제 확인"
+                                    dialogBody={
+                                        <>
+                                            <Text>비밀번호를 삭제하시겠습니까?</Text>
+                                            <br />
+                                            <Text>본 작업은 <BlueMark>도어락 앞</BlueMark>에서만 실행하시길 바랍니다.</Text>
+                                            <Text>또한 <RedMark>즉시 비밀번호를 삭제</RedMark> 바랍니다.</Text>
+                                        </>
+                                    }
+                                >
+                                    <Button
+                                        size={"xs"}
+                                        colorPalette={"red"}
+                                        variant={"outline"}
+                                    >
+                                        Clear Pin
+                                    </Button>
+                                </AlertBtn>
                                 <AlertBtn
                                     onClick={() => {
                                         changePasspin({ spaceId: selectedSpace?.id ?? -1 }, {
@@ -149,7 +176,7 @@ export default function PasspinView() {
                                         size={"xs"}
                                         colorPalette={"red"}
                                     >
-                                        Change Passpin
+                                        Change Pin
                                     </Button>
                                 </AlertBtn>
                             </Flex>

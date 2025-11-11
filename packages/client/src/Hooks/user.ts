@@ -23,7 +23,7 @@ export function useUserInfo({ uid }: { uid: Number }) {
 
 export function useAllUser(options: { studentNumberPrefix?: number } = {}) {
     const { data, isLoading, refetch } = useQueryApi<IUser[]>(
-        `/user/all?studentNumberPrefix=${options.studentNumberPrefix ?? 20}`
+        `/user/all?studentNumberPrefix=${options.studentNumberPrefix ?? 0}`
     );
     const [users, setUsers] = useState<IUser[] | null>(null);
 
