@@ -1,13 +1,14 @@
 import { Injectable, Inject, NotFoundException, BadRequestException, Logger } from "@nestjs/common";
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
-import { Passpin, schema } from "@schema";
-import { and, count, desc, eq } from "drizzle-orm";
+import { Passpin, schema, Reservation, Space } from "@schema";
+import { and, between, count, desc, eq, getTableColumns, gt } from "drizzle-orm";
 import { PasspinEnum } from '@scspace-depot/enums/passpin.enum';
-import { IPasspin, IPasspinSpace } from "@scspace-depot/types/passpin";
+import { IPasspin, IPasspinSpace, IPasspinWithSpace } from "@scspace-depot/types/passpin";
 import { MPasspin, MPasspinSpace } from "@scspace-server/feature/passpin/passpin.model";
 import { getNow } from "@scspace-server/common/utils";
 import { PasspinUtils } from "./passpin.utils";
+import { MSpace } from "../space/space.model";
 
 @Injectable()
 export class PasspinRepository {
@@ -31,7 +32,7 @@ export class PasspinRepository {
     }
 
     async fetchSpacepin(spaceId: number): Promise<IPasspinSpace> {
-        Logger.log('fetchSpacepin spaceId : ' + spaceId +  ' called');
+        Logger.log('fetchSpacepin spaceId : ' + spaceId + ' called');
         const current_pin = await this.db
             .select()
             .from(Passpin)
@@ -42,9 +43,9 @@ export class PasspinRepository {
             throw new NotFoundException(`Passpin with spaceId ${spaceId} & Stauts = 0 not found`);
         }
 
-        Logger.log('fetchSpacepin spaceId : ' + spaceId +  ' current_pin : ' + JSON.stringify(current_pin));
+        Logger.log('fetchSpacepin spaceId : ' + spaceId + ' current_pin : ' + JSON.stringify(current_pin));
 
-        const previous_pin  = await this.db
+        const previous_pin = await this.db
             .select()
             .from(Passpin)
             .where(and(eq(Passpin.spaceId, spaceId), eq(Passpin.status, -1)))
@@ -52,23 +53,46 @@ export class PasspinRepository {
             .limit(1)
             .then((pins) => pins[0]);
 
-        Logger.log('fetchSpacepin spaceId : ' + spaceId +  ' previous_pin : ' + JSON.stringify(previous_pin));
+        Logger.log('fetchSpacepin spaceId : ' + spaceId + ' previous_pin : ' + JSON.stringify(previous_pin));
 
         if (!previous_pin) {
-            Logger.log('fetchSpacepin spaceId : ' + spaceId +  ' previous_pin is null');
+            Logger.log('fetchSpacepin spaceId : ' + spaceId + ' previous_pin is null');
             return MPasspinSpace.fromDB(current_pin);
         }
         return MPasspinSpace.fromDB(current_pin, previous_pin);
     }
 
-    async fetchActivePins(): Promise<IPasspin[]> {
-        const pins = await this.db
+    async fetchActivePins(): Promise<IPasspinWithSpace[]> {
+        return await this.db
             .select()
             .from(Passpin)
+            .innerJoin(Space, eq(Passpin.spaceId, Space.id))
             .where(eq(Passpin.status, PasspinEnum.USING))
-            .then((pins) => pins);
+            .then((pins) => pins.map(pin => ({
+                ...MPasspin.fromDB(pin.passpin),
+                space: MSpace.fromDB(pin.space),
+            })));
+    }
 
-        return pins.map(pin => MPasspin.fromDB(pin));
+    async fetchActivePinsByUserId(userId: number): Promise<IPasspinWithSpace[]> {
+        const now = getNow();
+
+        return await this.db
+            .select()
+            .from(Passpin)
+            .innerJoin(Space, eq(Passpin.spaceId, Space.id))
+            .innerJoin(Reservation, eq(Passpin.spaceId, Reservation.spaceId))
+            .where(
+                and(
+                    eq(Reservation.userId, userId),
+                    eq(Passpin.status, PasspinEnum.USING),
+                    between(Reservation.timeFrom, now - 60, now + 60)
+                )
+            )
+            .then((pins) => pins.map(pin => ({
+                ...MPasspin.fromDB(pin.passpin),
+                space: MSpace.fromDB(pin.space),
+            })));
     }
 
     async fetchDetailed(spaceId: number, status: number): Promise<IPasspin> {
@@ -166,6 +190,17 @@ export class PasspinRepository {
             res.pop(); //then the total length = limit !
         }
         return res;
+    }
+
+    async deletePin(id: number): Promise<void> {
+        const [result] = await this.db
+            .update(Passpin)
+            .set({ status: PasspinEnum.OUTDATED })
+            .where(eq(Passpin.id, id));
+
+        if (result.affectedRows === 0) {
+            throw new NotFoundException(`Passpin with id ${id} not found`);
+        }
     }
 
 

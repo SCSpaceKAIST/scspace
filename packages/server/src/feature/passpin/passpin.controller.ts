@@ -5,13 +5,15 @@ import {
     Query,
     ParseIntPipe,
     Req,
+    Delete,
 } from "@nestjs/common";
-import { AdminGuard, PasspinMasterGuard } from '../auth/jwt/jwt.guard';
+import { ManagerGuard, PasspinMasterGuard } from '../auth/jwt/jwt.guard';
 import { PasspinService } from "@scspace-server/feature/passpin/passpin.service";
-import { IPasspin, IPasspinSpace } from "@scspace-depot/types/passpin";
+import { IPasspin, IPasspinSpace, IPasspinWithSpace } from "@scspace-depot/types/passpin";
 import { AuthGuard } from "@nestjs/passport";
 import { IUser } from "@scspace-depot/types/user";
 import { Request } from "express";
+import { UserUtils } from "@scspace-depot/utils/user.utils";
 
 
 @Controller('passpin')
@@ -31,26 +33,35 @@ export class PasspinController {
         return await this.passpinService.changePin(body.spaceId, body.next ?? null)
     }
 
+    @Delete()
+    @UseGuards(PasspinMasterGuard)
+    async deletePasspin(
+        @Body('spaceId', ParseIntPipe) spaceId: number,
+    ): Promise<void> {
+        return await this.passpinService.deleteCurrentPin(spaceId);
+    }
+
     @Get()
     @UseGuards(AuthGuard('jwt'))
     async getCurrentPin(
         @Req() req: Request,
-    ): Promise<IPasspin[]> {
-        // const res = await this.passpinService.getSpacePin(spaceId);
-        // return res.currentPin;
-        return await this.passpinService.getActivePins((req.user as IUser).id);
+    ): Promise<IPasspinWithSpace[]> {
+        const user = req.user as IUser;
+        if (UserUtils.isManager(user.type))
+            return await this.passpinService.getActivePins();
+        return await this.passpinService.getActivePinsByUser(user.id);
     }
 
-    @Get('space')
-    @UseGuards(AuthGuard('jwt'))
-    async getCurrentPinSpace(
-        @Query('spaceId', ParseIntPipe) spaceId: number,
-    ): Promise<IPasspinSpace> {
-        return await this.passpinService.getSpacePin(spaceId);
-    }
+    // @Get('space')
+    // @UseGuards(ManagerGuard)
+    // async getCurrentPinSpace(
+    //     @Query('spaceId', ParseIntPipe) spaceId: number,
+    // ): Promise<IPasspinSpace> {
+    //     return await this.passpinService.getSpacePin(spaceId);
+    // }
 
     @Get('history')
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(ManagerGuard)
     async getHistory(
         @Query('spaceId', ParseIntPipe) spaceId: number,
         @Query('limit') limit?: number,
