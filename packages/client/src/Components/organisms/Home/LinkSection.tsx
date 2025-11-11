@@ -20,10 +20,10 @@ export default function LinkSection() {
                 <SimpleGrid
                     w={"full"}
                     columns={{
-                        base: 1,
-                        sm: 2,
-                        md: 3,
-                        lg: 4,
+                        base: 2,
+                        sm: 3,
+                        md: 4,
+                        lg: 5,
                         xl: links.filter((link) => !link.invisible).length
                     }}
                     gap={8}
