@@ -144,7 +144,7 @@ export default function SCSpaceSection() {
                             size={"sm"}
                         >
                             <VStack align="flex-start" gap={6}>
-                                <Heading size="2xl">
+                                <Heading size={{ base: "xl", md: "2xl" }}>
                                     함께 만드는 학생 문화 플랫폼
                                 </Heading>
                                 <Text fontSize="md" color="blue.950">

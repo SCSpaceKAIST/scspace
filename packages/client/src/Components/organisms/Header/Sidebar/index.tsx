@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 
 import Redirect from "./Redirect";
-import Contact from "./Contact";
 import { useState, useEffect } from "react";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useRedirectStore } from "@scspace-client/Store/redirect";
@@ -96,7 +95,6 @@ export default function Sidebar() {
                             px={4}
                             py={2}
                         >
-                            <Contact />
                         </Drawer.Footer>
                         <Drawer.CloseTrigger asChild>
                             <CloseButton size="sm" />
