@@ -71,6 +71,11 @@ export function useRedirects() {
                 helperText: "Browse",
                 subdomains: [
                     {
+                        href: "/browse/archive",
+                        label: "자료실",
+                        helperText: "Archive",
+                    },
+                    {
                         href: "/browse/space",
                         label: "공간",
                         helperText: "Spaces",

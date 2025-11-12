@@ -27,8 +27,8 @@ function Element({ p }: { p: IPage }) {
     return (
         <Stack
             alignItems="flex-start"
-            width="100%"
             gap={0}
+            pr={8}
         >
             <Text
                 margin={0}
@@ -86,6 +86,11 @@ export default function PageSelector({
                         as={Flex}
                         direction="column"
                         minH={0}
+                        width={{
+                            base: "100%",
+                            md: "18%"
+                        }}
+                        minW={"fit-content"}
                     >
                         {pages.map((p, i) => (
                             <Button
@@ -93,10 +98,6 @@ export default function PageSelector({
                                 variant={{
                                     base: "ghost",
                                     md: (key === i || false) ? "subtle" : "ghost"
-                                }}
-                                width={{
-                                    base: "100%",
-                                    md: "calc(var(--screen-width) * 0.18)"
                                 }}
                                 padding={4}
                                 onClick={() => {
@@ -107,6 +108,7 @@ export default function PageSelector({
                                     }
                                 }}
                                 key={p.href}
+                                justifyContent={"start"}
                             >
                                 <Element p={p} />
                             </Button>
