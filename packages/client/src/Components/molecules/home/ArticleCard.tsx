@@ -1,6 +1,6 @@
 "use client"
 
-import { AspectRatio, Badge, Box, Button, Card, Flex, Heading, HStack, Link, Text, Textarea, VStack } from "@chakra-ui/react";
+import { AspectRatio, Badge, Box, Button, Card, Flex, Heading, HStack, Link, SimpleGrid, Stack, Text, Textarea, VStack } from "@chakra-ui/react";
 import { dateUtils } from "@scspace-client/Hooks/utils";
 import { IArticleWithUser } from "@scspace-depot/types/article";
 import { motion } from "framer-motion";
@@ -51,20 +51,22 @@ export default function ArticleCard({ title, id, index, content, timeUpdate, typ
                     </VStack>
                 </Card.Header>
                 <Card.Body>
-                    <AspectRatio ratio={5 / 4}>
-                        <Image
-                            src={images ? `${localhostBaseURL}${image}` : "/img/logo.svg"}
-                            alt={`Image ${index + 1}`}
-                            layout="fill"
-                            objectFit="contain"
+                    <SimpleGrid columns={{ base: 1, md: 2, xl: 1 }} gap={2}>
+                        <AspectRatio ratio={4 / 5}>
+                            <Image
+                                src={images ? `${localhostBaseURL}${image}` : "/img/logo.svg"}
+                                alt={`Image ${index + 1}`}
+                                layout="fill"
+                                objectFit="contain"
+                            />
+                        </AspectRatio>
+                        <Textarea
+                            value={content ?? ""}
+                            readOnly
+                            autoresize
+                            resize="none"
                         />
-                    </AspectRatio>
-                    <Textarea
-                        value={content ?? ""}
-                        readOnly
-                        autoresize
-                        resize="none"
-                    />
+                    </SimpleGrid>
                 </Card.Body>
                 <Card.Footer>
                     <Link href={`/article/${id}`} w="full" _hover={{ textDecoration: "none" }}>
