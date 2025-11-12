@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ko">
       <head>
-        <link rel="shortcut icon" href="/img/Favicon.svg" />
+        <link rel="shortcut icon" href="/img/logo.svg" />
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
@@ -47,9 +47,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Providers>
           <ToasterComponent />
           <Grid
-            width="100svw"
-            maxHeight="100svh"
-            height="100svh"
+            width="100dvw"
+            height="100dvh"
             direction="column"
             templateRows="auto 1fr"
           >

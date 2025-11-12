@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",        // NodeNext → CommonJS
-    "moduleResolution": "node",  // NodeNext → node
+    "module": "CommonJS", // NodeNext -> CommonJS
+    "moduleResolution": "node", // NodeNext -> node
     "lib": ["ESNext", "DOM"],
     "target": "ESNext",
     "sourceMap": true,
@@ -21,9 +21,8 @@
     "paths": {
       "@scspace-depot/*": ["packages/depot/src/*"],
       "@scspace-server/*": ["packages/server/src/*"],
-      "@scspace-client/*": ["packages/client/src/*"],
+      "@scspace-client/*": ["packages/client/src/*"]
     }
   },
   "exclude": ["node_modules", "dist"]
-
 }
