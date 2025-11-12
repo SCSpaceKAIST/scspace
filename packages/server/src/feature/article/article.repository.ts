@@ -173,7 +173,7 @@ export class ArticleRepository {
                 eq(Article.type, type),
                 eq(Article.state, ArticleStateEnum.FOR_ALL),
             ))
-            .orderBy(desc(Article.timePost))
+            .orderBy(desc(Article.timeUpdate))
             .limit(1);
 
         if (!result) {
