@@ -3,6 +3,7 @@
 import { useFormDataMutation, useMutationApi, useQueryApi } from "./api";
 import {
     IArticle,
+    IArticlePreview,
     IArticleQuery,
     IArticleUpdate,
     IArticleWithUser,
@@ -42,6 +43,10 @@ export function useArticleAPI(params?: {
         query
     );
 
+    const articlePreviews = useQueryApi<IArticlePreview>(
+        "/article/preview"
+    );
+
     // POST/PUT/DELETE 메서드들
     const createArticle = useFormDataMutation<IArticle>(
         "/article",
@@ -74,6 +79,7 @@ export function useArticleAPI(params?: {
         articles,
         articleById,
         myArticles,
+        articlePreviews,
 
         // CUD 메서드들
         createArticle,

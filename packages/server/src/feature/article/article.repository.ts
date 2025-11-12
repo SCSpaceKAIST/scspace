@@ -161,6 +161,31 @@ export class ArticleRepository {
         };
     }
 
+    async getArticlePreviewByType(type: ArticleTypeEnum): Promise<IArticleWithUser> {
+        const [result] = await this.db
+            .select({
+                article: Article,
+                user: User,
+            })
+            .from(Article)
+            .leftJoin(User, eq(Article.userId, User.id))
+            .where(and(
+                eq(Article.type, type),
+                eq(Article.state, ArticleStateEnum.FOR_ALL),
+            ))
+            .orderBy(desc(Article.timePost))
+            .limit(1);
+
+        if (!result) {
+            throw new NotFoundException(`No articles found for type ${type}`);
+        }
+
+        return {
+            ...result.article,
+            user: result.user,
+        };
+    }
+
     async updateArticle(id: number, updateData: IArticleUpdate): Promise<IArticle> {
         await this.getArticleById(id);
 

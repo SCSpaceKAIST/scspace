@@ -12,9 +12,10 @@ import {
     IArticle,
     IArticleWithUser,
     IArticleFetchResult,
+    IArticlePreview,
 } from '@scspace-depot/types/article';
 import { FileService } from "@scspace-server/tools/file/file.service";
-import { ArticleStateEnum } from '@scspace-depot/enums/article.enum';
+import { ArticleStateEnum, ArticleTypeEnum } from '@scspace-depot/enums/article.enum';
 
 @Injectable()
 export class ArticleService {
@@ -50,6 +51,20 @@ export class ArticleService {
             limit,
             totalPages,
         };
+    }
+
+    async getArticlePreviews(): Promise<IArticlePreview> {
+        const notice = await this.articleRepository.getArticlePreviewByType(ArticleTypeEnum.NOTICE);
+        const business = await this.articleRepository.getArticlePreviewByType(ArticleTypeEnum.BUSINESS);
+        const promotion = await this.articleRepository.getArticlePreviewByType(ArticleTypeEnum.PROMOTION);
+
+        return (
+            {
+                notice,
+                business,
+                promotion,
+            }
+        );
     }
 
     async updateArticle(
