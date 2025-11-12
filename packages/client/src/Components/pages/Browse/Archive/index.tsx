@@ -5,7 +5,7 @@ import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 export default function Archive() {
     return (
         <Scroll>
-            <Stack justify={"flex-start"}>
+            <Stack justify={"flex-start"} maxW={"calc(100% - 4px)"} mx={"auto"}>
                 <Separator />
                 <Heading>
                     Forms
@@ -44,8 +44,8 @@ export default function Archive() {
                 >
                     <DataListItem
                         label={
-                            <Text>
-                                <Mark>미래홀 사용 설명서</Mark> <Mark color="fg.muted">Manual for Mirae-Hall</Mark> <Mark color="blue">*아직 완벽하지 않아서 부족한 부분이 보일 수 있는데 그런 부분은 공유해드린 구글 독스 파일에 댓글로 남겨주시면 반영하여 수정, 추가하겠습니다!</Mark>
+                            <Text color={"blue"}>
+                                <Mark color={"black"}>미래홀 사용 설명서</Mark> <Mark color="fg.muted">Manual for Mirae-Hall</Mark> <br />*아직 완벽하지 않아서 부족한 부분이 보일 수 있는데 그런 부분은 공유해드린 구글 독스 파일에 댓글로 남겨주시면 반영하여 수정, 추가하겠습니다!
                             </Text>
                         }
                     >
@@ -66,8 +66,8 @@ export default function Archive() {
                     </DataListItem>
                     <DataListItem
                         label={
-                            <Text>
-                                <Mark>조수미홀 사용 설명서</Mark> <Mark color="fg.muted">Manual for Josumi-Hall</Mark> <Mark color="blue">*아직 완벽하지 않아서 부족한 부분이 보일 수 있는데 그런 부분은 공유해드린 구글 독스 파일에 댓글로 남겨주시면 반영하여 수정, 추가하겠습니다!</Mark>
+                            <Text maxW={"full"} wordBreak={"break-word"} color={"blue"}>
+                                <Mark color="black">조수미홀 사용 설명서</Mark> <Mark color="fg.muted">Manual for Josumi-Hall</Mark> <br />*아직 완벽하지 않아서 부족한 부분이 보일 수 있는데 그런 부분은 공유해드린 구글 독스 파일에 댓글로 남겨주시면 반영하여 수정, 추가하겠습니다!
                             </Text>
                         }
                     >
@@ -96,7 +96,7 @@ export default function Archive() {
                         <Center w="full">
                             <AspectRatio
                                 ratio={16 / 9}
-                                w={"80%"}
+                                w={{ base: "100%", md: "80%" }}
                                 maxW={"7xl"}
                                 borderColor={"gray"}
                                 borderWidth={"1px"}
@@ -118,7 +118,7 @@ export default function Archive() {
                         <Center w="full">
                             <AspectRatio
                                 ratio={16 / 9}
-                                w={"80%"}
+                                w={{ base: "100%", md: "80%" }}
                                 maxW={"7xl"}
                                 borderColor={"gray"}
                                 borderWidth={"1px"}
@@ -140,7 +140,7 @@ export default function Archive() {
                         <Center w="full">
                             <AspectRatio
                                 ratio={16 / 9}
-                                w={"80%"}
+                                w={{ base: "100%", md: "80%" }}
                                 maxW={"7xl"}
                                 borderColor={"gray"}
                                 borderWidth={"1px"}
