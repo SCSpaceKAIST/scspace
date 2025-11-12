@@ -1,7 +1,8 @@
 "use client"
 
-import { Box, Heading, SimpleGrid, Stack, Text, VStack, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Heading, SimpleGrid, Stack, Text, useBreakpointValue } from "@chakra-ui/react";
 import ArticleCard from "@scspace-client/Components/molecules/home/ArticleCard";
+import { useArticleAPI } from "@scspace-client/Hooks/article";
 
 const previewCards = [
     {
@@ -25,7 +26,9 @@ const previewCards = [
 ];
 
 export default function ArticleSection() {
-    const columns = useBreakpointValue({ base: 1, md: 2, xl: 3 }) ?? 1;
+    const columns = useBreakpointValue({ base: 1, xl: 3 }) ?? 1;
+
+    const { data } = useArticleAPI().articlePreviews;
 
     return (
         <Box
@@ -47,11 +50,13 @@ export default function ArticleSection() {
                     </Text>
                 </Stack>
 
-                <SimpleGrid columns={columns} gap={{ base: 4, md: 6 }} width="100%">
-                    {previewCards.map((card, index) => (
-                        <ArticleCard key={card.title} {...card} index={index} />
-                    ))}
-                </SimpleGrid>
+                {(data) && (
+                    <SimpleGrid columns={columns} gap={{ base: 4, md: 6 }} width="100%">
+                        {Object.values(data).map((article, index) => (
+                            <ArticleCard key={article.id} {...article} index={index} />
+                        ))}
+                    </SimpleGrid>
+                )}
             </Stack>
         </Box>
     );

@@ -48,3 +48,9 @@ export interface IArticleFetchResult {
     limit: number;
     totalPages: number;
 }
+
+export interface IArticlePreview {
+    notice: IArticleWithUser;
+    business: IArticleWithUser;
+    promotion: IArticleWithUser;
+}

@@ -23,6 +23,7 @@ import {
     IArticleQuery,
     IArticleWithUser,
     IArticleFetchResult,
+    IArticlePreview,
 } from '@scspace-depot/types/article';
 import { publicStorage } from '@scspace-server/tools/file/file.storage';
 import { ISuccessResponse } from '@scspace-depot/types/common';
@@ -37,6 +38,11 @@ export class ArticleController {
     constructor(
         private readonly articleService: ArticleService,
     ) { }
+
+    @Get('preview')
+    async getArticlePreviews(): Promise<IArticlePreview> {
+        return await this.articleService.getArticlePreviews();
+    }
 
     @Post()
     @UseGuards(AuthGuard('jwt'))
