@@ -6,8 +6,8 @@ export default function DataListItem({ label, children }: {
     children: React.ReactNode | string;
 }) {
     return (
-        <DataList.Item alignItems="start" gapX={0} maxH={"full"}>
-            <DataList.ItemLabel>
+        <DataList.Item alignItems="start" gapX={0} maxH={"full"} maxW={"full"}>
+            <DataList.ItemLabel maxW={"full"}>
                 {label}
             </DataList.ItemLabel>
             <DataList.ItemValue width="100%" mx={0} maxH={"full"}>

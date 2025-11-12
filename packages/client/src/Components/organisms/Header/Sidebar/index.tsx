@@ -58,7 +58,7 @@ export default function Sidebar() {
             <Portal>
                 <Drawer.Backdrop />
                 <Drawer.Positioner>
-                    <Drawer.Content>
+                    <Drawer.Content roundedTopRight={"3xl"}>
                         <Drawer.Header>
                             <Drawer.Title>
                                 학생문화공간위원회
@@ -97,7 +97,7 @@ export default function Sidebar() {
                         >
                         </Drawer.Footer>
                         <Drawer.CloseTrigger asChild>
-                            <CloseButton size="sm" />
+                            <CloseButton size="sm" rounded={"full"} />
                         </Drawer.CloseTrigger>
                     </Drawer.Content>
                 </Drawer.Positioner>
