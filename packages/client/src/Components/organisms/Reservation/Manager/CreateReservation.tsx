@@ -123,8 +123,8 @@ export default function CreateReservation() {
                     busking: check && (spaceId === 13),
                     workerNeed: worker
                 },
-                // userId: userInfo.id,
-                userId: 1,
+                userId: userInfo.id,
+                // userId: 1,
                 organizationId: orgId,
                 spaceId: spaceId,
                 title: title,
