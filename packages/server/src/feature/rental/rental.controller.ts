@@ -32,7 +32,6 @@ import { IUser } from '@scspace-depot/types/user';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { publicStorage } from '@scspace-server/tools/file/file.storage';
-import { FileService } from '@scspace-server/tools/file/file.service';
 
 @Controller('rental')
 export class RentalController {
@@ -57,26 +56,26 @@ export class RentalController {
     }
 
     //반납 요청 : 특정 렌탈
-    @Post('returnreq')
-    @UseGuards(ManagerGuard)
-    async returnRequest(
-        @Body('rentalId') rentalId : number,
-    ): Promise<{
-        success : boolean,
-        id : number,
-    }> {
-        return await this.rentalService.rentalReturnRequest(rentalId);
-    }
+    // @Post('returnreq')
+    // @UseGuards(ManagerGuard)
+    // async returnRequest(
+    //     @Body('rentalId') rentalId: number,
+    // ): Promise<{
+    //     success: boolean,
+    //     id: number,
+    // }> {
+    //     return await this.rentalService.rentalReturnRequest(rentalId);
+    // }
 
     //반납 요청 : 모든 overdue 렌탈
-    @Post('returnreq/all')
-    @UseGuards(AdminGuard)
-    async returnRequestAll () : Promise<{
-        success : boolean,
-        id : number,
-    }[]> {
-        return await this.rentalService.rentalReturnRequestAll()
-    }
+    // @Post('returnreq/all')
+    // @UseGuards(AdminGuard)
+    // async returnRequestAll(): Promise<{
+    //     success: boolean,
+    //     id: number,
+    // }[]> {
+    //     return await this.rentalService.rentalReturnRequestAll()
+    // }
 
     // 모든 대여 목록 조회 (관리자용)
     @Get()
