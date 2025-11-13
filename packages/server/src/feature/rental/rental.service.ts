@@ -33,8 +33,8 @@ export class RentalService {
         private readonly rentalPublicService: RentalPublicService,
         private readonly userPublicService: UserPublicService,
         private readonly fileService: FileService,
-        private readonly pdfService : PdfService,
-        private readonly mailService : MailService
+        private readonly pdfService: PdfService,
+        private readonly mailService: MailService
     ) { }
 
     // Rental 관련 서비스 메서드들
@@ -120,15 +120,15 @@ export class RentalService {
 
         //Rental Cert
         try {
-            const meta : ICertificatePdf = {
-                id : id,
-                user : user,
-                goods : goods,
-                contact : user.email,
-                rentalFrom : getDateString(now),
-                rentalTo : getDateString(afterOneWeek),
-                rentalDuration : MAX_RENTAL_DURATION, // # day - might be 7
-                rentalQuantity : rentalData.count,
+            const meta: ICertificatePdf = {
+                id: id,
+                user: user,
+                goods: goods,
+                contact: user.email,
+                rentalFrom: getDateString(now),
+                rentalTo: getDateString(afterOneWeek),
+                rentalDuration: MAX_RENTAL_DURATION, // # day - might be 7
+                rentalQuantity: rentalData.count,
             }
 
             const res = await this.pdfService.createAndStoreRentalCert(meta)
@@ -138,12 +138,12 @@ export class RentalService {
             //rental mail notif
 
             await this.mailService.sendMail({
-                to : "scspace.kaist@gmail.com",
-                bcc : "jhlee012@kaist.ac.kr",
-                template : "rentalNotif",
-                subject : "[SCSpace] 새로운 대여가 있습니다.",
-                context : {
-                    meta : meta,
+                to: "scspace.kaist@gmail.com",
+                bcc: "jhlee012@kaist.ac.kr",
+                template: "rentalNotif",
+                subject: "[SCSpace] 새로운 대여가 있습니다.",
+                context: {
+                    meta: meta,
                 }
             })
 
@@ -281,15 +281,6 @@ export class RentalService {
 
         await this.rentalRepository.returnRental(id, getNow());
 
-        // 재고 복구
-        const goods = await this.rentalPublicService.getGoodsById(rental.goodsId);
-        if (goods) {
-            await this.rentalRepository.updateGoodsStock(
-                rental.goodsId,
-                goods.countNow + rental.count
-            );
-        }
-
         return { success: true };
     }
 
@@ -305,6 +296,15 @@ export class RentalService {
 
         if (rental.timeConfirm !== 0) {
             throw new BadRequestException('This return has already been confirmed');
+        }
+
+        // 재고 복구
+        const goods = await this.rentalPublicService.getGoodsById(rental.goodsId);
+        if (goods) {
+            await this.rentalRepository.updateGoodsStock(
+                rental.goodsId,
+                goods.countNow + rental.count
+            );
         }
 
         // 연체된 대여인지 확인
@@ -357,9 +357,6 @@ export class RentalService {
 
         const user = await this.userPublicService.fetchById(rental.userId);
         // Organization << 언젠간 추가되지 않을까? (모름)
-
-
-
 
         return { success: true };
     }
@@ -478,9 +475,9 @@ export class RentalService {
     }
 
     //send return request mail to specific rental (FYI : overdue not required)
-    async rentalReturnRequest(id : number) : Promise<{
-        success : boolean,
-        id : number,
+    async rentalReturnRequest(id: number): Promise<{
+        success: boolean,
+        id: number,
     }> {
         const rental = await this.rentalPublicService.getRentalById(id);
         if (!rental) {
@@ -498,32 +495,33 @@ export class RentalService {
         const meta = RentalMeta.requestReturn
 
         const dates = {
-            timeFrom : getDateString(rental.timeBorrow),
-            timeTo : getDateString(rental.timeDue),
-            overdue : rental.timeDue < getNow() ? String(Math.ceil(getDateDiffInMinute(getNow(), rental.timeDue)) / (60 * 24)) :'0'
+            timeFrom: getDateString(rental.timeBorrow),
+            timeTo: getDateString(rental.timeDue),
+            overdue: rental.timeDue < getNow() ? String(Math.ceil(getDateDiffInMinute(getNow(), rental.timeDue)) / (60 * 24)) : '0'
         }
 
         const rentalMeta = {
-            title : goods.name,
-            user : user,
-            timeFrom : dates.timeFrom,
-            timeTo : dates.timeTo,
-            overdue : dates.overdue,
+            title: goods.name,
+            user: user,
+            timeFrom: dates.timeFrom,
+            timeTo: dates.timeTo,
+            overdue: dates.overdue,
         }
 
         try {
-            Logger.log('Sending Return Request mail for Rental ID : ' + id + ' by User : ' + user.nameKr+ '')
+            Logger.log('Sending Return Request mail for Rental ID : ' + id + ' by User : ' + user.nameKr + '')
             Logger.log(meta)
             Logger.log(rentalMeta)
             await this.mailService.sendMail({
-                to : user.email,
-                bcc : "jhlee012@kaist.ac.kr",
-                template : "rentalReturnReq",
-                subject : "[SCSpace] 대여 기한 만료 안내 및 반납 요청",
-                context : {
-                    meta : meta,
-                    rental : rentalMeta,
-                }});
+                to: user.email,
+                bcc: "jhlee012@kaist.ac.kr",
+                template: "rentalReturnReq",
+                subject: "[SCSpace] 대여 기한 만료 안내 및 반납 요청",
+                context: {
+                    meta: meta,
+                    rental: rentalMeta,
+                }
+            });
         } catch (error) {
             console.log(error)
             await this.mailService.reportError(
@@ -535,15 +533,15 @@ export class RentalService {
 
 
         return {
-            success : true,
-            id : id,
+            success: true,
+            id: id,
         };
     }
 
     //send request return mail to all overdue rentals
-    async rentalReturnRequestAll() : Promise<{
-        success : boolean,
-        id : number,
+    async rentalReturnRequestAll(): Promise<{
+        success: boolean,
+        id: number,
     }[]> {
         const rentals = await this.rentalPublicService.getOverdueRentals();
         const res = await Promise.allSettled(
