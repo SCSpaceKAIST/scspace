@@ -16,7 +16,7 @@ export default function PasspinHeader() {
                     colorPalette={"blue"}
                     onClick={() => refetch()}
                 >
-                    Show Passpins
+                    Passpins
                 </Button>
             </Dialog.Trigger>
             <Dialog.Backdrop />
