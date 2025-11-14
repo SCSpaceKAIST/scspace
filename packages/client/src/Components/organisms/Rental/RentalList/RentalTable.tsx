@@ -111,7 +111,7 @@ export default function RentalTable({
                         header={[
                             "Goods Name",
                             "Count",
-                            "Burrowed Time",
+                            "Borrowed At",
                             "Return Due"
                         ]}
                         content={rentals

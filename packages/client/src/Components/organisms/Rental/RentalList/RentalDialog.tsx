@@ -94,16 +94,16 @@ export default function RentalDialog({ open, setOpen, rental, refetchList }: {
                                 <DataList.Root
                                     orientation={isWide ? "horizontal" : "vertical"}
                                 >
-                                    <DataListItem label="Burrowed Time">
+                                    <DataListItem label="Borrowed At">
                                         {getString(rental.timeBorrow)}
                                     </DataListItem>
                                     <DataListItem label="Return Due">
                                         {getString(rental.timeDue)}
                                     </DataListItem>
-                                    <DataListItem label="Returned Time">
+                                    <DataListItem label="Returned At">
                                         {rental.timeReturn === 0 ? (<Badge>Not Returned</Badge>) : getString(rental.timeReturn)}
                                     </DataListItem>
-                                    <DataListItem label="Confirm Time">
+                                    <DataListItem label="Confirmed At">
                                         {rental.timeConfirm === 0 ? (<Badge>Not Confirmed</Badge>) : getString(rental.timeConfirm)}
                                     </DataListItem>
                                 </DataList.Root>
