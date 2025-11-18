@@ -12,7 +12,8 @@ type MailTemplate =
     | "lotteryResult"
     | 'worker'
     | 'rentalNotif'
-    | 'rentalReturnReq';
+    | 'rentalReturnReq'
+    | 'workerNeedReason';
 
 export interface IMail {
     subject: string;
