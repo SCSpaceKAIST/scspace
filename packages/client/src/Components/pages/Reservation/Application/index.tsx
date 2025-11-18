@@ -29,6 +29,8 @@ import { CalendarView } from "@scspace-client/Components/organisms/Reservation/C
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { dateUtils } from "@scspace-client/Hooks/utils";
+import InputComponent from "@scspace-client/Components/molecules/forms/Input";
+import { useMailAPI } from "@scspace-client/Hooks/mail";
 
 export default function ReservationApplication() {
   const { userInfo, needLogin } = useAuth();
@@ -58,8 +60,10 @@ export default function ReservationApplication() {
   const [food, setFood] = useState<string>("");
   const [worker, setWorker] = useState<boolean>(false);
   const [check, setCheck] = useState<boolean>(false);
+  const [workerNeedReason, setWorkerNeedReason] = useState<string>("");
 
   const createReservation = useReservationAPI().createRes;
+  const sendMail = useMailAPI().sendMail;
 
   const [e, setE] = useState<string | null>(null);
 
@@ -105,6 +109,18 @@ export default function ReservationApplication() {
         {
           onSuccess: () => {
             setCount(c => c + 1);
+            if (worker && (spaceId === 10 || spaceId === 11)) {
+              sendMail({
+                to: "scspace.kaist@gmail.com",
+                subject: `근로 요청 이유: ${userInfo.nameKr}`,
+                template: "workerNeedReason",
+                context: {
+                  meta: {
+                    description: workerNeedReason
+                  }
+                }
+              });
+            }
           },
           onError: (error) => {
             setE(error.message);
@@ -235,6 +251,21 @@ export default function ReservationApplication() {
                 value={worker}
                 setValue={setWorker}
               />
+            </GridItem>
+          )}
+          {worker && (spaceId === 10 || spaceId === 11) && (
+            <GridItem colSpan={6}>
+              <Stack>
+                <Text>
+                  Please describe the reason for needing workers. This information will help us understand your requirements better.
+                </Text>
+                <InputComponent
+                  label="Reason for Needing Workers"
+                  placeholder="Input Reason"
+                  value={workerNeedReason}
+                  onChange={setWorkerNeedReason}
+                />
+              </Stack>
             </GridItem>
           )}
         </Grid>
