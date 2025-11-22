@@ -2,13 +2,14 @@ import { Injectable, Inject, NotFoundException, BadRequestException, Logger } fr
 import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { Passpin, schema, Reservation, Space, OrganizationMember } from "@schema";
-import { and, between, count, desc, eq, or, inArray } from "drizzle-orm";
+import { and, between, count, desc, eq, or, ne } from "drizzle-orm";
 import { PasspinEnum } from '@scspace-depot/enums/passpin.enum';
 import { IPasspin, IPasspinSpace, IPasspinWithSpace } from "@scspace-depot/types/passpin";
 import { MPasspin, MPasspinSpace } from "@scspace-server/feature/passpin/passpin.model";
 import { getNow } from "@scspace-server/common/utils";
 import { PasspinUtils } from "./passpin.utils";
 import { MSpace } from "../space/space.model";
+import { IndividualOrganizationId } from "@scspace-depot/consts/organization.const";
 
 @Injectable()
 export class PasspinRepository {
@@ -36,7 +37,7 @@ export class PasspinRepository {
         const current_pin = await this.db
             .select()
             .from(Passpin)
-            .where(and(eq(Passpin.spaceId, spaceId), eq(Passpin.status, 0)))
+            .where(and(eq(Passpin.spaceId, spaceId), eq(Passpin.status, PasspinEnum.USING)))
             .then((pins) => pins[pins.length - 1]);
 
         if (!current_pin) {
@@ -48,7 +49,7 @@ export class PasspinRepository {
         const previous_pin = await this.db
             .select()
             .from(Passpin)
-            .where(and(eq(Passpin.spaceId, spaceId), eq(Passpin.status, -1)))
+            .where(and(eq(Passpin.spaceId, spaceId), eq(Passpin.status, PasspinEnum.OUTDATED)))
             .orderBy(desc(Passpin.id))
             .limit(1)
             .then((pins) => pins[0]);
@@ -78,7 +79,7 @@ export class PasspinRepository {
         const now = getNow();
 
         return await this.db
-            .select({
+            .selectDistinct({
                 passpin: Passpin,
                 space: Space,
             })
@@ -97,17 +98,26 @@ export class PasspinRepository {
                     )
                 )
             )
-            .innerJoin(
+            .leftJoin(
                 OrganizationMember,
-                eq(Reservation.organizationId, OrganizationMember.organizationId)
+                and(
+                    ne(Reservation.organizationId, IndividualOrganizationId),
+                    eq(Reservation.organizationId, OrganizationMember.organizationId),
+                )
             )
             .where(
                 and(
-                    or(
-                        eq(Reservation.userId, userId),
-                        eq(OrganizationMember.userId, userId)
-                    ),
                     eq(Passpin.status, PasspinEnum.USING),
+                    or(
+                        and(
+                            eq(Reservation.organizationId, IndividualOrganizationId),
+                            eq(Reservation.userId, userId)
+                        ),
+                        and(
+                            ne(Reservation.organizationId, IndividualOrganizationId),
+                            eq(OrganizationMember.userId, userId)
+                        )
+                    ),
                 )
             )
             .then((pins) => pins.map(pin => ({
