@@ -2,6 +2,7 @@ import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import SelectComponent, { ISelectOption } from "@scspace-client/Components/molecules/forms/Select";
 import { Dispatch, SetStateAction } from "react";
 import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
+import { IndividualOrganizationId } from "@scspace-depot/consts/organization.const";
 
 export function OrganizationForm({ id, setOrgId }: {
   id: number;
@@ -11,7 +12,7 @@ export function OrganizationForm({ id, setOrgId }: {
   const organizations: ISelectOption[] = [
     {
       label: "개인 예약",
-      value: "0",
+      value: IndividualOrganizationId.toString(),
       description: "use as individual"
     }
   ];

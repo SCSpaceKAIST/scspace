@@ -31,6 +31,7 @@ import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { dateUtils } from "@scspace-client/Hooks/utils";
 import InputComponent from "@scspace-client/Components/molecules/forms/Input";
 import { useMailAPI } from "@scspace-client/Hooks/mail";
+import { IndividualOrganizationId } from "@scspace-depot/consts/organization.const";
 
 export default function ReservationApplication() {
   const { userInfo, needLogin } = useAuth();
@@ -52,7 +53,7 @@ export default function ReservationApplication() {
   const [hourTo, setHourTo] = useState<number>(0);
 
   const [spaceId, setSpaceId] = useState<number>(1);
-  const [orgId, setOrgId] = useState<number>(1);
+  const [orgId, setOrgId] = useState<number>(IndividualOrganizationId);
   const [title, setTitle] = useState<string>("");
   const [dscrp, setDscrp] = useState<string>("");
   const [inner, setInner] = useState<number>(10);
