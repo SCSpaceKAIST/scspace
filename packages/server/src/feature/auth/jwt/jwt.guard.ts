@@ -4,6 +4,7 @@ import { IUser } from '@scspace-depot/types/user';
 import { UserUtils } from '@scspace-depot/utils/user.utils';
 import { OrganizationPublicService } from '@scspace-server/feature/organization/organization.public.service';
 import { ReservationPublicService } from '@scspace-server/feature/reservation/reservation.public.service';
+import { inspect } from 'util';
 
 @Injectable()
 export class OptionalJwtAuthGuard extends AuthGuard('jwt') {
@@ -185,6 +186,7 @@ export class MemberGuardWithReservation extends AuthGuard('jwt') {
       return true;
     }
     this.logger.log(request);
+    this.logger.debug(inspect(request, { depth: null })); // 순환 허용 [web:23][web:49]
     const id = parseInt(request.params.id);
     const reservation = await this.reservationPublicService.fetchById(id);
     if (reservation === null) {
