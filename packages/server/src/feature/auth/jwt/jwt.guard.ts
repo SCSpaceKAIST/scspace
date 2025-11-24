@@ -1,4 +1,4 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { ExecutionContext, Injectable, Logger } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { IUser } from '@scspace-depot/types/user';
 import { UserUtils } from '@scspace-depot/utils/user.utils';
@@ -167,7 +167,7 @@ export class MemberGuard extends AuthGuard('jwt') {
 
 @Injectable()
 export class MemberGuardWithReservation extends AuthGuard('jwt') {
-  private readonly logger = new Logger(JwtStrategy.name);
+  private readonly logger = new Logger("debug");
 
   constructor(
     private readonly organizationPublicService: OrganizationPublicService,
