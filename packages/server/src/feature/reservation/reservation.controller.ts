@@ -137,7 +137,7 @@ export class ReservationController {
   }
 
   // AuthGuard - user
-  @UseGuards(MemberGuard)
+  @UseGuards(MemberGuardWithReservation)
   @Put()
   async updateReservation(
     @Body() reservationInput: IReservationUpdate,
