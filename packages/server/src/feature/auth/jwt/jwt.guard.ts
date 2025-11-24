@@ -1,9 +1,10 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { ExecutionContext, Injectable, Logger } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { IUser } from '@scspace-depot/types/user';
 import { UserUtils } from '@scspace-depot/utils/user.utils';
 import { OrganizationPublicService } from '@scspace-server/feature/organization/organization.public.service';
 import { ReservationPublicService } from '@scspace-server/feature/reservation/reservation.public.service';
+import { inspect } from 'util';
 
 @Injectable()
 export class OptionalJwtAuthGuard extends AuthGuard('jwt') {
@@ -167,6 +168,8 @@ export class MemberGuard extends AuthGuard('jwt') {
 
 @Injectable()
 export class MemberGuardWithReservation extends AuthGuard('jwt') {
+  private readonly logger = new Logger("debug");
+
   constructor(
     private readonly organizationPublicService: OrganizationPublicService,
     private readonly reservationPublicService: ReservationPublicService,
@@ -182,12 +185,15 @@ export class MemberGuardWithReservation extends AuthGuard('jwt') {
     if (UserUtils.isManager(user.type)) {
       return true;
     }
-
+    this.logger.log(request);
+    this.logger.debug(inspect(request, { depth: null })); // 순환 허용 [web:23][web:49]
     const id = parseInt(request.params.id);
     const reservation = await this.reservationPublicService.fetchById(id);
     if (reservation === null) {
       return false;
     }
+    this.logger.log(`ID: ${id}`);
+    this.logger.log(`Reservation: ${reservation.id}, UserID: ${reservation.userId}, OrgID: ${reservation.organizationId}`);
     if (reservation.userId === user.id) {
       return true;
     } else if (reservation.organizationId !== 1) {
