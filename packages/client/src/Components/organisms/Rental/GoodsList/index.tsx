@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, Center, CheckboxCard, Grid, Separator, Stack, useBreakpointValue } from "@chakra-ui/react";
+import { Alert, Box, Center, CheckboxCard, Grid, Separator, Stack, useBreakpointValue } from "@chakra-ui/react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useGoodsAPI } from "@scspace-client/Hooks/rental";
 import { useState } from "react";
@@ -44,6 +44,13 @@ export default function GoodsList(props: {
         <Grid templateRows={"1fr auto"} height={"100%"}>
             <Scroll>
                 <Stack p={2}>
+                    <Alert.Root status={"error"}>
+                        <Alert.Indicator />
+                        <Alert.Content>
+                            <Alert.Title>현재 대여 신청은 일시적으로 중단되었습니다.</Alert.Title>
+                            <Alert.Description>Rental Application page is under update.</Alert.Description>
+                        </Alert.Content>
+                    </Alert.Root>
                     {goodsListData.map(item => (
                         <GoodsListItem
                             key={`${item.name}-${item.id}`}
