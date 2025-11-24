@@ -7,8 +7,6 @@ import { useAuth } from "@scspace-client/Hooks/auth";
 export default function RentalApplication() {
     const { isLogined } = useAuth();
 
-    alert("Rental Application page is under update.");
-
     return (
         <Scroll>
             <GoodsList
