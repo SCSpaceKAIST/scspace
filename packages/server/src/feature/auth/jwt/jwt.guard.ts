@@ -185,15 +185,15 @@ export class MemberGuardWithReservation extends AuthGuard('jwt') {
     if (UserUtils.isManager(user.type)) {
       return true;
     }
-    this.logger.log(request);
-    this.logger.debug(inspect(request, { depth: null })); // 순환 허용 [web:23][web:49]
-    const id = parseInt(request.params.id);
+    const id = parseInt(
+      (request.params && request.params.id) ||
+      (request.query && (request.query as any).id) ||
+      (request.body && (request.body as any).id));
+
     const reservation = await this.reservationPublicService.fetchById(id);
     if (reservation === null) {
       return false;
     }
-    this.logger.log(`ID: ${id}`);
-    this.logger.log(`Reservation: ${reservation.id}, UserID: ${reservation.userId}, OrgID: ${reservation.organizationId}`);
     if (reservation.userId === user.id) {
       return true;
     } else if (reservation.organizationId !== 1) {
