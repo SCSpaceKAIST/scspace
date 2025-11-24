@@ -184,7 +184,7 @@ export class MemberGuardWithReservation extends AuthGuard('jwt') {
     if (UserUtils.isManager(user.type)) {
       return true;
     }
-    this.logger.log(`ID: ${JSON.stringify(request)}`);
+    this.logger.log(request);
     const id = parseInt(request.params.id);
     const reservation = await this.reservationPublicService.fetchById(id);
     if (reservation === null) {
