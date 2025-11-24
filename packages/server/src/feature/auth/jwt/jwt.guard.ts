@@ -167,6 +167,8 @@ export class MemberGuard extends AuthGuard('jwt') {
 
 @Injectable()
 export class MemberGuardWithReservation extends AuthGuard('jwt') {
+  private readonly logger = new Logger(JwtStrategy.name);
+
   constructor(
     private readonly organizationPublicService: OrganizationPublicService,
     private readonly reservationPublicService: ReservationPublicService,
@@ -188,6 +190,8 @@ export class MemberGuardWithReservation extends AuthGuard('jwt') {
     if (reservation === null) {
       return false;
     }
+    this.logger.log(`ID: ${id}`);
+    this.logger.log(`Reservation: ${reservation.id}, UserID: ${reservation.userId}, OrgID: ${reservation.organizationId}`);
     if (reservation.userId === user.id) {
       return true;
     } else if (reservation.organizationId !== 1) {
