@@ -21,6 +21,7 @@ export * from './enums/rule.enum';
 export * from './enums/space.enum';
 export * from './enums/user.enum';
 export * from './enums/passpin.enum';
+export * from './enums/rental.enum'
 
 
 // Export constants
