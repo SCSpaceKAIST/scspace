@@ -3,7 +3,6 @@ import {
   mysqlTable,
   varchar,
   int,
-  bigint
 } from 'drizzle-orm/mysql-core';
 
 // users 테이블 정의
