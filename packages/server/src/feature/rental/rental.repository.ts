@@ -340,49 +340,6 @@ export class RentalRepository {
         return overdueCount === 0 && overdueCountByOrg === 0;
     }
 
-    /**
-     * @deprecated - Confirm 절차 삭제됨
-     */
-    // async checkUnconfirmedOverdueReturns(userId: number): Promise<boolean> {
-    //     const unconfirmedOverdueCount = await this.db
-    //         .select({ totalCount: count() })
-    //         .from(Rental)
-    //         .where(and(
-    //             eq(Rental.userId, userId),
-    //             gt(Rental.timeReturn, 0),   // 반납은 했음
-    //             // eq(Rental.timeConfirm, 0),  // @deprecated "timeConfirm"
-    //             lt(Rental.timeDue, Rental.timeReturn)  // 연체된 반납 (due < return)
-    //         ))
-    //         .then(res => res[0]?.totalCount || 0);
-    //
-    //     return unconfirmedOverdueCount === 0;
-    // }
-
-    /**
-     * @deprecated
-     * 현재 overdue 중에만 신규 대여 불가
-     * 향후 보증금 받으면 또 바뀔 예정
-     */
-    // async checkUserOverduePenalty(userId: number): Promise<boolean> {
-    //     const now = getNow();
-    //
-    //     // User 테이블에서 timeOverdue 확인
-    //     const userResult = await this.db
-    //         .select({ timeOverdue: User.timeOverdue })
-    //         .from(User)
-    //         .where(eq(User.id, userId))
-    //         .limit(1);
-    //
-    //     if (userResult.length === 0) {
-    //         return false; // 사용자를 찾을 수 없음
-    //     }
-    //
-    //     const user = userResult[0];
-    //
-    //     // timeOverdue가 0이거나 현재 시간이 timeOverdue를 지났으면 대여 가능
-    //     return user.timeOverdue === 0 || now > user.timeOverdue;
-    // }
-
     // Get overdue rentals
     async getOverdueRentals(): Promise<typeof Rental.$inferSelect[]> {
         const now = getNow();

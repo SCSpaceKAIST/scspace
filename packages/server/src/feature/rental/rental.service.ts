@@ -9,7 +9,6 @@ import {
     IGoodsCreate,
     IGoodsUpdate,
     IGoods,
-    IGoodsAvailabilityCheck,
     IUserRentalStatus,
     IRentalCreateClient,
 } from '@scspace-depot/types/rental';

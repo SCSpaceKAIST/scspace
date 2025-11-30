@@ -3,7 +3,6 @@ import { RentalRepository } from './rental.repository';
 import {
     IRental,
     IGoods,
-    IGoodsFilter,
     IGoodsAvailabilityCheck
 } from '@scspace-depot/types/rental';
 import { MRental, MGoods } from './rental.model';
@@ -138,22 +137,6 @@ export class RentalPublicService {
 
     async checkCurrentOverdue(userId: number, orgId : number): Promise<boolean> {
         return await this.rentalRepository.checkCurrentOverdue(userId, orgId);
-    }
-
-    /**
-     * @deprecated
-     * @param userId
-     */
-    async checkUnconfirmedOverdueReturns(userId: number): Promise<boolean> {
-        return await this.rentalRepository.checkUnconfirmedOverdueReturns(userId);
-    }
-
-    /**
-     * @deprecated
-     * @param userId
-     */
-    async checkUserOverduePenalty(userId: number): Promise<boolean> {
-        return await this.rentalRepository.checkUserOverduePenalty(userId);
     }
 
     async getOverdueRentals(): Promise<IRental[]> {
