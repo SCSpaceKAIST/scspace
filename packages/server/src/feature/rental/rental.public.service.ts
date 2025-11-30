@@ -8,11 +8,13 @@ import {
 } from '@scspace-depot/types/rental';
 import { MRental, MGoods } from './rental.model';
 import { IDataResponse } from '@scspace-depot/types/common';
+import { OrganizationPublicService } from "@scspace-server/feature/organization/organization.public.service";
 
 @Injectable()
 export class RentalPublicService {
     constructor(
         private readonly rentalRepository: RentalRepository,
+        private readonly organizationPublicService: OrganizationPublicService
     ) { }
 
     // Rental 관련 public methods
@@ -33,15 +35,19 @@ export class RentalPublicService {
             .map(rental => MRental.fromDB(rental));
     }
 
+    //Only 개인 렌탈만 fetch함
     async getRentalsByUserId(
         userId: number,
         isActive?: boolean,
         limit: number = 50,
         offset: number = 0
     ): Promise<IDataResponse<IRental[]>> {
+
+        //only individual
         const result = await this.rentalRepository.fetchRentalsByUserId(
             userId,
             isActive,
+            true,
             limit,
             offset
         );
@@ -50,6 +56,50 @@ export class RentalPublicService {
             data: result.data.map(rental => MRental.fromDB(rental)),
             count: result.count
         };
+    }
+
+    //Only Organization 렌탈만 fetch함
+    async getRentalsByOrganizationId(
+        organizationId: number,
+        isActive?: boolean,
+        limit: number = 50,
+        offset: number = 0
+    ): Promise<IDataResponse<IRental[]>> {
+        const result = await this.rentalRepository.fetchRentalsByOrganizationId(
+            organizationId,
+            isActive,
+            limit,
+            offset
+        )
+
+        return {
+            data : result.data.map(rental => MRental.fromDB(rental)),
+            count : result.count
+        }
+    }
+
+    //fetch 개인 렌탈 + 개인이 속한 모든 조직의 Rental
+    async getRentalsFull(
+        userId: number,
+        isActive?: boolean,
+        limit: number = 50,
+        offset: number = 0
+    ): Promise<IDataResponse<IRental[]>> {
+        const orgs = await this.organizationPublicService.fetchByUserId(userId);
+        const orgIds = orgs.map(org => org.id);
+
+        const result = await this.rentalRepository.fetchRentalsFull(
+            userId,
+            orgIds,
+            isActive,
+            limit,
+            offset
+        )
+
+        return {
+            data : result.data.map(rental => MRental.fromDB(rental)),
+            count : result.count
+        }
     }
 
     // Goods 관련 public methods
@@ -82,14 +132,26 @@ export class RentalPublicService {
         return await this.rentalRepository.checkRentalLimit(userId);
     }
 
-    async checkCurrentOverdue(userId: number): Promise<boolean> {
-        return await this.rentalRepository.checkCurrentOverdue(userId);
+    async checkRentalLimitOrganization(orgId : number) : Promise<boolean> {
+        return await this.rentalRepository.checkRentalLimitByOrganization(orgId);
     }
 
+    async checkCurrentOverdue(userId: number, orgId : number): Promise<boolean> {
+        return await this.rentalRepository.checkCurrentOverdue(userId, orgId);
+    }
+
+    /**
+     * @deprecated
+     * @param userId
+     */
     async checkUnconfirmedOverdueReturns(userId: number): Promise<boolean> {
         return await this.rentalRepository.checkUnconfirmedOverdueReturns(userId);
     }
 
+    /**
+     * @deprecated
+     * @param userId
+     */
     async checkUserOverduePenalty(userId: number): Promise<boolean> {
         return await this.rentalRepository.checkUserOverduePenalty(userId);
     }

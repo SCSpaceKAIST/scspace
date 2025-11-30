@@ -10,6 +10,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { FileModule } from '@scspace-server/tools/file/file.module';
 import { PdfModule } from "@scspace-server/tools/pdf/pdf.module";
 import { MailModule } from "@scspace-server/tools/mailer/mail.module";
+import { OrganizationModule } from "@scspace-server/feature/organization/organization.module";
 
 @Module({
     imports: [
@@ -21,7 +22,8 @@ import { MailModule } from "@scspace-server/tools/mailer/mail.module";
         }),
         FileModule,
         PdfModule,
-        MailModule
+        MailModule,
+        OrganizationModule
     ],
     controllers: [RentalController],
     providers: [
