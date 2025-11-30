@@ -9,19 +9,17 @@ import {
     schema,
     Rental,
     Goods,
-    User,
 } from '@schema';
 import {
     eq,
     and,
     SQL,
-    gt,
     lt,
     desc,
     or,
     count,
     ne,
-    asc, inArray, sql,
+    asc, inArray,
 } from "drizzle-orm";
 import {
     IRentalCreate,
@@ -149,11 +147,11 @@ export class RentalRepository {
         const filteredOrgIds = orgIds.filter(id => id !== 1);
 
         // organization 조건
-        // filteredOrgIds가 빈 배열이면 inArray 생성 불가능 -> 항상 FALSE 조건 사용
+        // filteredOrgIds가 빈 배열이면 inArray 생성 불가능 -> 알아서 스킵하도록 undefined
         const orgCondition =
             filteredOrgIds.length > 0
                 ? inArray(Rental.organizationId, filteredOrgIds)
-                : sql`0`; // 항상 FALSE
+                : undefined;
 
         // where 조건 구성
         const whereClause: SQL[] = [
@@ -344,48 +342,46 @@ export class RentalRepository {
 
     /**
      * @deprecated - Confirm 절차 삭제됨
-     * @param userId
      */
-    async checkUnconfirmedOverdueReturns(userId: number): Promise<boolean> {
-        const unconfirmedOverdueCount = await this.db
-            .select({ totalCount: count() })
-            .from(Rental)
-            .where(and(
-                eq(Rental.userId, userId),
-                gt(Rental.timeReturn, 0),   // 반납은 했음
-                // eq(Rental.timeConfirm, 0),  // @deprecated "timeConfirm"
-                lt(Rental.timeDue, Rental.timeReturn)  // 연체된 반납 (due < return)
-            ))
-            .then(res => res[0]?.totalCount || 0);
-
-        return unconfirmedOverdueCount === 0;
-    }
+    // async checkUnconfirmedOverdueReturns(userId: number): Promise<boolean> {
+    //     const unconfirmedOverdueCount = await this.db
+    //         .select({ totalCount: count() })
+    //         .from(Rental)
+    //         .where(and(
+    //             eq(Rental.userId, userId),
+    //             gt(Rental.timeReturn, 0),   // 반납은 했음
+    //             // eq(Rental.timeConfirm, 0),  // @deprecated "timeConfirm"
+    //             lt(Rental.timeDue, Rental.timeReturn)  // 연체된 반납 (due < return)
+    //         ))
+    //         .then(res => res[0]?.totalCount || 0);
+    //
+    //     return unconfirmedOverdueCount === 0;
+    // }
 
     /**
      * @deprecated
-     * @param userId
      * 현재 overdue 중에만 신규 대여 불가
      * 향후 보증금 받으면 또 바뀔 예정
      */
-    async checkUserOverduePenalty(userId: number): Promise<boolean> {
-        const now = getNow();
-
-        // User 테이블에서 timeOverdue 확인
-        const userResult = await this.db
-            .select({ timeOverdue: User.timeOverdue })
-            .from(User)
-            .where(eq(User.id, userId))
-            .limit(1);
-
-        if (userResult.length === 0) {
-            return false; // 사용자를 찾을 수 없음
-        }
-
-        const user = userResult[0];
-
-        // timeOverdue가 0이거나 현재 시간이 timeOverdue를 지났으면 대여 가능
-        return user.timeOverdue === 0 || now > user.timeOverdue;
-    }
+    // async checkUserOverduePenalty(userId: number): Promise<boolean> {
+    //     const now = getNow();
+    //
+    //     // User 테이블에서 timeOverdue 확인
+    //     const userResult = await this.db
+    //         .select({ timeOverdue: User.timeOverdue })
+    //         .from(User)
+    //         .where(eq(User.id, userId))
+    //         .limit(1);
+    //
+    //     if (userResult.length === 0) {
+    //         return false; // 사용자를 찾을 수 없음
+    //     }
+    //
+    //     const user = userResult[0];
+    //
+    //     // timeOverdue가 0이거나 현재 시간이 timeOverdue를 지났으면 대여 가능
+    //     return user.timeOverdue === 0 || now > user.timeOverdue;
+    // }
 
     // Get overdue rentals
     async getOverdueRentals(): Promise<typeof Rental.$inferSelect[]> {
