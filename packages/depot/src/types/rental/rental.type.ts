@@ -1,51 +1,60 @@
 import { IUser } from "../user";
 import { IGoods } from "./goods.type";
+import { IOrganization } from "../organization";
 
 // Table: rental
 export interface IRental {
     id: number;
     userId: number;
+    organizationId : number; //new
+    rentalWorkerId : number; //new
+    returnWorkerId : number; //new
     goodsId: number;
     count: number;
     timeBorrow: number;
     timeDue: number;
     timeReturn: number;
-    timeConfirm: number;
     certName: string;
+    status : number; //new
+    //timeConfirmed << deleted
 }
 
 export type IRentalAll = IRental & {
     user: IUser;
+    organization : IOrganization;
     goods: IGoods;
 };
 
+//rentalWorkerId => req.user.id, userId should be designated
 export type IRentalCreate = Pick<
     IRental,
-    "userId" | "goodsId" | "count" | "timeBorrow" | "timeDue"
+    "userId" | "organizationId" | "rentalWorkerId" | "goodsId" | "count" | "timeBorrow" | "timeDue"
 >;
 
+//the rentalWorkerId => req.user.id, then we should throw a userId / organizationId (indiv => 1)
 export type IRentalCreateClient = Pick<
     IRentalCreate,
-    "count" | "goodsId"
+    "userId" | "organizationId" | "goodsId" | "count"
 >;
 
 export type IRentalUpdate = Partial<Pick<
     IRental,
-    "timeReturn" | "timeConfirm"
+    "timeReturn" | "returnWorkerId" | "status"
 >> & {
     id: number;
 };
 
-// 대여 가능 여부 체크
+// 대여 가능 여부 체크 - i dont know
 export type IGoodsAvailabilityCheck = {
     goodsId: number;
     count: number;
-    timeBorrow: number;
-    timeDue: number;
 };
 
+
+//**수정 필요**
 // 사용자 대여 현황 조회
 export type IUserRentalStatus = {
     userId: number;
+    onlyIndividual : boolean;
     isActive?: boolean; // true면 현재 대여중인 것만, false면 모든 대여 기록
 };
