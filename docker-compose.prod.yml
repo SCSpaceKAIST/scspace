@@ -1,25 +1,28 @@
 # version: "3.8"
 services:
   nginx:
-    image: nginx
-    container_name: scspace-nginx-container
+    image: nginx:alpine
+    container_name: scspace-nginx
     restart: always
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ./nginx.prod.conf:/etc/nginx/nginx.conf:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ${CERTBOT_PATH}/conf:/etc/letsencrypt:ro
+      - ${CERTBOT_PATH}/certbot/www:/var/www/certbot:ro
     environment:
       - BASIC_URL=${BASIC_URL}
     extra_hosts:
-      - "host.docker.internal:host-gateway" # Linux에서 Docker 호스트 IP를 매핑
+      - "host.docker.internal:host-gateway"
+    command: >-
+      /bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'
     networks:
       - scspace_network
 
   mysql:
-    image: mysql:latest
-    container_name: scspace-mysql-container
+    image: mysql:8.0
+    container_name: scspace-mysql
     restart: always
     env_file:
       - .env
@@ -28,15 +31,34 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PWD}
-      TZ: Asia/Seoul # 시간대 설정
+      TZ: Asia/Seoul
     ports:
-      - "${DB_PORT}:3306" # .env 파일과 같은지 체크하기
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci # UTF-8 인코딩 설정
+      - "${DB_PORT}:3306" 
+    command: >-
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
     volumes:
       - mysql-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./my.cnf:/etc/mysql/conf.d/override.cnf:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - scspace_network
+
+  certbot:
+    image: certbot/certbot
+    container_name: scspace-certbot
+    restart: always
+    volumes:
+      - ${CERTBOT_PATH}/conf:/etc/letsencrypt
+      - ${CERTBOT_PATH}/www:/var/www/certbot
+    entrypoint: >-
+      /bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'
+
 
 networks:
   scspace_network:
