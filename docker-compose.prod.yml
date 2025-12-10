@@ -10,7 +10,7 @@ services:
     volumes:
       - ./nginx.prod.conf:/etc/nginx/nginx.conf:ro
       - ${CERTBOT_PATH}/conf:/etc/letsencrypt:ro
-      - ${CERTBOT_PATH}/certbot/www:/var/www/certbot:ro
+      - ${CERTBOT_PATH}/www:/var/www/certbot:ro
     environment:
       - BASIC_URL=${BASIC_URL}
     extra_hosts:
