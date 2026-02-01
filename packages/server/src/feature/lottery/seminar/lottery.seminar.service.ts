@@ -264,8 +264,8 @@ export class LotterySeminarService {
         if (pastLotteries.find(lottery => lottery.time === params.lottery.time)) {
             throw new BadRequestException("A seminar lottery with the same time already exists.");
         }
-        if (pastLotteries.length >= 6) {
-            throw new BadRequestException("Maximum number of seminar lotteries is 6. Cannot create more.");
+        if (pastLotteries.length >= 2) {
+            throw new BadRequestException("Maximum number of seminar lotteries is 2. Cannot create more.");
         }
         // Implementation for inserting a new seminar lottery
         return await this.lotterySeminarRepository.insert(params.lottery);
