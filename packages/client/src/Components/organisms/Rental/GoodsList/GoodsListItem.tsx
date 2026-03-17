@@ -1,73 +1,35 @@
 "use client"
 
 import { Box, Button, CheckboxCard, CloseButton, Collapsible, Dialog, Flex, Grid, Separator, Stack } from "@chakra-ui/react";
-import { IGoods, IRentalCreateClient } from "@scspace-depot/types/rental";
+import { IGoods } from "@scspace-depot/types/rental";
 import Image from "next/image";
 import { useState } from "react";
-import Counter from "./Counter";
-import { useRentalAPI } from "@scspace-client/Hooks/rental";
+import { useAuth } from "@scspace-client/Hooks/auth";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
-import ConfirmBtn from "./ConfirmBtn";
+import RentalCreateDialog from "./RentalCreateDialog";
 
 const localhostBaseURL = "http://localhost:3001";
 
 export default function GoodsListItem({
     item,
     isSelected,
-    onSelect,
+    onSelectAction,
     disabled,
     manage,
     isWide,
-    refetch,
+    refetchAction,
     countAvailable
 }: {
     item: IGoods;
     isSelected: boolean;
-    onSelect: (id: number) => void;
+    onSelectAction: (id: number) => void;
     disabled: boolean;
     manage: boolean;
     isWide: boolean;
-    refetch: () => void;
+    refetchAction: () => void;
     countAvailable: number;
 }) {
-    const [count, setCount] = useState<number>(1);
-    const [errorMessage, setErrorMessage] = useState<string>('');
-
-    const { createRental } = useRentalAPI();
-
-    const handleCreate = () => {
-        const data: IRentalCreateClient = {
-            goodsId: item.id,
-            count: count
-        };
-
-        toaster.promise(
-            createRental(data, {
-                onError: (error) => {
-                    setErrorMessage(error.message || 'Failed to create rental');
-                    console.error('Failed to create rental:', error);
-                },
-                onSuccess: () => {
-                    onSelect(item.id);
-                    refetch();
-                }
-            }),
-            {
-                loading: {
-                    title: "Creating rental...",
-                    description: "Please wait",
-                },
-                success: {
-                    title: "Rental created successfully!",
-                    description: "The rental has been created",
-                },
-                error: {
-                    title: "Failed to create rental",
-                    description: errorMessage || "Please try again"
-                }
-            }
-        );
-    }
+    const { userInfo } = useAuth();
 
     const [imgOpen, setImgOpen] = useState(false);
 
@@ -108,8 +70,8 @@ export default function GoodsListItem({
                 }}
                 key={item.id}
                 checked={isSelected}
-                onCheckedChange={(v) => {
-                    onSelect(item.id);
+                onCheckedChange={() => {
+                    onSelectAction(item.id);
                 }}
             >
                 {!disabled && <CheckboxCard.HiddenInput />}
@@ -160,16 +122,25 @@ export default function GoodsListItem({
                         <Collapsible.Content>
                             <Separator />
                             <Flex justify={"flex-end"} p={2} gap={4}>
-                                <Counter
-                                    count={count}
-                                    setCount={setCount}
-                                    max={countAvailable}
-                                />
-                                <ConfirmBtn
-                                    handleConfirm={handleCreate}
-                                    count={count}
-                                    goodsName={item.name}
-                                />
+                                {userInfo?.id ? (
+                                    <RentalCreateDialog
+                                        item={item}
+                                        refetchAction={refetchAction}
+                                        countAvailable={countAvailable}
+                                    />
+                                ) : (
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => {
+                                            toaster.error({
+                                                title: "로그인이 필요합니다",
+                                                description: "대여 신청을 하려면 먼저 로그인해주세요"
+                                            });
+                                        }}
+                                    >
+                                        대여 신청
+                                    </Button>
+                                )}
                             </Flex>
                         </Collapsible.Content>
                     </Collapsible.Root>

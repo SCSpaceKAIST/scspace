@@ -48,7 +48,7 @@ export function useRentalAPI(params?: {
     );
 
     // POST/PUT/DELETE 메서드들
-    const createRental = useMutationApi<{ success: boolean; data: { id: number } }, Omit<IRentalCreateClient, 'userId'>>(
+    const createRental = useMutationApi<{ success: boolean; data: { id: number } }, IRentalCreateClient>(
         "/rental",
         "POST"
     ).mutateAsync;
@@ -63,6 +63,11 @@ export function useRentalAPI(params?: {
         "PUT"
     ).mutateAsync;
 
+    const updateRental = useMutationApi<ISuccessResponse, Omit<IRentalUpdate, 'id'>>(
+        `/rental/${id || ''}`,
+        "PUT"
+    ).mutateAsync;
+
     return {
         // GET 데이터와 상태들
         allRentals,
@@ -72,6 +77,7 @@ export function useRentalAPI(params?: {
 
         // CUD 메서드들
         createRental,
+        updateRental,
         returnRental,
         confirmReturn,
     };

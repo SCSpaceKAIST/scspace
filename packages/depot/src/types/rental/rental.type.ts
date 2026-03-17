@@ -39,7 +39,7 @@ export type IRentalCreateClient = Pick<
 
 export type IRentalUpdate = Partial<Pick<
     IRental,
-    "timeReturn" | "returnWorkerId" | "status"
+    "goodsId" | "count" | "timeDue" | "timeReturn" | "returnWorkerId" | "status"
 >> & {
     id: number;
 };

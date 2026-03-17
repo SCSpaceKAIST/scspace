@@ -325,6 +325,41 @@ export class RentalService {
             throw new NotFoundException('Rental not found');
         }
 
+        const nextGoodsId = updates.goodsId ?? existingRental.goodsId;
+        const nextCount = updates.count ?? existingRental.count;
+
+        if (nextCount <= 0) {
+            throw new BadRequestException('Rental count must be greater than 0');
+        }
+
+        if (nextGoodsId !== existingRental.goodsId || nextCount !== existingRental.count) {
+            const existingGoods = await this.rentalPublicService.getGoodsById(existingRental.goodsId);
+            const nextGoods = await this.rentalPublicService.getGoodsById(nextGoodsId);
+
+            if (!existingGoods || !nextGoods) {
+                throw new NotFoundException('Goods not found');
+            }
+
+            if (existingRental.timeReturn === 0 && existingRental.status === RentalStatusEnum.RENTED) {
+                if (nextGoodsId === existingRental.goodsId) {
+                    const adjustedCountNow = existingGoods.countNow + existingRental.count - nextCount;
+                    if (adjustedCountNow < 0) {
+                        throw new BadRequestException('Insufficient stock');
+                    }
+
+                    await this.rentalRepository.updateGoodsStock(existingRental.goodsId, adjustedCountNow);
+                } else {
+                    await this.rentalRepository.updateGoodsStock(existingRental.goodsId, existingGoods.countNow + existingRental.count);
+
+                    if (nextGoods.countNow < nextCount) {
+                        throw new BadRequestException('Insufficient stock');
+                    }
+
+                    await this.rentalRepository.updateGoodsStock(nextGoodsId, nextGoods.countNow - nextCount);
+                }
+            }
+        }
+
         await this.rentalRepository.updateRental(id, updates);
 
         return { success: true };

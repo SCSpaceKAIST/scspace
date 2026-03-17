@@ -17,7 +17,7 @@ export default function RentalHistoryManager() {
             {rentals ? (
                 <RentalTable
                     rentals={rentals.data ?? []}
-                    refetch={refetch}
+                    refetchAction={refetch}
                     showTabs
                 />
             ) : (

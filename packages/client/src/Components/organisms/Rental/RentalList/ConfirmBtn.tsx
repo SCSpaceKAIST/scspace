@@ -1,70 +1,154 @@
 "use client"
 
-import { Button, Text } from "@chakra-ui/react";
-import AlertBtn from "@scspace-client/Components/atoms/AlertBtn";
+import { Button, Checkbox, Dialog, Portal, Stack, Text } from "@chakra-ui/react";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useRentalAPI } from "@scspace-client/Hooks/rental";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-export default function ConfirmBtn({ disabled, id, refetch }: {
+const checklistItems = [
+    { key: "condition", label: "물품 상태를 확인했습니다." },
+    { key: "clean", label: "물품이 깨끗하게 반납되었습니다." },
+    { key: "complete", label: "구성품이 모두 반납되었습니다." },
+    { key: "count", label: "수량이 신청 내역과 일치합니다." },
+] as const;
+
+type ChecklistKey = (typeof checklistItems)[number]["key"];
+
+export default function ConfirmBtn({ disabled, id, refetchAction }: {
     disabled: boolean;
     id: number;
-    refetch: () => void;
+    refetchAction: () => void;
 }) {
     const confirmReturn = useRentalAPI({ id }).confirmReturn;
-    const [e, setE] = useState<string>('');
+    const [errorMessage, setErrorMessage] = useState("");
+    const [open, setOpen] = useState(false);
+    const [checkedState, setCheckedState] = useState<Record<ChecklistKey, boolean>>({
+        condition: false,
+        clean: false,
+        complete: false,
+        count: false,
+    });
 
-    const handleReturn = () => {
+    const allChecked = useMemo(
+        () => Object.values(checkedState).every(Boolean),
+        [checkedState]
+    );
+
+    const resetState = () => {
+        setCheckedState({
+            condition: false,
+            clean: false,
+            complete: false,
+            count: false,
+        });
+        setErrorMessage("");
+    };
+
+    const handleConfirm = () => {
+        if (!allChecked) {
+            toaster.error({
+                title: "체크리스트를 모두 확인해주세요",
+                description: "모든 반납 점검 항목을 체크해야 반납 확인이 가능합니다.",
+            });
+            return;
+        }
+
         toaster.promise(
             confirmReturn({}, {
                 onError: (error) => {
-                    setE(error.message);
+                    setErrorMessage(error.message);
                 },
                 onSuccess: () => {
-                    refetch();
-                }
+                    refetchAction();
+                    resetState();
+                    setOpen(false);
+                },
             }),
             {
                 loading: {
-                    title: "Processing confirm...",
-                    description: "Please wait",
+                    title: "반납 확인 중...",
+                    description: "잠시만 기다려주세요",
                 },
                 success: {
-                    title: "Confirm successful",
-                    description: "The rental has been confirmed successfully.",
+                    title: "반납 확인 완료",
+                    description: "체크리스트 확인 후 반납이 정상 처리되었습니다.",
                 },
                 error: {
-                    title: "Confirm failed",
-                    description: e || "Please try again",
+                    title: "반납 확인 실패",
+                    description: errorMessage || "다시 시도해주세요",
                 },
             }
-        )
-    }
+        );
+    };
 
     return (
-        <AlertBtn
-            onClick={handleReturn}
-            colorPalette="blue"
-            buttonText="Return"
-            dialogTitle="반납 확인하시겠습니까?"
-            dialogBody={
-                <>
-                    <Text>
-                        실제 물품 반납을 확인한 뒤에 버튼을 누르시길 바랍니다.
-                    </Text>
-                    <Text fontWeight={"semibold"} color={"red"}>
-                        이 작업은 되돌릴 수 없습니다.
-                    </Text>
-                </>
-            }
+        <Dialog.Root
+            open={open}
+            onOpenChange={(event) => {
+                setOpen(event.open);
+                if (!event.open) resetState();
+            }}
+            placement="center"
         >
-            <Button
-                colorPalette={"green"}
-                variant={"outline"}
-                disabled={disabled}
-            >
-                {disabled ? "Already Confirmed" : "Confirm Return"}
-            </Button>
-        </AlertBtn>
+            <Dialog.Trigger asChild>
+                <Button
+                    colorPalette="green"
+                    variant="outline"
+                    disabled={disabled}
+                >
+                    {disabled ? "Already Confirmed" : "Confirm Return"}
+                </Button>
+            </Dialog.Trigger>
+            <Portal>
+                <Dialog.Backdrop zIndex={1500} />
+                <Dialog.Positioner zIndex={1600}>
+                    <Dialog.Content>
+                        <Dialog.Header>
+                            <Dialog.Title>반납 체크리스트 확인</Dialog.Title>
+                        </Dialog.Header>
+                        <Dialog.Body>
+                            <Stack gap={4}>
+                                <Text>
+                                    실제 물품을 확인한 뒤 모든 항목을 체크하고 반납을 확정해주세요.
+                                </Text>
+                                <Stack gap={3}>
+                                    {checklistItems.map((item) => (
+                                        <Checkbox.Root
+                                            key={item.key}
+                                            checked={checkedState[item.key]}
+                                            onCheckedChange={(event) => {
+                                                setCheckedState((current) => ({
+                                                    ...current,
+                                                    [item.key]: event.checked === true,
+                                                }));
+                                            }}
+                                        >
+                                            <Checkbox.HiddenInput />
+                                            <Checkbox.Control />
+                                            <Checkbox.Label>{item.label}</Checkbox.Label>
+                                        </Checkbox.Root>
+                                    ))}
+                                </Stack>
+                            </Stack>
+                        </Dialog.Body>
+                        <Dialog.Footer>
+                            <Dialog.ActionTrigger asChild>
+                                <Button variant="outline" rounded="sm">
+                                    취소
+                                </Button>
+                            </Dialog.ActionTrigger>
+                            <Button
+                                colorPalette="green"
+                                rounded="sm"
+                                onClick={handleConfirm}
+                                disabled={!allChecked}
+                            >
+                                반납 확인
+                            </Button>
+                        </Dialog.Footer>
+                    </Dialog.Content>
+                </Dialog.Positioner>
+            </Portal>
+        </Dialog.Root>
     );
 }

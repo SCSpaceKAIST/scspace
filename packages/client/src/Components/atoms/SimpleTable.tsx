@@ -6,6 +6,7 @@ import { ReactNode } from "react";
 export interface TableContent {
     id: number;
     row: [ReactNode, ReactNode, ReactNode, ReactNode];
+    rowBg?: string;
 }
 
 interface SimpleTableProps {
@@ -66,6 +67,7 @@ export default function SimpleTable({ onIdChange, header, content }: SimpleTable
                             key={c.id}
                             onClick={onIdChange && (() => onIdChange(c.id))}
                             cursor="pointer"
+                            bg={c.rowBg}
                         >
                             <Table.Cell truncate>
                                 {c.row[0]}

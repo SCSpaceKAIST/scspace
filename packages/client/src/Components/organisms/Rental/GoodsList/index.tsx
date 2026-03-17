@@ -1,6 +1,6 @@
 "use client"
 
-import { Alert, Box, Center, CheckboxCard, Grid, Separator, Stack, useBreakpointValue } from "@chakra-ui/react";
+import { Alert, Grid, Stack, useBreakpointValue } from "@chakra-ui/react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useGoodsAPI } from "@scspace-client/Hooks/rental";
 import { useState } from "react";
@@ -56,11 +56,11 @@ export default function GoodsList(props: {
                             key={`${item.name}-${item.id}`}
                             item={item}
                             isSelected={selected === item.id}
-                            onSelect={id => setSelected((s) => s === id ? null : id)}
+                            onSelectAction={id => setSelected((s) => s === id ? null : id)}
                             disabled={disabled}
                             manage={manage}
                             isWide={isWide ?? false}
-                            refetch={goodsListRefetch}
+                            refetchAction={goodsListRefetch}
                             countAvailable={item.countNow}
                         />
                     ))}

@@ -157,6 +157,15 @@ export class RentalController {
         return await this.rentalService.returnRental(id, worker.id);
     }
 
+    @Put(':id')
+    @UseGuards(ManagerGuard)
+    async updateRental(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() updates: Omit<IRentalUpdate, 'id'>
+    ): Promise<ISuccessResponse> {
+        return await this.rentalService.updateRental(id, { ...updates, id });
+    }
+
     // 대여 삭제
     @Delete(':id')
     @UseGuards(AdminGuard)

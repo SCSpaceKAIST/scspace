@@ -1,9 +1,11 @@
 "use client"
 
 import {
+    Badge,
     Flex,
     Text,
     Grid,
+    Stack,
     useBreakpointValue,
     Tabs
 } from "@chakra-ui/react";
@@ -15,19 +17,52 @@ import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import { IRentalAll } from "@scspace-depot/types/rental";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
 import RentalDialog from "./RentalDialog";
+import { RentalStatusEnum } from "@scspace-depot/enums/rental.enum";
+import { useUserInfo } from "@scspace-client/Hooks/user";
+
+function RentalStatusBadge({ rental, now }: { rental: IRentalAll; now: number; }) {
+    if (rental.status === RentalStatusEnum.RETURNED) {
+        return <Badge colorPalette="green">반납 완료</Badge>;
+    }
+    if (rental.timeReturn !== 0) {
+        return <Badge colorPalette="yellow">반납 요청</Badge>;
+    }
+    if (rental.timeDue < now) {
+        return <Badge colorPalette="red">연체</Badge>;
+    }
+    return <Badge colorPalette="blue">대여 중</Badge>;
+}
+
+function ApproverSummary({ rental }: { rental: IRentalAll; }) {
+    const { userInfo: rentalWorker } = useUserInfo({ uid: rental.rentalWorkerId });
+    const { userInfo: returnWorker } = useUserInfo({ uid: rental.returnWorkerId || 0 });
+
+    return (
+        <Stack gap={0}>
+            <Text>{rentalWorker ? rentalWorker.nameKr : `#${rental.rentalWorkerId}`}</Text>
+            <Text fontSize="xs" color="fg.muted">
+                {rental.returnWorkerId === 0
+                    ? "반납 승인자 미정"
+                    : `반납 승인: ${returnWorker ? returnWorker.nameKr : `#${rental.returnWorkerId}`}`}
+            </Text>
+        </Stack>
+    );
+}
 
 export default function RentalTable({
     disabled,
     rentals,
-    refetch,
+    refetchAction,
     helperText,
-    showTabs
+    showTabs,
+    mode = "default",
 }: {
     helperText?: string;
     disabled?: boolean;
     rentals: IRentalAll[];
-    refetch: () => void;
+    refetchAction: () => void;
     showTabs?: boolean;
+    mode?: "default" | "user";
 }) {
     const [selected, setSelected] = useState<number | null>(null);
 
@@ -98,7 +133,7 @@ export default function RentalTable({
                             )}
                         </Text>
                     ))}
-                    <RefetchBtn refetch={refetch} />
+                    <RefetchBtn refetch={refetchAction} />
                 </Flex>
                 <Scroll>
                     <SimpleTable
@@ -109,10 +144,10 @@ export default function RentalTable({
                             }
                         ) : (undefined)}
                         header={[
-                            "Goods Name",
-                            "Count",
+                            mode === "user" ? "Goods / Organization" : "Goods Name",
+                            mode === "user" ? "Status" : "Count",
                             "Borrowed At",
-                            "Return Due"
+                            mode === "user" ? "Approver" : "Return Due"
                         ]}
                         content={rentals
                             .filter(rental => {
@@ -120,22 +155,34 @@ export default function RentalTable({
                                     case RENTAL_STATE.ALL:
                                         return true;
                                     case RENTAL_STATE.CONFIRMED:
-                                        return rental.timeConfirm !== 0;
+                                        return rental.status === RentalStatusEnum.RETURNED;
                                     case RENTAL_STATE.RETURNED:
-                                        return (rental.timeReturn !== 0) && (rental.timeConfirm === 0);
+                                        return rental.timeReturn !== 0 && rental.status !== RentalStatusEnum.RETURNED;
                                     case RENTAL_STATE.OVERDUE:
-                                        return (rental.timeDue < now) && (rental.timeReturn === 0);
+                                        return rental.timeDue < now && rental.timeReturn === 0 && rental.status === RentalStatusEnum.RENTED;
                                     default:
-                                        return rental.timeReturn === 0;
+                                        return rental.timeReturn === 0 && rental.status === RentalStatusEnum.RENTED;
                                 }
                             })
                             .map((rental: IRentalAll) => ({
                                 id: rental.id,
+                                rowBg: (rental.timeDue < now && rental.timeReturn === 0 && rental.status === RentalStatusEnum.RENTED)
+                                    ? "orange.50"
+                                    : undefined,
                                 row: [
-                                    rental.goods.name,
-                                    rental.count,
+                                    mode === "user" ? (
+                                        <Stack gap={0}>
+                                            <Text>{rental.goods.name}</Text>
+                                            <Text fontSize="xs" color="fg.muted">{rental.organization.name}</Text>
+                                        </Stack>
+                                    ) : rental.goods.name,
+                                    mode === "user" ? (
+                                        <RentalStatusBadge rental={rental} now={now} />
+                                    ) : rental.count,
                                     getString(rental.timeBorrow),
-                                    getString(rental.timeDue)
+                                    mode === "user" ? (
+                                        <ApproverSummary rental={rental} />
+                                    ) : getString(rental.timeDue)
                                 ]
                             }))
                         }
@@ -144,9 +191,9 @@ export default function RentalTable({
             </Grid>
             <RentalDialog
                 open={open}
-                setOpen={setOpen}
+                setOpenAction={setOpen}
                 rental={rentals.find(rental => rental.id === selected) ?? null}
-                refetchList={refetch}
+                refetchListAction={refetchAction}
             />
         </>
     );
