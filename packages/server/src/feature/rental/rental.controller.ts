@@ -39,43 +39,38 @@ export class RentalController {
         private readonly rentalService: RentalService
     ) { }
 
-    // Rental 관련 엔드포인트들
+    // ******************************
+    // **** Rental 관련 Endpoints ****
+    // ******************************
+
+
+    /**
+     * 1. POST | 대여 생성 (ManagerGuard)
+     * 2. GET | 생성된 모든 대여 조회 (ManagerGuard)
+     * 3. GET/:id | 특정 대여 조회
+     * 4. GET/user/:userId | 특정 사용자 대여 조회
+     * 5. GET/organization/:organizationId | 특정 조직 대여 조회
+     * 6. GET/my/list | 내 대여 (+ 내 모든 조직의 대여) 조회
+     * 7. GET/overdue/list | 기한 경과한 대여 조회 (기존과 동일)
+     * 8. PUT/:id/return | 대여 반납
+     * 9. DELETE/:id | 대여 삭제
+     */
+
+    // NOTE : 4, 6의 경우 OnlyIndividual (Optional): 0 또는 1로 받음. 기본은 FALSE로, 개인이 속한 조직 렌탈까지 다 보임. 만약 1을 넣어서 검색한다면, 개인 렌탈만 보임 - 체크박스 형태로 하는걸 염두함
 
     // 대여 생성
     @Post()
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(ManagerGuard)
     async createRental(
         @Body() rentalData: IRentalCreateClient,
         @Req() req: Request
     ): Promise<{ success: boolean; data: { id: number } }> {
-        const user = req.user as IUser;
+        const worker = req.user as IUser;
         return await this.rentalService.createRental({
             ...rentalData,
-            userId: user.id,
+            rentalWorkerId : worker.id
         });
     }
-
-    //반납 요청 : 특정 렌탈
-    // @Post('returnreq')
-    // @UseGuards(ManagerGuard)
-    // async returnRequest(
-    //     @Body('rentalId') rentalId: number,
-    // ): Promise<{
-    //     success: boolean,
-    //     id: number,
-    // }> {
-    //     return await this.rentalService.rentalReturnRequest(rentalId);
-    // }
-
-    //반납 요청 : 모든 overdue 렌탈
-    // @Post('returnreq/all')
-    // @UseGuards(AdminGuard)
-    // async returnRequestAll(): Promise<{
-    //     success: boolean,
-    //     id: number,
-    // }[]> {
-    //     return await this.rentalService.rentalReturnRequestAll()
-    // }
 
     // 모든 대여 목록 조회 (관리자용)
     @Get()
@@ -99,82 +94,81 @@ export class RentalController {
 
     // 사용자별 대여 목록 조회
     @Get('user/:userId')
-    // @UseGuards(UserGuard)
     @UseGuards(AuthGuard('jwt'))
     async getUserRentals(
         @Param('userId', ParseIntPipe) userId: number,
+        @Query('onlyIndividual') onlyIndividual?: number,
         @Query('isActive') isActive?: string
     ): Promise<IRentalAll[]> {
         const params: IUserRentalStatus = {
             userId,
+            onlyIndividual : onlyIndividual ? onlyIndividual === 1 : false,
             isActive: isActive ? isActive === 'true' : undefined,
         };
         return await this.rentalService.getUserRentals(params);
     }
 
+    // 조직별 대여 목록 조회
+    @Get('organization/:organizationId')
+    @UseGuards(AuthGuard('jwt'))
+    async getOrgRentals(
+        @Param('organizationId', ParseIntPipe) organizationId: number,
+        @Query('isActive') isActive?: string
+    ): Promise<IRentalAll[]> {
+        const params = {
+            organizationId,
+            isActive: isActive ? isActive === 'true' : undefined,
+        }
+        return await this.rentalService.getOrganizationRentals(params);
+    }
+
     // 내 대여 목록 조회
     @Get('my/list')
-    // @UseGuards(MemberGuard)
     @UseGuards(AuthGuard('jwt'))
     async getMyRentals(
         @Req() req: Request,
+        @Query('onlyIndividual') onlyIndividual?: number,
         @Query('isActive') isActive?: string
     ): Promise<IRentalAll[]> {
         const user = req.user as IUser;
         const params: IUserRentalStatus = {
             userId: user.id,
+            onlyIndividual : onlyIndividual ? onlyIndividual === 1 : false,
             isActive: isActive ? isActive === 'true' : undefined,
         };
         return await this.rentalService.getUserRentals(params);
     }
 
     // 연체된 대여 목록 조회
-    // @Get('overdue/list')
-    // @UseGuards(ManagerGuard)
-    // async getOverdueRentals(): Promise<IRentalAll[]> {
-    //     return await this.rentalService.getOverdueRentals();
-    // }
-
-    // 대여 정보 수정
-    @Put(':id')
-    // @UseGuards(MemberGuard)
-    @UseGuards(AuthGuard('jwt'))
-    async updateRental(
-        @Param('id', ParseIntPipe) id: number,
-        @Body() updates: IRentalUpdate
-    ): Promise<ISuccessResponse> {
-        return await this.rentalService.updateRental(id, updates);
+    @Get('overdue/list')
+    @UseGuards(ManagerGuard)
+    async getOverdueRentals(): Promise<IRentalAll[]> {
+        return await this.rentalService.getOverdueRentals();
     }
 
-    // 물품 반납
+    // 대여 반납
     @Put(':id/return')
-    // @UseGuards(MemberGuard)
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(ManagerGuard)
     async returnRental(
         @Param('id', ParseIntPipe) id: number,
+        @Req() req: Request
     ): Promise<ISuccessResponse> {
-        return await this.rentalService.returnRental(id);
-    }
-
-    // 반납 확인 (관리자용)
-    @Put(':id/confirm')
-    @UseGuards(ManagerGuard)
-    async confirmReturn(
-        @Param('id', ParseIntPipe) id: number,
-    ): Promise<ISuccessResponse> {
-        return await this.rentalService.confirmReturn(id);
+        const worker = req.user as IUser;
+        return await this.rentalService.returnRental(id, worker.id);
     }
 
     // 대여 삭제
-    // @Delete(':id')
-    // @UseGuards(AdminGuard)
-    // async deleteRental(
-    //     @Param('id', ParseIntPipe) id: number
-    // ): Promise<ISuccessResponse> {
-    //     return await this.rentalService.deleteRental(id);
-    // }
+    @Delete(':id')
+    @UseGuards(AdminGuard)
+    async deleteRental(
+        @Param('id', ParseIntPipe) id: number
+    ): Promise<ISuccessResponse> {
+        return await this.rentalService.deleteRental(id);
+    }
 
-    // Goods 관련 엔드포인트들
+    // *****************************
+    // **** Goods 관련 Endpoints ****
+    // *****************************
 
     // 물품 생성
     @Post('goods')
@@ -229,8 +223,7 @@ export class RentalController {
         },
     ): Promise<ISuccessResponse> {
         if (file) {
-            const imageURI = `/uploads/${file.filename}`;
-            updates.imageURI = imageURI;
+            updates.imageURI = `/uploads/${file.filename}`;
         }
         return await this.rentalService.updateGoods(id, {
             ...updates,

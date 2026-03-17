@@ -9,7 +9,6 @@ import {
     IGoodsCreate,
     IGoodsUpdate,
     IGoods,
-    IGoodsAvailabilityCheck,
     IUserRentalStatus,
     IRentalCreateClient,
 } from '@scspace-depot/types/rental';
@@ -25,6 +24,9 @@ import { PdfService } from "@scspace-server/tools/pdf/pdf.service";
 import { ICertificatePdf } from "@scspace-depot/types/pdf/pdf.type";
 import { MailService } from "@scspace-server/tools/mailer/mail.service";
 import { RentalMeta } from "@scspace-depot/enums/mail.enum";
+import { OrganizationPublicService } from "@scspace-server/feature/organization/organization.public.service";
+import { IOrganization } from "@scspace-depot/types/organization";
+import { RentalStatusEnum } from "@scspace-depot/enums/rental.enum";
 
 @Injectable()
 export class RentalService {
@@ -34,11 +36,12 @@ export class RentalService {
         private readonly userPublicService: UserPublicService,
         private readonly fileService: FileService,
         private readonly pdfService: PdfService,
-        private readonly mailService: MailService
+        private readonly mailService: MailService,
+        private readonly organizationPublicService: OrganizationPublicService
     ) { }
 
     // Rental 관련 서비스 메서드들
-    async createRental(rentalData: IRentalCreateClient & { userId: number }): Promise<{ success: boolean; data: { id: number } }> {
+    async createRental(rentalData: IRentalCreateClient & { rentalWorkerId : number} ): Promise<{ success: boolean; data: { id: number } }> {
 
         // 1. 대여 개수 제한 확인
         const limitOk = await this.rentalPublicService.checkRentalLimit(rentalData.userId);
@@ -46,47 +49,25 @@ export class RentalService {
             throw new BadRequestException(`User has reached the maximum rental limit: ${MAX_RENTAL_LIMIT}`);
         }
 
+        if (rentalData.organizationId !== 1) {
+            const limitOk2 = await this.rentalPublicService.checkRentalLimitOrganization(rentalData.organizationId);
+            if (!limitOk2) {
+                throw new BadRequestException(`Organization has reached the maximum rental limit: ${MAX_RENTAL_LIMIT}`)
+            }
+        }
+
         // 2. 현재 연체된 대여 확인
-        const overdueOk = await this.rentalPublicService.checkCurrentOverdue(rentalData.userId);
+        const overdueOk = await this.rentalPublicService.checkCurrentOverdue(rentalData.userId, rentalData.organizationId);
         if (!overdueOk) {
             throw new BadRequestException('Cannot create new rental: user has overdue rentals that must be returned first');
         }
 
-        // 3. 관리자 확인 대기 중인 연체 반납 확인
-        const unconfirmedOk = await this.rentalPublicService.checkUnconfirmedOverdueReturns(rentalData.userId);
-        if (!unconfirmedOk) {
-            throw new BadRequestException('Cannot create new rental: user has overdue returns pending administrator confirmation');
-        }
-
-        // 4. 연체 제재 기간 확인
-        const penaltyOk = await this.rentalPublicService.checkUserOverduePenalty(rentalData.userId);
-        if (!penaltyOk) {
-            // 사용자 정보를 가져와서 언제부터 대여 가능한지 알려주기
-            const user = await this.userPublicService.fetchById(rentalData.userId);
-            if (user && user.timeOverdue > 0) {
-                throw new BadRequestException(`User is currently under rental penalty due to overdue returns. Rental will be available again after: ${getDateString(user.timeOverdue)}`);
-            } else {
-                throw new BadRequestException('User is currently under rental penalty due to overdue returns');
-            }
-        }
-
-        // 물품 가용성 확인
+        // 3. 물품 가용성 확인
         const now = getNow();
         const _now = getDate(now);
         _now.setDate(_now.getDate() + MAX_RENTAL_DURATION);
         const afterOneWeek = getDateEnd(getTime(_now));
 
-        const availability: IGoodsAvailabilityCheck = {
-            goodsId: rentalData.goodsId,
-            count: rentalData.count,
-            timeBorrow: now,
-            timeDue: afterOneWeek,
-        };
-
-        const isAvailable = await this.rentalPublicService.checkGoodsAvailability(availability);
-        if (!isAvailable) {
-            throw new BadRequestException('Requested goods are not available for the specified period');
-        }
 
         // 물품 재고 감소
         const goods = await this.rentalPublicService.getGoodsById(rentalData.goodsId);
@@ -110,13 +91,14 @@ export class RentalService {
             goods.countNow - rentalData.count
         );
 
-        // 3.4: 대여 성공 시 timeOverdue 초기화
         const user = await this.userPublicService.fetchById(rentalData.userId);
-        if (user && user.timeOverdue !== 0) {
-            await this.userPublicService.updateOverdue(rentalData.userId, {
-                timeOverdue: 0
-            });
-        }
+
+        // 3.4: 대여 성공 시 timeOverdue 초기화
+        // if (user && user.timeOverdue !== 0) {
+        //     await this.userPublicService.updateOverdue(rentalData.userId, {
+        //         timeOverdue: 0
+        //     });
+        // }
 
         //Rental Cert
         try {
@@ -170,13 +152,17 @@ export class RentalService {
             throw new NotFoundException('Rental not found');
         }
 
-        const [user, goods] = await Promise.all([
+        const [user, organization, goods] = await Promise.all([
             this.userPublicService.fetchById(rental.userId),
+            this.organizationPublicService.fetchById(rental.organizationId),
             this.rentalPublicService.getGoodsById(rental.goodsId),
         ]);
 
         if (!user) {
             throw new NotFoundException('User not found');
+        }
+        if (!organization) {
+            throw new NotFoundException('Organization not found');
         }
         if (!goods) {
             throw new NotFoundException('Goods not found');
@@ -185,6 +171,7 @@ export class RentalService {
         return {
             ...rental,
             user,
+            organization,
             goods,
         };
     }
@@ -200,19 +187,23 @@ export class RentalService {
         }
 
         const userIds = [...new Set(rentals.map(r => r.userId))];
+        const organizationIds = [...new Set(rentals.map(r => r.organizationId))];
         const goodsIds = [...new Set(rentals.map(r => r.goodsId))];
 
-        const [users, goods] = await Promise.all([
+        const [users, organizations, goods] = await Promise.all([
             this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
+            this.organizationPublicService.fetchByIds(organizationIds),
             this.rentalPublicService.getGoodsByIds(goodsIds),
-        ]) as [IUser[], IGoods[]];
+        ]) as [IUser[], IOrganization[], IGoods[]];
 
         checkContainAllId(userIds, users, 'users');
+        checkContainAllId(organizationIds, organizations, 'organizations');
         checkContainAllId(goodsIds, goods, 'goods');
 
         const rentalsWithDetails = rentals.map(rental => ({
             ...rental,
             user: users.find(u => u.id === rental.userId)!,
+            organization : organizations.find(o => o.id === rental.organizationId),
             goods: goods.find(g => g.id === rental.goodsId)!,
         }));
 
@@ -222,39 +213,110 @@ export class RentalService {
         };
     }
 
+    // 만약 onlyIndividual == true 일 경우 개인 렌탈만 fetch
+    // 만약 onlyIndividual == false 일 경우 개인 렌탈 + 개인이 속한 모든 조직의 렌탈까지 fetch
     async getUserRentals(params: IUserRentalStatus): Promise<IRentalAll[]> {
-        const { userId, isActive } = params;
+        const { userId, onlyIndividual, isActive } = params;
 
-        const { data: rentals, count } = await this.rentalPublicService.getRentalsByUserId(
-            userId,
-            isActive,
-            50,
-            0
-        );
+        //only 개인 렌탈
+        if (onlyIndividual) {
+            const { data: rentals, count } = await this.rentalPublicService.getRentalsByUserId(
+                userId,
+                isActive,
+                50,
+                0
+            );
 
+            if (rentals.length === 0) {
+                return [];
+            }
+
+            const goodsIds = [...new Set(rentals.map(r => r.goodsId))];
+            const organizationIds = [...new Set(rentals.map(r => r.organizationId))];
+
+            const [user, organizations, goods] = await Promise.all([
+                this.userPublicService.fetchById(userId),
+                this.organizationPublicService.fetchByIds(organizationIds),
+                this.rentalPublicService.getGoodsByIds(goodsIds),
+            ]);
+
+            if (!user) {
+                throw new NotFoundException('User not found');
+            }
+
+            checkContainAllId(organizationIds, organizations, 'organizations');
+            checkContainAllId(goodsIds, goods, 'goods');
+
+            return rentals.map(rental => ({
+                ...rental,
+                user,
+                organization: organizations.find(o => o.id === rental.organizationId)!,
+                goods: goods.find(g => g.id === rental.goodsId)!,
+            }));
+        }
+
+        //개인렌탈 + 모든 개인 조직의 렌탈 (getRentalsFull)
+        else {
+            const { data: rentals, count } = await this.rentalPublicService.getRentalsFull(
+                userId,
+                isActive,
+                50,
+                0
+            )
+
+            if (rentals.length === 0) {
+                return [];
+            }
+
+            const userIds = [...new Set(rentals.map(r => r.userId))];
+            const organizationIds = [...new Set(rentals.map(r => r.organizationId))];
+            const goodsIds = [...new Set(rentals.map(r => r.goodsId))];
+
+            const [users, organizations, goods] = await Promise.all([
+                this.userPublicService.fetchAllByIds(userIds),
+                this.organizationPublicService.fetchByIds(organizationIds),
+                this.rentalPublicService.getGoodsByIds(goodsIds)
+            ])
+
+            checkContainAllId(userIds, users, 'users');
+            checkContainAllId(organizationIds, organizations, 'organizations');
+            checkContainAllId(goodsIds, goods, 'goods');
+
+            return rentals.map(rental => ({
+                ...rental,
+                user: users.find(u => u.id === rental.userId)!,
+                organization : organizations.find(o => o.id === rental.organizationId)!,
+                goods: goods.find(g => g.id === rental.goodsId)!,
+            }))
+        }
+    }
+
+    async getOrganizationRentals(params : { organizationId : number, isActive : boolean}): Promise<IRentalAll[]> {
+        const { organizationId, isActive } = params;
+        const { data: rentals, count } = await this.rentalPublicService.getRentalsByOrganizationId(organizationId, isActive, 50, 0);
         if (rentals.length === 0) {
             return [];
         }
 
+        const userIds = [...new Set(rentals.map(r => r.userId))];
         const goodsIds = [...new Set(rentals.map(r => r.goodsId))];
-        const [user, goods] = await Promise.all([
-            this.userPublicService.fetchById(userId),
+
+        const [users, organization, goods] = await Promise.all([
+            this.userPublicService.fetchAllByIds(userIds),
+            this.organizationPublicService.fetchById(organizationId),
             this.rentalPublicService.getGoodsByIds(goodsIds),
-        ]);
+        ])
 
-        if (!user) {
-            throw new NotFoundException('User not found');
-        }
-
+        checkContainAllId(userIds, users, 'users');
         checkContainAllId(goodsIds, goods, 'goods');
 
-        const rentalsWithDetails = rentals.map(rental => ({
+        return rentals.map(rental => ({
             ...rental,
-            user,
-            goods: goods.find(g => g.id === rental.goodsId)!,
-        }));
+            user : users.find(u => u.id === rental.userId),
+            organization,
+            goods : goods.find(g => g.id === rental.goodsId)
+        }))
 
-        return rentalsWithDetails;
     }
 
     async updateRental(id: number, updates: IRentalUpdate): Promise<ISuccessResponse> {
@@ -268,7 +330,7 @@ export class RentalService {
         return { success: true };
     }
 
-    async returnRental(id: number): Promise<ISuccessResponse> {
+    async returnRental(id: number, returnWorkerId : number): Promise<ISuccessResponse> {
 
         const rental = await this.rentalPublicService.getRentalById(id);
         if (!rental) {
@@ -279,26 +341,9 @@ export class RentalService {
             throw new BadRequestException('This rental has already been returned');
         }
 
-        await this.rentalRepository.returnRental(id, getNow());
+        await this.rentalRepository.returnRental(id, getNow(), returnWorkerId);
 
-        return { success: true };
-    }
-
-    async confirmReturn(id: number): Promise<ISuccessResponse> {
-        const rental = await this.rentalPublicService.getRentalById(id);
-        if (!rental) {
-            throw new NotFoundException('Rental not found');
-        }
-
-        if (rental.timeReturn === 0) {
-            throw new BadRequestException('This rental has not been returned yet');
-        }
-
-        if (rental.timeConfirm !== 0) {
-            throw new BadRequestException('This return has already been confirmed');
-        }
-
-        // 재고 복구
+        //재고 복구
         const goods = await this.rentalPublicService.getGoodsById(rental.goodsId);
         if (goods) {
             await this.rentalRepository.updateGoodsStock(
@@ -307,81 +352,36 @@ export class RentalService {
             );
         }
 
-        // 연체된 대여인지 확인
-        const isOverdue = rental.timeDue < rental.timeReturn;
-
-        if (isOverdue) {
-            // 연체 기간 계산 (일 단위)
-            const overdueDays = Math.ceil(
-                getDateDiffInMinute(rental.timeReturn, rental.timeDue) / (60 * 24)
-            );
-
-            // 사용자 정보 가져오기
-            const user = await this.userPublicService.fetchById(rental.userId);
-            if (!user) {
-                throw new NotFoundException('User not found');
-            }
-
-            // 새로운 timeOverdue 계산
-            let newTimeOverdue: number;
-            const now = getNow();
-
-            if (user.timeOverdue === 0) {
-                // 3.2: 첫 연체인 경우, timeReturn부터 연체된 날짜만큼 뒤 23:59:59
-                const overdueEndDate = getDate(rental.timeReturn);
-                overdueEndDate.setDate(overdueEndDate.getDate() + overdueDays);
-                overdueEndDate.setHours(23, 59, 59, 999);
-                newTimeOverdue = getTime(overdueEndDate);
-            } else {
-                // 3.3: 이미 연체 기록이 있는 경우, 기존 timeOverdue에 연체 기간 추가
-                const existingOverdueEndDate = getDate(user.timeOverdue);
-                existingOverdueEndDate.setDate(existingOverdueEndDate.getDate() + overdueDays);
-                newTimeOverdue = getTime(existingOverdueEndDate);
-            }
-
-            // 사용자의 timeOverdue 업데이트
-            await this.userPublicService.updateOverdue(rental.userId, {
-                timeOverdue: newTimeOverdue
-            });
-        }
-
-
-        //File Deletetion
-
+        //대여확인서 삭제 - 사실 이건 지금 필요없을것 같음, 기록 보관의 기능도 수행해야 할 필요가 있음.
+        //생각 중인 것은 대여 반납 완료 시
+        //      => 공간위 계정 & 사용자 이메일로 대여확인서를 발송 => 이후 데이터베이스 상 삭제 절차가 좋을 것으로 생각됨.
         await this.fileService.deletePrivateFile(rental.certName)
-
-        await this.rentalRepository.confirmReturn(id, getNow())
-
-        //mailer << Unnecessary - Currently Delayed
-
-
-        const user = await this.userPublicService.fetchById(rental.userId);
-        // Organization << 언젠간 추가되지 않을까? (모름)
 
         return { success: true };
     }
 
-    // async deleteRental(id: number): Promise<ISuccessResponse> {
-    //     const rental = await this.rentalPublicService.getRentalById(id);
-    //     if (!rental) {
-    //         throw new NotFoundException('Rental not found');
-    //     }
+    async deleteRental(id: number): Promise<ISuccessResponse> {
+        const rental = await this.rentalPublicService.getRentalById(id);
+        if (!rental) {
+            throw new NotFoundException('Rental not found');
+        }
 
-    //     // 반납되지 않은 대여는 삭제 시 재고 복구
-    //     if (rental.timeReturn === 0) {
-    //         const goods = await this.rentalPublicService.getGoodsById(rental.goodsId);
-    //         if (goods) {
-    //             await this.rentalRepository.updateGoodsStock(
-    //                 rental.goodsId,
-    //                 goods.countNow + rental.count
-    //             );
-    //         }
-    //     }
+        // 반납되지 않은 대여는 삭제 시 재고 복구
+        if (rental.status === RentalStatusEnum.RENTED) {
+            const goods = await this.rentalPublicService.getGoodsById(rental.goodsId);
+            if (goods) {
+                await this.rentalRepository.updateGoodsStock(
+                    rental.goodsId,
+                    goods.countNow + rental.count
+                );
+            }
+        }
 
-    //     await this.rentalRepository.deleteRental(id);
+        await this.fileService.deletePrivateFile(rental.certName)
+        await this.rentalRepository.deleteRental(id);
 
-    //     return { success: true };
-    // }
+        return { success: true };
+    }
 
     // Goods 관련 서비스 메서드들
     async createGoods(goodsData: IGoodsCreate): Promise<{ success: boolean; data: { id: number } }> {
@@ -457,12 +457,14 @@ export class RentalService {
         }
 
         const userIds = [...new Set(overdueRentals.map(r => r.userId))];
+        const organizationIds = [...new Set(overdueRentals.map(r => r.organizationId))];
         const goodsIds = [...new Set(overdueRentals.map(r => r.goodsId))];
 
-        const [users, goods] = await Promise.all([
+        const [users, organizations, goods] = await Promise.all([
             this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
+            this.organizationPublicService.fetchByIds(organizationIds),
             this.rentalPublicService.getGoodsByIds(goodsIds),
-        ]) as [IUser[], IGoods[]];
+        ]) as [IUser[], IOrganization[], IGoods[]];
 
         checkContainAllId(userIds, users, 'users');
         checkContainAllId(goodsIds, goods, 'goods');
@@ -470,6 +472,7 @@ export class RentalService {
         return overdueRentals.map(rental => ({
             ...rental,
             user: users.find(u => u.id === rental.userId)!,
+            organization: organizations.find(o => o.id === rental.organizationId)!,
             goods: goods.find(g => g.id === rental.goodsId)!,
         }));
     }

@@ -4,37 +4,46 @@ import { Rental, Goods, schema } from '@schema';
 export class MRental implements IRental {
     id: IRental['id'];
     userId: IRental['userId'];
+    organizationId: IRental['organizationId'];
+    rentalWorkerId: IRental['rentalWorkerId'];
+    returnWorkerId: IRental['returnWorkerId'];
     goodsId: IRental['goodsId'];
     count: IRental['count'];
     timeBorrow: IRental['timeBorrow'];
     timeDue: IRental['timeDue'];
     timeReturn: IRental['timeReturn'];
-    timeConfirm: IRental['timeConfirm'];
     certName: IRental['certName'];
+    status: IRental['status'];
 
     constructor(data: IRental) {
         this.id = data.id;
         this.userId = data.userId;
+        this.organizationId = data.organizationId;
+        this.rentalWorkerId = data.rentalWorkerId;
+        this.returnWorkerId = data.returnWorkerId;
         this.goodsId = data.goodsId;
         this.count = data.count;
         this.timeBorrow = data.timeBorrow;
         this.timeDue = data.timeDue;
         this.timeReturn = data.timeReturn;
-        this.timeConfirm = data.timeConfirm;
         this.certName = data.certName;
+        this.status = data.status;
     }
 
     static fromDB(rental: typeof Rental.$inferSelect): IRental {
         return {
             id: rental.id,
             userId: rental.userId,
+            organizationId: rental.organizationId,
+            rentalWorkerId: rental.rentalWorkerId,
+            returnWorkerId: rental.returnWorkerId,
             goodsId: rental.goodsId,
             count: rental.count,
             timeBorrow: rental.timeBorrow,
             timeDue: rental.timeDue,
             timeReturn: rental.timeReturn,
-            timeConfirm: rental.timeConfirm,
             certName: rental.certName,
+            status: rental.status,
         };
     }
 }

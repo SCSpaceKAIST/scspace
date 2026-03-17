@@ -5,6 +5,7 @@ import {
     bigint,
 } from 'drizzle-orm/mysql-core';
 import { User } from './user';
+import { Organization } from './organization';
 
 // goods 테이블 정의
 export const Goods = mysqlTable('goods', {
@@ -22,6 +23,14 @@ export const Rental = mysqlTable('rental', {
     userId: int('user_id')
         .notNull()
         .references(() => User.id, { onDelete: 'cascade' }),
+    organizationId: int('organization_id')
+        .notNull()
+        .references(() => Organization.id, { onDelete: 'cascade' }),
+    rentalWorkerId: int('rental_worker_id')
+        .notNull()
+        .references(() => User.id, { onDelete: 'cascade' }),
+    returnWorkerId: int('return_worker_id')
+        .references(() => User.id, { onDelete: 'cascade' }),
     goodsId: int('goods_id')
         .notNull()
         .references(() => Goods.id, { onDelete: 'cascade' }),
@@ -29,8 +38,8 @@ export const Rental = mysqlTable('rental', {
     timeBorrow: bigint('time_borrow', { mode: 'number' }).notNull(),
     timeDue: bigint('time_due', { mode: 'number' }).notNull(),
     timeReturn: bigint('time_return', { mode: 'number' }).notNull().default(0),
-    timeConfirm: bigint('time_confirm', { mode: 'number' }).notNull().default(0),
     certName: varchar('cert_name', { length: 256 }).notNull(),
+    status: int('status').notNull().default(0),
     // Foreign keys
     // userId references users.userId O
     // goodsId references goods.goodsId O
