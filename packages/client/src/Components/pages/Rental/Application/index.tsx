@@ -5,12 +5,12 @@ import GoodsList from "@scspace-client/Components/organisms/Rental/GoodsList";
 import { useAuth } from "@scspace-client/Hooks/auth";
 
 export default function RentalApplication() {
-    const { isLogined } = useAuth();
+    const { isManager } = useAuth();
 
     return (
         <Scroll>
             <GoodsList
-                disabled={!isLogined}
+                disabled={!isManager}
             />
         </Scroll>
     );

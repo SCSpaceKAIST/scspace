@@ -5,12 +5,13 @@ import {
     Portal, 
     Button, 
     VStack, 
+    Box,
     Input, 
-    Textarea, 
     PinInput, 
     useBreakpointValue,
     Field,
     Fieldset,
+    Badge,
     Text,
     Stack,
     HStack,
@@ -27,8 +28,8 @@ import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { IRentalCreateClient } from "@scspace-depot/types/rental/rental.type";
 import { IGoods } from "@scspace-depot/types/rental";
 import { useState, useEffect } from "react";
-import { OrganizationStatusEnum } from "@scspace-depot/enums/organization.enum";
 import Counter from "./Counter";
+import TextareaComponent from "@scspace-client/Components/molecules/forms/Textarea";
 
 export default function RentalCreateDialog({ 
     item, 
@@ -61,9 +62,9 @@ export default function RentalCreateDialog({
     const [count, setCount] = useState<number>(1);
     const maxCount = countAvailable;
 
-    const { userInfo } = useAuth();
+    const { isManager } = useAuth();
     const { student } = useStudent({ studentNumber: studentNumberStr });
-    const { data: userOrganizations } = useOrganizationAPI({ uid: userInfo?.id ?? -1 }).userOrganizations;
+    const { data: allOrganizations } = useOrganizationAPI().allOrganizations;
     const { createRental } = useRentalAPI();
 
     useEffect(() => {
@@ -86,23 +87,18 @@ export default function RentalCreateDialog({
             { label: "개인 (Individual)", value: "1", description: "개인 대여" }
         ];
         
-        if (userOrganizations && userOrganizations.length > 0) {
-            userOrganizations
-                .filter((org) => (
-                    org.status !== OrganizationStatusEnum.REJECTED &&
-                    org.status !== OrganizationStatusEnum.REGISTER_REQUEST
-                ))
-                .forEach((org) => {
+        if (allOrganizations && allOrganizations.length > 0) {
+            allOrganizations.forEach((org) => {
                 options.push({
                     label: org.name,
                     value: org.id.toString(),
                     description: "Delegator: " + org.delegator.nameKr
                 });
-                });
+            });
         }
 
         setOrgOptions(options);
-    }, [userOrganizations]);
+    }, [allOrganizations]);
 
     const resetForm = () => {
         setStudentNumberValue(["", "", "", "", "", "", "", ""]);
@@ -119,6 +115,10 @@ export default function RentalCreateDialog({
     };
 
     const handleSubmit = () => {
+        if (!isManager) {
+            toaster.error({ title: "공간위원만 대여 등록이 가능합니다." });
+            return;
+        }
         if (!borrowerId) {
             toaster.error({ title: "대여자를 선택해주세요", description: "학번을 입력하여 대여자를 검색해주세요" });
             return;
@@ -217,8 +217,8 @@ export default function RentalCreateDialog({
                         <Dialog.Body>
                             <VStack gap={4} alignItems="stretch">
                                 <Fieldset.Root>
-                                    <Field.Root>
-                                        <Field.Label>대여자 (학번으로 검색)</Field.Label>
+                                    <Field.Root required>
+                                        <Field.Label>대여자 (학번으로 검색) <Field.RequiredIndicator /></Field.Label>
                                         <VStack width="100%" py={2} borderWidth="1px" rounded="sm" gap={4}>
                                             <PinInput.Root
                                                 size="lg" 
@@ -266,13 +266,14 @@ export default function RentalCreateDialog({
                                 <SelectComponent
                                     inDialog={true}
                                     label="단체"
+                                    required={true}
                                     optionList={orgOptions}
                                     defaultValue="1"
                                     onChange={(option) => setOrganizationId(parseInt(option.value))}
                                 />
 
-                                <Field.Root>
-                                    <Field.Label>전화번호</Field.Label>
+                                <Field.Root required>
+                                    <Field.Label>전화번호 <Field.RequiredIndicator /></Field.Label>
                                     <Input
                                         type="tel"
                                         placeholder="010-1234-5678"
@@ -283,8 +284,8 @@ export default function RentalCreateDialog({
                                     />
                                 </Field.Root>
 
-                                <Field.Root>
-                                    <Field.Label>비상연락처 (회장)</Field.Label>
+                                <Field.Root required>
+                                    <Field.Label>비상연락처 (회장) <Field.RequiredIndicator /></Field.Label>
                                     <Input
                                         type="tel"
                                         placeholder="010-1234-5678"
@@ -295,8 +296,8 @@ export default function RentalCreateDialog({
                                     />
                                 </Field.Root>
 
-                                <Field.Root>
-                                    <Field.Label>비상연락처 (부회장)</Field.Label>
+                                <Field.Root required>
+                                    <Field.Label>비상연락처 (부회장) <Field.RequiredIndicator /></Field.Label>
                                     <Input
                                         type="tel"
                                         placeholder="010-1234-5678"
@@ -307,8 +308,8 @@ export default function RentalCreateDialog({
                                     />
                                 </Field.Root>
 
-                                <Field.Root>
-                                    <Field.Label>사용 위치</Field.Label>
+                                <Field.Root required>
+                                    <Field.Label>사용 위치 <Field.RequiredIndicator /></Field.Label>
                                     <Input
                                         placeholder="예: 학생회관 1층"
                                         value={reasonLocation}
@@ -318,30 +319,40 @@ export default function RentalCreateDialog({
                                     />
                                 </Field.Root>
 
-                                <Field.Root>
-                                    <Field.Label>사용 목적</Field.Label>
-                                    <Textarea
-                                        placeholder="물품을 사용하는 이유를 입력해주세요"
-                                        value={reasonPurpose}
-                                        onChange={(e) => setReasonPurpose(e.target.value)}
-                                        rounded="sm"
-                                        bg="white"
-                                        rows={3}
-                                    />
-                                </Field.Root>
+                                <TextareaComponent
+                                    label="사용 목적"
+                                    placeholder="물품을 사용하는 이유를 입력해주세요"
+                                    value={reasonPurpose}
+                                    required={true}
+                                    onChange={setReasonPurpose}
+                                />
 
-                                <Field.Root>
-                                    <Field.Label>반납 기한</Field.Label>
-                                    <Center borderWidth="1px" rounded="sm" py={2}>
-                                        <DatePicker
-                                            selected={deadline}
-                                            onChange={(date) => {
-                                                if (date) setDeadline(date);
-                                            }}
-                                            inline
-                                            minDate={new Date()}
-                                        />
-                                    </Center>
+                                <Field.Root required>
+                                    <Field.Label>반납 기한 <Field.RequiredIndicator /></Field.Label>
+                                    <Box
+                                        borderWidth="1px"
+                                        rounded="xl"
+                                        bg="white"
+                                        boxShadow="sm"
+                                        px={4}
+                                        py={4}
+                                    >
+                                        <VStack gap={3}>
+                                            <Badge colorPalette="blue" variant="subtle" px={3} py={1} rounded="full">
+                                                {deadline.toLocaleDateString("ko-KR")}
+                                            </Badge>
+                                            <Center width="100%">
+                                                <DatePicker
+                                                    selected={deadline}
+                                                    onChange={(date) => {
+                                                        if (date) setDeadline(date);
+                                                    }}
+                                                    inline
+                                                    minDate={new Date()}
+                                                />
+                                            </Center>
+                                        </VStack>
+                                    </Box>
                                 </Field.Root>
 
                                 <Field.Root>
@@ -355,9 +366,20 @@ export default function RentalCreateDialog({
                                     />
                                 </Field.Root>
 
-                                <Field.Root>
-                                    <Field.Label>수량</Field.Label>
-                                    <Counter count={count} setCount={setCount} min={1} max={maxCount} />
+                                <Field.Root required>
+                                    <Field.Label>수량 <Field.RequiredIndicator /></Field.Label>
+                                    <Center>
+                                        <Box
+                                            borderWidth="1px"
+                                            rounded="xl"
+                                            bg="white"
+                                            boxShadow="sm"
+                                            px={4}
+                                            py={3}
+                                        >
+                                            <Counter count={count} setCount={setCount} min={1} max={maxCount} />
+                                        </Box>
+                                    </Center>
                                     <Field.HelperText>
                                         최대 {maxCount}개까지 대여 가능합니다
                                     </Field.HelperText>

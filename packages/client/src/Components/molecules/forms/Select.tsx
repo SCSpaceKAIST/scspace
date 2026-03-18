@@ -3,6 +3,7 @@ import {
   Portal,
   createListCollection,
   Flex,
+  Field,
   Stack,
   Span,
   Text,
@@ -23,6 +24,7 @@ export default function SelectComponent({
   checkboxLabel,
   optionList,
   defaultValue,
+  required,
   onChange,
   setCheck = () => null
 }: {
@@ -34,6 +36,7 @@ export default function SelectComponent({
   optionList: ISelectOption[];
   onChange: (e: ISelectOption) => any;
   defaultValue?: string;
+  required?: boolean;
   setCheck?: Dispatch<SetStateAction<boolean>>;
 }) {
   const options = createListCollection({
@@ -70,7 +73,9 @@ export default function SelectComponent({
       <Select.HiddenSelect />
       <Select.Label>
         <Flex justify="space-between">
-          {label}
+          <Span>
+            {label} {required && <Field.RequiredIndicator />}
+          </Span>
           {(checkboxLabel && (
             (typeof checkboxLabel === "string") ? (
               <CheckComponent label={checkboxLabel}

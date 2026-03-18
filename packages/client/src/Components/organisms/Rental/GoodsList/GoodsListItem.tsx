@@ -29,7 +29,7 @@ export default function GoodsListItem({
     refetchAction: () => void;
     countAvailable: number;
 }) {
-    const { userInfo } = useAuth();
+    const { userInfo, isManager } = useAuth();
 
     const [imgOpen, setImgOpen] = useState(false);
 
@@ -71,6 +71,7 @@ export default function GoodsListItem({
                 key={item.id}
                 checked={isSelected}
                 onCheckedChange={() => {
+                    if (disabled) return;
                     onSelectAction(item.id);
                 }}
             >
@@ -122,13 +123,13 @@ export default function GoodsListItem({
                         <Collapsible.Content>
                             <Separator />
                             <Flex justify={"flex-end"} p={2} gap={4}>
-                                {userInfo?.id ? (
+                                {userInfo?.id && isManager ? (
                                     <RentalCreateDialog
                                         item={item}
                                         refetchAction={refetchAction}
                                         countAvailable={countAvailable}
                                     />
-                                ) : (
+                                ) : !userInfo?.id ? (
                                     <Button
                                         variant="outline"
                                         onClick={() => {
@@ -139,6 +140,10 @@ export default function GoodsListItem({
                                         }}
                                     >
                                         대여 신청
+                                    </Button>
+                                ) : (
+                                    <Button variant="outline" disabled>
+                                        공간위원만 등록 가능
                                     </Button>
                                 )}
                             </Flex>
