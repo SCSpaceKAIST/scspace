@@ -12,6 +12,7 @@ type MailTemplate =
     | "lotteryResult"
     | 'worker'
     | 'rentalNotif'
+    | 'rentalSuccess'
     | 'rentalReturnReq'
     | 'workerNeedReason';
 

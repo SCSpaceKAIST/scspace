@@ -301,6 +301,20 @@ export const WorkerMeta  = {
 
 
 export const RentalMeta = {
+    createdSuccess: {
+        color: '#2f855a',
+        emoji: '📦',
+        header: {
+            kr: '대여 신청 등록 안내',
+            en: 'Rental Registration Confirmed'
+        },
+        body: {
+            kr: '대여 신청이 정상적으로 등록되었습니다. 아래의 핵심 정보를 확인해 주세요.',
+            en: 'Your rental registration has been completed successfully. Please review the key details below.'
+        },
+        templateFooter: '대여 관련 변경이나 문의가 필요하시면 학생문화공간위원회로 연락해 주세요.',
+        templateFooterEn: 'If you need to change or ask about this rental, please contact the Student Cultural Space Committee.',
+    },
     requestReturn: {
         color: '#d72424',
         emoji: DEFAULT_EMOJI_FAIL,

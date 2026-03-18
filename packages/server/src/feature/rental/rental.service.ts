@@ -157,6 +157,35 @@ export class RentalService {
                 .catch(() => null);
         }
 
+        try {
+            await this.mailService.sendMail({
+                to: user.email,
+                template: "rentalSuccess",
+                subject: "[SCSpace] 대여 신청이 등록되었습니다.",
+                context: {
+                    meta: RentalMeta.createdSuccess,
+                    rental: {
+                        id,
+                        goodsName: goods.name,
+                        quantity: rentalData.count,
+                        borrowerName: user.nameKr,
+                        organizationName: rentalData.organizationId === 1 ? '개인' : '단체',
+                        timeFrom: getDateString(now),
+                        timeTo: getDateString(afterOneWeek),
+                    },
+                }
+            })
+        } catch (error) {
+            const err = error instanceof Error
+                ? error
+                : new Error(String(error))
+
+            Logger.error(`Borrower rental success mail failed for rental ${id}: ${err.message}`, err.stack, RentalService.name);
+            await this.mailService.reportError(err,
+                "rental.service.ts > createRental > sendBorrowerMail")
+                .catch(() => null);
+        }
+
         return {
             success: true,
             data: { id }
