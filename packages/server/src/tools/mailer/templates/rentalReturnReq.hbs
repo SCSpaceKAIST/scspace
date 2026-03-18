@@ -58,7 +58,7 @@
                     <span>{{rental.title}}</span>
                 </li>
                 <li>
-                    <strong>예약자:</strong>
+                    <strong>대여자:</strong>
                     <span>{{rental.user.studentNumber}}
                         {{rental.user.nameKr}}</span>
                 </li>
@@ -71,8 +71,8 @@
                     <span>{{rental.timeTo}} KST</span>
                 </li>
                 <li>
-                    <strong>초과 기한:</strong>
-                    <span>{{rental.overdue}} KST</span>
+                    <strong>연체 일수:</strong>
+                    <span>{{rental.overdue}}일</span>
                 </li>
             </ul>
         </div>
@@ -89,7 +89,7 @@
         <p><strong>학생문화공간위원회 / Student Cultural Space Committee</strong></p>
         <p>{{meta.templateFooter}}<br />
             {{meta.templateFooterEn}}</p>
-        <p style='margin-top:15px;color:#999;'>Contact : ✉️ scspace@kaist.ac.kr</p>
+        <p style='margin-top:15px;color:#999;'>문의: scspace@kaist.ac.kr</p>
     </div>
 </div>
 </body>
