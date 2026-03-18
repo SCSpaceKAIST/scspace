@@ -44,13 +44,15 @@ export default function GoodsList(props: {
         <Grid templateRows={"1fr auto"} height={"100%"}>
             <Scroll>
                 <Stack p={2}>
-                    <Alert.Root status={"error"}>
-                        <Alert.Indicator />
-                        <Alert.Content>
-                            <Alert.Title>현재 대여 신청은 일시적으로 중단되었습니다.</Alert.Title>
-                            <Alert.Description>Rental Application page is under update.</Alert.Description>
-                        </Alert.Content>
-                    </Alert.Root>
+                    {disabled && !manage && (
+                        <Alert.Root status={"warning"}>
+                            <Alert.Indicator />
+                            <Alert.Content>
+                                <Alert.Title>로그인이 필요합니다.</Alert.Title>
+                                <Alert.Description>대여 신청을 하려면 먼저 로그인해주세요.</Alert.Description>
+                            </Alert.Content>
+                        </Alert.Root>
+                    )}
                     {goodsListData.map(item => (
                         <GoodsListItem
                             key={`${item.name}-${item.id}`}

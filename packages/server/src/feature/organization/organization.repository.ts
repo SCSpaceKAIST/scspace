@@ -6,6 +6,7 @@ import { and, eq, inArray, SQL, InferInsertModel, ne } from 'drizzle-orm';
 import { IOrganizationCreate, IOrganizationUpdate } from '@scspace-depot/types/organization';
 import { MOrganization } from './organization.model';
 import { getNow } from '@scspace-server/common/utils';
+import { OrganizationStatusEnum } from '@scspace-depot/enums/organization.enum';
 
 @Injectable()
 export class OrganizationRepository {
@@ -67,6 +68,32 @@ export class OrganizationRepository {
 
     Logger.log('ADD ORGANIZATION ' + JSON.stringify(organization));
     return organizationCreated[0];
+  }
+
+  async ensureIndividualOrganization(delegatorId: number): Promise<MOrganization> {
+    const existing = await this.fetch({ id: 1 });
+    if (existing.length > 0) {
+      return existing[0];
+    }
+
+    const insertData = {
+      id: 1,
+      name: 'individual',
+      status: OrganizationStatusEnum.REGISTERED,
+      hasRoom: false,
+      delegatorId,
+      timeRegister: getNow(),
+      timeUpdate: getNow(),
+    } as InferInsertModel<typeof Organization>;
+
+    await this.db.insert(Organization).values(insertData);
+
+    const created = await this.fetch({ id: 1 });
+    if (created.length === 0) {
+      throw new NotFoundException('Individual organization not found after creation');
+    }
+
+    return created[0];
   }
 
   async update(organizationId: number, organization: IOrganizationUpdate): Promise<MOrganization> {

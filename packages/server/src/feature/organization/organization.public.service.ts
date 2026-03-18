@@ -129,6 +129,17 @@ export class OrganizationPublicService {
     return MOrganization.fromDB(organization[0]);
   }
 
+  async ensureIndividualOrganization(): Promise<IOrganization> {
+    const organization = await this.organizationRepository.ensureIndividualOrganization(1);
+    const members = await this.organizationMemberRepository.fetch({ organizationId: 1, userId: 1 });
+
+    if (members.length === 0) {
+      await this.organizationMemberRepository.insert(1, 1);
+    }
+
+    return MOrganization.fromDB(organization);
+  }
+
   async count(): Promise<number> {
     return (await this.organizationRepository.fetchAll()).length;
   }

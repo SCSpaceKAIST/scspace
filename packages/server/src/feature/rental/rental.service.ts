@@ -40,8 +40,15 @@ export class RentalService {
         private readonly organizationPublicService: OrganizationPublicService
     ) { }
 
+    private async ensureIndividualOrganizationIfNeeded(organizationIds: number[]): Promise<void> {
+        if (organizationIds.includes(1)) {
+            await this.organizationPublicService.ensureIndividualOrganization();
+        }
+    }
+
     // Rental 관련 서비스 메서드들
     async createRental(rentalData: IRentalCreateClient & { rentalWorkerId : number} ): Promise<{ success: boolean; data: { id: number } }> {
+        await this.ensureIndividualOrganizationIfNeeded([rentalData.organizationId]);
 
         // 1. 대여 개수 제한 확인
         const limitOk = await this.rentalPublicService.checkRentalLimit(rentalData.userId);
@@ -152,6 +159,8 @@ export class RentalService {
             throw new NotFoundException('Rental not found');
         }
 
+        await this.ensureIndividualOrganizationIfNeeded([rental.organizationId]);
+
         const [user, organization, goods] = await Promise.all([
             this.userPublicService.fetchById(rental.userId),
             this.organizationPublicService.fetchById(rental.organizationId),
@@ -189,6 +198,8 @@ export class RentalService {
         const userIds = [...new Set(rentals.map(r => r.userId))];
         const organizationIds = [...new Set(rentals.map(r => r.organizationId))];
         const goodsIds = [...new Set(rentals.map(r => r.goodsId))];
+
+        await this.ensureIndividualOrganizationIfNeeded(organizationIds);
 
         const [users, organizations, goods] = await Promise.all([
             this.userPublicService.fetchAllByIds(userIds).then(takeAll(userIds, 'users')),
@@ -234,6 +245,8 @@ export class RentalService {
             const goodsIds = [...new Set(rentals.map(r => r.goodsId))];
             const organizationIds = [...new Set(rentals.map(r => r.organizationId))];
 
+            await this.ensureIndividualOrganizationIfNeeded(organizationIds);
+
             const [user, organizations, goods] = await Promise.all([
                 this.userPublicService.fetchById(userId),
                 this.organizationPublicService.fetchByIds(organizationIds),
@@ -272,6 +285,8 @@ export class RentalService {
             const organizationIds = [...new Set(rentals.map(r => r.organizationId))];
             const goodsIds = [...new Set(rentals.map(r => r.goodsId))];
 
+            await this.ensureIndividualOrganizationIfNeeded(organizationIds);
+
             const [users, organizations, goods] = await Promise.all([
                 this.userPublicService.fetchAllByIds(userIds),
                 this.organizationPublicService.fetchByIds(organizationIds),
@@ -300,6 +315,8 @@ export class RentalService {
 
         const userIds = [...new Set(rentals.map(r => r.userId))];
         const goodsIds = [...new Set(rentals.map(r => r.goodsId))];
+
+        await this.ensureIndividualOrganizationIfNeeded([organizationId]);
 
         const [users, organization, goods] = await Promise.all([
             this.userPublicService.fetchAllByIds(userIds),
