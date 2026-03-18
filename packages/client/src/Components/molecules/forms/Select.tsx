@@ -3,7 +3,6 @@ import {
   Portal,
   createListCollection,
   Flex,
-  Field,
   Stack,
   Span,
   Text,
@@ -74,7 +73,7 @@ export default function SelectComponent({
       <Select.Label>
         <Flex justify="space-between">
           <Span>
-            {label} {required && <Field.RequiredIndicator />}
+            {label} {required && <Span color="fg.error">*</Span>}
           </Span>
           {(checkboxLabel && (
             (typeof checkboxLabel === "string") ? (
