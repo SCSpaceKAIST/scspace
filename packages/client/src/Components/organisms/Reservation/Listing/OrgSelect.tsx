@@ -5,6 +5,11 @@ import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import { IOrganizationDelegator } from "@scspace-depot/types/organization";
 import { useEffect, useState } from "react";
 
+const INIT_OPTIONS = [
+    { label: "All", value: "0" },
+    { label: "Individual", value: "1" }
+];
+
 export default function OrgSelect({ organization, setOid, oid }: {
     organization: IOrganizationDelegator[];
     setOid: (n: number) => void;
@@ -14,21 +19,16 @@ export default function OrgSelect({ organization, setOid, oid }: {
     useEffect(() => {
         const _t = parseInt(_oid[0]);
         if (_t != oid) setOid(_t);
-    }, [_oid]);
+    }, [_oid, oid, setOid]);
 
-    const initOpt = [
-        { label: "All", value: "0" },
-        { label: "Individual", value: "1" }
-    ];
-
-    const [options, setOptions] = useState<{ label: string; value: string }[]>(initOpt);
+    const [options, setOptions] = useState<{ label: string; value: string }[]>(INIT_OPTIONS);
     useEffect(() => {
         if (!organization) {
-            setOptions(initOpt);
+            setOptions(INIT_OPTIONS);
             return;
         }
         setOptions([
-            ...initOpt,
+            ...INIT_OPTIONS,
             ...organization.map((o) => ({
                 label: o.name,
                 value: o.id.toString()

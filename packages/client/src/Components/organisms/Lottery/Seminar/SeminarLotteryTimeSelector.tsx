@@ -29,6 +29,16 @@ import { dateUtils } from "@scspace-client/Hooks/utils";
 import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn";
 import AlertBtn from "@scspace-client/Components/atoms/AlertBtn";
 
+const WEEK_DAYS = [
+    { key: "sunday", label: "Sun", index: 0 },
+    { key: "monday", label: "Mon", index: 1 },
+    { key: "tuesday", label: "Tue", index: 2 },
+    { key: "wednesday", label: "Wed", index: 3 },
+    { key: "thursday", label: "Thu", index: 4 },
+    { key: "friday", label: "Fri", index: 5 },
+    { key: "saturday", label: "Sat", index: 6 },
+];
+
 export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
     orgId: number;
     spaceId: number;
@@ -65,14 +75,15 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
             !editable ||
             activeLotteryInfo[0].applied
         );
-    }, [orgId, activeLotteryInfo, editable]);
+    }, [activeLotteryInfo, editable, getTime, orgId]);
 
     const [selectedTime, setSelectedTime] = useState<number>(-1);
     const [selectedTimeString, setSelectedTimeString] = useState<string>("");
     useEffect(() => {
         if (selectedTime !== -1) {
-            const { dayIndex, hour } = decodeTimeSlot(selectedTime);
-            const dayLabel = weekDays[dayIndex].label;
+            const dayIndex = Math.floor(selectedTime / 24);
+            const hour = selectedTime % 24;
+            const dayLabel = WEEK_DAYS[dayIndex].label;
             setSelectedTimeString(`${dayLabel} ${hour}:00 - ${hour + 1}:00`);
         }
     }, [selectedTime]);
@@ -107,10 +118,10 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
         time: selectedTime,
     });
 
-    useEffect(() => { refetchTimeSlotCounts() }, [spaceId]);
-    useEffect(() => { if (selectedTime !== -1) { refetchLotteryByTime(); } }, [selectedTime, orgId, spaceId]);
-    useEffect(() => { refetchDrawnLottery(); }, [orgId, spaceId]);
-    useEffect(() => { refetchLotteryByOrganization(); }, [orgId, spaceId]);
+    useEffect(() => { refetchTimeSlotCounts() }, [refetchTimeSlotCounts, spaceId]);
+    useEffect(() => { if (selectedTime !== -1) { refetchLotteryByTime(); } }, [orgId, refetchLotteryByTime, selectedTime, spaceId]);
+    useEffect(() => { refetchDrawnLottery(); }, [orgId, refetchDrawnLottery, spaceId]);
+    useEffect(() => { refetchLotteryByOrganization(); }, [orgId, refetchLotteryByOrganization, spaceId]);
 
     const [available, setAvailable] = useState<boolean>(true);
 
@@ -126,16 +137,6 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
     }, [drawnLottery, selectedTime]);
 
     // 요일 배열 (월 ~ 일) - 인덱스가 날짜 번호 (0~6)
-    const weekDays = [
-        { key: "sunday", label: "Sun", index: 0 },
-        { key: "monday", label: "Mon", index: 1 },
-        { key: "tuesday", label: "Tue", index: 2 },
-        { key: "wednesday", label: "Wed", index: 3 },
-        { key: "thursday", label: "Thu", index: 4 },
-        { key: "friday", label: "Fri", index: 5 },
-        { key: "saturday", label: "Sat", index: 6 },
-    ];
-
     // 시간 배열 (18 ~ 3시: 18,19,20,21,22,23,0,1,2,3)
     const timeHours = Array.from({ length: 24 }, (_, i) => i);
 
@@ -289,7 +290,7 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
                     width={"full"}
                 >
                     <Grid
-                        templateColumns={`60px repeat(${weekDays.length}, 1fr)`}
+                        templateColumns={`60px repeat(${WEEK_DAYS.length}, 1fr)`}
                         templateRows={`40px repeat(${timeHours.length}, 1fr)`}
                         gap={0}
                         minW="600px"
@@ -307,7 +308,7 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
                         />
 
                         {/* 요일 헤더 */}
-                        {weekDays.map((day) => (
+                        {WEEK_DAYS.map((day) => (
                             <GridItem
                                 key={day.key}
                                 bg="gray.50"
@@ -360,7 +361,7 @@ export function TimeSelector({ orgId, spaceId, editable, isAdmin }: {
                                 </GridItem>
 
                                 {/* 각 요일별 시간 슬롯 */}
-                                {weekDays.map((day) => (
+                                {WEEK_DAYS.map((day) => (
                                     <TimeSlot
                                         key={`${day.key}-${hour}`}
                                         day={day.key}

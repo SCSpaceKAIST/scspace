@@ -47,7 +47,7 @@ export default function ArticleDetail({ id }: { id: number }) {
             setImages(JSON.parse(data.images ?? "[]"));
             setFiles(JSON.parse(data.files ?? "[]"));
         }
-    }, [data?.title, data?.content, data?.type, data?.images, data?.files, editable]);
+    }, [data, editable]);
 
     const updateArticle = useArticleAPI({ id }).updateArticle;
 

@@ -4,7 +4,7 @@ import { Dialog, HStack, useBreakpointValue, DataList, Separator, Text, Button, 
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { dateUtils } from "@scspace-client/Hooks/utils";
 import { IReservationAll } from "@scspace-depot/types/reservation";
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { useReservationAPI } from "@scspace-client/Hooks/reservation";
 import DeleteBtn from "@scspace-client/Components/molecules/buttons/DeleteBtn";
@@ -63,7 +63,7 @@ export default function ReservationDetail({ open, setOpen, selectedRes, refetch 
                 }
             }
         );
-    }, [selectedRes, userInfo]);
+    }, [assignWorker, e, refetch, selectedRes, userInfo]);
 
     function onDelete() {
         toaster.promise(

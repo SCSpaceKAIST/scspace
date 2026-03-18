@@ -35,24 +35,25 @@ export default function UserReservation() {
     const [page, setPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(10);
     const [_limit, _setLimit] = useState<string>("10");
+    const userId = userInfo?.id ?? 0;
     const { getString } = dateUtils();
 
     useEffect(() => {
         if (parseInt(_limit) != limit) setLimit(parseInt(_limit));
-    }, [_limit]);
+    }, [_limit, limit]);
 
     const [selected, setSelected] = useState<IReservationAll | null>(null);
     const [open, setOpen] = useState<boolean>(false);
     const isWide = useBreakpointValue({ base: false, md: true });
 
     const { data: reservation, refetch } = useReservationAPI({
-        uid: userInfo?.id || 0,
+        uid: userId,
         oid,
         limit,
         offset: limit * (page - 1)
     }).userReservation;
 
-    useEffect(() => { refetch(); }, [page, limit, userInfo?.id || 0]);
+    useEffect(() => { refetch(); }, [limit, page, refetch, userId]);
 
     useEffect(() => {
         setSelected(reservation?.data[0] ?? null);

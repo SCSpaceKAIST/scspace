@@ -43,7 +43,7 @@ export default function AllReservation() {
 
     useEffect(() => {
         if (parseInt(_limit) != limit) setLimit(parseInt(_limit));
-    }, [_limit]);
+    }, [_limit, limit]);
 
     const [selected, setSelected] = useState<IReservationAll | null>(null);
     const [open, setOpen] = useState<boolean>(false);
@@ -55,7 +55,7 @@ export default function AllReservation() {
         offset: limit * (page - 1)
     }).allReservation;
 
-    useEffect(() => { refetch(); }, [page, limit]);
+    useEffect(() => { refetch(); }, [limit, page, refetch]);
 
     useEffect(() => {
         setSelected(reservation?.data[0] ?? null);

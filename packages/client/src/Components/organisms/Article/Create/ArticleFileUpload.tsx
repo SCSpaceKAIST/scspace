@@ -22,12 +22,8 @@ function FileUploadList() {
 
     const [select, setSelect] = useState<number>(0);
     useEffect(() => {
-        if (select >= files.length) {
-            setSelect(files.length - 1);
-        } else {
-            setSelect(0);
-        }
-    }, [files]);
+        setSelect((prev) => (prev >= files.length ? files.length - 1 : 0));
+    }, [files.length]);
 
     if (files.length === 0) return null;
 

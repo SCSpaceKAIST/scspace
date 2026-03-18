@@ -37,7 +37,7 @@ export default function ChangeTimeBtn({ rid, refetch, timeFrom, timeTo }: {
 
     useEffect(() => {
         setNewTimeFrom(getTime(dateFrom) + getTime({ hour: hourFrom }));
-    }, [dateFrom, hourFrom]);
+    }, [dateFrom, getTime, hourFrom]);
 
     const [newTimeTo, setNewTimeTo] = useState<number>(
         getTime(dateTo) + getTime({ hour: hourTo })
@@ -45,7 +45,7 @@ export default function ChangeTimeBtn({ rid, refetch, timeFrom, timeTo }: {
 
     useEffect(() => {
         setNewTimeTo(getTime(dateTo) + getTime({ hour: hourTo }));
-    }, [dateTo, hourTo]);
+    }, [dateTo, getTime, hourTo]);
 
     const [isCorrect, setIsCorrect] = useState<boolean>(newTimeFrom <= newTimeTo);
 

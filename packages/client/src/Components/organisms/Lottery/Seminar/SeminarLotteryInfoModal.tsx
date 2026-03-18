@@ -39,18 +39,17 @@ export default function SeminarLotteryInfoModal({ info, open, setOpen, refetch }
             setDateStart(getDate(info.timeStart));
             setDateEnd(getDate(info.timeEnd));
         }
-    }, [info]);
-
-    const today = new Date();
+    }, [getDate, info]);
 
     useEffect(() => {
+        const today = new Date();
         setIsError(
             today >= dateLotteryStart ||
             dateLotteryStart >= dateLotteryEnd ||
             dateLotteryEnd >= dateStart ||
             dateStart >= dateEnd
         )
-    }, [dateLotteryStart, dateLotteryEnd, dateStart, dateEnd, today]);
+    }, [dateLotteryStart, dateLotteryEnd, dateStart, dateEnd]);
 
     return (
         <SimpleDialog

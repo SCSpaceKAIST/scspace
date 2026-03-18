@@ -1,6 +1,6 @@
 "use client"
 
-import { Alert, Center, Heading } from "@chakra-ui/react";
+import { Alert, Heading } from "@chakra-ui/react";
 import { useSeminarLotteryInfoAPI } from "@scspace-client/Hooks/lottery";
 import { dateUtils } from "@scspace-client/Hooks/utils";
 import { useEffect } from "react";
@@ -11,7 +11,7 @@ export default function SeminarLotteryStatus() {
 
     useEffect(() => {
         refetch();
-    }, []);
+    }, [refetch]);
 
     return (
         <Alert.Root status={(activeLotteryInfo && activeLotteryInfo.length > 0) ? "info" : "error"

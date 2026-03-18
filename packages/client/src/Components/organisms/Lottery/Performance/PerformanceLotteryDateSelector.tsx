@@ -68,7 +68,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
                 getDate(activeLotteryInfo[0].timeEnd).getTime() - getDate(activeLotteryInfo[0].timeStart).getTime()
             ) / (1000 * 60 * 60 * 24))
         );
-    }, [activeLotteryInfo]);
+    }, [activeLotteryInfo, getDate]);
 
     const { data: verifiedOrganizations } = useOrganizationAPI().verifiedOrganizations;
 
@@ -81,7 +81,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
             !editable ||
             activeLotteryInfo[0].applied
         );
-    }, [orgId, activeLotteryInfo, editable]);
+    }, [activeLotteryInfo, editable, getTime, orgId]);
 
     const [selectedDate, setSelectedDate] = useState<number>(-1);
     const [selectedDateString, setSelectedDateString] = useState<string>("");
@@ -89,7 +89,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
         const pivotDate = new Date(startDate);
         pivotDate.setDate(pivotDate.getDate() + selectedDate);
         setSelectedDateString(getDateString(getTime(pivotDate)));
-    }, [selectedDate]);
+    }, [getDateString, getTime, selectedDate, startDate]);
 
     const [open, setOpen] = useState<boolean>(false);
     useEffect(() => { if (selectedDate !== -1) setOpen(true); }, [selectedDate]);
@@ -121,12 +121,12 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
         date: selectedDate,
     });
 
-    useEffect(() => { refetchDateSlotCounts() }, [spaceId]);
+    useEffect(() => { refetchDateSlotCounts() }, [refetchDateSlotCounts, spaceId]);
     useEffect(() => {
         if (selectedDate !== -1) { refetchLotteryByDate(); }
-    }, [selectedDate, orgId, spaceId]);
-    useEffect(() => { refetchDrawnLottery(); }, [orgId, spaceId]);
-    useEffect(() => { refetchLotteryByOrganization(); }, [orgId, spaceId]);
+    }, [orgId, refetchLotteryByDate, selectedDate, spaceId]);
+    useEffect(() => { refetchDrawnLottery(); }, [orgId, refetchDrawnLottery, spaceId]);
+    useEffect(() => { refetchLotteryByOrganization(); }, [orgId, refetchLotteryByOrganization, spaceId]);
 
     const [drawnOrgNameAtSelectedDate, setDrawnOrgNameAtSelectedDate] = useState<string | null>(null);
     useEffect(() => {
@@ -134,7 +134,7 @@ export function DateSelector({ orgId, spaceId, editable, isAdmin }: {
             const found = drawnLottery.find(l => l.date === selectedDate);
             setDrawnOrgNameAtSelectedDate(verifiedOrganizations?.find(o => o.id === found?.organizationId)?.name || null);
         }
-    }, [drawnLottery, selectedDate]);
+    }, [drawnLottery, selectedDate, verifiedOrganizations]);
 
     const [available, setAvailable] = useState<boolean>(true);
 

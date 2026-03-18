@@ -87,7 +87,7 @@ export default function RentalTable({
 
     useEffect(() => {
         setNow(getTime(new Date()));
-    }, []);
+    }, [getTime]);
 
     return (
         <>

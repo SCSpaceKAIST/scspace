@@ -3,7 +3,6 @@
 import { Button, Dialog, Portal, useFileUpload, VStack } from "@chakra-ui/react";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { useGoodsAPI } from "@scspace-client/Hooks/rental";
-import { IGoodsCreate } from "@scspace-depot/types/rental/goods.type";
 import { useCallback, useEffect, useState } from "react";
 import { GoodsNameForm } from "../AddGoods/NameForm";
 import { GoodsDescriptionForm } from "../AddGoods/DecsriptionForm";
@@ -51,7 +50,7 @@ export default function ManageDialog({ id, onChange }: {
             setCountAll(0);
         }
         fileUpload.clearFiles();
-    }, [goodsData]);
+    }, [fileUpload, goodsData]);
 
     const handleCreate = useCallback(() => {
         if (!name) {
@@ -109,7 +108,7 @@ export default function ManageDialog({ id, onChange }: {
                 }
             }
         );
-    }, [name, description, countAll, createGoods, errorMessage, fileUpload]);
+    }, [name, description, countAll, createGoods, errorMessage, fileUpload, onChange]);
 
     const handleUpdate = useCallback(() => {
         const formData = new FormData();
@@ -145,7 +144,7 @@ export default function ManageDialog({ id, onChange }: {
                 }
             }
         );
-    }, [name, description, countAll, updateGoods, errorMessage, fileUpload]);
+    }, [name, description, countAll, updateGoods, errorMessage, fileUpload, onChange]);
 
     const handleDelete = useCallback(() => {
         toaster.promise(
@@ -173,7 +172,7 @@ export default function ManageDialog({ id, onChange }: {
                 }
             }
         )
-    }, [deleteGoods, goodsRefetch]);
+    }, [deleteGoods, errorMessage, onChange]);
 
     return (
         <Dialog.Root

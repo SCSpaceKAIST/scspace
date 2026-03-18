@@ -50,7 +50,7 @@ export default function SelectComponent({
     _setValue(defaultValue ?? optionList[0].value ?? "");
     _setLabel(optionList.find(o => o.value === defaultValue)?.label ?? optionList[0].label ?? "");
     _setDscrp(optionList.find(o => o.value === defaultValue)?.description ?? optionList[0].description ?? "");
-  }, [optionList.length]);
+  }, [defaultValue, optionList]);
 
   return (options.items.length === 0) ? (
     <SmallLoading />

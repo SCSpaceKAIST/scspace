@@ -1,6 +1,6 @@
 "use client"
 
-import { Dialog, DataList, Separator, Button, Center, useBreakpointValue, Stack, Badge } from "@chakra-ui/react";
+import { Dialog, DataList, Separator, Button, Center, useBreakpointValue, Stack } from "@chakra-ui/react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { IUser } from "@scspace-depot/types/user";
@@ -34,14 +34,15 @@ export default function UserDialog({
 
     const [page, setPage] = useState<number>(1);
     const [openResDetail, setOpenResDetail] = useState<boolean>(false);
+    const userId = user?.id ?? 0;
     const { data: reservation, refetch: refetchRes } = useReservationAPI({
-        uid: user?.id || 0,
+        uid: userId,
         oid: 0,
         limit: 50,
         offset: 50 * (page - 1)
     }).userReservation;
     const [selectedRes, setSelectedRes] = useState<IReservationAll | null>(null);
-    useEffect(() => { refetchRes(); }, [page, user?.id || 0]);
+    useEffect(() => { refetchRes(); }, [page, refetchRes, userId]);
     useEffect(() => { setSelectedRes(reservation?.data[0] ?? null); }, [reservation]);
 
     const { getString } = dateUtils();

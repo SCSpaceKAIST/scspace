@@ -11,7 +11,7 @@ import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import { useAllSpace } from "@scspace-client/Hooks/space";
 import { SpaceTypeEnum } from "@scspace-depot/enums/space.enum";
 import { ISpace } from "@scspace-depot/types/space";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function SeminarLottery() {
     const { userInfo, needLogin } = useAuth();
@@ -20,9 +20,9 @@ export default function SeminarLottery() {
     const { spaces, isLoading: spaceLoading } = useAllSpace();
     const { data: verifiedOrganizations, isLoading: orgLoading } = useOrganizationAPI().verifiedOrganizations;
 
-    const seminarRoom: ISpace[] = spaces?.filter(space =>
+    const seminarRoom: ISpace[] = useMemo(() => spaces?.filter(space =>
         space.spaceType === SpaceTypeEnum.SEMINAR
-    ) ?? [];
+    ) ?? [], [spaces]);
     const [spaceId, setSpaceId] = useState<number>(1);
     const [orgId, setOrgId] = useState<number>(-1);
 
@@ -31,12 +31,12 @@ export default function SeminarLottery() {
         if (verifiedOrganizations.length > 0 && orgId === -1) {
             setOrgId(verifiedOrganizations[0].id);
         }
-    }, [verifiedOrganizations]);
+    }, [orgId, verifiedOrganizations]);
     useEffect(() => {
         if (seminarRoom.length > 0 && spaceId === 1) {
             setSpaceId(seminarRoom[0].id);
         }
-    }, [seminarRoom]);
+    }, [seminarRoom, spaceId]);
 
     return (
         <Scroll>

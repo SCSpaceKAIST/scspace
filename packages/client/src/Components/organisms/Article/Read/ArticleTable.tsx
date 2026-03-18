@@ -18,7 +18,7 @@ export default function ArticleTable({ refetchTrigger, query }: {
 
     useEffect(() => {
         refetch();
-    }, [refetchTrigger]);
+    }, [refetch, refetchTrigger]);
 
     const { linkPush } = useLinkPush();
 

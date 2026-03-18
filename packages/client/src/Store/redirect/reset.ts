@@ -11,7 +11,7 @@ export function useRedirects() {
     const { spaces } = useAllSpace();
     const [spaceLinks, setSpaceLinks] = useState<IRedirect[]>([]);
     const [calendarLinks, setCalendarLinks] = useState<IRedirect[]>([]);
-    const { userInfo, isAdmin, isManager, isLogined, isWorker, isPasspinMaster } = useAuth();
+    const { isAdmin, isManager, isLogined, isWorker, isPasspinMaster } = useAuth();
     const pathname = usePathname();
 
     useEffect(() => {
@@ -49,7 +49,7 @@ export function useRedirects() {
     useEffect(() => {
         refetchActiveSeminarLotteryInfo();
         refetchActivePerformanceLotteryInfo();
-    }, [pathname]);
+    }, [pathname, refetchActivePerformanceLotteryInfo, refetchActiveSeminarLotteryInfo]);
 
     useEffect(() => {
         update([
@@ -219,5 +219,16 @@ export function useRedirects() {
                 invisible: !isPasspinMaster,
             },
         ]);
-    }, [spaceLinks, isLogined, isManager, isAdmin, isWorker, isPasspinMaster, userInfo]);
+    }, [
+        activePerformanceLotteryInfo,
+        activeSeminarLotteryInfo,
+        calendarLinks,
+        isAdmin,
+        isLogined,
+        isManager,
+        isPasspinMaster,
+        isWorker,
+        spaceLinks,
+        update,
+    ]);
 }

@@ -45,7 +45,7 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
       dateFrom: dS,
       dateTo: dE
     });
-  }, [spaceId, date.getTime()]);
+  }, [date, spaceId]);
 
   const isWide = useBreakpointValue({ base: false, md: true });
   const [refetchCounter, setRefetchCounter] = useState(0);

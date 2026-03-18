@@ -21,7 +21,7 @@ export default function AvailableDate({ spaceType }: { spaceType: SpaceTypeEnum 
 
         setStartString(getDateString(getTime(startDate)));
         setEndString(getDateString(getTime(endDate)));
-    });
+    }, [spaceType, getDateString, getTime]);
 
     return (
         <Card.Root border={"1px solid"} borderColor={"gray.200"} size={"sm"} bg={"inherit"}>

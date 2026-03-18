@@ -3,7 +3,7 @@
 import { ReservationStateEnum } from "@scspace-depot/enums/reservation.enum";
 import { useMutationApi, useQueryApi } from "./api"
 import { IReservation, IReservationAll, IReservationApplyWorker, IReservationCreate, IReservationCreateMultiple, IReservationMultipleCreateResurt, IReservationUpdate } from "@scspace-depot/types/reservation"
-import { use, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IDataResponse, ISuccessResponse } from "@scspace-depot/types/common/common.type";
 import { dateUtils } from "./utils";
 
@@ -47,8 +47,8 @@ export function useReservationAPI(param: {
     const limit = param.limit ?? 10;
     const offset = param.offset ?? 0;
     const spaceId = param.spaceId ?? 0;
-    const dateFrom = param.dateFrom ?? new Date();
-    const dateTo = param.dateTo ?? new Date();
+    const dateFrom = useMemo(() => param.dateFrom ?? new Date(), [param.dateFrom]);
+    const dateTo = useMemo(() => param.dateTo ?? new Date(), [param.dateTo]);
 
     const { getDate, getDateString, getTime, getMidnightTime, timeUnit } = dateUtils();
 
@@ -63,10 +63,11 @@ export function useReservationAPI(param: {
     const _spaceReservation = useQueryApi<IReservationAll[]>(
         `/reservation/space?spaceId=${spaceId}&timeFrom=${getTime(dateFrom)}&timeTo=${getTime(dateTo)}`
     );
+    const spaceReservationData = _spaceReservation.data;
 
     const [dateReservation, setReservation] = useState<IReservationHookRes>({});
     useEffect(() => {
-        if (!_spaceReservation || !_spaceReservation.data) {
+        if (!spaceReservationData) {
             setReservation({});
             return;
         }
@@ -80,7 +81,7 @@ export function useReservationAPI(param: {
             _reservation[getDateString(getTime(temp))] = [];
         }
 
-        _spaceReservation.data.map((d) => {
+        spaceReservationData.map((d) => {
             const tF = getDate(d.timeFrom);
             const tT = getDate(d.timeTo);
             // tF.setHours(tF.getHours() + 9);
@@ -111,7 +112,7 @@ export function useReservationAPI(param: {
         });
 
         setReservation(_reservation);
-    }, [_spaceReservation.data]);
+    }, [spaceReservationData, dateFrom, dateTo, getDate, getDateString, getMidnightTime, getTime, timeUnit.date]);
     const spaceReservation = {
         ..._spaceReservation,
         dataForCalendar: dateReservation,
