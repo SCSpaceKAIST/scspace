@@ -3,8 +3,8 @@
 import { Button, Text } from "@chakra-ui/react";
 import AlertBtn from "@scspace-client/Components/atoms/AlertBtn";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
+import { getErrorMessage } from "@scspace-client/Hooks/error";
 import { useRentalAPI } from "@scspace-client/Hooks/rental";
-import { useState } from "react";
 
 export default function ReturnBtn({ disabled, id, refetch }: {
     disabled: boolean;
@@ -12,33 +12,21 @@ export default function ReturnBtn({ disabled, id, refetch }: {
     refetch: () => void;
 }) {
     const returnRental = useRentalAPI({ id }).returnRental;
-    const [e, setE] = useState<string>('');
 
-    const handleReturn = () => {
-        toaster.promise(
-            returnRental({}, {
-                onError: (error) => {
-                    setE(error.message);
-                },
-                onSuccess: () => {
-                    refetch();
-                }
-            }),
-            {
-                loading: {
-                    title: "Processing return...",
-                    description: "Please wait",
-                },
-                success: {
-                    title: "Return successful",
-                    description: "The rental has been returned successfully.",
-                },
-                error: {
-                    title: "Return failed",
-                    description: e || "Please try again",
-                },
-            }
-        )
+    const handleReturn = async () => {
+        try {
+            await returnRental({});
+            refetch();
+            toaster.success({
+                title: "Return successful",
+                description: "The rental has been returned successfully.",
+            });
+        } catch (error) {
+            toaster.error({
+                title: "Return failed",
+                description: getErrorMessage(error, "Please try again"),
+            });
+        }
     }
 
     return (

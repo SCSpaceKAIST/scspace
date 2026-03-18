@@ -30,6 +30,7 @@ import ConfirmBtn from "./ConfirmBtn";
 import Link from "next/link";
 import { RentalStatusEnum } from "@scspace-depot/enums/rental.enum";
 import { useGoodsAPI, useRentalAPI } from "@scspace-client/Hooks/rental";
+import { getErrorMessage } from "@scspace-client/Hooks/error";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
@@ -42,8 +43,8 @@ export default function RentalDialog({ open, setOpenAction, rental, refetchListA
 }) {
     const { isManager } = useAuth();
     const { getString } = dateUtils();
-    const { userInfo: rentalWorker } = useUserInfo({ uid: rental?.rentalWorkerId ?? 0 });
-    const { userInfo: returnWorker } = useUserInfo({ uid: rental?.returnWorkerId ?? 0 });
+    const { userInfo: rentalWorker } = useUserInfo({ uid: rental?.rentalWorkerId ?? undefined });
+    const { userInfo: returnWorker } = useUserInfo({ uid: rental?.returnWorkerId ?? undefined });
     const { allGoods: { data: goodsList } } = useGoodsAPI();
     const updateRental = useRentalAPI({ id: rental?.id ?? -1 }).updateRental;
 
@@ -65,7 +66,7 @@ export default function RentalDialog({ open, setOpenAction, rental, refetchListA
         [editGoodsId, goodsList]
     );
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!rental) return;
         if (!editGoodsId || !editTimeDue || editCount <= 0) {
             toaster.error({ title: "수정 값을 다시 확인해주세요" });
@@ -81,23 +82,18 @@ export default function RentalDialog({ open, setOpenAction, rental, refetchListA
             return;
         }
 
-        toaster.promise(
-            updateRental({
+        try {
+            await updateRental({
                 goodsId: editGoodsId,
                 count: editCount,
                 timeDue: new Date(editTimeDue).getTime(),
-            }, {
-                onSuccess: () => {
-                    refetchListAction();
-                    setIsEditMode(false);
-                },
-            }),
-            {
-                loading: { title: "대여 정보 수정 중...", description: "잠시만 기다려주세요" },
-                success: { title: "수정 완료", description: "대여 정보가 저장되었습니다" },
-                error: { title: "수정 실패", description: "다시 시도해주세요" },
-            }
-        );
+            });
+            refetchListAction();
+            setIsEditMode(false);
+            toaster.success({ title: "수정 완료", description: "대여 정보가 저장되었습니다" });
+        } catch (error) {
+            toaster.error({ title: "수정 실패", description: getErrorMessage(error) });
+        }
     };
 
     const statusBadge = rental?.status === RentalStatusEnum.RETURNED ? (
@@ -247,13 +243,19 @@ export default function RentalDialog({ open, setOpenAction, rental, refetchListA
                                     orientation={isWide ? "horizontal" : "vertical"}
                                 >
                                     <DataListItem label="Rental Approver">
-                                        {rentalWorker ? `${rentalWorker.nameKr} (${rentalWorker.studentNumber})` : rental.rentalWorkerId}
+                                        {rental.rentalWorkerId && rental.rentalWorkerId > 0
+                                            ? (rentalWorker
+                                                ? `${rentalWorker.nameKr} (${rentalWorker.studentNumber})`
+                                                : `승인자 정보 없음 (#${rental.rentalWorkerId})`)
+                                            : "대여 승인자 미정"}
                                     </DataListItem>
                                     <DataListItem label="Return Approver">
-                                        {rental.returnWorkerId === 0 ? (
-                                            <Badge>Not Assigned</Badge>
+                                        {!rental.returnWorkerId ? (
+                                            <Badge>반납 승인자 미정</Badge>
                                         ) : (
-                                            returnWorker ? `${returnWorker.nameKr} (${returnWorker.studentNumber})` : rental.returnWorkerId
+                                            returnWorker
+                                                ? `${returnWorker.nameKr} (${returnWorker.studentNumber})`
+                                                : `승인자 정보 없음 (#${rental.returnWorkerId})`
                                         )}
                                     </DataListItem>
                                 </DataList.Root>

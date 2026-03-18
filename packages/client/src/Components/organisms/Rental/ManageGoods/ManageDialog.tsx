@@ -2,6 +2,7 @@
 
 import { Button, Dialog, Portal, useFileUpload, VStack } from "@chakra-ui/react";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
+import { getErrorMessage } from "@scspace-client/Hooks/error";
 import { useGoodsAPI } from "@scspace-client/Hooks/rental";
 import { useCallback, useEffect, useState } from "react";
 import { GoodsNameForm } from "../AddGoods/NameForm";
@@ -16,8 +17,6 @@ export default function ManageDialog({ id, onChange }: {
     const [name, setName] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [countAll, setCountAll] = useState<number>(0);
-    const [errorMessage, setErrorMessage] = useState<string>('');
-
     const fileUpload = useFileUpload({
         maxFiles: 1,
         accept: { "image/*": [] },
@@ -77,38 +76,26 @@ export default function ManageDialog({ id, onChange }: {
         formData.append('description', description || '');
         formData.append('countAll', countAll.toString());
 
-        toaster.promise(
-            createGoods(formData, {
-                onError: (error) => {
-                    setErrorMessage(error.message || 'Failed to create goods');
-                    console.error('Failed to create goods:', error);
-                },
-                onSuccess: () => {
-                    setName('');
-                    setDescription('');
-                    setCountAll(0);
-                    setErrorMessage('');
-                    fileUpload.clearFiles();
-                    onChange();
-                }
-            }),
-
-            {
-                loading: {
-                    title: "Creating goods...",
-                    description: "Please wait",
-                },
-                success: {
+        createGoods(formData)
+            .then(() => {
+                setName('');
+                setDescription('');
+                setCountAll(0);
+                fileUpload.clearFiles();
+                onChange();
+                toaster.success({
                     title: "Goods created successfully!",
                     description: "The new goods has been added",
-                },
-                error: {
+                });
+            })
+            .catch((error) => {
+                console.error('Failed to create goods:', error);
+                toaster.error({
                     title: "Failed to create goods",
-                    description: errorMessage || "Please try again"
-                }
-            }
-        );
-    }, [name, description, countAll, createGoods, errorMessage, fileUpload, onChange]);
+                    description: getErrorMessage(error, "Please try again"),
+                });
+            });
+    }, [name, description, countAll, createGoods, fileUpload, onChange]);
 
     const handleUpdate = useCallback(() => {
         const formData = new FormData();
@@ -118,61 +105,41 @@ export default function ManageDialog({ id, onChange }: {
         if (description) formData.append('description', description);
         if (countAll) formData.append('countAll', countAll.toString());
 
-        toaster.promise(
-            updateGoods(formData, {
-                onError: (error) => {
-                    setErrorMessage(error.message || 'Failed to update goods');
-                    console.error('Failed to update goods:', error);
-                },
-                onSuccess: () => {
-                    onChange();
-                    fileUpload.clearFiles();
-                }
-            }),
-            {
-                loading: {
-                    title: "Updating goods...",
-                    description: "Please wait",
-                },
-                success: {
+        updateGoods(formData)
+            .then(() => {
+                onChange();
+                fileUpload.clearFiles();
+                toaster.success({
                     title: "Goods updated successfully!",
                     description: "The goods has been updated",
-                },
-                error: {
+                });
+            })
+            .catch((error) => {
+                console.error('Failed to update goods:', error);
+                toaster.error({
                     title: "Failed to update goods",
-                    description: errorMessage || "Please try again"
-                }
-            }
-        );
-    }, [name, description, countAll, updateGoods, errorMessage, fileUpload, onChange]);
+                    description: getErrorMessage(error, "Please try again"),
+                });
+            });
+    }, [name, description, countAll, updateGoods, fileUpload, onChange]);
 
     const handleDelete = useCallback(() => {
-        toaster.promise(
-            deleteGoods({}, {
-                onError: (error) => {
-                    setErrorMessage(error.message || 'Failed to delete goods');
-                    console.error('Failed to delete goods:', error);
-                },
-                onSuccess: () => {
-                    onChange();
-                }
-            }),
-            {
-                loading: {
-                    title: "Deleting goods...",
-                    description: "Please wait",
-                },
-                success: {
+        deleteGoods({})
+            .then(() => {
+                onChange();
+                toaster.success({
                     title: "Goods deleted successfully!",
                     description: "The goods has been removed",
-                },
-                error: {
+                });
+            })
+            .catch((error) => {
+                console.error('Failed to delete goods:', error);
+                toaster.error({
                     title: "Failed to delete goods",
-                    description: errorMessage || "Please try again"
-                }
-            }
-        )
-    }, [deleteGoods, errorMessage, onChange]);
+                    description: getErrorMessage(error, "Please try again"),
+                });
+            });
+    }, [deleteGoods, onChange]);
 
     return (
         <Dialog.Root

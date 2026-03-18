@@ -35,15 +35,21 @@ function RentalStatusBadge({ rental, now }: { rental: IRentalAll; now: number; }
 
 function ApproverSummary({ rental }: { rental: IRentalAll; }) {
     const { userInfo: rentalWorker } = useUserInfo({ uid: rental.rentalWorkerId });
-    const { userInfo: returnWorker } = useUserInfo({ uid: rental.returnWorkerId || 0 });
+    const { userInfo: returnWorker } = useUserInfo({ uid: rental.returnWorkerId || undefined });
+
+    const rentalApproverText = rental.rentalWorkerId > 0
+        ? (rentalWorker ? rentalWorker.nameKr : `승인자 정보 없음 (#${rental.rentalWorkerId})`)
+        : "대여 승인자 미정";
+
+    const returnApproverText = !rental.returnWorkerId
+        ? "반납 승인자 미정"
+        : (returnWorker ? returnWorker.nameKr : `승인자 정보 없음 (#${rental.returnWorkerId})`);
 
     return (
         <Stack gap={0}>
-            <Text>{rentalWorker ? rentalWorker.nameKr : `#${rental.rentalWorkerId}`}</Text>
+            <Text>{rentalApproverText}</Text>
             <Text fontSize="xs" color="fg.muted">
-                {rental.returnWorkerId === 0
-                    ? "반납 승인자 미정"
-                    : `반납 승인: ${returnWorker ? returnWorker.nameKr : `#${rental.returnWorkerId}`}`}
+                {`반납 승인: ${returnApproverText}`}
             </Text>
         </Stack>
     );

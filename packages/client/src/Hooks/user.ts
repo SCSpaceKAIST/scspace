@@ -5,8 +5,10 @@ import { useQueryApi, useMutationApi } from "./api"
 import { useEffect, useState } from "react";
 import { UserUtils } from "@scspace-depot/utils/user.utils";
 
-export function useUserInfo({ uid }: { uid: Number }) {
-    const { data, isLoading, refetch } = useQueryApi<IUser>(`/user/profile/${uid}`);
+export function useUserInfo({ uid }: { uid?: number | null }) {
+    const { data, isLoading, refetch } = useQueryApi<IUser>(
+        uid && uid > 0 ? `/user/profile/${uid}` : ""
+    );
     const [userInfo, setUserInfo] = useState<IUser | null>(null);
 
     useEffect(() => {

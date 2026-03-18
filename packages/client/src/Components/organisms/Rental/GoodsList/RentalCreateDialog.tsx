@@ -24,6 +24,7 @@ import { useAuth } from "@scspace-client/Hooks/auth";
 import { useStudent } from "@scspace-client/Hooks/user";
 import { useOrganizationAPI } from "@scspace-client/Hooks/organization";
 import { useRentalAPI } from "@scspace-client/Hooks/rental";
+import { getErrorMessage } from "@scspace-client/Hooks/error";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
 import { IRentalCreateClient } from "@scspace-depot/types/rental/rental.type";
 import { IGoods } from "@scspace-depot/types/rental";
@@ -121,7 +122,7 @@ export default function RentalCreateDialog({
         setCount(1);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!isManager) {
             toaster.error({ title: "공간위원만 대여 등록이 가능합니다." });
             return;
@@ -170,32 +171,21 @@ export default function RentalCreateDialog({
             count,
         };
 
-        toaster.promise(
-            createRental(payload, {
-                onSuccess: () => {
-                    resetForm();
-                    setOpen(false);
-                    refetchAction();
-                },
-                onError: (error) => {
-                    console.error('Failed to create rental:', error);
-                }
-            }),
-            {
-                loading: {
-                    title: "대여 신청 중...",
-                    description: "잠시만 기다려주세요",
-                },
-                success: {
-                    title: "대여 신청 완료!",
-                    description: "대여가 성공적으로 신청되었습니다",
-                },
-                error: {
-                    title: "대여 신청 실패",
-                    description: "다시 시도해주세요"
-                }
-            }
-        );
+        try {
+            await createRental(payload);
+            resetForm();
+            setOpen(false);
+            refetchAction();
+            toaster.success({
+                title: "대여 신청 완료!",
+                description: "대여가 성공적으로 신청되었습니다",
+            });
+        } catch (error) {
+            toaster.error({
+                title: "대여 신청 실패",
+                description: getErrorMessage(error),
+            });
+        }
     };
 
     return (

@@ -2,6 +2,7 @@
 
 import { Button, Checkbox, Dialog, Portal, Stack, Text } from "@chakra-ui/react";
 import { toaster } from "@scspace-client/Components/atoms/Toaster";
+import { getErrorMessage } from "@scspace-client/Hooks/error";
 import { useRentalAPI } from "@scspace-client/Hooks/rental";
 import { useMemo, useState } from "react";
 
@@ -20,7 +21,6 @@ export default function ConfirmBtn({ disabled, id, refetchAction }: {
     refetchAction: () => void;
 }) {
     const confirmReturn = useRentalAPI({ id }).confirmReturn;
-    const [errorMessage, setErrorMessage] = useState("");
     const [open, setOpen] = useState(false);
     const [checkedState, setCheckedState] = useState<Record<ChecklistKey, boolean>>({
         condition: false,
@@ -41,10 +41,9 @@ export default function ConfirmBtn({ disabled, id, refetchAction }: {
             complete: false,
             count: false,
         });
-        setErrorMessage("");
     };
 
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         if (!allChecked) {
             toaster.error({
                 title: "체크리스트를 모두 확인해주세요",
@@ -53,32 +52,21 @@ export default function ConfirmBtn({ disabled, id, refetchAction }: {
             return;
         }
 
-        toaster.promise(
-            confirmReturn({}, {
-                onError: (error) => {
-                    setErrorMessage(error.message);
-                },
-                onSuccess: () => {
-                    refetchAction();
-                    resetState();
-                    setOpen(false);
-                },
-            }),
-            {
-                loading: {
-                    title: "반납 확인 중...",
-                    description: "잠시만 기다려주세요",
-                },
-                success: {
-                    title: "반납 확인 완료",
-                    description: "체크리스트 확인 후 반납이 정상 처리되었습니다.",
-                },
-                error: {
-                    title: "반납 확인 실패",
-                    description: errorMessage || "다시 시도해주세요",
-                },
-            }
-        );
+        try {
+            await confirmReturn({});
+            refetchAction();
+            resetState();
+            setOpen(false);
+            toaster.success({
+                title: "반납 확인 완료",
+                description: "체크리스트 확인 후 반납이 정상 처리되었습니다.",
+            });
+        } catch (error) {
+            toaster.error({
+                title: "반납 확인 실패",
+                description: getErrorMessage(error),
+            });
+        }
     };
 
     return (
