@@ -83,6 +83,13 @@ export default function RentalCreateDialog({
     }, [student]);
 
     useEffect(() => {
+        if (organizationId === 1) {
+            setEmergencyContactPresident(phoneNumber);
+            setEmergencyContactVP(phoneNumber);
+        }
+    }, [organizationId, phoneNumber]);
+
+    useEffect(() => {
         const options: ISelectOption[] = [
             { label: "개인 (Individual)", value: "1", description: "개인 대여" }
         ];
@@ -131,11 +138,11 @@ export default function RentalCreateDialog({
             toaster.error({ title: "전화번호를 입력해주세요" });
             return;
         }
-        if (!emergencyContactPresident || emergencyContactPresident.trim() === "") {
+        if (organizationId !== 1 && (!emergencyContactPresident || emergencyContactPresident.trim() === "")) {
             toaster.error({ title: "비상연락처(회장)를 입력해주세요" });
             return;
         }
-        if (!emergencyContactVP || emergencyContactVP.trim() === "") {
+        if (organizationId !== 1 && (!emergencyContactVP || emergencyContactVP.trim() === "")) {
             toaster.error({ title: "비상연락처(부회장)를 입력해주세요" });
             return;
         }
@@ -293,7 +300,11 @@ export default function RentalCreateDialog({
                                         onChange={(e) => setEmergencyContactPresident(e.target.value)}
                                         rounded="sm"
                                         bg="white"
+                                        disabled={organizationId === 1}
                                     />
+                                    {organizationId === 1 && (
+                                        <Field.HelperText>개인 대여 시 전화번호와 동일하게 자동 입력됩니다.</Field.HelperText>
+                                    )}
                                 </Field.Root>
 
                                 <Field.Root required>
@@ -305,7 +316,11 @@ export default function RentalCreateDialog({
                                         onChange={(e) => setEmergencyContactVP(e.target.value)}
                                         rounded="sm"
                                         bg="white"
+                                        disabled={organizationId === 1}
                                     />
+                                    {organizationId === 1 && (
+                                        <Field.HelperText>개인 대여 시 전화번호와 동일하게 자동 입력됩니다.</Field.HelperText>
+                                    )}
                                 </Field.Root>
 
                                 <Field.Root required>
@@ -333,7 +348,6 @@ export default function RentalCreateDialog({
                                         borderWidth="1px"
                                         rounded="xl"
                                         bg="white"
-                                        boxShadow="sm"
                                         px={4}
                                         py={4}
                                     >
@@ -373,7 +387,6 @@ export default function RentalCreateDialog({
                                             borderWidth="1px"
                                             rounded="xl"
                                             bg="white"
-                                            boxShadow="sm"
                                             px={4}
                                             py={3}
                                         >

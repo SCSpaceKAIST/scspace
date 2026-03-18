@@ -107,25 +107,36 @@ export class RentalService {
         //     });
         // }
 
-        //Rental Cert
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
+        const meta: ICertificatePdf = {
+            id: id,
+            user: user,
+            goods: goods,
+            contact: user.email,
+            rentalFrom: getDateString(now),
+            rentalTo: getDateString(afterOneWeek),
+            rentalDuration: MAX_RENTAL_DURATION,
+            rentalQuantity: rentalData.count,
+        }
+
         try {
-            const meta: ICertificatePdf = {
-                id: id,
-                user: user,
-                goods: goods,
-                contact: user.email,
-                rentalFrom: getDateString(now),
-                rentalTo: getDateString(afterOneWeek),
-                rentalDuration: MAX_RENTAL_DURATION, // # day - might be 7
-                rentalQuantity: rentalData.count,
-            }
-
             const res = await this.pdfService.createAndStoreRentalCert(meta)
-
             await this.rentalRepository.updateRentalCert(id, res.filename);
+        } catch (error) {
+            const err = error instanceof Error
+                ? error
+                : new Error(String(error))
 
-            //rental mail notif
+            Logger.error(`Rental certificate generation failed for rental ${id}: ${err.message}`, err.stack, RentalService.name);
+            await this.mailService.reportError(err,
+                "rental.service.ts > createRental > createAndStoreRentalCert")
+                .catch(() => null);
+        }
 
+        try {
             await this.mailService.sendMail({
                 to: "scspace.kaist@gmail.com",
                 bcc: "jhlee012@kaist.ac.kr",
@@ -135,16 +146,15 @@ export class RentalService {
                     meta: meta,
                 }
             })
-
         } catch (error) {
-            console.log(error)
-
             const err = error instanceof Error
                 ? error
                 : new Error(String(error))
+
+            Logger.error(`Rental notification mail failed for rental ${id}: ${err.message}`, err.stack, RentalService.name);
             await this.mailService.reportError(err,
-                "pdf.service.ts > createRentalConfirmPdf")
-            throw err;
+                "rental.service.ts > createRental > sendMail")
+                .catch(() => null);
         }
 
         return {
