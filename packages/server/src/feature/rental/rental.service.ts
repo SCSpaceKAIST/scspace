@@ -451,6 +451,55 @@ export class RentalService {
         return { success: true };
     }
 
+    async confirmReturn(id: number): Promise<ISuccessResponse> {
+        const rental = await this.rentalPublicService.getRentalById(id);
+        if (!rental) {
+            throw new NotFoundException('Rental not found');
+        }
+
+        if (rental.timeReturn === 0) {
+            throw new BadRequestException('This rental has not been returned yet');
+        }
+
+        if (rental.status === RentalStatusEnum.RETURNED) {
+            throw new BadRequestException('This return has already been confirmed');
+        }
+
+        const isOverdue = rental.timeDue < rental.timeReturn;
+
+        if (isOverdue) {
+            const overdueDays = Math.ceil(
+                getDateDiffInMinute(rental.timeReturn, rental.timeDue) / (60 * 24)
+            );
+
+            const user = await this.userPublicService.fetchById(rental.userId);
+            if (!user) {
+                throw new NotFoundException('User not found');
+            }
+
+            let newTimeOverdue: number;
+
+            if (user.timeOverdue === 0) {
+                const overdueEndDate = getDate(rental.timeReturn);
+                overdueEndDate.setDate(overdueEndDate.getDate() + overdueDays);
+                overdueEndDate.setHours(23, 59, 59, 999);
+                newTimeOverdue = getTime(overdueEndDate);
+            } else {
+                const existingOverdueEndDate = getDate(user.timeOverdue);
+                existingOverdueEndDate.setDate(existingOverdueEndDate.getDate() + overdueDays);
+                newTimeOverdue = getTime(existingOverdueEndDate);
+            }
+
+            await this.userPublicService.updateOverdue(rental.userId, {
+                timeOverdue: newTimeOverdue,
+            });
+        }
+
+        await this.rentalRepository.confirmReturn(id);
+
+        return { success: true };
+    }
+
     async deleteRental(id: number): Promise<ISuccessResponse> {
         const rental = await this.rentalPublicService.getRentalById(id);
         if (!rental) {

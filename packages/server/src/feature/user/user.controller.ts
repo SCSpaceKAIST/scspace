@@ -34,6 +34,18 @@ export class UserController {
     return user;
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Get('profile/:id')
+  async getUserProfileById(
+    @Param('id', ParseIntPipe) id: number
+  ): Promise<IUser> {
+    const user = await this.userPublicService.fetchById(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+
   //HOOK: useUserInfo
   @UseGuards(ManagerGuard)
   @Get(':id')

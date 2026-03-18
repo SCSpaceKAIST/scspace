@@ -226,6 +226,12 @@ export class RentalRepository {
         await this.db.update(Rental).set({ timeReturn, returnWorkerId }).where(eq(Rental.id, id));
     }
 
+    async confirmReturn(id: number): Promise<void> {
+        await this.db.update(Rental)
+            .set({ status: RentalStatusEnum.RETURNED })
+            .where(eq(Rental.id, id));
+    }
+
     async deleteRental(id: number): Promise<void> {
         await this.db.delete(Rental).where(eq(Rental.id, id));
     }

@@ -157,6 +157,14 @@ export class RentalController {
         return await this.rentalService.returnRental(id, worker.id);
     }
 
+    @Put(':id/confirm')
+    @UseGuards(ManagerGuard)
+    async confirmReturn(
+        @Param('id', ParseIntPipe) id: number,
+    ): Promise<ISuccessResponse> {
+        return await this.rentalService.confirmReturn(id);
+    }
+
     @Put(':id')
     @UseGuards(ManagerGuard)
     async updateRental(
