@@ -12,7 +12,6 @@ import {
     Badge,
     Center,
     Input,
-    Select,
     Stack,
 } from "@chakra-ui/react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
@@ -157,13 +156,23 @@ export default function RentalDialog({ open, setOpenAction, rental, refetchListA
                                 >
                                     <DataListItem label="Name">
                                         {isEditMode ? (
-                                            <Select value={editGoodsId.toString()} onChange={(event) => setEditGoodsId(parseInt(event.target.value, 10))}>
+                                            <select
+                                                value={editGoodsId.toString()}
+                                                onChange={(event) => setEditGoodsId(parseInt(event.target.value, 10))}
+                                                style={{
+                                                    width: "100%",
+                                                    border: "1px solid var(--chakra-colors-border)",
+                                                    borderRadius: "0.375rem",
+                                                    padding: "0.5rem 0.75rem",
+                                                    background: "var(--chakra-colors-bg)",
+                                                }}
+                                            >
                                                 {goodsList?.map((goods) => (
                                                     <option key={goods.id} value={goods.id.toString()}>
                                                         {goods.name}
                                                     </option>
                                                 ))}
-                                            </Select>
+                                            </select>
                                         ) : (
                                             rental.goods.name
                                         )}
