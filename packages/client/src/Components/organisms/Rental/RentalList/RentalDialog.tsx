@@ -1,7 +1,6 @@
 "use client"
 
 import {
-    Box,
     Button,
     Dialog,
     Separator,
@@ -12,7 +11,6 @@ import {
     Badge,
     Center,
     Input,
-    Stack,
 } from "@chakra-ui/react";
 import LoadingComponent from "@scspace-client/Components/atoms/Loading";
 import { HiOutlineRefresh } from "react-icons/hi";
@@ -42,7 +40,7 @@ export default function RentalDialog({ open, setOpenAction, rental, refetchListA
     refetchListAction: () => any;
 }) {
     const { isManager } = useAuth();
-    const { getString } = dateUtils();
+    const { getString, getDateString, getTime, timeUnit } = useMemo(() => dateUtils(), []);
     const { userInfo: rentalWorker } = useUserInfo({ uid: rental?.rentalWorkerId ?? undefined });
     const { userInfo: returnWorker } = useUserInfo({ uid: rental?.returnWorkerId ?? undefined });
     const { allGoods: { data: goodsList } } = useGoodsAPI();
@@ -58,8 +56,8 @@ export default function RentalDialog({ open, setOpenAction, rental, refetchListA
         setIsEditMode(false);
         setEditGoodsId(rental?.goodsId ?? 0);
         setEditCount(rental?.count ?? 1);
-        setEditTimeDue(rental ? new Date(rental.timeDue).toISOString().slice(0, 10) : "");
-    }, [rental]);
+        setEditTimeDue(rental ? getDateString(rental.timeDue) : "");
+    }, [rental, getDateString]);
 
     const selectedGoods = useMemo(
         () => goodsList?.find((goods) => goods.id === editGoodsId) ?? null,
@@ -82,11 +80,15 @@ export default function RentalDialog({ open, setOpenAction, rental, refetchListA
             return;
         }
 
+        const [year, month, day] = editTimeDue.split("-").map(Number);
+        const nextDueDate = new Date(year, month - 1, day);
+        const nextTimeDue = getTime(nextDueDate) + timeUnit.date - 1;
+
         try {
             await updateRental({
                 goodsId: editGoodsId,
                 count: editCount,
-                timeDue: new Date(editTimeDue).getTime(),
+                timeDue: nextTimeDue,
             });
             refetchListAction();
             setIsEditMode(false);
