@@ -3,7 +3,7 @@
 import { createListCollection, Portal, Select } from "@chakra-ui/react";
 import TooltipComponent from "@scspace-client/Components/atoms/Tooptip";
 import { IOrganizationDelegator } from "@scspace-depot/types/organization";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 const INIT_OPTIONS = [
     { label: "All", value: "0" },
@@ -15,34 +15,35 @@ export default function OrgSelect({ organization, setOid, oid }: {
     setOid: (n: number) => void;
     oid: number;
 }) {
-    const [_oid, _setOid] = useState<string[]>(["0"]);
-    useEffect(() => {
-        const _t = parseInt(_oid[0]);
-        if (_t != oid) setOid(_t);
-    }, [_oid, oid, setOid]);
-
-    const [options, setOptions] = useState<{ label: string; value: string }[]>(INIT_OPTIONS);
-    useEffect(() => {
+    const options = useMemo(() => {
         if (!organization) {
-            setOptions(INIT_OPTIONS);
-            return;
+            return INIT_OPTIONS;
         }
-        setOptions([
+
+        return [
             ...INIT_OPTIONS,
             ...organization.map((o) => ({
                 label: o.name,
                 value: o.id.toString()
             }))
-        ])
+        ];
     }, [organization]);
 
-    const optionList = createListCollection({ items: options });
+    const optionList = useMemo(() => createListCollection({ items: options }), [options]);
 
     return (
         <Select.Root
             collection={optionList}
-            value={_oid}
-            onValueChange={(e) => _setOid(e.value)}
+            value={[oid.toString()]}
+            onValueChange={(e) => {
+                const nextValue = e.value[0];
+                if (!nextValue) return;
+
+                const nextOid = parseInt(nextValue, 10);
+                if (!Number.isNaN(nextOid) && nextOid !== oid) {
+                    setOid(nextOid);
+                }
+            }}
             width="180px"
         >
             <Select.HiddenSelect />

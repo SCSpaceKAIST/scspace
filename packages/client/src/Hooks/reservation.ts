@@ -50,7 +50,7 @@ export function useReservationAPI(param: {
     const dateFrom = useMemo(() => param.dateFrom ?? new Date(), [param.dateFrom]);
     const dateTo = useMemo(() => param.dateTo ?? new Date(), [param.dateTo]);
 
-    const { getDate, getDateString, getTime, getMidnightTime, timeUnit } = dateUtils();
+    const { getDate, getDateString, getTime, getMidnightTime, timeUnit } = useMemo(() => dateUtils(), []);
 
     const allReservation = useQueryApi<IDataResponse<IReservationAll[]>>(
         `/reservation?oid=${oid}&limit=${limit}&offset=${offset}`

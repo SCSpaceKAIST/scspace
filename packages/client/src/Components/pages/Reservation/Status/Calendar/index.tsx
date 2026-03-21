@@ -21,6 +21,7 @@ import RefetchBtn from "@scspace-client/Components/molecules/buttons/RefetchBtn"
 
 export default function Calendar({ spaceId }: { spaceId: number }) {
   const [date, setDate] = useState<Date>(() => new Date());
+  const dateTime = date.getTime();
   const [open, setOpen] = useState<boolean>(false);
   const [text, setText] = useState<string>("")
 
@@ -31,9 +32,10 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
   } | null>(null);
 
   useEffect(() => {
-    const dS = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const pivotDate = new Date(dateTime);
+    const dS = new Date(pivotDate.getFullYear(), pivotDate.getMonth(), pivotDate.getDate());
     const dE = new Date(dS);
-    const d = date.getDay();
+    const d = pivotDate.getDay();
 
     dS.setDate(dS.getDate() - d);
     dE.setDate(dE.getDate() - d + 6);
@@ -45,7 +47,7 @@ export default function Calendar({ spaceId }: { spaceId: number }) {
       dateFrom: dS,
       dateTo: dE
     });
-  }, [date, spaceId]);
+  }, [dateTime, spaceId]);
 
   const isWide = useBreakpointValue({ base: false, md: true });
   const [refetchCounter, setRefetchCounter] = useState(0);

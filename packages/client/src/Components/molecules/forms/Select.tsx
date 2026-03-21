@@ -8,7 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import CheckComponent from "./Checkbox";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { SmallLoading } from "@scspace-client/Components/atoms/Loading";
 
 export interface ISelectOption {
@@ -38,21 +38,32 @@ export default function SelectComponent({
   required?: boolean;
   setCheck?: Dispatch<SetStateAction<boolean>>;
 }) {
-  const options = createListCollection({
+  const options = useMemo(() => createListCollection({
     items: optionList,
-  });
+  }), [optionList]);
 
   const [_value, _setValue] = useState<string>("");
-  const [_label, _setLabel] = useState<string>("");
-  const [_dscrp, _setDscrp] = useState<string>("");
+
+  const selectedOption = useMemo(() => {
+    if (optionList.length === 0) return null;
+
+    return optionList.find((option) => option.value === _value)
+      ?? optionList.find((option) => option.value === defaultValue)
+      ?? optionList[0];
+  }, [_value, defaultValue, optionList]);
 
   useEffect(() => {
     if (optionList.length === 0) return;
 
-    _setValue(defaultValue ?? optionList[0].value ?? "");
-    _setLabel(optionList.find(o => o.value === defaultValue)?.label ?? optionList[0].label ?? "");
-    _setDscrp(optionList.find(o => o.value === defaultValue)?.description ?? optionList[0].description ?? "");
-  }, [defaultValue, optionList]);
+    const hasCurrentValue = optionList.some((option) => option.value === _value);
+    if (hasCurrentValue) return;
+
+    const nextValue = optionList.find((option) => option.value === defaultValue)?.value
+      ?? optionList[0].value
+      ?? "";
+
+    _setValue(nextValue);
+  }, [_value, defaultValue, optionList]);
 
   return (options.items.length === 0) ? (
     <SmallLoading />
@@ -62,11 +73,11 @@ export default function SelectComponent({
       collection={options}
       value={[_value]}
       onValueChange={(e) => {
-        _setValue(e.value[0]);
-        _setDscrp(e.items[0].description ?? "");
-        _setLabel(e.items[0].label);
-        console.log(e);
-        onChange(e.items[0]);
+        const selectedItem = e.items[0];
+        if (!selectedItem) return;
+
+        _setValue(selectedItem.value);
+        onChange(selectedItem);
       }}
     >
       <Select.HiddenSelect />
@@ -79,9 +90,9 @@ export default function SelectComponent({
             (typeof checkboxLabel === "string") ? (
               <CheckComponent label={checkboxLabel}
               />
-            ) : (checkboxLabel[_label] && (
+            ) : (selectedOption && checkboxLabel[selectedOption.label] && (
               <CheckComponent
-                label={checkboxLabel[_label]}
+                label={checkboxLabel[selectedOption.label]}
                 onChange={(e) => setCheck(e)}
               />
             ))
@@ -97,10 +108,10 @@ export default function SelectComponent({
           <Select.ValueText>
             <Stack gap={0} m={0} p={0}>
               <Text>
-                {_label}
+                {selectedOption?.label ?? ""}
               </Text>
               <Span color="fg.muted" textStyle="xs">
-                {_dscrp}
+                {selectedOption?.description ?? ""}
               </Span>
             </Stack>
           </Select.ValueText>

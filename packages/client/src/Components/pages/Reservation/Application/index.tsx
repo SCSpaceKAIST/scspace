@@ -42,12 +42,12 @@ export default function ReservationApplication() {
   const [dateTo, setDateTo] = useState<Date>(() => new Date(_init.getFullYear(), _init.getMonth(), _init.getDate()));
 
   useEffect(() => {
-    if (dateFrom > dateTo) setDateTo(dateFrom);
-  }, [dateFrom, dateTo]);
+    setDateTo((current) => (dateFrom > current ? dateFrom : current));
+  }, [dateFrom]);
 
   useEffect(() => {
-    if (dateFrom > dateTo) setDateFrom(dateTo);
-  }, [dateFrom, dateTo]);
+    setDateFrom((current) => (current > dateTo ? dateTo : current));
+  }, [dateTo]);
 
   const [hourFrom, setHourFrom] = useState<number>(0);
   const [hourTo, setHourTo] = useState<number>(0);
