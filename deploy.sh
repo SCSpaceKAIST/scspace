@@ -6,8 +6,11 @@ pm2 save --force
 
 pnpm self-update
 pnpm i
+# pnpm migrate
+pnpm generate
+pnpm push
+
 pnpm build
-pnpm migrate
 
 pm2 start "pnpm run start" --name "scspace-app"
 pm2 save
