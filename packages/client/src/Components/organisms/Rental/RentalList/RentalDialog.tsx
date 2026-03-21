@@ -215,19 +215,6 @@ export default function RentalDialog({ open, setOpenAction, rental, refetchListA
                                 </DataList.Root>
                             </DataListItem>
                             <Separator />
-                            <DataListItem label="Emergency Contacts">
-                                <DataList.Root
-                                    orientation={isWide ? "horizontal" : "vertical"}
-                                >
-                                    <DataListItem label="President">
-                                        {rental.emergencyContactPresident}
-                                    </DataListItem>
-                                    <DataListItem label="Vice President">
-                                        {rental.emergencyContactVicePresident}
-                                    </DataListItem>
-                                </DataList.Root>
-                            </DataListItem>
-                            <Separator />
                             <DataListItem label="User">
                                 <DataList.Root
                                     orientation={isWide ? "horizontal" : "vertical"}
@@ -247,6 +234,19 @@ export default function RentalDialog({ open, setOpenAction, rental, refetchListA
                                 </DataList.Root>
                             </DataListItem>
                             <Separator />
+                            <DataListItem label="Contacts">
+                                <DataList.Root
+                                    orientation={isWide ? "horizontal" : "vertical"}
+                                >
+                                    <DataListItem label="President">
+                                        {rental.emergencyContactPresident}
+                                    </DataListItem>
+                                    <DataListItem label="Vice President">
+                                        {rental.emergencyContactVicePresident}
+                                    </DataListItem>
+                                </DataList.Root>
+                            </DataListItem>
+                            <Separator />
                             <DataListItem label="Organization">
                                 <DataList.Root
                                     orientation={isWide ? "horizontal" : "vertical"}
@@ -254,20 +254,17 @@ export default function RentalDialog({ open, setOpenAction, rental, refetchListA
                                     <DataListItem label="Name">
                                         {rental.organization.name}
                                     </DataListItem>
-                                    <DataListItem label="Organization ID">
-                                        {rental.organizationId}
-                                    </DataListItem>
                                 </DataList.Root>
                             </DataListItem>
                             <Separator />
-                            <DataListItem label="Workers">
+                            <DataListItem label="SCSpace">
                                 <DataList.Root
                                     orientation={isWide ? "horizontal" : "vertical"}
                                 >
                                     <DataListItem label="Rental Approver">
                                         {rental.rentalWorkerId && rental.rentalWorkerId > 0
                                             ? (rentalWorker
-                                                ? `${rentalWorker.nameKr} (${rentalWorker.studentNumber})`
+                                                ? `${rentalWorker.nameKr}`
                                                 : `승인자 정보 없음 (#${rental.rentalWorkerId})`)
                                             : "대여 승인자 미정"}
                                     </DataListItem>
@@ -276,7 +273,7 @@ export default function RentalDialog({ open, setOpenAction, rental, refetchListA
                                             <Badge>반납 승인자 미정</Badge>
                                         ) : (
                                             returnWorker
-                                                ? `${returnWorker.nameKr} (${returnWorker.studentNumber})`
+                                                ? `${returnWorker.nameKr}`
                                                 : `승인자 정보 없음 (#${rental.returnWorkerId})`
                                         )}
                                     </DataListItem>
