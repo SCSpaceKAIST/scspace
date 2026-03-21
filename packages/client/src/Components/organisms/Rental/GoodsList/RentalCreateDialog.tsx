@@ -176,17 +176,26 @@ export default function RentalCreateDialog({
             reasonPurpose,
         };
 
+        const toastId = `rental-create-${item.id}-${borrowerId}`;
+        toaster.loading({
+            id: toastId,
+            title: "대여 신청 중...",
+            description: "잠시만 기다려주세요",
+        });
+
         try {
             await createRental(payload);
             resetForm();
             setOpen(false);
             refetchAction();
-            toaster.success({
+            toaster.update(toastId, {
+                type: "success",
                 title: "대여 신청 완료!",
                 description: "대여가 성공적으로 신청되었습니다",
             });
         } catch (error) {
-            toaster.error({
+            toaster.update(toastId, {
+                type: "error",
                 title: "대여 신청 실패",
                 description: getErrorMessage(error),
             });

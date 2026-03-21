@@ -46,6 +46,77 @@ export class RentalService {
         }
     }
 
+    private async runCreateRentalSideEffects(
+        id: number,
+        meta: ICertificatePdf,
+        user: IUser,
+        organizationId: number,
+    ): Promise<void> {
+        try {
+            const res = await this.pdfService.createAndStoreRentalCert(meta)
+            await this.rentalRepository.updateRentalCert(id, res.filename);
+        } catch (error) {
+            const err = error instanceof Error
+                ? error
+                : new Error(String(error))
+
+            Logger.error(`Rental certificate generation failed for rental ${id}: ${err.message}`, err.stack, RentalService.name);
+            await this.mailService.reportError(err,
+                "rental.service.ts > createRental > createAndStoreRentalCert")
+                .catch(() => null);
+        }
+
+        try {
+            await this.mailService.sendMail({
+                to: "scspace.kaist@gmail.com",
+                bcc: "jhlee012@kaist.ac.kr",
+                template: "rentalNotif",
+                subject: "[SCSpace] 새로운 대여가 있습니다.",
+                context: {
+                    meta: meta,
+                }
+            })
+        } catch (error) {
+            const err = error instanceof Error
+                ? error
+                : new Error(String(error))
+
+            Logger.error(`Rental notification mail failed for rental ${id}: ${err.message}`, err.stack, RentalService.name);
+            await this.mailService.reportError(err,
+                "rental.service.ts > createRental > sendMail")
+                .catch(() => null);
+        }
+
+        try {
+            await this.mailService.sendMail({
+                to: user.email,
+                template: "rentalSuccess",
+                subject: "[SCSpace] 대여 신청이 등록되었습니다.",
+                context: {
+                    meta: RentalMeta.createdSuccess,
+                    rental: {
+                        id,
+                        goodsName: meta.goods.name,
+                        quantity: meta.rentalQuantity,
+                        borrowerName: user.nameKr,
+                        organizationName: organizationId === 1 ? '개인' : '단체',
+                        timeFrom: meta.rentalFrom,
+                        timeTo: meta.rentalTo,
+                    },
+                }
+            })
+        } catch (error) {
+            const err = error instanceof Error
+                ? error
+                : new Error(String(error))
+
+            Logger.error(`Borrower rental success mail failed for rental ${id}: ${err.message}`, err.stack, RentalService.name);
+            await this.mailService.reportError(err,
+                "rental.service.ts > createRental > sendBorrowerMail")
+                .catch(() => null);
+        }
+    }
+
     // Rental 관련 서비스 메서드들
     async createRental(rentalData: IRentalCreateClient & { rentalWorkerId : number} ): Promise<{ success: boolean; data: { id: number } }> {
         await this.ensureIndividualOrganizationIfNeeded([rentalData.organizationId]);
@@ -122,69 +193,7 @@ export class RentalService {
             rentalQuantity: rentalData.count,
         }
 
-        try {
-            const res = await this.pdfService.createAndStoreRentalCert(meta)
-            await this.rentalRepository.updateRentalCert(id, res.filename);
-        } catch (error) {
-            const err = error instanceof Error
-                ? error
-                : new Error(String(error))
-
-            Logger.error(`Rental certificate generation failed for rental ${id}: ${err.message}`, err.stack, RentalService.name);
-            await this.mailService.reportError(err,
-                "rental.service.ts > createRental > createAndStoreRentalCert")
-                .catch(() => null);
-        }
-
-        try {
-            await this.mailService.sendMail({
-                to: "scspace.kaist@gmail.com",
-                bcc: "jhlee012@kaist.ac.kr",
-                template: "rentalNotif",
-                subject: "[SCSpace] 새로운 대여가 있습니다.",
-                context: {
-                    meta: meta,
-                }
-            })
-        } catch (error) {
-            const err = error instanceof Error
-                ? error
-                : new Error(String(error))
-
-            Logger.error(`Rental notification mail failed for rental ${id}: ${err.message}`, err.stack, RentalService.name);
-            await this.mailService.reportError(err,
-                "rental.service.ts > createRental > sendMail")
-                .catch(() => null);
-        }
-
-        try {
-            await this.mailService.sendMail({
-                to: user.email,
-                template: "rentalSuccess",
-                subject: "[SCSpace] 대여 신청이 등록되었습니다.",
-                context: {
-                    meta: RentalMeta.createdSuccess,
-                    rental: {
-                        id,
-                        goodsName: goods.name,
-                        quantity: rentalData.count,
-                        borrowerName: user.nameKr,
-                        organizationName: rentalData.organizationId === 1 ? '개인' : '단체',
-                        timeFrom: getDateString(now),
-                        timeTo: getDateString(afterOneWeek),
-                    },
-                }
-            })
-        } catch (error) {
-            const err = error instanceof Error
-                ? error
-                : new Error(String(error))
-
-            Logger.error(`Borrower rental success mail failed for rental ${id}: ${err.message}`, err.stack, RentalService.name);
-            await this.mailService.reportError(err,
-                "rental.service.ts > createRental > sendBorrowerMail")
-                .catch(() => null);
-        }
+        void this.runCreateRentalSideEffects(id, meta, user, rentalData.organizationId);
 
         return {
             success: true,
