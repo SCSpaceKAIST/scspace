@@ -9,6 +9,11 @@ export class MRental implements IRental {
     returnWorkerId: IRental['returnWorkerId'];
     goodsId: IRental['goodsId'];
     count: IRental['count'];
+    phoneNumber: IRental['phoneNumber'];
+    emergencyContactPresident: IRental['emergencyContactPresident'];
+    emergencyContactVicePresident: IRental['emergencyContactVicePresident'];
+    reasonLocation: IRental['reasonLocation'];
+    reasonPurpose: IRental['reasonPurpose'];
     timeBorrow: IRental['timeBorrow'];
     timeDue: IRental['timeDue'];
     timeReturn: IRental['timeReturn'];
@@ -23,6 +28,11 @@ export class MRental implements IRental {
         this.returnWorkerId = data.returnWorkerId;
         this.goodsId = data.goodsId;
         this.count = data.count;
+        this.phoneNumber = data.phoneNumber;
+        this.emergencyContactPresident = data.emergencyContactPresident;
+        this.emergencyContactVicePresident = data.emergencyContactVicePresident;
+        this.reasonLocation = data.reasonLocation;
+        this.reasonPurpose = data.reasonPurpose;
         this.timeBorrow = data.timeBorrow;
         this.timeDue = data.timeDue;
         this.timeReturn = data.timeReturn;
@@ -39,6 +49,11 @@ export class MRental implements IRental {
             returnWorkerId: rental.returnWorkerId,
             goodsId: rental.goodsId,
             count: rental.count,
+            phoneNumber: rental.phoneNumber,
+            emergencyContactPresident: rental.emergencyContactPresident,
+            emergencyContactVicePresident: rental.emergencyContactVicePresident,
+            reasonLocation: rental.reasonLocation,
+            reasonPurpose: rental.reasonPurpose,
             timeBorrow: rental.timeBorrow,
             timeDue: rental.timeDue,
             timeReturn: rental.timeReturn,

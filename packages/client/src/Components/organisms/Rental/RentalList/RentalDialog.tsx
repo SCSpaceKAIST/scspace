@@ -206,6 +206,25 @@ export default function RentalDialog({ open, setOpenAction, rental, refetchListA
                                     <DataListItem label="Status">
                                         {statusBadge}
                                     </DataListItem>
+                                    <DataListItem label="Usage Location">
+                                        {rental.reasonLocation}
+                                    </DataListItem>
+                                    <DataListItem label="Usage Purpose">
+                                        {rental.reasonPurpose}
+                                    </DataListItem>
+                                </DataList.Root>
+                            </DataListItem>
+                            <Separator />
+                            <DataListItem label="Emergency Contacts">
+                                <DataList.Root
+                                    orientation={isWide ? "horizontal" : "vertical"}
+                                >
+                                    <DataListItem label="President">
+                                        {rental.emergencyContactPresident}
+                                    </DataListItem>
+                                    <DataListItem label="Vice President">
+                                        {rental.emergencyContactVicePresident}
+                                    </DataListItem>
                                 </DataList.Root>
                             </DataListItem>
                             <Separator />
@@ -221,6 +240,9 @@ export default function RentalDialog({ open, setOpenAction, rental, refetchListA
                                     </DataListItem>
                                     <DataListItem label="Email">
                                         {rental.user.email}
+                                    </DataListItem>
+                                    <DataListItem label="Phone Number">
+                                        {rental.phoneNumber}
                                     </DataListItem>
                                 </DataList.Root>
                             </DataListItem>

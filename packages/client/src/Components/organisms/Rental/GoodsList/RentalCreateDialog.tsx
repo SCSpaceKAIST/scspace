@@ -169,6 +169,11 @@ export default function RentalCreateDialog({
             organizationId,
             goodsId: item.id,
             count,
+            phoneNumber,
+            emergencyContactPresident,
+            emergencyContactVicePresident: emergencyContactVP,
+            reasonLocation,
+            reasonPurpose,
         };
 
         try {

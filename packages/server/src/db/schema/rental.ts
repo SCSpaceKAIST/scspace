@@ -35,6 +35,11 @@ export const Rental = mysqlTable('rental', {
         .notNull()
         .references(() => Goods.id, { onDelete: 'cascade' }),
     count: int('count').notNull().default(1),
+    phoneNumber: varchar('phone_number', { length: 32 }).notNull(),
+    emergencyContactPresident: varchar('emergency_contact_president', { length: 32 }).notNull(),
+    emergencyContactVicePresident: varchar('emergency_contact_vice_president', { length: 32 }).notNull(),
+    reasonLocation: varchar('reason_location', { length: 256 }).notNull(),
+    reasonPurpose: varchar('reason_purpose', { length: 2048 }).notNull(),
     timeBorrow: bigint('time_borrow', { mode: 'number' }).notNull(),
     timeDue: bigint('time_due', { mode: 'number' }).notNull(),
     timeReturn: bigint('time_return', { mode: 'number' }).notNull().default(0),

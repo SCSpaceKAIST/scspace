@@ -11,6 +11,11 @@ export interface IRental {
     returnWorkerId : number; //new
     goodsId: number;
     count: number;
+    phoneNumber: string;
+    emergencyContactPresident: string;
+    emergencyContactVicePresident: string;
+    reasonLocation: string;
+    reasonPurpose: string;
     timeBorrow: number;
     timeDue: number;
     timeReturn: number;
@@ -28,13 +33,13 @@ export type IRentalAll = IRental & {
 //rentalWorkerId => req.user.id, userId should be designated
 export type IRentalCreate = Pick<
     IRental,
-    "userId" | "organizationId" | "rentalWorkerId" | "goodsId" | "count" | "timeBorrow" | "timeDue"
+    "userId" | "organizationId" | "rentalWorkerId" | "goodsId" | "count" | "phoneNumber" | "emergencyContactPresident" | "emergencyContactVicePresident" | "reasonLocation" | "reasonPurpose" | "timeBorrow" | "timeDue"
 >;
 
 //the rentalWorkerId => req.user.id, then we should throw a userId / organizationId (indiv => 1)
 export type IRentalCreateClient = Pick<
     IRentalCreate,
-    "userId" | "organizationId" | "goodsId" | "count"
+    "userId" | "organizationId" | "goodsId" | "count" | "phoneNumber" | "emergencyContactPresident" | "emergencyContactVicePresident" | "reasonLocation" | "reasonPurpose"
 >;
 
 export type IRentalUpdate = Partial<Pick<
