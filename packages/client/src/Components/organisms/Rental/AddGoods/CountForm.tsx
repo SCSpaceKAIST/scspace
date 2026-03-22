@@ -9,7 +9,11 @@ export function GoodsCountForm({ count, setCount }: {
     <NumberInputComponent
       label="Total Count"
       value={count.toString()}
-      onChange={v => setCount(parseInt(v))}
+      onChange={v => {
+        const parsed = parseInt(v);
+        if (!isNaN(parsed)) setCount(parsed);
+        else if (v === "") setCount(0);
+      }}
     />
   );
 }

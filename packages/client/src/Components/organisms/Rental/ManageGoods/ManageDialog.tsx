@@ -49,7 +49,7 @@ export default function ManageDialog({ id, onChange }: {
             setCountAll(0);
         }
         fileUpload.clearFiles();
-    }, [fileUpload, goodsData]);
+    }, [goodsData?.id]);
 
     const handleCreate = useCallback(() => {
         if (!name) {
