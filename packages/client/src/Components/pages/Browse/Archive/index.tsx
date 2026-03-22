@@ -50,7 +50,7 @@ export default function Archive() {
                         }
                     >
                         <Link
-                            href="https://docs.google.com/document/d/1U0IpkWkp2jewem2reDkV6SIFeChtsRh6zTAquX4qm7o"
+                            href="https://docs.google.com/document/d/1U0IpkWkp2jewem2reDkV6SIFeChtsRh6zTAquX4qm7o/edit?usp=sharing"
                             target="_blank"
                             rel="noopener noreferrer"
                             w={"full"}
@@ -72,7 +72,7 @@ export default function Archive() {
                         }
                     >
                         <Link
-                            href="https://docs.google.com/document/d/1U0IpkWkp2jewem2reDkV6SIFeChtsRh6zTAquX4qm7o"
+                            href="https://docs.google.com/document/d/1njWD4Q3xb8IExv3W9po3KOTi32SJN1-J5gYH5bPVY48/edit?usp=sharing"
                             target="_blank"
                             rel="noopener noreferrer"
                             w={"full"}
