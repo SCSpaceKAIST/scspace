@@ -275,8 +275,15 @@ export class ReservationRepository {
       .from(ReservationContent)
       .where(eq(ReservationContent.id, id));
 
-    if (reservationContent.length == 0) throw new NotFoundException(`Dev: Cannot found reservationContent: ${id}`);
-    return reservationContent[0];
+      // need to refine the logic
+    if (reservationContent.length == 0) {
+        const errorContent = await this.db
+            .select()
+            .from(ReservationContent)
+            .where(eq(ReservationContent.id, 1));
+        return errorContent;
+    }
+    else return reservationContent[0];
   }
 
   async fetchByWorkerId(workerId: number): Promise<MReservationSimple[]> {
