@@ -263,7 +263,10 @@ export class ReservationPublicService {
     checkContainAllId(workerIds, workers, 'workers');
 
     return reservations.map((reservation) => {
-      const content = reservationContents.find(content => content.id === reservation.id)!;
+        // NEED TO REFINE NULL EXCEPTION LOGIC
+        // if no content => it must contains RC id 1, so ~
+      const content = reservationContents.find(content => content.id === reservation.id)
+        ?? reservationContents.find(content => content.id == 1);
       return {
         ...reservation,
         user: users.find(user => user.id === reservation.userId)!,
