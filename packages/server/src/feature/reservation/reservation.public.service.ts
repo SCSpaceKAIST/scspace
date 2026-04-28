@@ -230,7 +230,6 @@ export class ReservationPublicService {
     timeFrom?: number,
     timeTo?: number,
   ): Promise<IReservationAll[]> {
-
     if (timeFrom && timeTo) {
       if (timeFrom > timeTo) throw new BadRequestException('timeFrom must be before timeTo');
       const oneDayInMs = BigInt(60) * BigInt(24);

@@ -1,5 +1,6 @@
 import { IReservation, IReservationContent, IReservationSimple } from '@scspace-depot/types/reservation';
 import { Reservation, ReservationContent, schema } from '@schema';
+import { Logger } from '@nestjs/common';
 
 export class MReservationContent implements IReservationContent {
   id: IReservationContent['id'];
@@ -22,7 +23,21 @@ export class MReservationContent implements IReservationContent {
     this.workerId = data.workerId ?? 0;
   }
 
-  static fromDB(reservationContent: typeof ReservationContent.$inferSelect): IReservationContent {
+  static fromDB(reservationContent: typeof ReservationContent.$inferSelect | undefined | null): IReservationContent {
+      if (!reservationContent) { 
+          Logger.log('Trigger: No RC found');
+          return {
+              id : 1,
+              description: 'Dev - Null',
+              innerParticipantNumber: 0,
+              outerParticipantNumber: 0, 
+              food: 'Dev - Null',
+              busking: false,
+              workerNeed: false,
+              workerId : 0,
+          };
+      }
+
     return {
       id: reservationContent.id,
       description: reservationContent.description,

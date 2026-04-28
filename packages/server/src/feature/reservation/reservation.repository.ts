@@ -274,6 +274,8 @@ export class ReservationRepository {
       .select()
       .from(ReservationContent)
       .where(eq(ReservationContent.id, id));
+
+    if (reservationContent.length == 0) throw new NotFoundException(`Dev: Cannot found reservationContent: ${id}`);
     return reservationContent[0];
   }
 
