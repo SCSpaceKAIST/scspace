@@ -281,7 +281,7 @@ export class ReservationRepository {
             .select()
             .from(ReservationContent)
             .where(eq(ReservationContent.id, 1));
-        return errorContent;
+        return errorContent[0];
     }
     else return reservationContent[0];
   }
