@@ -65,7 +65,8 @@ export class ReservationService {
 
     return {
       data: reservations.map((reservation) => {
-        const content = reservationContents.find(content => content.id === reservation.id)!;
+        let content = reservationContents.find(content => content.id === reservation.id)!;
+        if (!content) content = reservationContents.find(c => c.id === 1);
         return {
           ...reservation,
           user: users.find(user => user.id === reservation.userId)!,
