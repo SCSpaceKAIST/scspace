@@ -20,12 +20,38 @@ export class UserPublicService {
     return MUser.fromDB(user[0]);
   }
 
+
+  // WHY WE ALWAYS USE MUser.fromDB for every MUser element? 
+  // Since MUser implements IUser, just return MUser does not make error idk
   async fetchByStudentNumber(studentNumber: number): Promise<IUser | null> {
     const user = await this.userRepository.fetch({ studentNumber: studentNumber });
     if (user.length === 0) {
       return null;
     }
     return MUser.fromDB(user[0]);
+  }
+
+  // fetch user by email
+  async fetchByEmail(email : string) : Promise<IUser | null> {
+    const users = await this.userRepository.fetch({ email});
+    if (users.length === 0) {
+      return null;
+    }
+    return MUser.fromDB(users[0]);
+  }
+
+  // update student number for New-graduate students
+  async updateStudentNumber(id : number, newStudentNumber : number) : Promise<IUser | null> {
+      const users = await this.userRepository.fetch({ id }) ;
+      if (users.length === 0) return null;
+
+      const user = users[0];
+      
+      if (user.studentNumber === newStudentNumber) return MUser.fromDB(user); // no change
+
+      const updatedUser = await this.userRepository.updateStudentNumber(id, newStudentNumber)
+
+      return updatedUser ? MUser.fromDB(updatedUser) : null;
   }
 
   async fetchAllByIds(ids: number[]): Promise<IUser[]> {

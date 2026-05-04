@@ -68,17 +68,26 @@ export class AuthService {
 
       const payload = this.ssoToUser(userInfo);
 
-      const user = await this.userPublicService.fetchByStudentNumber(
-        payload.studentNumber,
+      const user = await this.userPublicService.fetchByEmail(
+        payload.email,
       );
+
+      let currentUser : IUser | null;
+
       const createdUser = !user ? await this.userPublicService.insert(payload) : user;
 
+      if (createdUser.studentNumber !== payload.studentNumber) {
+         currentUser = await this.userPublicService
+            .updateStudentNumber(createdUser.id, payload.studentNumber) ?? createdUser; 
+      } else currentUser = createdUser;
+
+
       const memberExist = await this.organizationPublicService.fetchMembersById(1);
-      if (!memberExist.some(member => member.userId === createdUser.id)) {
-        await this.organizationPublicService.insertMember(1, createdUser.id);
+      if (!memberExist.some(member => member.userId === currentUser.id)) {
+        await this.organizationPublicService.insertMember(1, currentUser.id);
       }
 
-      const token = this.jwtService.sign(createdUser, {
+      const token = this.jwtService.sign(currentUser, {
         expiresIn: '7d',
         issuer: 'scspace',
         subject: 'userInfo',
