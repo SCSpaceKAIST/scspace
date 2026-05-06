@@ -96,8 +96,8 @@ export class AppService {
           spaceType: SpaceTypeEnum.WORK,
         },
         {
-          nameKr: '오픈스페이스',
-          nameEn: 'Open Space',
+          nameKr: '버스킹존',
+          nameEn: 'Busking Zone',
           spaceType: SpaceTypeEnum.OPEN,
         },
         {
@@ -113,6 +113,11 @@ export class AppService {
         {
           nameKr: '2층 로비',
           nameEn: '2nd Floor Lobby',
+          spaceType: SpaceTypeEnum.OPEN,
+        },
+        {
+          nameKr: '신학관 옥상',
+          nameEn: 'Student Center Rooftop',
           spaceType: SpaceTypeEnum.OPEN,
         },
       ];
