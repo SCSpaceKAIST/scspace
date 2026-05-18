@@ -6,6 +6,7 @@ import Providers from "./providers";
 import { Grid, } from "@chakra-ui/react";
 import ToasterComponent from "@scspace-client/Components/atoms/Toaster";
 import LayoutBox from "./padding";
+import MatchPredictHeader from "@scspace-client/Components/organisms/Header/MatchPredictHeader";
 
 export const metadata = {
   title: "KAIST SCSpace",
@@ -43,7 +44,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             direction="column"
             templateRows="auto 1fr"
           >
-            <Header />
+            <MatchPredictHeader />
             <LayoutBox>
               {children}
             </LayoutBox>
