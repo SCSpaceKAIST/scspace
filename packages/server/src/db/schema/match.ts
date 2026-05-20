@@ -1,0 +1,30 @@
+import { mysqlTable, int, varchar, datetime, timestamp } from 'drizzle-orm/mysql-core';
+import { User } from './user'; // 기존 프로젝트의 User 스키마 경로에 맞게 임포트
+
+// 1. 경기 정보 테이블
+export const MatchInfo = mysqlTable('match_info', {
+  id: int('id').autoincrement().primaryKey(),
+  matchName: varchar('match_name', { length: 255 }).notNull(),
+  matchTime: datetime('match_time').notNull(),
+  teamA: varchar('team_a', { length: 100 }).notNull(),
+  teamB: varchar('team_b', { length: 100 }).notNull(),
+  scoreA: int('score_a'),
+  scoreB: int('score_b'),
+});
+
+// 2. 유저의 경기 예측 테이블
+export const MatchPrediction = mysqlTable('match_prediction', {
+  id: int('id').autoincrement().primaryKey(),
+  userId: int('user_id')
+    .notNull()
+    .references(() => User.id, { onDelete: 'cascade' }),  
+  matchId: int('match_id')
+    .notNull()
+    .references(() => MatchInfo.id, { onDelete: 'cascade' }), 
+  firstScoreA: int('first_score_a').notNull(),
+  firstScoreB: int('first_score_b').notNull(),
+  secondScoreA: int('second_score_a').notNull(),
+  secondScoreB: int('second_score_b').notNull(),
+  timeSubmit: timestamp('time_submit').defaultNow().onUpdateNow(),
+  predictionResult: int('prediction_result'),
+});
