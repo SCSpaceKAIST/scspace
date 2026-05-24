@@ -28,6 +28,7 @@ import {
   getDateString,
   getNow,
   getString,
+  getTime,
   getWeekPeriod,
   takeAll,
   timeRangeCheck,
@@ -418,22 +419,36 @@ export class ReservationPublicService {
     if (!space) {
       throw new BadRequestException('Space not found');
     }
-    // check min / max time
-    const nowDay = getNow();
-    if (
-      reservationMinDate[space.spaceType] * (24 * 60) >
-      getDateDiffInMinute(nowDay, timeFrom)
-    ) {
+    // check min / max date using the reservation rule's day boundaries
+    const now = getNow();
+    const reservationDate = getDate(timeFrom);
+    const reservationOpenTime = getTime(
+      new Date(
+        reservationDate.getFullYear(),
+        reservationDate.getMonth(),
+        reservationDate.getDate() - reservationMaxDate[space.spaceType],
+        0,
+        0,
+      ),
+    );
+    const reservationDeadline = getTime(
+      new Date(
+        reservationDate.getFullYear(),
+        reservationDate.getMonth(),
+        reservationDate.getDate() - reservationMinDate[space.spaceType],
+        23,
+        59,
+      ),
+    );
+
+    if (now > reservationDeadline) {
       throw new BadRequestException(
-        `Check the minimum reservation date. ${space.nameEn} can be reserved at least ${reservationMinDate[space.spaceType]} days in advance. (Left days: ${reservationMinDate[space.spaceType] - Math.floor(getDateDiffInMinute(nowDay, timeFrom) / (24 * 60))})`,
+        `Check the minimum reservation date. ${space.nameEn} can be reserved no later than ${reservationMinDate[space.spaceType]} days before the date of use. (Reservation deadline: ${getString(reservationDeadline)})`,
       );
     }
-    if (
-      reservationMaxDate[space.spaceType] * (24 * 60) <
-      getDateDiffInMinute(nowDay, timeFrom)
-    ) {
+    if (now < reservationOpenTime) {
       throw new BadRequestException(
-        `Check the maximum reservation date. ${space.nameEn} can be reserved at most ${reservationMaxDate[space.spaceType]} days in advance. (Left days: ${reservationMaxDate[space.spaceType] - Math.floor(getDateDiffInMinute(nowDay, timeFrom) / (24 * 60))})`,
+        `Check the maximum reservation date. ${space.nameEn} can be reserved from ${reservationMaxDate[space.spaceType]} days before the date of use. (Reservation opens: ${getString(reservationOpenTime)})`,
       );
     }
 
