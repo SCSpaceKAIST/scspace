@@ -7,8 +7,8 @@ pm2 save --force
 pnpm self-update
 pnpm i
 # pnpm migrate
-pnpm generate
-pnpm push
+# pnpm generate
+# pnpm push
 
 pnpm build
 
