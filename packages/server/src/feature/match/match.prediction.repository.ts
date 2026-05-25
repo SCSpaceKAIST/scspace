@@ -13,12 +13,12 @@ export class MatchPredictionRepository {
 
   async insert(data: IMatchPredictionCreate) { // 타입 변경
     const insertData = {
-      userId: data.user_id,
-      matchId: data.match_id,
-      firstScoreA: data.first_score_a,
-      firstScoreB: data.first_score_b,
-      secondScoreA: data.second_score_a,
-      secondScoreB: data.second_score_b,
+      userId: data.userId,
+      matchId: data.matchId,
+      firstScoreA: data.firstScoreA,
+      firstScoreB: data.firstScoreB,
+      secondScoreA: data.secondScoreA,
+      secondScoreB: data.secondScoreB,
     } as InferInsertModel<typeof MatchPrediction>;
 
     const [result] = await this.db.insert(MatchPrediction).values(insertData);
@@ -31,19 +31,29 @@ export class MatchPredictionRepository {
   }
   
   async fetchByUserId(userId: number) {
-    const result = await this.db
+    return this.db
       .select({
         prediction: MatchPrediction,
         matchInfo: MatchInfo,
       })
       .from(MatchPrediction)
-      // match_info 테이블과 조인하여 경기 상세 정보(이름, 팀 등)를 함께 가져옵니다.
       .leftJoin(MatchInfo, eq(MatchPrediction.matchId, MatchInfo.id))
       .where(eq(MatchPrediction.userId, userId))
-      .orderBy(desc(MatchPrediction.timeSubmit)); // 최신 제출 순 정렬
+      .orderBy(desc(MatchPrediction.timeSubmit));
+  }
 
-    if (result.length === 0) {
-      throw new NotFoundException(`유저 ID ${userId}의 예측 데이터가 없습니다.`);
+  async fetchAll() {
+    return this.db.select().from(MatchInfo).orderBy(desc(MatchInfo.matchTime));
+  }
+
+  async fetchByMatchId(matchId: number) {
+    const [result] = await this.db
+      .select()
+      .from(MatchInfo)
+      .where(eq(MatchInfo.id, matchId));
+
+    if (!result) {
+      throw new NotFoundException(`경기 ID ${matchId}를 찾을 수 없습니다.`);
     }
 
     return result;
