@@ -1,10 +1,11 @@
 "use client";
 
-import { Flex, Box, Text, Link, Input, Button } from "@chakra-ui/react";
+import { Flex, Box, Text, Input, Button } from "@chakra-ui/react";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useLinkPush } from "@scspace-client/Hooks/api";
-import { useEffect } from "react";
+import { useMatchAPI, useMatchPredictionAPI } from "@scspace-client/Hooks/match";
+import { useEffect, useState } from "react";
 
 const bannerStyle = {
     backgroundColor: "lightgray",
@@ -97,13 +98,18 @@ const scoreStyle = {
 
 const SCORE_GAP = { base: "40px", md: "110px", lg: "180px" };
 
-function ScoreInput() {
+function ScoreInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
     return (
         <Box display="flex" {...scoreBoxStyle}>
             <Input
                 type="text"
                 inputMode="numeric"
                 pattern="[0-9]*"
+                value={value}
+                onChange={(e) => {
+                    const v = e.target.value;
+                    if (v === "" || /^\d+$/.test(v)) onChange(v);
+                }}
                 w="full"
                 h="full"
                 p="0"
@@ -122,28 +128,46 @@ function ScoreInput() {
     );
 }
 
-function ScoreRow() {
+function ScoreRow({ valueA, valueB, onChangeA, onChangeB }: {
+    valueA: string;
+    valueB: string;
+    onChangeA: (v: string) => void;
+    onChangeB: (v: string) => void;
+}) {
     return (
         <Flex justify="center" alignItems="center" gap={SCORE_GAP} alignSelf="stretch">
-            <ScoreInput />
+            <ScoreInput value={valueA} onChange={onChangeA} />
             <Text {...scoreStyle}>:</Text>
-            <ScoreInput />
+            <ScoreInput value={valueB} onChange={onChangeB} />
         </Flex>
     );
 }
 
-function ScoreSection({ label }: { label: string }) {
+function ScoreSection({ label, valueA, valueB, onChangeA, onChangeB }: {
+    label: string;
+    valueA: string;
+    valueB: string;
+    onChangeA: (v: string) => void;
+    onChangeB: (v: string) => void;
+}) {
     return (
         <Flex direction="column" alignItems="center" gap="9px" alignSelf="stretch">
             <Text {...labelStyle}>{label}</Text>
-            <ScoreRow />
+            <ScoreRow valueA={valueA} valueB={valueB} onChangeA={onChangeA} onChangeB={onChangeB} />
         </Flex>
     );
 }
 
 export default function MatchPredictInputPage() {
-    const { isLogined, isLoading } = useAuth();
+    const { isLogined, isLoading, userInfo } = useAuth();
     const { linkPush } = useLinkPush();
+    const { allMatches, createPrediction } = useMatchAPI();
+    const { myPredictions } = useMatchPredictionAPI(userInfo?.id);
+
+    const [firstA, setFirstA] = useState("");
+    const [firstB, setFirstB] = useState("");
+    const [secondA, setSecondA] = useState("");
+    const [secondB, setSecondB] = useState("");
 
     useEffect(() => {
         if (isLoading) return;
@@ -153,7 +177,46 @@ export default function MatchPredictInputPage() {
         }
     }, [isLogined, isLoading, linkPush]);
 
-    if (!isLogined) return null;
+    const matchId = allMatches.data?.data?.[0]?.id;
+    const existingPrediction = myPredictions.data?.find(
+        (p) => p.prediction.matchId === matchId
+    );
+    const hasSubmitted = !!existingPrediction;
+
+    useEffect(() => {
+        if (!existingPrediction) return;
+        setFirstA(String(existingPrediction.prediction.firstScoreA));
+        setFirstB(String(existingPrediction.prediction.firstScoreB));
+        setSecondA(String(existingPrediction.prediction.secondScoreA));
+        setSecondB(String(existingPrediction.prediction.secondScoreB));
+    }, [existingPrediction]);
+
+    if (!isLogined || !userInfo) return null;
+
+    function handleSubmit() {
+        if (!matchId) return;
+        if ([firstA, firstB, secondA, secondB].some((v) => v === "")) {
+            alert("모든 점수를 입력해주세요.");
+            return;
+        }
+
+        createPrediction({
+            userId: userInfo!.id,
+            matchId,
+            firstScoreA: Number(firstA),
+            firstScoreB: Number(firstB),
+            secondScoreA: Number(secondA),
+            secondScoreB: Number(secondB),
+        }, {
+            onSuccess: () => {
+                alert("예측이 제출되었습니다!");
+                linkPush("/match-predict/main");
+            },
+            onError: (e) => {
+                alert(e.message);
+            },
+        });
+    }
 
     return (
         <Scroll>
@@ -183,22 +246,52 @@ export default function MatchPredictInputPage() {
                                 <Text {...labelStyle} alignSelf="center">VS</Text>
                                 <Box bgImage="url(/img/match-predict/psg.png)" {...emblemStyle} />
                             </Flex>
-                            <ScoreSection label="전반전 점수" />
-                            <ScoreSection label="후반전 점수" />
-                            <Button
-                                px="30px"
-                                color={labelStyle.color}
-                                fontFamily={labelStyle.fontFamily}
-                                fontSize={labelStyle.fontSize}
-                                fontWeight={labelStyle.fontWeight}
-                                bg="rgba(255, 255, 255, 0.1)"
-                                border="1px solid rgba(255, 255, 255, 0.3)"
-                                borderRadius="md"
-                                _hover={{ bg: "rgba(255, 255, 255, 0.2)" }}
-                                _active={{ bg: "rgba(255, 255, 255, 0.15)" }}
-                            >
-                                Submit
-                            </Button>
+                            <ScoreSection
+                                label="전반전 점수"
+                                valueA={firstA} valueB={firstB}
+                                onChangeA={hasSubmitted ? () => {} : setFirstA}
+                                onChangeB={hasSubmitted ? () => {} : setFirstB}
+                            />
+                            <ScoreSection
+                                label="후반전 점수"
+                                valueA={secondA} valueB={secondB}
+                                onChangeA={hasSubmitted ? () => {} : setSecondA}
+                                onChangeB={hasSubmitted ? () => {} : setSecondB}
+                            />
+                            {!hasSubmitted && (
+                                <Button
+                                    px="30px"
+                                    color={labelStyle.color}
+                                    fontFamily={labelStyle.fontFamily}
+                                    fontSize={labelStyle.fontSize}
+                                    fontWeight={labelStyle.fontWeight}
+                                    bg="rgba(255, 255, 255, 0.1)"
+                                    border="1px solid rgba(255, 255, 255, 0.3)"
+                                    borderRadius="md"
+                                    _hover={{ bg: "rgba(255, 255, 255, 0.2)" }}
+                                    _active={{ bg: "rgba(255, 255, 255, 0.15)" }}
+                                    onClick={handleSubmit}
+                                    isLoading={allMatches.isLoading || myPredictions.isLoading}
+                                >
+                                    Submit
+                                </Button>
+                            )}
+                            {hasSubmitted && (
+                                <Button
+                                    px="30px"
+                                    color="rgba(255, 255, 255, 0.4)"
+                                    fontFamily={labelStyle.fontFamily}
+                                    fontSize={labelStyle.fontSize}
+                                    fontWeight={labelStyle.fontWeight}
+                                    bg="rgba(255, 255, 255, 0.05)"
+                                    border="1px solid rgba(255, 255, 255, 0.15)"
+                                    borderRadius="md"
+                                    isDisabled
+                                    cursor="not-allowed"
+                                >
+                                    제출 완료
+                                </Button>
+                            )}
                         </Flex>
                     </Flex>
 

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { DBModule } from 'src/db/db.module';
 import { MatchController } from './match.controller';
-import { MatchPredictionRepository } from './match-prediction.repository';
+import { MatchPredictionRepository } from './match.prediction.repository'
 
 @Module({
     imports: [
