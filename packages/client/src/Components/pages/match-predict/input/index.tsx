@@ -2,7 +2,6 @@
 
 import { Flex, Box, Text, Input, Button } from "@chakra-ui/react";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
-import { useAuth } from "@scspace-client/Hooks/auth";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useMatchAPI, useMatchPredictionAPI } from "@scspace-client/Hooks/match";
 import { useEffect, useState } from "react";
@@ -158,24 +157,17 @@ function ScoreSection({ label, valueA, valueB, onChangeA, onChangeB }: {
     );
 }
 
+const TEST_USER_ID = 1;
+
 export default function MatchPredictInputPage() {
-    const { isLogined, isLoading, userInfo } = useAuth();
     const { linkPush } = useLinkPush();
     const { allMatches, createPrediction } = useMatchAPI();
-    const { myPredictions } = useMatchPredictionAPI(userInfo?.id);
+    const { myPredictions } = useMatchPredictionAPI(TEST_USER_ID);
 
     const [firstA, setFirstA] = useState("");
     const [firstB, setFirstB] = useState("");
     const [secondA, setSecondA] = useState("");
     const [secondB, setSecondB] = useState("");
-
-    useEffect(() => {
-        if (isLoading) return;
-        if (!isLogined) {
-            sessionStorage.setItem("loginRedirect", "/match-predict/input");
-            linkPush("/login");
-        }
-    }, [isLogined, isLoading, linkPush]);
 
     const matchId = allMatches.data?.data?.[0]?.id;
     const existingPrediction = myPredictions.data?.find(
@@ -191,8 +183,6 @@ export default function MatchPredictInputPage() {
         setSecondB(String(existingPrediction.prediction.secondScoreB));
     }, [existingPrediction]);
 
-    if (!isLogined || !userInfo) return null;
-
     function handleSubmit() {
         if (!matchId) return;
         if ([firstA, firstB, secondA, secondB].some((v) => v === "")) {
@@ -201,7 +191,7 @@ export default function MatchPredictInputPage() {
         }
 
         createPrediction({
-            userId: userInfo!.id,
+            userId: TEST_USER_ID,
             matchId,
             firstScoreA: Number(firstA),
             firstScoreB: Number(firstB),
