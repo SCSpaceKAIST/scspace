@@ -170,8 +170,8 @@ export default function MatchPredictInputPage() {
     const [secondB, setSecondB] = useState("");
 
     const matchId = allMatches.data?.data?.[0]?.id;
-    const existingPrediction = myPredictions.data?.find(
-        (p) => p.prediction.matchId === matchId
+    const existingPrediction = (myPredictions.data as any)?.data?.find(
+        (p: any) => p.prediction.matchId === matchId
     );
     const hasSubmitted = !!existingPrediction;
 
