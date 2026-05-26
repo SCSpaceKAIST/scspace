@@ -19,7 +19,7 @@ export function useMatchAPI() {
 }
 
 export function useMatchPredictionAPI(userId?: number) {
-    const myPredictions = useQueryApi<IMatchPredictionWithInfo[]>(
+    const myPredictions = useQueryApi<{ status: string; data: IMatchPredictionWithInfo[] }>(
         `/match/prediction/${userId ?? 0}`,
     );
 

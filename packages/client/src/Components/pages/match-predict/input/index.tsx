@@ -178,7 +178,7 @@ export default function MatchPredictInputPage() {
     }, [isLogined, isLoading, linkPush]);
 
     const matchId = allMatches.data?.data?.[0]?.id;
-    const existingPrediction = myPredictions.data?.find(
+    const existingPrediction = myPredictions.data?.data?.find(
         (p) => p.prediction.matchId === matchId
     );
     const hasSubmitted = !!existingPrediction;
