@@ -271,7 +271,7 @@ export default function MatchPredictInputPage() {
                                     _hover={{ bg: "rgba(255, 255, 255, 0.2)" }}
                                     _active={{ bg: "rgba(255, 255, 255, 0.15)" }}
                                     onClick={handleSubmit}
-                                    isLoading={allMatches.isLoading || myPredictions.isLoading}
+                                    loading={allMatches.isLoading || myPredictions.isLoading}
                                 >
                                     Submit
                                 </Button>
@@ -286,7 +286,7 @@ export default function MatchPredictInputPage() {
                                     bg="rgba(255, 255, 255, 0.05)"
                                     border="1px solid rgba(255, 255, 255, 0.15)"
                                     borderRadius="md"
-                                    isDisabled
+                                    disabled
                                     cursor="not-allowed"
                                 >
                                     제출 완료
