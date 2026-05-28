@@ -17,10 +17,11 @@ export const MatchPrediction = mysqlTable('match_prediction', {
   id: int('id').autoincrement().primaryKey(),
   userId: int('user_id')
     .notNull()
-    .references(() => User.id, { onDelete: 'cascade' }),  
+    .unique()
+    .references(() => User.id, { onDelete: 'cascade' }),
   matchId: int('match_id')
     .notNull()
-    .references(() => MatchInfo.id, { onDelete: 'cascade' }), 
+    .references(() => MatchInfo.id, { onDelete: 'cascade' }),
   firstScoreA: int('first_score_a').notNull(),
   firstScoreB: int('first_score_b').notNull(),
   secondScoreA: int('second_score_a').notNull(),
