@@ -21,7 +21,17 @@ export class MatchPredictionRepository {
       secondScoreB: data.secondScoreB,
     } as InferInsertModel<typeof MatchPrediction>;
 
-    const [result] = await this.db.insert(MatchPrediction).values(insertData);
+    const [result] = await this.db
+      .insert(MatchPrediction)
+      .values(insertData)
+      .onDuplicateKeyUpdate({
+        set: {
+          firstScoreA: data.firstScoreA,
+          firstScoreB: data.firstScoreB,
+          secondScoreA: data.secondScoreA,
+          secondScoreB: data.secondScoreB,
+        }
+      });
     
     if (!result.insertId) {
       throw new Error('데이터 저장에 실패했습니다.');

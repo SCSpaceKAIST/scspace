@@ -17,6 +17,7 @@ export const MatchPrediction = mysqlTable('match_prediction', {
   id: int('id').autoincrement().primaryKey(),
   userId: int('user_id')
     .notNull()
+    .unique()
     .references(() => User.id, { onDelete: 'cascade' }),  
   matchId: int('match_id')
     .notNull()
