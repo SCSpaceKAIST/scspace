@@ -136,12 +136,12 @@ function ScoreDisplay({ label, scoreA, scoreB }: {
                     <Text color="white" fontSize="12px" fontWeight="600">PSG</Text>
                 </Flex>
                 <Flex align="center" gap="6px">
-                    <Flex w={SCORE_BOX_SIZE} h={SCORE_BOX_SIZE} justify="center" align="center" bg="white" border="1px solid white">
-                        <Text color="#08080C" fontSize={SCORE_FONT} fontWeight="700">{scoreA}</Text>
+                    <Flex w={SCORE_BOX_SIZE} h={SCORE_BOX_SIZE} justify="center" align="center" bg="#08080C" border="1px solid rgba(255,204,0,0.6)" style={{ boxShadow: "0 0 8px rgba(255,204,0,0.4)" }}>
+                        <Text color="rgba(255,255,255,0.9)" fontSize={SCORE_FONT} fontWeight="700">{scoreA}</Text>
                     </Flex>
                     <Text color="white" fontSize={SCORE_FONT} fontWeight="700">:</Text>
-                    <Flex w={SCORE_BOX_SIZE} h={SCORE_BOX_SIZE} justify="center" align="center" bg="white" border="1px solid white">
-                        <Text color="#08080C" fontSize={SCORE_FONT} fontWeight="700">{scoreB}</Text>
+                    <Flex w={SCORE_BOX_SIZE} h={SCORE_BOX_SIZE} justify="center" align="center" bg="#08080C" border="1px solid rgba(255,204,0,0.6)" style={{ boxShadow: "0 0 8px rgba(255,204,0,0.4)" }}>
+                        <Text color="rgba(255,255,255,0.9)" fontSize={SCORE_FONT} fontWeight="700">{scoreB}</Text>
                     </Flex>
                 </Flex>
                 <Flex direction="column" align="center" gap="5px" minW="52px">
