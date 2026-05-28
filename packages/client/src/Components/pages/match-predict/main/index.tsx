@@ -286,6 +286,49 @@ function ScoringCard() {
     );
 }
 
+function PrizeCard() {
+    const rows = [
+        { rank: "1위(1명)", desc: "배달의민족 상품권 5만원 교환권" },
+        { rank: "2위(3명)", desc: "휴대용 선풍기" },
+        { rank: "3위(3명)", desc: "커피 교환권" },
+    ];
+
+    return (
+        <Flex px="12px" alignSelf="stretch">
+            <Flex
+                flex="1"
+                direction="column"
+                gap="10px"
+                bg="#08080C"
+                borderRadius="10px"
+                border="1px solid rgb(245, 30, 11)"
+                px="14px"
+                py="16px"
+                style={{ boxShadow: "0 0 30px rgb(143, 8, 8)" }}
+            >
+                <Text
+                    color="white"
+                    fontSize="20px"
+                    fontWeight="700"
+                    style={{
+                        textShadow: "0 0 10px rgb(255, 162, 0), 0 0 15px rgba(255, 38, 0, 0.7), 0 0 30px rgba(72, 47, 0, 0.82)",
+                    }}
+                >
+                    예측 순위별 상품
+                </Text>
+                {rows.map((row, i) => (
+                    <Flex key={row.rank} justify="space-between" align="center">
+                        <Text color="white" fontSize="14px" fontWeight="500" style={{ textShadow: RANK_GLOWS[i] }}>
+                            {row.rank}
+                        </Text>
+                        <Text color="white" fontSize="14px" fontWeight="500">{row.desc}</Text>
+                    </Flex>
+                ))}
+            </Flex>
+        </Flex>
+    );
+}
+
 export default function MatchPredictMainPage() {
     const { isLogined, userInfo } = useAuth();
     const { linkPush } = useLinkPush();
@@ -327,6 +370,8 @@ export default function MatchPredictMainPage() {
 
                     <MatchHeader />
                     <InfoBar />
+
+                    <PrizeCard />
 
                     {existingPrediction ? (
                         <MyPredictionCard prediction={existingPrediction} onEdit={handleInputClick} />
