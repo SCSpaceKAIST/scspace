@@ -22,6 +22,8 @@ export interface IMatchPrediction {
 
 export type IMatchPredictionCreate = Omit<IMatchPrediction, 'id' | 'timeSubmit' | 'predictionResult'>;
 
+export type IMatchPredictionUpdate = Pick<IMatchPrediction, 'firstScoreA' | 'firstScoreB' | 'secondScoreA' | 'secondScoreB'>;
+
 export interface IMatchPredictionWithInfo {
     prediction: IMatchPrediction;
     matchInfo: IMatchInfo | null;

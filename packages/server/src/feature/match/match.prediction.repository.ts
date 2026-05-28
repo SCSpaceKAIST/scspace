@@ -3,7 +3,7 @@ import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema, MatchPrediction, MatchInfo } from '@schema'; 
 import { eq, desc, InferInsertModel } from 'drizzle-orm';
-import { IMatchPredictionCreate } from './match.model'; // DTO 대신 모델 임포트
+import { IMatchPredictionCreate, IMatchPredictionUpdate } from './match.model';
 
 @Injectable()
 export class MatchPredictionRepository {
@@ -54,6 +54,24 @@ export class MatchPredictionRepository {
 
   async fetchAll() {
     return this.db.select().from(MatchInfo).orderBy(desc(MatchInfo.matchTime));
+  }
+
+  async update(predictionId: number, data: IMatchPredictionUpdate) {
+    const [result] = await this.db
+      .update(MatchPrediction)
+      .set({
+        firstScoreA: data.firstScoreA,
+        firstScoreB: data.firstScoreB,
+        secondScoreA: data.secondScoreA,
+        secondScoreB: data.secondScoreB,
+      })
+      .where(eq(MatchPrediction.id, predictionId));
+
+    if (!result.affectedRows) {
+      throw new NotFoundException(`예측 ID ${predictionId}를 찾을 수 없습니다.`);
+    }
+
+    return result;
   }
 
   async fetchByMatchId(matchId: number) {

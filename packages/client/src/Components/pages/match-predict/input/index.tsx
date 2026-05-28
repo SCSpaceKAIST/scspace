@@ -1,44 +1,11 @@
 "use client";
 
-import { Flex, Box, Text, Input, Button } from "@chakra-ui/react";
+import { Flex, Box, Text, Input, Button, Image } from "@chakra-ui/react";
 import Scroll from "@scspace-client/Components/molecules/page/Scroll";
 import { useAuth } from "@scspace-client/Hooks/auth";
 import { useLinkPush } from "@scspace-client/Hooks/api";
 import { useMatchAPI, useMatchPredictionAPI } from "@scspace-client/Hooks/match";
 import { useEffect, useState } from "react";
-
-const bannerStyle = {
-    backgroundColor: "lightgray",
-    backgroundSize: "cover",
-    backgroundPosition: "50%",
-    backgroundRepeat: "no-repeat",
-};
-
-const banner1Style = {
-    w: { base: "140px", md: "180px", lg: "212px" },
-    h: { base: "56px", md: "72px", lg: "85px" },
-    aspectRatio: "212/85",
-    backgroundImage: "url('/img/match-predict/banner1.png')",
-    ...bannerStyle,
-};
-
-const banner2Style = {
-    h: { base: "110px", md: "160px", lg: "200px" },
-    maxW: "600px",
-    alignSelf: "center",
-    aspectRatio: "3/1",
-    backgroundImage: "url('/img/match-predict/banner2.png')",
-    ...bannerStyle,
-};
-
-const banner3Style = {
-    h: { base: "90px", md: "122px", lg: "155px" },
-    flexShrink: 0,
-    alignSelf: "center",
-    aspectRatio: "244/63",
-    backgroundImage: "url('/img/match-predict/banner3.png')",
-    ...bannerStyle,
-};
 
 const titleStyle = {
     w: "190px",
@@ -51,56 +18,64 @@ const titleStyle = {
     backgroundBlendMode: "lighten",
 };
 
-const bannerRowStyle = {
-    justify: "center",
-    alignItems: "flex-start",
-    alignContent: "flex-start",
-    gap: "5px",
-    alignSelf: "stretch",
-    flexWrap: "wrap" as const,
-};
-
-const emblemStyle = {
-    w: { base: "60px", md: "75px", lg: "90px" },
-    h: { base: "60px", md: "75px", lg: "90px" },
-    aspectRatio: "1/1",
-    bgColor: "black",
-    bgPosition: "50%",
-    bgSize: "contain",
-    bgRepeat: "no-repeat",
-};
-
-const scoreBoxStyle = {
-    w: { base: "60px", md: "75px", lg: "90px" },
-    h: { base: "60px", md: "75px", lg: "90px" },
-    justifyContent: "center",
-    alignItems: "center",
-    border: "1px solid #FFF",
-    bg: "rgba(255, 255, 255, 0)",
-};
-
-const labelStyle = {
-    color: "rgba(255, 255, 255, 0.62)",
-    fontFamily: "Inter",
-    fontSize: { base: "14px", md: "17px", lg: "20px" },
-    fontWeight: "400",
-    alignSelf: "stretch" as const,
-    textAlign: "center" as const,
-};
-
-const scoreStyle = {
-    color: "rgba(255, 255, 255, 0.81)",
-    fontFamily: "Inter",
-    fontSize: { base: "24px", md: "30px", lg: "36px" },
-    fontWeight: "700",
-    textAlign: "center" as const,
-};
-
-const SCORE_GAP = { base: "40px", md: "110px", lg: "180px" };
-
-function ScoreInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+function TopBanners() {
     return (
-        <Box display="flex" {...scoreBoxStyle}>
+        <Flex direction="column" gap="3px" w="100%" maxW="440px">
+            {Array.from({ length: 4 }).map((_, i) => (
+                <Box
+                    key={i}
+                    w="100%"
+                    h="60px"
+                    backgroundImage="url('/img/match-predict/top-banner.png')"
+                    backgroundSize="cover"
+                    backgroundPosition="center"
+                    backgroundRepeat="no-repeat"
+                />
+            ))}
+        </Flex>
+    );
+}
+
+function BottomBanners() {
+    return (
+        <Flex direction="column" gap="3px" w="100%" maxW="440px">
+            {Array.from({ length: 4 }).map((_, i) => (
+                <Box
+                    key={i}
+                    w="100%"
+                    h="65px"
+                    backgroundImage="url('/img/match-predict/bottom-banner.png')"
+                    backgroundSize="cover"
+                    backgroundPosition="center"
+                    backgroundRepeat="no-repeat"
+                />
+            ))}
+        </Flex>
+    );
+}
+
+const scoreTextStyle = {
+    color: "rgba(255,255,255,0.81)" as const,
+    WebkitTextStroke: "1px rgba(9,12,32,1)",
+};
+
+function ScoreBox({
+    value,
+    onChange,
+}: {
+    value: string;
+    onChange: (v: string) => void;
+}) {
+    return (
+        <Flex
+            w="72px"
+            h="72px"
+            justify="center"
+            align="center"
+            bg="transparent"
+            border="1px solid white"
+            flexShrink={0}
+        >
             <Input
                 type="text"
                 inputMode="numeric"
@@ -108,7 +83,7 @@ function ScoreInput({ value, onChange }: { value: string; onChange: (v: string) 
                 value={value}
                 onChange={(e) => {
                     const v = e.target.value;
-                    if (v === "" || /^\d+$/.test(v)) onChange(v);
+                    if (v === "" || (/^\d{1,2}$/.test(v) && Number(v) <= 99)) onChange(v);
                 }}
                 w="full"
                 h="full"
@@ -118,32 +93,22 @@ function ScoreInput({ value, onChange }: { value: string; onChange: (v: string) 
                 boxShadow="none"
                 outline="none"
                 _focus={{ boxShadow: "none", border: "none" }}
-                color={scoreStyle.color}
-                fontFamily={scoreStyle.fontFamily}
-                fontSize={scoreStyle.fontSize}
-                fontWeight={scoreStyle.fontWeight}
+                fontSize="28px"
+                fontWeight="700"
                 textAlign="center"
+                style={scoreTextStyle}
             />
-        </Box>
-    );
-}
-
-function ScoreRow({ valueA, valueB, onChangeA, onChangeB }: {
-    valueA: string;
-    valueB: string;
-    onChangeA: (v: string) => void;
-    onChangeB: (v: string) => void;
-}) {
-    return (
-        <Flex justify="center" alignItems="center" gap={SCORE_GAP} alignSelf="stretch">
-            <ScoreInput value={valueA} onChange={onChangeA} />
-            <Text {...scoreStyle}>:</Text>
-            <ScoreInput value={valueB} onChange={onChangeB} />
         </Flex>
     );
 }
 
-function ScoreSection({ label, valueA, valueB, onChangeA, onChangeB }: {
+function ScoreSection({
+    label,
+    valueA,
+    valueB,
+    onChangeA,
+    onChangeB,
+}: {
     label: string;
     valueA: string;
     valueB: string;
@@ -151,9 +116,23 @@ function ScoreSection({ label, valueA, valueB, onChangeA, onChangeB }: {
     onChangeB: (v: string) => void;
 }) {
     return (
-        <Flex direction="column" alignItems="center" gap="9px" alignSelf="stretch">
-            <Text {...labelStyle}>{label}</Text>
-            <ScoreRow valueA={valueA} valueB={valueB} onChangeA={onChangeA} onChangeB={onChangeB} />
+        <Flex direction="column" gap="8px" alignSelf="stretch">
+            <Text
+                color="rgba(255,255,255,0.62)"
+                fontSize="16px"
+                fontWeight="400"
+                textAlign="center"
+                style={{ textShadow: "0 0 10px rgba(255,255,255,0.4)" }}
+            >
+                {label}
+            </Text>
+            <Flex align="center" alignSelf="stretch">
+                <ScoreBox value={valueA} onChange={onChangeA} />
+                <Flex flex="1" justify="center" align="center">
+                    <Text fontSize="28px" fontWeight="700" style={scoreTextStyle}>:</Text>
+                </Flex>
+                <ScoreBox value={valueB} onChange={onChangeB} />
+            </Flex>
         </Flex>
     );
 }
@@ -161,7 +140,7 @@ function ScoreSection({ label, valueA, valueB, onChangeA, onChangeB }: {
 export default function MatchPredictInputPage() {
     const { isLogined, isLoading, userInfo } = useAuth();
     const { linkPush } = useLinkPush();
-    const { allMatches, createPrediction } = useMatchAPI();
+    const { allMatches, createPrediction, updatePrediction, isUpdating } = useMatchAPI();
     const { myPredictions } = useMatchPredictionAPI(userInfo?.id);
 
     const [firstA, setFirstA] = useState("");
@@ -193,114 +172,121 @@ export default function MatchPredictInputPage() {
 
     if (!isLogined || !userInfo) return null;
 
-    function handleSubmit() {
-        if (!matchId) return;
+    const scores = {
+        firstScoreA: Number(firstA),
+        firstScoreB: Number(firstB),
+        secondScoreA: Number(secondA),
+        secondScoreB: Number(secondB),
+    };
+
+    function validate() {
         if ([firstA, firstB, secondA, secondB].some((v) => v === "")) {
             alert("모든 점수를 입력해주세요.");
-            return;
+            return false;
         }
+        const values = [firstA, firstB, secondA, secondB].map(Number);
+        if (values.some((v) => isNaN(v) || v < 0 || v > 99)) {
+            alert("점수는 0~99 사이의 숫자여야 합니다.");
+            return false;
+        }
+        return true;
+    }
 
-        createPrediction({
-            userId: userInfo!.id,
-            matchId,
-            firstScoreA: Number(firstA),
-            firstScoreB: Number(firstB),
-            secondScoreA: Number(secondA),
-            secondScoreB: Number(secondB),
-        }, {
-            onSuccess: () => {
-                alert("예측이 제출되었습니다!");
-                linkPush("/match-predict/main");
-            },
-            onError: (e) => {
-                alert(e.message);
-            },
-        });
+    function handleSubmit() {
+        if (!matchId || !validate()) return;
+        createPrediction(
+            { userId: userInfo!.id, matchId, ...scores },
+            {
+                onSuccess: () => {
+                    alert("예측이 제출되었습니다!");
+                    linkPush("/match-predict/main");
+                },
+                onError: (e) => alert(e.message),
+            }
+        );
+    }
+
+    function handleUpdate() {
+        if (!existingPrediction || !validate()) return;
+        updatePrediction(
+            { id: existingPrediction.prediction.id, ...scores },
+            {
+                onSuccess: () => {
+                    linkPush("/match-predict/main");
+                },
+                onError: (e) => alert(e.message),
+            }
+        );
     }
 
     return (
         <Scroll>
-            <Flex w="100%" direction="column" align="center">
-                <Flex h="60px" justify="center" align="center" alignSelf="stretch" bg="#292E38">
+            <Flex direction="column" align="center" bg="#09090E" minH="100vh">
+                <Flex w="100%" maxW="440px" h="60px" justify="center" align="center" bg="#292E38">
                     <Box {...titleStyle} />
                 </Flex>
-                <Flex pb="20px" direction="column" align="center" gap="27px" alignSelf="stretch">
-                    <Flex direction="column" align="center" gap="3px" alignSelf="stretch">
-                        <Flex {...bannerRowStyle}>
-                            {Array.from({ length: 5 }).map((_, i) => (
-                                <Box key={i} {...banner1Style} />
-                            ))}
-                        </Flex>
-                        <Flex {...bannerRowStyle}>
-                            {Array.from({ length: 3 }).map((_, i) => (
-                                <Box key={i} {...banner1Style} />
-                            ))}
-                        </Flex>
-                        <Box {...banner2Style} />
-                    </Flex>
 
-                    <Flex px={{ base: "4px", md: "12px" }} justify="center" alignSelf="stretch">
-                        <Flex px={{ base: "16px", md: "32px", lg: "50px" }} py={{ base: "16px", md: "20px", lg: "24px" }} direction="column" alignItems="center" gap={{ base: "24px", md: "32px", lg: "40px" }} flex="1 0 0">
-                            <Flex justify="center" alignItems="center" gap={SCORE_GAP} alignSelf="stretch">
-                                <Box bgImage="url(/img/match-predict/arsenal.png)" {...emblemStyle} />
-                                <Text {...labelStyle} alignSelf="center">VS</Text>
-                                <Box bgImage="url(/img/match-predict/psg.png)" {...emblemStyle} />
+                <TopBanners />
+
+                <Flex w="100%" maxW="440px" mx="auto" px="12px" py="20px">
+                    <Flex
+                        flex="1"
+                        direction="column"
+                        align="center"
+                        gap="32px"
+                        bg="#08080C"
+                        borderRadius="10px"
+                        px="24px"
+                        py="20px"
+                        style={{
+                            boxShadow: "0 0 30px rgba(1,39,143,1), 0 0 50px rgba(1,39,143,0.6), 0 0 70px rgba(1,39,143,0.3)",
+                        }}
+                    >
+                        <Flex justify="space-between" align="flex-end" alignSelf="stretch">
+                            <Flex direction="column" align="center" gap="5px">
+                                <Image src="/img/match-predict/psg.png" w="72px" h="72px" objectFit="cover" borderRadius="full" />
+                                <Text color="white" fontSize="18px" fontWeight="800">PSG</Text>
                             </Flex>
-                            <ScoreSection
-                                label="전반전 점수"
-                                valueA={firstA} valueB={firstB}
-                                onChangeA={hasSubmitted ? () => {} : setFirstA}
-                                onChangeB={hasSubmitted ? () => {} : setFirstB}
-                            />
-                            <ScoreSection
-                                label="후반전 점수"
-                                valueA={secondA} valueB={secondB}
-                                onChangeA={hasSubmitted ? () => {} : setSecondA}
-                                onChangeB={hasSubmitted ? () => {} : setSecondB}
-                            />
-                            {!hasSubmitted && (
-                                <Button
-                                    px="30px"
-                                    color={labelStyle.color}
-                                    fontFamily={labelStyle.fontFamily}
-                                    fontSize={labelStyle.fontSize}
-                                    fontWeight={labelStyle.fontWeight}
-                                    bg="rgba(255, 255, 255, 0.1)"
-                                    border="1px solid rgba(255, 255, 255, 0.3)"
-                                    borderRadius="md"
-                                    _hover={{ bg: "rgba(255, 255, 255, 0.2)" }}
-                                    _active={{ bg: "rgba(255, 255, 255, 0.15)" }}
-                                    onClick={handleSubmit}
-                                    loading={allMatches.isLoading || myPredictions.isLoading}
-                                >
-                                    Submit
-                                </Button>
-                            )}
-                            {hasSubmitted && (
-                                <Button
-                                    px="30px"
-                                    color="rgba(255, 255, 255, 0.4)"
-                                    fontFamily={labelStyle.fontFamily}
-                                    fontSize={labelStyle.fontSize}
-                                    fontWeight={labelStyle.fontWeight}
-                                    bg="rgba(255, 255, 255, 0.05)"
-                                    border="1px solid rgba(255, 255, 255, 0.15)"
-                                    borderRadius="md"
-                                    disabled
-                                    cursor="not-allowed"
-                                >
-                                    제출 완료
-                                </Button>
-                            )}
+                            <Text
+                                color="white"
+                                fontSize="28px"
+                                fontWeight="800"
+                                pb="28px"
+                                style={{ textShadow: "0 0 10px rgba(255,255,255,0.4)" }}
+                            >
+                                VS
+                            </Text>
+                            <Flex direction="column" align="center" gap="5px" w="72px">
+                                <Image src="/img/match-predict/arsenal.png" w="72px" h="72px" objectFit="contain" />
+                                <Text color="white" fontSize="18px" fontWeight="800">Arsenal</Text>
+                            </Flex>
                         </Flex>
-                    </Flex>
 
-                    <Flex maxW="600px" direction="column" align="center" alignSelf="center" aspectRatio="173/134">
-                        {Array.from({ length: 3 }).map((_, i) => (
-                            <Box key={i} {...banner3Style} />
-                        ))}
+                        <ScoreSection label="전반전 점수" valueA={firstA} valueB={firstB} onChangeA={setFirstA} onChangeB={setFirstB} />
+                        <ScoreSection label="후반전 점수" valueA={secondA} valueB={secondB} onChangeA={setSecondA} onChangeB={setSecondB} />
+
+                        <Button
+                            alignSelf="stretch"
+                            color="white"
+                            fontSize="16px"
+                            fontWeight="400"
+                            bg="#0F0F0F"
+                            border="1px solid rgba(47,47,47,1)"
+                            borderRadius="md"
+                            minH="47px"
+                            h="auto"
+                            _hover={{ bg: "rgba(255,255,255,0.08)" }}
+                            _active={{ bg: "rgba(255,255,255,0.05)" }}
+                            onClick={hasSubmitted ? handleUpdate : handleSubmit}
+                            loading={allMatches.isLoading || myPredictions.isLoading || isUpdating}
+                            style={{ boxShadow: "0 0 10px rgba(255,255,255,0.4), 0 0 15px rgba(255,255,255,0.2)" }}
+                        >
+                            {hasSubmitted ? "수정하기" : "Submit"}
+                        </Button>
                     </Flex>
                 </Flex>
+
+                <BottomBanners />
             </Flex>
         </Scroll>
     );

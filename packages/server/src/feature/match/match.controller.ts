@@ -1,6 +1,6 @@
-import { Controller, Post, Get, Body, Param, ParseIntPipe, Logger } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Body, Param, ParseIntPipe, Logger } from '@nestjs/common';
 import { MatchPredictionRepository } from './match.prediction.repository';
-import { IMatchPredictionCreate } from './match.model'; 
+import { IMatchPredictionCreate, IMatchPredictionUpdate } from './match.model';
 
 @Controller('match')
 export class MatchController {
@@ -20,6 +20,20 @@ export class MatchController {
             throw error;
         }
         
+    }
+
+    @Patch('prediction/:id')
+    async updatePrediction(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() body: IMatchPredictionUpdate,
+    ) {
+        try {
+            await this.matchRepo.update(id, body);
+            return { status: 'success' };
+        } catch (error) {
+            this.logger.error('Error updating match prediction:', error);
+            throw error;
+        }
     }
 
     @Get('prediction/:userId')
