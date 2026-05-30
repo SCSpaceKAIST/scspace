@@ -3,7 +3,7 @@ import { DBAsyncProvider } from 'src/db/db.provider';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { schema, MatchPrediction, MatchInfo } from '@schema'; 
 import { eq, desc, InferInsertModel } from 'drizzle-orm';
-import { IMatchPredictionCreate, IMatchPredictionUpdate } from './match.model';
+import { IMatchPredictionInsert } from './match.model';
 
 @Injectable()
 export class MatchPredictionRepository {
@@ -11,7 +11,7 @@ export class MatchPredictionRepository {
     @Inject(DBAsyncProvider) private readonly db: MySql2Database<typeof schema>,
   ) {}
 
-  async insert(data: IMatchPredictionCreate) { // 타입 변경
+  async insert(data: IMatchPredictionInsert) {
     const insertData = {
       userId: data.userId,
       matchId: data.matchId,
@@ -23,21 +23,9 @@ export class MatchPredictionRepository {
 
     const [result] = await this.db
       .insert(MatchPrediction)
-      .values(insertData)
-      .onDuplicateKeyUpdate({
-        set: {
-          firstScoreA: data.firstScoreA,
-          firstScoreB: data.firstScoreB,
-          secondScoreA: data.secondScoreA,
-          secondScoreB: data.secondScoreB,
-        }
-      });
-    
-    if (!result.insertId) {
-      throw new Error('데이터 저장에 실패했습니다.');
-    }
+      .values(insertData);
 
-    return result.insertId;
+    return result;
   }
   
   async fetchByUserId(userId: number) {
@@ -49,25 +37,20 @@ export class MatchPredictionRepository {
       .from(MatchPrediction)
       .leftJoin(MatchInfo, eq(MatchPrediction.matchId, MatchInfo.id))
       .where(eq(MatchPrediction.userId, userId))
-      .orderBy(desc(MatchPrediction.timeSubmit));
+      .orderBy(desc(MatchPrediction.timeSubmit), desc(MatchPrediction.id));
   }
 
   async fetchAll() {
     return this.db.select().from(MatchInfo).orderBy(desc(MatchInfo.matchTime));
   }
 
-  async update(predictionId: number, data: IMatchPredictionUpdate) {
+  async fetchPredictionById(predictionId: number) {
     const [result] = await this.db
-      .update(MatchPrediction)
-      .set({
-        firstScoreA: data.firstScoreA,
-        firstScoreB: data.firstScoreB,
-        secondScoreA: data.secondScoreA,
-        secondScoreB: data.secondScoreB,
-      })
+      .select()
+      .from(MatchPrediction)
       .where(eq(MatchPrediction.id, predictionId));
 
-    if (!result.affectedRows) {
+    if (!result) {
       throw new NotFoundException(`예측 ID ${predictionId}를 찾을 수 없습니다.`);
     }
 

@@ -1,6 +1,27 @@
-import { Controller, Post, Get, Patch, Body, Param, ParseIntPipe, Logger } from '@nestjs/common';
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    ForbiddenException,
+    Get,
+    Logger,
+    Param,
+    ParseIntPipe,
+    Patch,
+    Post,
+    Req,
+    UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { IUser } from '@scspace-depot/types/user';
+import { Request } from 'express';
 import { MatchPredictionRepository } from './match.prediction.repository';
 import { IMatchPredictionCreate, IMatchPredictionUpdate } from './match.model';
+
+type AuthenticatedRequest = Request & { user: IUser };
+type ScoreField = keyof IMatchPredictionUpdate;
+
+const SCORE_FIELDS: ScoreField[] = ['firstScoreA', 'firstScoreB', 'secondScoreA', 'secondScoreB'];
 
 @Controller('match')
 export class MatchController {
@@ -8,12 +29,51 @@ export class MatchController {
 
     constructor(private readonly matchRepo: MatchPredictionRepository) {}
 
+    private parseScores(body: Partial<IMatchPredictionUpdate>): IMatchPredictionUpdate {
+        if (!body || typeof body !== 'object') {
+            throw new BadRequestException('예측 점수를 입력해주세요.');
+        }
+
+        const scores = {} as IMatchPredictionUpdate;
+        for (const field of SCORE_FIELDS) {
+            const value = body[field];
+            if (typeof value !== 'number' || !Number.isInteger(value) || value < 0 || value > 99) {
+                throw new BadRequestException('점수는 0~99 사이의 정수여야 합니다.');
+            }
+            scores[field] = value;
+        }
+
+        return scores;
+    }
+
+    private parseCreateBody(body: Partial<IMatchPredictionCreate>): IMatchPredictionCreate {
+        if (!body || typeof body !== 'object') {
+            throw new BadRequestException('예측 정보를 입력해주세요.');
+        }
+        if (typeof body.matchId !== 'number' || !Number.isInteger(body.matchId) || body.matchId <= 0) {
+            throw new BadRequestException('유효한 경기 ID가 필요합니다.');
+        }
+
+        return {
+            matchId: body.matchId,
+            ...this.parseScores(body),
+        };
+    }
+
     @Post('prediction')
-    async createPrediction(@Body() body: IMatchPredictionCreate) { 
+    @UseGuards(AuthGuard('jwt'))
+    async createPrediction(
+        @Req() req: AuthenticatedRequest,
+        @Body() body: IMatchPredictionCreate,
+    ) { 
         try{
-            const insertId = await this.matchRepo.insert(body);
+            const prediction = this.parseCreateBody(body);
+            await this.matchRepo.insert({
+                userId: req.user.id,
+                ...prediction,
+            });
             return {
-            status: 'success',
+                success: true,
             };
         } catch (error) {
             this.logger.error('Error creating match prediction:', error);
@@ -23,13 +83,24 @@ export class MatchController {
     }
 
     @Patch('prediction/:id')
-    async updatePrediction(
+    @UseGuards(AuthGuard('jwt'))
+    async appendPredictionFromPatch(
+        @Req() req: AuthenticatedRequest,
         @Param('id', ParseIntPipe) id: number,
         @Body() body: IMatchPredictionUpdate,
     ) {
         try {
-            await this.matchRepo.update(id, body);
-            return { status: 'success' };
+            const prediction = await this.matchRepo.fetchPredictionById(id);
+            if (prediction.userId !== req.user.id) {
+                throw new ForbiddenException('본인의 예측만 수정할 수 있습니다.');
+            }
+
+            await this.matchRepo.insert({
+                userId: req.user.id,
+                matchId: prediction.matchId,
+                ...this.parseScores(body),
+            });
+            return { success: true };
         } catch (error) {
             this.logger.error('Error updating match prediction:', error);
             throw error;
@@ -37,8 +108,16 @@ export class MatchController {
     }
 
     @Get('prediction/:userId')
-    async getPredictionsByUserId(@Param('userId', ParseIntPipe) userId: number) {
+    @UseGuards(AuthGuard('jwt'))
+    async getPredictionsByUserId(
+        @Req() req: AuthenticatedRequest,
+        @Param('userId', ParseIntPipe) userId: number,
+    ) {
         try {
+            if (userId !== req.user.id) {
+                throw new ForbiddenException('본인의 예측만 조회할 수 있습니다.');
+            }
+
             const data = await this.matchRepo.fetchByUserId(userId);
             return {
                 status: 'success',

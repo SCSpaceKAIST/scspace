@@ -1,48 +1,62 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
-import { useMutationApi, useQueryApi } from "./api";
-import { IMatchInfo, IMatchPredictionCreate, IMatchPredictionUpdate, IMatchPredictionWithInfo } from "@scspace-depot/types/match";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryApi } from "./api";
+import { IMatchInfo, IMatchPredictionCreate, IMatchPredictionWithInfo } from "@scspace-depot/types/match";
 import { ISuccessResponse } from "@scspace-depot/types/common";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
+async function requestMatchJson<ResponseType, RequestBody extends object>(
+    endpoint: string,
+    method: "POST",
+    body: RequestBody,
+) {
+    const res = await fetch(`${baseUrl}${endpoint}`, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+        let msg = res.statusText;
+        try { msg = (await res.json()).message || msg; } catch {}
+        throw new Error(msg);
+    }
+    return res.json() as Promise<ResponseType>;
+}
+
 export function useMatchAPI() {
+    const queryClient = useQueryClient();
     const allMatches = useQueryApi<{ status: string; data: IMatchInfo[] }>("/match");
 
-    const createPrediction = useMutationApi<ISuccessResponse, IMatchPredictionCreate>(
-        "/match/prediction",
-        "POST"
-    ).mutate;
+    const invalidatePredictions = () => {
+        queryClient.invalidateQueries({
+            predicate: ({ queryKey }) => (
+                typeof queryKey[0] === "string" &&
+                queryKey[0].startsWith("/match/prediction")
+            ),
+        });
+    };
 
-    const updatePredictionMutation = useMutation<ISuccessResponse, Error, { id: number } & IMatchPredictionUpdate>({
-        mutationFn: async ({ id, ...data }) => {
-            const res = await fetch(`${baseUrl}/match/prediction/${id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify(data),
-            });
-            if (!res.ok) {
-                let msg = res.statusText;
-                try { msg = (await res.json()).message || msg; } catch {}
-                throw new Error(msg);
-            }
-            return res.json();
-        },
+    const createPredictionMutation = useMutation<ISuccessResponse, Error, IMatchPredictionCreate>({
+        mutationFn: (data) => requestMatchJson<ISuccessResponse, IMatchPredictionCreate>("/match/prediction", "POST", data),
+        onSuccess: invalidatePredictions,
     });
 
     return {
         allMatches,
-        createPrediction,
-        updatePrediction: updatePredictionMutation.mutate,
-        isUpdating: updatePredictionMutation.isPending,
+        createPrediction: createPredictionMutation.mutate,
+        isCreating: createPredictionMutation.isPending,
     };
 }
 
 export function useMatchPredictionAPI(userId?: number) {
+    const enabled = typeof userId === "number" && userId > 0;
     const myPredictions = useQueryApi<{ status: string; data: IMatchPredictionWithInfo[] }>(
         `/match/prediction/${userId ?? 0}`,
+        undefined,
+        { enabled },
     );
 
     return {

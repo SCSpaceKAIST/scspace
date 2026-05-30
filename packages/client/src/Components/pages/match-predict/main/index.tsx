@@ -58,13 +58,13 @@ function MatchHeader() {
         <Flex px="12px" justify="center" alignSelf="stretch">
             <Flex justify="center" align="center" gap="28px" flex="1">
                 <Flex align="center" gap="6px">
-                    <Image src="/img/match-predict/psg.png" w="48px" h="48px" objectFit="contain" />
+                    <Image src="/img/match-predict/psg.png" alt="PSG" w="48px" h="48px" objectFit="contain" />
                     <Text color="white" fontSize="18px" fontWeight="800">PSG</Text>
                 </Flex>
                 <Text color="white" fontSize="28px" fontWeight="800">VS</Text>
                 <Flex align="center" gap="6px">
                     <Text color="white" fontSize="18px" fontWeight="800">Arsenal</Text>
-                    <Image src="/img/match-predict/arsenal.png" w="48px" h="48px" objectFit="contain" />
+                    <Image src="/img/match-predict/arsenal.png" alt="Arsenal" w="48px" h="48px" objectFit="contain" />
                 </Flex>
             </Flex>
         </Flex>
@@ -97,6 +97,7 @@ function InfoBar() {
                     <Flex key={item.title} align="flex-start" gap="6px" flex="1">
                         <Image
                             src={item.icon}
+                            alt=""
                             w="22px"
                             h="22px"
                             objectFit="contain"
@@ -132,7 +133,7 @@ function ScoreDisplay({ label, scoreA, scoreB }: {
             <Text color="white" fontSize="16px" fontWeight="400">{label}</Text>
             <Flex justify="space-between" align="center">
                 <Flex direction="column" align="center" gap="5px" minW="44px">
-                    <Image src="/img/match-predict/psg.png" w={EMBLEM_SIZE} h={EMBLEM_SIZE} objectFit="cover" borderRadius="full" />
+                    <Image src="/img/match-predict/psg.png" alt="PSG" w={EMBLEM_SIZE} h={EMBLEM_SIZE} objectFit="cover" borderRadius="full" />
                     <Text color="white" fontSize="12px" fontWeight="600">PSG</Text>
                 </Flex>
                 <Flex align="center" gap="6px">
@@ -145,7 +146,7 @@ function ScoreDisplay({ label, scoreA, scoreB }: {
                     </Flex>
                 </Flex>
                 <Flex direction="column" align="center" gap="5px" minW="52px">
-                    <Image src="/img/match-predict/arsenal.png" w={EMBLEM_SIZE} h={EMBLEM_SIZE} objectFit="cover" borderRadius="full" />
+                    <Image src="/img/match-predict/arsenal.png" alt="Arsenal" w={EMBLEM_SIZE} h={EMBLEM_SIZE} objectFit="cover" borderRadius="full" />
                     <Text color="white" fontSize="12px" fontWeight="600">Arsenal</Text>
                 </Flex>
             </Flex>
@@ -335,7 +336,12 @@ export default function MatchPredictMainPage() {
     const { allMatches } = useMatchAPI();
     const { myPredictions } = useMatchPredictionAPI(userInfo?.id);
 
-    const matchId = allMatches.data?.data?.[0]?.id;
+    const activeMatch = allMatches.data?.data?.find((match) => (
+        match.scoreA === null &&
+        match.scoreB === null &&
+        new Date(match.matchTime).getTime() > Date.now()
+    )) ?? allMatches.data?.data?.[0];
+    const matchId = activeMatch?.id;
     const existingPrediction = myPredictions.data?.data?.find(
         (p) => p.prediction.matchId === matchId
     )?.prediction;

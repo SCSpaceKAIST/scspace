@@ -140,7 +140,7 @@ function ScoreSection({
 export default function MatchPredictInputPage() {
     const { isLogined, isLoading, userInfo } = useAuth();
     const { linkPush } = useLinkPush();
-    const { allMatches, createPrediction, updatePrediction, isUpdating } = useMatchAPI();
+    const { allMatches, createPrediction, isCreating } = useMatchAPI();
     const { myPredictions } = useMatchPredictionAPI(userInfo?.id);
 
     const [firstA, setFirstA] = useState("");
@@ -156,7 +156,12 @@ export default function MatchPredictInputPage() {
         }
     }, [isLogined, isLoading, linkPush]);
 
-    const matchId = allMatches.data?.data?.[0]?.id;
+    const activeMatch = allMatches.data?.data?.find((match) => (
+        match.scoreA === null &&
+        match.scoreB === null &&
+        new Date(match.matchTime).getTime() > Date.now()
+    )) ?? allMatches.data?.data?.[0];
+    const matchId = activeMatch?.id;
     const existingPrediction = myPredictions.data?.data?.find(
         (p) => p.prediction.matchId === matchId
     );
@@ -193,9 +198,14 @@ export default function MatchPredictInputPage() {
     }
 
     function handleSubmit() {
-        if (!matchId || !validate()) return;
+        if (!matchId) {
+            alert("예측 가능한 경기가 없습니다.");
+            return;
+        }
+        if (!validate()) return;
+
         createPrediction(
-            { userId: userInfo!.id, matchId, ...scores },
+            { matchId, ...scores },
             {
                 onSuccess: () => {
                     alert("예측이 제출되었습니다!");
@@ -207,9 +217,14 @@ export default function MatchPredictInputPage() {
     }
 
     function handleUpdate() {
-        if (!existingPrediction || !validate()) return;
-        updatePrediction(
-            { id: existingPrediction.prediction.id, ...scores },
+        if (!matchId) {
+            alert("예측 가능한 경기가 없습니다.");
+            return;
+        }
+        if (!validate()) return;
+
+        createPrediction(
+            { matchId, ...scores },
             {
                 onSuccess: () => {
                     linkPush("/match-predict/main");
@@ -244,7 +259,7 @@ export default function MatchPredictInputPage() {
                     >
                         <Flex justify="space-between" align="flex-end" alignSelf="stretch">
                             <Flex direction="column" align="center" gap="5px">
-                                <Image src="/img/match-predict/psg.png" w="72px" h="72px" objectFit="cover" borderRadius="full" />
+                                <Image src="/img/match-predict/psg.png" alt="PSG" w="72px" h="72px" objectFit="cover" borderRadius="full" />
                                 <Text color="white" fontSize="18px" fontWeight="800">PSG</Text>
                             </Flex>
                             <Text
@@ -257,7 +272,7 @@ export default function MatchPredictInputPage() {
                                 VS
                             </Text>
                             <Flex direction="column" align="center" gap="5px" w="72px">
-                                <Image src="/img/match-predict/arsenal.png" w="72px" h="72px" objectFit="contain" />
+                                <Image src="/img/match-predict/arsenal.png" alt="Arsenal" w="72px" h="72px" objectFit="contain" />
                                 <Text color="white" fontSize="18px" fontWeight="800">Arsenal</Text>
                             </Flex>
                         </Flex>
@@ -278,7 +293,7 @@ export default function MatchPredictInputPage() {
                             _hover={{ bg: "rgba(255,255,255,0.08)" }}
                             _active={{ bg: "rgba(255,255,255,0.05)" }}
                             onClick={hasSubmitted ? handleUpdate : handleSubmit}
-                            loading={allMatches.isLoading || myPredictions.isLoading || isUpdating}
+                            loading={allMatches.isLoading || myPredictions.isLoading || isCreating}
                             style={{ boxShadow: "0 0 10px rgba(255,255,255,0.4), 0 0 15px rgba(255,255,255,0.2)" }}
                         >
                             {hasSubmitted ? "수정하기" : "Submit"}

@@ -20,7 +20,7 @@ export interface IMatchPrediction {
     predictionResult: number | null;
 }
 
-export type IMatchPredictionCreate = Omit<IMatchPrediction, 'id' | 'timeSubmit' | 'predictionResult'>;
+export type IMatchPredictionCreate = Omit<IMatchPrediction, 'id' | 'userId' | 'timeSubmit' | 'predictionResult'>;
 
 export type IMatchPredictionUpdate = Pick<IMatchPrediction, 'firstScoreA' | 'firstScoreB' | 'secondScoreA' | 'secondScoreB'>;
 
