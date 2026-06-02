@@ -4,8 +4,10 @@ export interface IMatchInfo {
     matchTime: Date;
     teamA: string;
     teamB: string;
-    scoreA: number | null;
-    scoreB: number | null;
+    firstScoreA: number | null;
+    firstScoreB: number | null;
+    secondScoreA: number | null;
+    secondScoreB: number | null;
 }
 
 export interface IMatchPrediction {

@@ -8,8 +8,10 @@ export const MatchInfo = mysqlTable('match_info', {
   matchTime: datetime('match_time').notNull(),
   teamA: varchar('team_a', { length: 100 }).notNull(),
   teamB: varchar('team_b', { length: 100 }).notNull(),
-  scoreA: int('score_a'),
-  scoreB: int('score_b'),
+  firstScoreA: int('first_score_a'),
+  firstScoreB: int('first_score_b'),
+  secondScoreA: int('second_score_a'),
+  secondScoreB: int('second_score_b'),
 });
 
 // 2. 유저의 경기 예측 테이블
