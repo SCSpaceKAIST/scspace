@@ -166,6 +166,8 @@ def main():
         "s_lottery_info",
         "s_lottery",
         "passpin",
+        "match_info",
+        "match_prediction"
     ]
     # export_tables_to_csv(folder_path)
 
