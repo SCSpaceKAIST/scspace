@@ -337,8 +337,10 @@ export default function MatchPredictMainPage() {
     const { myPredictions } = useMatchPredictionAPI(userInfo?.id);
 
     const activeMatch = allMatches.data?.data?.find((match) => (
-        match.scoreA === null &&
-        match.scoreB === null &&
+        match.firstScoreA === null &&
+        match.secondScoreB === null &&
+        match.firstScoreA === null &&
+        match.secondScoreB === null &&
         new Date(match.matchTime).getTime() > Date.now()
     )) ?? allMatches.data?.data?.[0];
     const matchId = activeMatch?.id;
